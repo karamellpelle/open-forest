@@ -1,0 +1,25 @@
+DataWorld
+  * RunWorld
+
+RunWorld
+  * ForestWorld
+  * GUI
+
+ForestWorld
+  * Camera
+  * Map
+  * Terrain
+  * ForestWorldModifier
+  * Network (created by RunWorld)
+  * [Player]
+  * Course
+
+Player
+  * View
+  * Physics (position, movement)
+  (* CollisionPhysics (shape) )
+  * 
+
+Course
+  * [Control]
+

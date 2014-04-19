@@ -1,0 +1,2 @@
+cd source/
+g++ -g -pg -I . test/test_Game.cpp -o ../build/main

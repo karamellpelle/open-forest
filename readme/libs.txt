@@ -1,0 +1,9 @@
+screen (OpenGL)   : GLFW
+sound  (OpenAL)   : ?
+sound  (MIDI)     : ?
+input             : GLFW
+GUI               : 
+config (XML)      : ?
+network           : ?
+screen rendering  : OpenSceneGraph?
+collision         : Bullet3D?
