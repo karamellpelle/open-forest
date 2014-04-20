@@ -1,0 +1,7 @@
+== using CMake ==
+* I suggest running cmake inside the build folder, in order to prevent pollution:
+    > cd build/
+    > cmake ..
+    > make
+* CMake variables can be defined in command line:
+    > cmake .. -DCMAKE_INSTALL_PREFIX=/my/path

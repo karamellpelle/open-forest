@@ -16,8 +16,6 @@ public:
         static NoOutput ret;
         return &ret;
     }
-    static void destroy(NoOutput<A>* out) { }
-
 
     void outputWorld(A& a) { } 
 
