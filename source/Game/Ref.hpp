@@ -60,8 +60,8 @@ public:
 
     }
 
-    // tag object as container-released (release on count decrease to 0)
-    static Ref* releasing(Ref* ref)
+    template <typename RefA>
+    static RefA* releasing(RefA* ref)
     {
         ref->release_ = true;
         return ref;

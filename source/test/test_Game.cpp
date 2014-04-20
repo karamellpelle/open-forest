@@ -3,7 +3,8 @@
 #include <string>
 #include <unistd.h>
 
-
+#include <stdint.h>
+typedef uint_fast32_t uint;
 
 class A
 {
@@ -11,14 +12,19 @@ friend std::ostream& operator<<(std::ostream& , const A& );
 
 public:
     A(uint n) : count_(n) { } 
-
+    
     void modify(uint n)
     {
         count_ += n;
     }
 
+    void append(const std::string& str) { str_ += str; }
+    std::size_t strsize() const { return str_.size(); }
+    const std::string& string() const { return str_; }
+
 private:
     uint count_;
+    std::string str_;
 };
 
 std::ostream& operator<<(std::ostream& os, const A& a)
@@ -31,45 +37,108 @@ std::ostream& operator<<(std::ostream& os, const A& a)
     typedef Game::IterationFunction<A> IterationFunctionA;
     typedef Game::Ref Ref;
     typedef Game::Step<A> StepA;
+    typedef Game::IterationDefault<A> IterationDefaultA;
 
 void f(IterationA* this_, IterationStackA& stack, A& a);
 void g(IterationA* this_, IterationStackA& stack, A& a);
 void h(IterationA* this_, IterationStackA& stack, A& a);
 
 
-class MyIteration : public IterationA
+class MyScoopIteration  : public IterationA
 {
 public:
-    void iterate(IterationStackA& stack, A& a) { std::cout << "MyIteration" << std::endl; }
-};
-
-/*
-class MyStep : public StepA
-{
-public:
-    void stepWorld(IterationStackA& stack, A& a)
+    MyScoopIteration() : count_( 2 ) { }
+    void iterate(IterationStackA& stack, A& a)
     {
-        static uint ix = 2;
-        if ( --ix == 0 )
+        // output
+        std::cout << "MyIteration" << std::endl;
+
+        // do
+        --count_;
+        
+        // think
+        if ( count_ == 0 )
         {
             stack.push();
         }
         else
         {
-            stack.push( iteration_ );
+            stack.push( this );
+        }
+    }
+private:
+    uint count_;
+};
+
+
+class MyStep : public Game::Step<A>
+{
+public:
+    static MyStep* create() { return new MyStep(); }
+    static void destroy(MyStep* step) { step->destroy_(); }
+
+    void stepWorld(IterationA* this_, IterationStackA& stack, A& a)
+    {
+        // do 
+        a.append( "*" );
+
+        // think
+        if ( 5 <= a.strsize() )
+        {
+            stack.push();
+        }
+        else
+        {
+            stack.push( this_ );
         }
     }
 
+private:
+    MyStep() : count_( 4 ) { } 
+    void destroy_()
+    {
+        delete this;
+    }
+
+    uint count_;
 };
-*/
+
+
+
+class MyOutput : public Game::Output<A>
+{
+public:
+    static MyOutput* create(std::ostream& os) { return new MyOutput(os); }
+    static void destroy(MyOutput* out) { out->destroy_(); }
+
+    void outputWorld(A& a)
+    {
+        os_ << a.string() << std::endl;
+    }
+private:
+    MyOutput(std::ostream& os) : os_( os ) { }
+    void destroy_() { delete this; }
+
+    std::ostream& os_;
+};
+
+
+
 int main(int argc, char** argv)
 {
     A a( 100 );
-    //MyStep mystep;
 
     IterationStackA stack;
-    stack.push( IterationStackA::releasing( IterationFunctionA::create( f ) ),
-                IterationStackA::releasing( IterationFunctionA::create( g ) )
+
+    MyScoopIteration scoop_iter;
+
+    stack.push( Ref::releasing( IterationFunctionA::create( f ) ),
+                Ref::releasing( IterationFunctionA::create( g ) ),
+                &scoop_iter, 
+                Ref::releasing( IterationDefaultA::create(
+                                            Ref::releasing( MyOutput::create( std::cout ) ),
+                                            Ref::releasing( MyStep::create() ) ) )
+
               );
     
     while ( !stack.empty() )
@@ -125,7 +194,7 @@ void g(IterationA* this_, IterationStackA& stack, A& a)
     // think
     if ( --j == 0 )
     {
-        stack.push( IterationStackA::releasing( IterationFunctionA::create( h ) ) );
+        stack.push( Ref::releasing( IterationFunctionA::create( h ) ) );
     }
     else
     {

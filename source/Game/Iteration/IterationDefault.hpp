@@ -14,7 +14,7 @@ class IterationDefault : public Iteration<A>
 {
 public:
     static IterationDefault<A>* create(Output<A>* out, Step<A>* step) { return new IterationDefault( out, step ); }
-    static void destroy(IterationDefault<A>* iter)                    { delete iter; }
+    static void destroy(IterationDefault<A>* iter)                    { iter->destroy_(); }
 
     void iterate(IterationStack<A>& stack, A& a)
     {
@@ -22,15 +22,11 @@ public:
         step_->stepWorld( this, stack, a );
     }
 
-    // let IterationDefault handle Output and Step primitives
-    static Output<A>* releasing(Output<A>* output)  { Ref::releasing(output); return output; }
-    static Step<A>*   releasing(Step<A>* step)      { Ref::releasing(step); return step; }
-
 protected:
     IterationDefault(Output<A>* out, Step<A>* step) : output_( out ), step_( step )
     {
-        Ref::hold( step );
-        Ref::hold( step );
+        Ref::hold( output_ );
+        Ref::hold( step_ );
     }
     ~IterationDefault()
     {

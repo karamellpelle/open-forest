@@ -48,9 +48,6 @@ public:
     }
 
 
-    // let IterationStack handle memory:
-    static Iteration<A>* releasing(Iteration<A>* iteration) { Ref::releasing(iteration); return iteration; }
-
 private:
     void push_(Iteration<A>* iteration)
     {
