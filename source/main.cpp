@@ -6,6 +6,7 @@ int main(int argc, char** argv)
 {
     
     // init Env
+    // TODO: init from settings (settings from file?)
     Env::begin();
 
     // set up environment (GL, ...)

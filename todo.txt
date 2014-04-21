@@ -1,3 +1,6 @@
+* use 'float' or 'double' for physics
+  - create typdefed 'float_t'?
 * GLFW + Env
-* oldBATB as iterations, together with GLFW (Env)
+* run oldBATB from iterations, together with GLFW (Env)
 * (global) exception handling
+* create GLHelpers (program creation, etc)

@@ -3,8 +3,15 @@
 #include <iostream>
 #include <stdint.h>
 #include <stdexcept>
-#include <GLFW/glfw3.h> // FIXME: option!
 
+
+namespace Env
+{
+
+typedef uint_fast32_t uint;
+
+
+}
 
 
 #endif

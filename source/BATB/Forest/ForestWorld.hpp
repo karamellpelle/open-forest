@@ -10,6 +10,7 @@ namespace BATB
 class ForestWorld
 {
 public:
+    ForestWorld() { }    // worlds shall not be singletons!
 
 private:
 

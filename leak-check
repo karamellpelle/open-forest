@@ -1,3 +1,0 @@
-cd build
-valgrind --leak-check=full -v ./main | tee valgrind.txt
-# --show-leak-kinds=all 

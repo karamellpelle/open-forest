@@ -1,0 +1,3 @@
+cd ../../build
+valgrind --leak-check=full -v ./test_Game | tee valgrind_Game.txt
+# --show-leak-kinds=all 

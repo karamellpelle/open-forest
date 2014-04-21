@@ -1,0 +1,38 @@
+=== Program Design ===
+TODO:
+ * define game objects
+ * GUI abstraction      (GUI is just a world modifier)
+ * network abstraction  (network input is just a world modifier)
+ * game worlds shall be unaware of output, output shall handle
+   all OpenGL/Sound/Network stuff
+
+== Game Objects ==
+
+DataWorld
+  * RunWorld
+
+RunWorld
+  * ForestWorld
+  * GUI
+
+ForestWorld
+  * Camera
+  * Map
+  * Terrain
+  * ForestWorldModifier
+  * Network (created by RunWorld)
+  * [Player]
+  * Course
+
+Player
+  * View
+  * Physics (position, movement)
+  (* CollisionPhysics (shape) )
+  * 
+
+Course
+  * [Control]
+
+
+ForestWorldModifier
+  // 

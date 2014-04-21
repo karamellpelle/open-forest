@@ -2,6 +2,7 @@
 #define BATB_RUNDATA_HPP
 #include "BATB/include.hpp"
 #include "BATB/Run/RunPrim.hpp"
+#include "BATB/Run/RunSettings.hpp"
 
 
 namespace BATB
@@ -17,11 +18,13 @@ public:
 
     // 
     RunPrim* prim;
+    RunSettings* settings;
 
 
 private:
     static RunData theRunData_;
     static RunPrim theRunPrim_;
+    static RunSettings theRunSettings_;
 
     RunData()
     {

@@ -8,22 +8,28 @@ namespace BATB
 
 RunData RunData::theRunData_;
 RunPrim RunData::theRunPrim_;
+RunSettings RunData::theRunSettings_;
 
 
 void RunData::create()
 {
+    // FIXME: from file/config?
+  
+    RunData* this_ = &theRunData_;
+
     log << "RunData::create() " << std::endl;    
   
     // create primitives
-    RunPrim* prim = &theRunPrim_;
-    prim->iterationDataBegin =  Game::NoIteration<RunWorld>::create();
-    prim->iterationDataEnd   =  Game::NoIteration<RunWorld>::create();
-    prim->iterationIntro     =  Game::NoIteration<RunWorld>::create();
-    prim->iterationMain      =  Game::NoIteration<RunWorld>::create();
-    prim->iterationOutro     =  Game::NoIteration<RunWorld>::create();
+    this_->prim = &theRunPrim_;
+    this_->prim->iterationDataBegin =  Game::NoIteration<RunWorld>::create();
+    this_->prim->iterationDataEnd   =  Game::NoIteration<RunWorld>::create();
+    this_->prim->iterationIntro     =  Game::NoIteration<RunWorld>::create();
+    this_->prim->iterationMain      =  Game::NoIteration<RunWorld>::create();
+    this_->prim->iterationOutro     =  Game::NoIteration<RunWorld>::create();
 
-    // point to primitives
-    theRunData_.prim = prim;
+    // create settings
+    this_->settings = &theRunSettings_;
+    //this_->settings->
 
 
 }
