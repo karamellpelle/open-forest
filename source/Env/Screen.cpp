@@ -15,17 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
+#include "Env/Screen.hpp"
 
 
-namespace BATB
+namespace Env
 {
 
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
+
+static void glfw_error_callback(int error, const char* str)
+{
+    std::cerr << "Env : ERROR could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
+}
+
+
+void screenBegin()
+{
+    std::cout << "Env : Env::begin() " << std::endl;
+
+    // init GLFW
+    glfwSetErrorCallback( glfw_error_callback );
+    if ( !glfwInit() )
+    {
+        std::cerr << "Env : ERROR could not init GLFW. " << std::endl;
+        throw std::runtime_error( "???" );
+    }
+    
 
 }
 
-#endif
+
+void screenEnd()
+{
+    std::cout << "Env : Env::end() " << std::endl;
+    
+    // end GLFW
+    glfwTerminate();
+}
+
+
+}

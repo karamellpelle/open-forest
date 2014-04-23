@@ -15,17 +15,35 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
-
+#ifndef BATB_SCENE_HPP
+#define BATB_SCENE_HPP
+#include "BATB/include.hpp"
 
 namespace BATB
 {
 
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
 
+class Scene
+{
+public:
+
+
+private:
+    GLuint fbo_; // custom framebuffer
+
+    // pixel size
+    uint wth_;
+    uint hth_;
+
+    // shape
+    Shape shape_;
+
+    // projection matrices
+    Mat4 proj2D_;
+    Mat4 proj3D_;
+
+
+};
 }
 
 #endif

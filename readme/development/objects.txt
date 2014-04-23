@@ -1,0 +1,45 @@
+== Game Objects ==
+
+
+IterationStack<RunWorld>
+
+RunWorld
+  * Scene
+  * ForestWorld
+  * IterationStack<ForestWorld>
+  * Network
+  * [RunEvent]
+
+RunEvent
+  - ???
+
+ForestWorld
+  * Camera
+  * Map
+  * Terrain
+  * ForestWorldModifier
+  * Network* (created by RunWorld)
+  * [Player]
+  * Course
+  * [ForestEvent]
+
+// Run will look at these, and take actions:
+ForestEvent     
+  - Pause       
+  // Link is not part of this, since Run owns Network.
+
+Player
+  * Physics     // position, movement, head view, collision shape (?), ...
+  * fatigue, etc...
+  * controls taken
+  * stats
+
+// implies a Map
+Course       
+  * [Control]
+
+// gamecontrols( mouse, keyboard, ...), GUI, other stuff (escape, console toggle)
+ForestWorldModifier
+  * Player*   // current control 
+
+

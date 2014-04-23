@@ -1,0 +1,51 @@
+== Run-iterarions ==
+
+
+
+RunDataBegin:
+    load resources to be used thorough the whole lifecycle of game. 
+    should have interactive output, for example a progress bar.
+
+RunDataEnd:
+    unload resources created by RunDataBegin. no output.
+
+RunIntro:
+    introducing the game. can be effectful, like video/story/...
+
+RunOutro:
+    effectful ending of game, but must be short and cancelable. for examlpe 
+    fade out screen.
+
+RunMain:
+    GUI main menu, with controls for starting game play, ending game, 
+    settings, about, ...
+
+RunPlay:
+    set up a new game. single/network choice. map. course. player. etc.
+
+RunForestBegin:
+    load ForestWorld, which previously was defined by settings from 'RunPlay'. 
+    interactive output, for example a progress bar. 
+
+RunForestEnd:
+    unload ForestWorld. interactive output of some kind (no visible hang)
+
+RunForestPlay:
+    run iterations on ForestWorld from current IterationStackForestWorld.
+    no output of RunWorld (typically), since output is done by Forest.
+
+RunForestPause:
+    game paused by player. a corresponding pause ForestWorld-iteration 
+    on IterationStackForestWorld, if single player, otherwise continue
+    gameplay in background. the pause should be forced by Forest, and
+    Run shall present a menu, for example, on top of the output from 
+    Forest, with a choice of continuing game play or exit game play. 
+
+RunForestLink:
+    network link is unstable or broken during network play. continue play
+    if network is stable again, or exit game play if link totally broken.
+
+
+
+
+    

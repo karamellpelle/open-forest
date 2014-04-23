@@ -1,6 +1,9 @@
-* use 'float' or 'double' for physics
-  - create typdefed 'float_t'?
-* GLFW + Env
+* define RunWorldEvent's and ForestWorldEvent's. Since two worlds A and B of different types
+  shall be mostly unaware of each other (at least the subworld unaware of superworld), iterations
+  on A and B should create events for the respective worlds. then a superworld can look at the
+  events for a subworld, in order to make actions.
 * run oldBATB from iterations, together with GLFW (Env)
 * (global) exception handling
-* create GLHelpers (program creation, etc)
+* init Env from config file, init game from config file.
+* create helpers (GL program creation, etc)
+* 

@@ -49,8 +49,9 @@ option( BATB_INSTALL "Install BATB" OFF)
 include_directories( ${CMAKE_SOURCE_DIR}/source)
 set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/main.cpp
-      ${MAIN_SOURCE_DIR}/BATB.cpp
       ${MAIN_SOURCE_DIR}/Env.cpp
+      ${MAIN_SOURCE_DIR}/Env/Screen.cpp
+      ${MAIN_SOURCE_DIR}/BATB.cpp
       ${MAIN_SOURCE_DIR}/BATB/Run/RunData.cpp
       ${MAIN_SOURCE_DIR}/BATB/Forest/ForestData.cpp
       ${MAIN_SOURCE_DIR}/BATB/Log.cpp

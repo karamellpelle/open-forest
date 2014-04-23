@@ -1,0 +1,14 @@
+== Forest-iterations == 
+These will probably be expanded:
+
+
+ForestPlay:
+    play game. i.e. run in terrain.
+
+ForestComplete:
+    game complete, runner completed course, or got lost :)
+
+ForestPause:
+    game play paused, for single player game.    
+    
+

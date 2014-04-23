@@ -15,16 +15,22 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
-
+#ifndef BATB_INCLUDE_HPP
+#define BATB_INCLUDE_HPP
+#include "include.hpp"
+#include <stdint.h>
+#include <iostream>
+#include <string>
+#include <stdexcept>
 
 namespace BATB
 {
 
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
+typedef ::uint uint;
+
+
+// float or double?
+typedef ::float_t float_t;
 
 }
 

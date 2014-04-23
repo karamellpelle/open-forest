@@ -2,13 +2,18 @@
 GamePlay
   =>  player movement easily controlled by WASD
   =>  player view easily controlled by mouse
+  =>  manual control punching
+        * it should be possible to be disqualified for incorrect controls :)
   =>  map handling easy and fast
-        * automatic course-alignment on control punch
+        * automatic course-alignment on control punch.
+          well, since we have manual punching, we must think more about this. 
+          what if for example a player punches the correct one after the mistake?
+          so maybe better to have a control for this. lets think about it.
         * automatic north-alignment on double click?
   =>  running on trees will not slow down speed, only change run direction based on contact center
         * at least an option for this
         * different amount of direction change based on tree size? i.e. big amount on big tree.
-  =>  very fast run speed possible, by setting
+  =>  very fast run speed possible, by controllable setting
         * training orienteering 
   =>  if stopping/slow down while running, again starting running will lose speed (i.e. needs (small) acceleration)
         * fast running should be rewarded

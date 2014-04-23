@@ -1,0 +1,5 @@
+// OpenGL documentation
+http://www.opengl.org/registry/
+
+// OpenGL reference card:
+http://www.opengl.org/sdk/docs/reference_card/opengl44-quick-reference-card.pdf

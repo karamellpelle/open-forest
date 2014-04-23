@@ -1,0 +1,9 @@
+=== Invariants ===
+These are invariants to be used in development.
+
+== OpenGL ==
+* development OpenGL substates (all other substates are the default substates for OpenGL):
+  - ...
+* if a function/class/etc. X modifies an OpenGL substate A, then the substate A shall be set 
+  back to the development substate, when X is complete.
+

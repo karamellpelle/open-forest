@@ -1,9 +1,10 @@
 screen (OpenGL)   : GLFW
 sound  (OpenAL)   : ?
-sound  (MIDI)     : ?
 input             : GLFW
-GUI               : 
+GUI               : CEGUI?
 config (XML)      : ?
 network           : ?
 screen rendering  : OpenSceneGraph?
 collision         : Bullet3D?
+linear            : ? custom, just for GL?
+

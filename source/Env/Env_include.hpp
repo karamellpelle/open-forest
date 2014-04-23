@@ -15,17 +15,30 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
+#ifndef ENV_INCLUDE_HPP
+#define ENV_INCLUDE_HPP
+#include <stdint.h>
+#include <iostream>
+#include <string>
+#include <stdexcept>
+#include "include.hpp"
+
+#include <GL/glew.h>    // must be done before GLFW!!
+#include <GLFW/glfw3.h> // FIXME: build option?
 
 
-namespace BATB
+namespace Env
 {
 
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
+
+typedef ::uint uint;
+
+
+// float or double?
+typedef ::float_t float_t;
+
 
 }
+
 
 #endif

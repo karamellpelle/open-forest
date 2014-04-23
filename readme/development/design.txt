@@ -1,0 +1,8 @@
+=== Program Design ===
+TODO:
+ * define game objects
+ * GUI abstraction      (GUI is just a world modifier)
+ * network abstraction  (network input is just a world modifier)
+ * game worlds shall be unaware of output, output shall handle
+   all OpenGL/Sound/Network stuff
+

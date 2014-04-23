@@ -15,17 +15,16 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
+#ifndef HELPERS_HPP
+#define HELPERS_HPP
+#include <stdint.h>
 
-
-namespace BATB
+template <typename A>
+inline void keep_inside(const A& b, const A& e, A& x)
 {
-
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
-
+    if ( x <= b ) return b;
+    if ( e <= x ) return e;
+    return x;
 }
 
 #endif
