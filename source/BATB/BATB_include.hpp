@@ -23,6 +23,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "BATB/Values.hpp"
+
 namespace BATB
 {
 

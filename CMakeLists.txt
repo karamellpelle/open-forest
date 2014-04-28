@@ -46,7 +46,8 @@ option( BATB_INSTALL "Install BATB" OFF)
 
 
 # define sources
-include_directories( ${CMAKE_SOURCE_DIR}/source)
+include_directories( ${MAIN_SOURCE_DIR} )
+include_directories( ${LIBS_SOURCE_DIR}/tinyxml2 )
 set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/main.cpp
       ${MAIN_SOURCE_DIR}/Env.cpp

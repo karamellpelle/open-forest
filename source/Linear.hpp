@@ -15,28 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_HPP
-#define BATB_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Resource.hpp"
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/RunData.hpp"
-#include "BATB/Forest/ForestData.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Log.hpp"
-#include "BATB/Config.hpp"
-
-
-namespace BATB
-{
-
-
-void begin(const Config& cfg);
-
-void end();
-
-
-}
-
+#ifndef LINEAR_HPP
+#define LINEAR_HPP
+#include "Linear/Mat4.hpp"
+#include "Linear/Vec4.hpp"
+#include "Linear/Quat.hpp"
 
 #endif

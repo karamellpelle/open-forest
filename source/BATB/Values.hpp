@@ -15,28 +15,21 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_HPP
-#define BATB_HPP
+#ifndef VALUES_HPP
+#define VALUES_HPP
 #include "BATB/BATB_include.hpp"
-#include "BATB/Resource.hpp"
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/RunData.hpp"
-#include "BATB/Forest/ForestData.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Log.hpp"
-#include "BATB/Config.hpp"
 
-
+// this file contains values to be used throughout the BATB-program. some are constants, but other are not. the 
+// non-constants may defined runtime from for example a (the) configuration file. should these values be
+// allowed to change after they are initialized? ideally not. but maybe from a program change from settings,
+// for example. 
 namespace BATB
 {
 
-
-void begin(const Config& cfg);
-
-void end();
+//static const uint valueXXX = 0;
+//extern uint valueYYY = 0;
 
 
-}
-
+};
 
 #endif

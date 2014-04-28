@@ -1,10 +1,16 @@
-screen (OpenGL)   : GLFW
+screen (OpenGL)   : GLFW                  
 sound  (OpenAL)   : ?
 input             : GLFW
-GUI               : CEGUI?
-config (XML)      : ?
-network           : ?
-screen rendering  : OpenSceneGraph?
+GUI               : https://github.com/fruxo/turbobadger          (CEGUI? JUCE? https://github.com/betajaen/gorilla?)
+config            : https://github.com/leethomason/tinyxml2
+UDP network       : ? 
+screen rendering  : OGRE                                          (OpenSceneGraph? OpenSG? Horde3D? SpeedTree :))
+font rendering    : custom Valve-font?
+2D GL-rendering   : https://github.com/memononen/nanovg
 collision         : Bullet3D?
-linear            : ? custom, just for GL?
+linear            : custom, just for GL
+3D animation      : ?
+C++               : boost?
 
+
+NOTE: since some of these all uses font rendering, font rendering may be common...

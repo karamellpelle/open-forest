@@ -16,3 +16,26 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#ifndef BATB_ITERATION_RUN_XXX_HPP
+#define BATB_ITERATION_RUN_XXX_HPP
+#include "BATB/BATB_include.hpp"
+#include "BATB/Run/Prim/Iteration.hpp"
+
+
+class IterationRunXxx : public IterationRunWorld
+{
+public:
+    // Run-iterations are typically valid throughout the whole programs lifetime and only 1 object.
+    // hence typically create on stack.
+    static IterationRunXxx* create();                                // FIXME: define in .cpp
+    static void destroy(IterationRunXxx* );                          // FIXME: define in .cpp 
+
+    void iterate(IterationStackRunWorld& stack, RunWorld& run);   // FIXME: define in .cpp
+
+private:
+    IterationRunXxx();                                               // FIXME: define in .cpp
+    void destroy_();                                              // FIXME: define in .cpp iff releasable, i.e. not a typical Run-iteration.
+};
+
+
+#endif

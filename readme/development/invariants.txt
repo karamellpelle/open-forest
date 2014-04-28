@@ -1,9 +1,16 @@
 === Invariants ===
 These are invariants to be used in development.
 
+
+== General ==
+* for loading resources with Begin/End pairs, End shall be possible to call without Begin succeeded
+
 == OpenGL ==
 * development OpenGL substates (all other substates are the default substates for OpenGL):
   - ...
 * if a function/class/etc. X modifies an OpenGL substate A, then the substate A shall be set 
   back to the development substate, when X is complete.
 
+== Run ==
+* Run shall set up OpenGL at each iteration, like setting framebuffer, etc. by OpenGL invariant above
+  the full GL-state is known herefrom.

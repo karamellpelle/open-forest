@@ -1,4 +1,6 @@
 # keep this folder empty:
 *
-# ..., except this file
+# ..., except these
 !.gitignore
+!data
+

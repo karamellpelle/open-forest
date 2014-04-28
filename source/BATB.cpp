@@ -23,11 +23,14 @@ namespace BATB
 
 
 
-void begin()
+void begin(const Config& cfg)
 {
     // create log stream
-    Log::create();
+    Log::create( cfg );
 
+    // create values
+
+    //RunData::create( cfg );
     RunData::create();
 }
 
