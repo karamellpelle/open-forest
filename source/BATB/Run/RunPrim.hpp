@@ -19,7 +19,11 @@
 #define RUN_PRIM_HPP
 #include "BATB/BATB_include.hpp"
 #include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/Prim/Iteration.hpp"
+#include "BATB/Run/Prim/IterationRunBegin.hpp"
+#include "BATB/Run/Prim/IterationRunEnd.hpp"
+#include "BATB/Run/Prim/IterationRunIntro.hpp"
+#include "BATB/Run/Prim/IterationRunMain.hpp"
+#include "BATB/Run/Prim/IterationRunOutro.hpp"
 #include "Game.hpp"
 
 
@@ -33,11 +37,11 @@ class RunPrim
 {
 public:
     // TODO: custom types for each iteration!
-    IterationRunWorld* iterationDataBegin;
-    IterationRunWorld* iterationDataEnd;
-    IterationRunWorld* iterationIntro;
-    IterationRunWorld* iterationMain;
-    IterationRunWorld* iterationOutro;
+    IterationRunBegin* iterationRunBegin;
+    IterationRunEnd* iterationRunEnd;
+    IterationRunIntro* iterationRunIntro;
+    IterationRunMain* iterationRunMain;
+    IterationRunOutro* iterationRunOutro;
 
 };
 

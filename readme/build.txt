@@ -1,4 +1,11 @@
-== using CMake ==
+== building ==
+Create git submodules (i.e. libraries)
+> ./submodules
+Build application (i.e. BATB)
+> ./compile_it
+
+
+== CMake info ==
 * I suggest running cmake inside the build folder, in order to prevent pollution:
     > cd build/
     > cmake ..

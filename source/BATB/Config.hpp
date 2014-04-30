@@ -29,6 +29,9 @@ class Config
 public:
     Config(const std::string& xml) { }
 
+    typedef void Block; // FIXME: tinyxml object
+
+    Block* block() { return 0; } 
 };
 
 }

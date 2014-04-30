@@ -15,49 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "include.hpp"
-#include "BATB.hpp"
 
 namespace BATB
 {
 
-static Config theConfig_;
-
-void begin(const Config& cfg)
+// base Key class
+class Key
 {
-    // set BATB configuration-object
-    thConfig_ = cfg;
+public:
+    Key() : { }
+    virtual void ~Key() { }
 
-    // get XML-objects
-    BATB::Block* block = config->block();
+    virtual void clear() = 0;
+    virtual void update(tick_t ) = 0;
+    virtual float_t alpha() = 0; // FIXME: const??
 
-    // create log stream
-    Log::create( /* F */ block );
+    // helpers
 
-    // create values, from file
-    Values::create( /* F */ block );
+    float_t alpha(float_t b, float_t e)
+    {
+        float_t a  = alpha();
+        return (1.0 - a) * b + a * e;
+    }
+    bool zero()
+    {
+        return alpha() <= 0.0;
+    }
+    bool one()
+    {
+        return 1.0 <= alpha();
+    }
 
-    // create keys
-    Keys::create( /* F */ block );
+private:
 
-    // create RunData-resource
-    RunData::create( /* F */ block );
-
-    // create ForestData-resource
-    ForestData::create( /* F */ block );
-     
-}
-
-void end()
-{
-    // FIXME: save config
-
-
-    ForestData::destroy();
-    RunData::destroy();
-
-}
+};
 
 
 }
-

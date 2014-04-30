@@ -64,11 +64,8 @@ int main(int argc, char** argv)
         RunWorld run;
         Game::IterationStack<RunWorld> stack;
 
-        stack.push( resourceRunData()->prim->iterationRunDataBegin,    // create game data
-                    //resourceRunData()->prim->iterationRunIntro,        // game intro        <-  RunDataBegin may bail...
-                    //resourceRunData()->prim->iterationRunMain,         // "main menu"
-                    //resourceRunData()->prim->iterationRunOutro,        // game outro
-                    resourceRunData()->prim->iterationRunDataEnd       // destroy game data
+        stack.push( resourceRunData()->prim->iterationRunBegin,    // create game data, continue with iterationRunMain (if success)
+                    resourceRunData()->prim->iterationRunEnd       // destroy game data
                   );
 
         BATB::log << "Game::IterationStack<RunWorld> starting. " << std::endl;

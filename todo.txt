@@ -1,4 +1,3 @@
-* libs/ as git-submodules
 * run oldBATB from iterations, together with GLFW (Env)
 * define RunWorldEvent's and ForestWorldEvent's. Since two worlds A and B of different types
   shall be mostly unaware of each other (at least the subworld unaware of superworld), iterations

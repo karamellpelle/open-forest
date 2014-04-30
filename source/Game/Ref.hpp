@@ -77,6 +77,7 @@ public:
 
     }
 
+    // tell object to be released
     template <typename RefA>
     static RefA* releasing(RefA* ref)
     {
@@ -84,6 +85,12 @@ public:
         return ref;
     }
 
+    // destroy object (static interface)
+    static void destroy(Ref* ref)
+    {
+        ref->destroy_();
+    }
+    
 protected:
     Ref() : count_( 0 ), release_( false ) { }
     // FIXME: prevent public operator delete?

@@ -15,49 +15,49 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "include.hpp"
-#include "BATB.hpp"
+#ifndef BATB_ITERATION_RUN_BEGIN_HPP
+#define BATB_ITERATION_RUN_BEGIN_HPP
+#include "BATB/BATB_include.hpp"
+#include "BATB/Run/Prim/Iteration.hpp"
+
 
 namespace BATB
 {
 
-static Config theConfig_;
 
-void begin(const Config& cfg)
+// start 
+class IterationRunBegin0 : public IterationRunWorld
 {
-    // set BATB configuration-object
-    thConfig_ = cfg;
+public:
+    static IterationRunBegin0* create(Config::Block* cfg)
+    static void destroy(IterationRunBegin0* iter);
 
-    // get XML-objects
-    BATB::Block* block = config->block();
+    void iterate(IterationStackRunWorld& stack, RunWorld& run);           // to be run once, then calling IterationRunBegin1
 
-    // create log stream
-    Log::create( /* F */ block );
+private:
+    IterationRunBegin1* next_;
+};
 
-    // create values, from file
-    Values::create( /* F */ block );
 
-    // create keys
-    Keys::create( /* F */ block );
 
-    // create RunData-resource
-    RunData::create( /* F */ block );
-
-    // create ForestData-resource
-    ForestData::create( /* F */ block );
-     
-}
-
-void end()
+// main-iteration
+class IterationRunBegin1 : public IterationDefault<RunWorld>
 {
-    // FIXME: save config
+friend class IterationRunBegin0;
+
+public:
+    static IterationRunBegin1* create(Config::Block* cfg);
+
+    void iterate(IterationStackRunWorld& stack, RunWorld& run);   // FIXME: define in .cpp
+
+private:
+};
 
 
-    ForestData::destroy();
-    RunData::destroy();
+
+// externals are only referring to the starting iteration:
+typedef IterationRunBegin0 IterationRunBegin;
 
 }
 
-
-}
-
+#endif

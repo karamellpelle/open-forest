@@ -15,49 +15,33 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "include.hpp"
-#include "BATB.hpp"
+
+#include "BATB/Keys.hpp"
+
 
 namespace BATB
 {
 
-static Config theConfig_;
+static Keys theKeys_;
 
-void begin(const Config& cfg)
+
+Keys* Keys::create(Config::Block* cfg)
 {
-    // set BATB configuration-object
-    thConfig_ = cfg;
+    Keys* this_ = &theKeys_;
 
-    // get XML-objects
-    BATB::Block* block = config->block();
+    this_->mouse = KeysMouseAbstraction::create( /* F */ cfg );
+    this_->button_pause = KeysButtonAbstraction::create( /* F */ c );
 
-    // create log stream
-    Log::create( /* F */ block );
 
-    // create values, from file
-    Values::create( /* F */ block );
-
-    // create keys
-    Keys::create( /* F */ block );
-
-    // create RunData-resource
-    RunData::create( /* F */ block );
-
-    // create ForestData-resource
-    ForestData::create( /* F */ block );
-     
+    return this_;
 }
 
-void end()
+Keys* keys()
 {
-    // FIXME: save config
+    Keys* this_ = &theKeys_;
 
-
-    ForestData::destroy();
-    RunData::destroy();
 
 }
-
 
 }
 

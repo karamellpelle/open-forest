@@ -15,49 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "include.hpp"
-#include "BATB.hpp"
+#include "BATB/Keys/Key.hpp"
 
 namespace BATB
 {
 
-static Config theConfig_;
 
-void begin(const Config& cfg)
+class KeyButton : public Key
 {
-    // set BATB configuration-object
-    thConfig_ = cfg;
+public:
+    typedef int Code;
 
-    // get XML-objects
-    BATB::Block* block = config->block();
+    KeyButton(Code c) : code_( c )
+    {
+    }
+    void clear();
+    void update(tick_t );
+    float_t alpha();
 
-    // create log stream
-    Log::create( /* F */ block );
-
-    // create values, from file
-    Values::create( /* F */ block );
-
-    // create keys
-    Keys::create( /* F */ block );
-
-    // create RunData-resource
-    RunData::create( /* F */ block );
-
-    // create ForestData-resource
-    ForestData::create( /* F */ block );
-     
-}
-
-void end()
-{
-    // FIXME: save config
+    bool click();
+    bool click_double();
+    bool pressed();
+    bool released();
+    bool hold();
+    
+    // set alpha function
+    set_alpha_hold();
+    set_alpha_();
+private:
+    
+    Code code_;
 
 
-    ForestData::destroy();
-    RunData::destroy();
-
-}
+};
 
 
 }
-
