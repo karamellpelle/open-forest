@@ -17,19 +17,21 @@
 //
 #include "include.hpp"
 #include "BATB.hpp"
+#include "BATB/Keys.hpp"
+#include "BATB/Values.hpp"
 
 namespace BATB
 {
 
-static Config theConfig_;
+static Config* theConfig_;
 
-void begin(const Config& cfg)
+void begin(Config* cfg)
 {
     // set BATB configuration-object
-    thConfig_ = cfg;
+    theConfig_ = cfg;
 
     // get XML-objects
-    BATB::Block* block = config->block();
+    Config::Block* block = cfg->block();
 
     // create log stream
     Log::create( /* F */ block );
@@ -56,6 +58,11 @@ void end()
     ForestData::destroy();
     RunData::destroy();
 
+}
+
+Config* config()
+{
+    return theConfig_;
 }
 
 

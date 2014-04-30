@@ -23,6 +23,8 @@
 #include <string>
 #include <stdexcept>
 #include "helpers.hpp"
+#include "File.hpp"
+
 
 // main include file to be included through all sources...
 

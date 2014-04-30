@@ -23,5 +23,13 @@ namespace BATB
 std::ostream& log = std::cout;
 
 
+void Log::create(Config::Block* block)
+{
+    // FIXME: custom ostream object
+}
+
+void Log::destroy()
+{
+}
 
 }

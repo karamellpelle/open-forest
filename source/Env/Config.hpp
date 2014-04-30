@@ -15,18 +15,18 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ENV_INIT_HPP
-#define ENV_INIT_HPP
+#ifndef ENV_CONFIG_HPP
+#define ENV_CONFIG_HPP
 #include "Env/Env_include.hpp"
 
 
 namespace Env
 {
 
-class Init
+class Config
 {
 public:
-    Init(const std::string& xml)
+    Config(const std::string& xml)
     {
 
     }

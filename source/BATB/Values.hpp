@@ -15,9 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef VALUES_HPP
-#define VALUES_HPP
-#include "BATB/BATB_include.hpp"
+#ifndef BATB_VALUES_HPP
+#define BATB_VALUES_HPP
+#include "BATB/Config.hpp"
+
 
 // this file contains values to be used throughout the BATB-program. some are constants, but other are not. the 
 // non-constants may defined runtime from for example a (the) configuration file. should these values be
@@ -25,6 +26,13 @@
 // for example. 
 namespace BATB
 {
+
+class Values
+{
+public:
+    static void create(Config::Block* );
+    static void destroy();
+};
 
 //static const uint valueXXX = 0;
 //extern uint valueYYY = 0;

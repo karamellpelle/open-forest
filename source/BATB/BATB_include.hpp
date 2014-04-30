@@ -22,8 +22,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-
-#include "BATB/Values.hpp"
+#include "Env.hpp"
 
 namespace BATB
 {
@@ -33,6 +32,9 @@ typedef ::uint uint;
 
 // float or double?
 typedef ::float_t float_t;
+
+
+typedef Env::tick_t tick_t;
 
 }
 

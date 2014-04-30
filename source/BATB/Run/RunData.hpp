@@ -17,7 +17,7 @@
 //
 #ifndef BATB_RUNDATA_HPP
 #define BATB_RUNDATA_HPP
-#include "BATB/BATB_include.hpp"
+#include "BATB/Config.hpp"
 #include "BATB/Run/RunPrim.hpp"
 #include "BATB/Run/RunSettings.hpp"
 
@@ -29,7 +29,7 @@ namespace BATB
 class RunData
 {
 public:
-    static void create();
+    static void create(Config::Block* );
     static void destroy();
     static RunData* theRunData() { return &theRunData_; }
 

@@ -16,12 +16,15 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef BATB_ITERATION_RUN_XXX_HPP
-#define BATB_ITERATION_RUN_XXX_HPP
-#include "BATB/BATB_include.hpp"
+#ifndef BATB_ITERATION_RUN_END_HPP
+#define BATB_ITERATION_RUN_END_HPP
 #include "BATB/Run/Prim/Iteration.hpp"
 
+namespace BATB
+{
 
+typedef IterationRunWorld IterationRunEnd;
+/*
 class IterationRunXxx : public IterationRunWorld
 {
 public:
@@ -36,6 +39,7 @@ private:
     IterationRunXxx();                                               // FIXME: define in .cpp
     void destroy_();                                              // FIXME: define in .cpp iff releasable, i.e. not a typical Run-iteration.
 };
-
+*/
+}
 
 #endif

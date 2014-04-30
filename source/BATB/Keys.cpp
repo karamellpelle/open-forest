@@ -25,21 +25,25 @@ namespace BATB
 static Keys theKeys_;
 
 
-Keys* Keys::create(Config::Block* cfg)
+void Keys::create(Config::Block* cfg)
 {
     Keys* this_ = &theKeys_;
 
-    this_->mouse = KeysMouseAbstraction::create( /* F */ cfg );
-    this_->button_pause = KeysButtonAbstraction::create( /* F */ c );
+//    this_->mouse = KeysMouseAbstraction::create( /* F */ cfg );
+//    this_->button_pause = KeysButtonAbstraction::create( /* F */ c );
 
 
-    return this_;
+}
+
+void Keys::destroy()
+{
+    Keys* this_ = &theKeys_;
+
 }
 
 Keys* keys()
 {
-    Keys* this_ = &theKeys_;
-
+    return &theKeys_;
 
 }
 

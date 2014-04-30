@@ -17,7 +17,7 @@
 //
 #ifndef BATB_FORESTDATA_HPP
 #define BATB_FORESTDATA_HPP
-#include "BATB/BATB_include.hpp"
+#include "BATB/Config.hpp"
 #include "BATB/Forest/ForestPrim.hpp"
 #include "BATB/Forest/ForestSettings.hpp"
 
@@ -28,7 +28,7 @@ namespace BATB
 class ForestData
 {
 public:
-    static void create();
+    static void create(Config::Block* );
     static void destroy();
     static ForestData* theForestData() { return &theForestData_; }
 

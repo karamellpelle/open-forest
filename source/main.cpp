@@ -22,15 +22,15 @@
 
 
 
-// control Env from commandline, by modifying Init object
-Env::Init& cmdline_env(int argc, char** argv, Env::Init& init)
+// control Env from commandline, by modifying Config object
+Env::Config* cmdline_env(int argc, char** argv, Env::Config* init)
 {
     return init;
 }
 
 
 // control BATB from commandline, by modifying BATB::Config object
-BATB::Config& cmdline_batb(int argc, char** argv, BATB::Config& cfg)
+BATB::Config* cmdline_batb(int argc, char** argv, BATB::Config* cfg)
 {
     return cfg;
 }
@@ -43,8 +43,8 @@ int main(int argc, char** argv)
     try
     {
         // init Env
-        Env::Init env_init( File::fileDynamicData( "env.xml" ) );
-        Env::begin( cmdline_env( argc, argv, env_init ) );
+        Env::Config env_config( File::dynamicData( "env.xml" ) );
+        Env::begin( cmdline_env( argc, argv, &env_config ) );
 
         // FIXME: now set up
         //        - GL invariants (defined in readme/)
@@ -58,8 +58,8 @@ int main(int argc, char** argv)
         // init BATB.
         // this creates only the necessary part of resourceRunData, and the rest
         // is created by 'iterationRunDataBegin'
-        BATB::Config batb_cfg( File::fileDynamicData( "batb.xml" ) );
-        BATB::begin( cmdline_batb( argc, argv, batb_cfg ) );
+        BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
+        BATB::begin( cmdline_batb( argc, argv, &batb_cfg ) );
 
         RunWorld run;
         Game::IterationStack<RunWorld> stack;
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     }
     catch (std::exception& e)
     {
-        std::err << "main:    FATAL: " << e.what() << std::endl;
+        std::cerr << "main:    FATAL: " << e.what() << std::endl;
     }
 
     // end BATB

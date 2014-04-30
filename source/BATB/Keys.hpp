@@ -15,7 +15,6 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-
 #include "BATB/Config.hpp"
 
 
@@ -32,7 +31,7 @@ public:
     void clear();
     // update all keys:
     void update(tick_t );     
-
+/*
     // Key's to be used in game, typicall for ForestWorld (since RunWorld is
     // typically controlled by GUI)
     //
@@ -55,6 +54,7 @@ private:
     // abstraction
     //Key* key_create(Config::Block* );
     //std::vector<Key*> keys_allocations_;
+*/
 };
 
 Keys* keys();

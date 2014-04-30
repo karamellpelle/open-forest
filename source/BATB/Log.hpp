@@ -17,7 +17,7 @@
 //
 #ifndef BATB_LOG_HPP
 #define BATB_LOG_HPP
-#include "BATB/BATB_include.hpp"
+#include "BATB/Config.hpp"
 #include <iostream>
 
 
@@ -31,8 +31,8 @@ extern std::ostream& log;
 class Log
 {
 public:
-    static void create() { }
-    static void destroy() { }
+    static void create(Config::Block* );
+    static void destroy();
 
 };
 

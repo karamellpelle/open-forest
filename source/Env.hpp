@@ -20,13 +20,17 @@
 #include "Env/Env_include.hpp"
 #include "Env/Screen.hpp"
 #include "Env/Sound.hpp"
+#include "Env/Config.hpp"
+#include "Env/Tick.hpp"
 
 namespace Env
 {
 
-void begin();
+void begin(Config* );
 
 void end();
+
+Config* config();
 
 }
 

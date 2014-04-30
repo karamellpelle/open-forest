@@ -20,9 +20,12 @@
 namespace Env
 {
 
+static Config* theConfig_;
 
-void begin()
+void begin(Config* init)
 {
+    theConfig_ = init;
+
     screenBegin();
 }
 
@@ -34,5 +37,9 @@ void end()
 }
 
 
+Config* config()
+{
+    return theConfig_;
+}
 
 }

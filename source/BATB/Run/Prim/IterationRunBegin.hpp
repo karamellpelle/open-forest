@@ -17,19 +17,21 @@
 //
 #ifndef BATB_ITERATION_RUN_BEGIN_HPP
 #define BATB_ITERATION_RUN_BEGIN_HPP
-#include "BATB/BATB_include.hpp"
 #include "BATB/Run/Prim/Iteration.hpp"
+#include "BATB/Config.hpp"
 
 
 namespace BATB
 {
 
 
+class IterationRunBegin1;
+
 // start 
 class IterationRunBegin0 : public IterationRunWorld
 {
 public:
-    static IterationRunBegin0* create(Config::Block* cfg)
+    static IterationRunBegin0* create(Config::Block* cfg);
     static void destroy(IterationRunBegin0* iter);
 
     void iterate(IterationStackRunWorld& stack, RunWorld& run);           // to be run once, then calling IterationRunBegin1
@@ -41,12 +43,13 @@ private:
 
 
 // main-iteration
-class IterationRunBegin1 : public IterationDefault<RunWorld>
+class IterationRunBegin1 : /*public Game::IterationDefault<RunWorld>*/ IterationRunWorld
 {
 friend class IterationRunBegin0;
 
 public:
     static IterationRunBegin1* create(Config::Block* cfg);
+    static void destroy(IterationRunBegin1* iter);
 
     void iterate(IterationStackRunWorld& stack, RunWorld& run);   // FIXME: define in .cpp
 

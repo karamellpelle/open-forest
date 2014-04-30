@@ -30,7 +30,7 @@ std::string staticData(const std::string& path)
 
 // full path to read-write application data
 // example: configuration file, 
-std::string dynamicData(const std::string& path);
+std::string dynamicData(const std::string& path)
 {
     // TMP:
     return "data/dynamic/" + path;
@@ -38,7 +38,7 @@ std::string dynamicData(const std::string& path);
 
 // full path to user files (reachable outside application)
 // example: screenshot, 
-std::string user(const std::string& path);
+std::string user(const std::string& path)
 {
     // TMP:
     return "data/user/" + path;
@@ -46,7 +46,7 @@ std::string user(const std::string& path);
 
 // full path to temporary files (files that can be removed after application)
 // example: log file, 
-std::string tmp(const std::string& path);
+std::string tmp(const std::string& path)
 {
     // TMP:
     return "data/tmp/" + path;
@@ -54,4 +54,3 @@ std::string tmp(const std::string& path);
 
 }
 
-#endif

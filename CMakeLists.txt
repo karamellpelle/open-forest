@@ -26,7 +26,7 @@ set( CMAKE_CXX_FLAGS "-Wall -g -pg" )
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
-set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw-3.0.4 ) #FIXME: regex for just 3*
+set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw ) #FIXME: regex for just 3*
 add_subdirectory( ${GLFW_SOURCE_DIR} )
 include_directories( "${GLFW_SOURCE_DIR}/include" )
 set( BATB_LIBRARIES ${GLFW_LIBRARIES} )
@@ -52,10 +52,14 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/main.cpp
       ${MAIN_SOURCE_DIR}/Env.cpp
       ${MAIN_SOURCE_DIR}/Env/Screen.cpp
+      ${MAIN_SOURCE_DIR}/File.cpp
       ${MAIN_SOURCE_DIR}/BATB.cpp
       ${MAIN_SOURCE_DIR}/BATB/Run/RunData.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunBegin.cpp
       ${MAIN_SOURCE_DIR}/BATB/Forest/ForestData.cpp
       ${MAIN_SOURCE_DIR}/BATB/Log.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Values.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Keys.cpp
    )
 
 ### BUILD ###
@@ -69,6 +73,7 @@ if ( BATB_BUILD )
                            #VERSION ${})
                          )
     # libraries to target
+    message( "${GLFW_LIBRARIERS}" )
     target_link_libraries( batb glfw ${GLFW_LIBRARIES} )
 endif()
 

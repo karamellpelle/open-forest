@@ -17,15 +17,17 @@
 //
 #ifndef BATB_RUN_PRIM_ITERATION_HPP
 #define BATB_RUN_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
 #include "Game.hpp"
+#include "BATB/Config.hpp"
+#include "BATB/Run/RunWorld.hpp"
+#include "BATB/Log.hpp"
 
 
 namespace BATB
 {
 
 typedef Game::Iteration<RunWorld> IterationRunWorld;
-
+typedef Game::IterationStack<RunWorld> IterationStackRunWorld;
 }
 
 #endif

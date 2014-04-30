@@ -86,10 +86,12 @@ public:
     }
 
     // destroy object (static interface)
+    /*
     static void destroy(Ref* ref)
     {
         ref->destroy_();
     }
+    */
     
 protected:
     Ref() : count_( 0 ), release_( false ) { }
