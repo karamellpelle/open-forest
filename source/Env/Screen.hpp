@@ -17,26 +17,36 @@
 //
 #ifndef ENV_SCREEN_HPP
 #define ENV_SCREEN_HPP
-#include "Env/Env_include.hpp"
-
+#include "Env/Config.hpp"
 
 
 namespace Env
 {
 
 
-void screenBegin();
+void screenBegin(Config::Block* );
 
 void screenEnd();
 
-// return 
+void screenInfo(std::ostream& os);
+
+
+// the GL window
+inline GLFWwindow* screenWindow()
+{
+    extern GLFWwindow* theWindow_; 
+    return theWindow_;
+}
+
+
+// current FBO for window
 inline GLuint screenFBO()
 {
     extern GLuint fbo_current_;
     return fbo_current_;
 }
 
-// set custom FBO for 'Env::Screen'
+// set custom FBO for window
 inline GLuint screenFBOSet(GLuint fbo)
 {
     extern GLuint fbo_current_;
@@ -47,30 +57,35 @@ inline GLuint screenFBOSet(GLuint fbo)
     return prev;
 }
 
-// set FBO0, the main framebuffer (screen)
+// set FBO0 as frambuffer for window, the main framebuffer
 inline void screenFBOSet0()
 {
     extern GLuint fbo_0_;
     screenFBOSet( fbo_0_ );
 }
 
-// set FBO1, a auxilliary framebuffer (offscreen)
+// set FBO1 as framebuffer for window, a auxilliary framebuffer (offscreen)
 inline void screenFBOSet1()
 {
     extern GLuint fbo_1_;
     screenFBOSet( fbo_1_ );
 }
 
-
 // screenFBOSetN
 
+
+// get size of window, in pixels
 inline void screenSize(uint& wth, uint& hth)
 {
-    // FIXME
-    wth = 0;
-    hth = 0;
+    int w;
+    int h;
+    glfwGetFramebufferSize( screenWindow(), &w, &h );
+
+    wth = w;
+    hth = h;
 }
 
+// get normalized size of window
 inline void screenShape(float_t& wth, float_t& hth)
 {
     uint wth_n; uint hth_n;

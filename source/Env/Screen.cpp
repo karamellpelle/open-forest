@@ -22,35 +22,46 @@ namespace Env
 {
 
 
-static void glfw_error_callback(int error, const char* str)
+GLFWwindow* theWindow_ = 0;
+
+
+void screenBegin(Config::Block* )
 {
-    std::cerr << "Env : ERROR could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
-}
+    // set hints to window
+    // http://www.glfw.org/docs/latest/window.html#window_hints
+    //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
+    //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
+    //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+    //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+    glfwWindowHint( GLFW_DECORATED, GL_FALSE );
+    glfwWindowHint( GLFW_SAMPLES, 4 ); // 4 samples for multisampling
 
+    // fullscreen
+    //GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    // window 
+    GLFWmonitor* monitor = 0;
 
-void screenBegin()
-{
-    std::cout << "Env : Env::begin() " << std::endl;
+    theWindow_ = glfwCreateWindow( 640, 480, "GLFW screenBegin", monitor, 0 );
 
-    // init GLFW
-    glfwSetErrorCallback( glfw_error_callback );
-    if ( !glfwInit() )
+    // set GL context as 'theWindow_'
+    glfwMakeContextCurrent( theWindow_ );
+
+    if ( !theWindow_ )
     {
-        std::cerr << "Env : ERROR could not init GLFW. " << std::endl;
-        throw std::runtime_error( "???" );
+        throw std::runtime_error( "could not create window" );
     }
-    
-
 }
 
 
 void screenEnd()
 {
-    std::cout << "Env : Env::end() " << std::endl;
-    
-    // end GLFW
-    glfwTerminate();
+    glfwDestroyWindow( theWindow_ ); 
 }
 
+
+void screenInfo(std::ostream& os)
+{
+    // TODO: print GLFW window info
+}
 
 }

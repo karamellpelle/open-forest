@@ -73,8 +73,14 @@ int main(int argc, char** argv)
         // "main loop"
         while ( !stack.empty() )
         {
+            // begin frame for iteration
+            Env::frameBegin();
+
             // make 1 iteration of RunWorld:
             stack.iterate( run ); 
+
+            // end frame for iteration (swap buffers, poll events)
+            Env::frameEnd();
         }
 
         BATB::log << "Game::IterationStack<RunWorld> empty. " << std::endl;

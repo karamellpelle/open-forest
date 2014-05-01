@@ -17,7 +17,6 @@
 //
 #ifndef ENV_HPP
 #define ENV_HPP
-#include "Env/Env_include.hpp"
 #include "Env/Screen.hpp"
 #include "Env/Sound.hpp"
 #include "Env/Config.hpp"
@@ -30,7 +29,22 @@ void begin(Config* );
 
 void end();
 
+// print info
+void info(std::ostream& os);
+
 Config* config();
+
+// begin frame
+inline void frameBegin()
+{
+
+}
+
+inline void frameEnd()
+{
+    glfwSwapBuffers( screenWindow() );
+    glfwPollEvents();
+}
 
 }
 

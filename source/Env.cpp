@@ -22,11 +22,34 @@ namespace Env
 
 static Config* theConfig_;
 
-void begin(Config* init)
+static void glfw_error_callback(int error, const char* str)
 {
-    theConfig_ = init;
+    std::cerr << "Env : ERROR could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
+}
 
-    screenBegin();
+
+void begin(Config* cfg)
+{
+    theConfig_ = cfg;
+
+    // cfg GLFW
+    glfwSetErrorCallback( glfw_error_callback );
+    if ( !glfwInit() )
+    {
+        throw std::runtime_error( "Env: could not init GLFW" );
+    }
+
+    try
+    {
+        // create Screen
+        screenBegin( /* F */ cfg->block() );
+    }
+    catch (std::exception& e)
+    {
+        std::ostringstream os;
+        os << "Env : could not create screen (" << e.what() << ") ";
+        throw std::runtime_error( os.str() );
+    }
 }
 
 void end()
@@ -34,8 +57,15 @@ void end()
 
     screenEnd();
 
+    // end GLFW
+    glfwTerminate();
 }
 
+// print Env info
+void info(std::ostream& os)
+{
+    screenInfo( os );
+}
 
 Config* config()
 {

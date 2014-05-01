@@ -25,6 +25,34 @@ namespace BATB
 
 static Config* theConfig_;
 
+static void gl_info(std::ostream& os)
+{
+    const GLubyte* vendor = glGetString(GL_VENDOR);
+    const GLubyte* renderer = glGetString(GL_RENDERER);
+    const GLubyte* version = glGetString(GL_VERSION);
+    //const GLubyte* extensions = glGetString(GL_EXTENSIONS);
+    //const GLubyte* GLUversion = gluGetString(GLU_VERSION);
+    
+    os << "OpenGL: " << "\n";
+    os << "  vendor:             " << vendor << "\n";
+    os << "  renderer:           " << renderer << "\n";
+    os << "  GL version:         " << version << "\n";
+#ifdef GL_SHADING_LANGUAGE_VERSION
+    const GLubyte* sl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
+    if (sl_version != 0) {
+    os << "  GLSL version:       " << sl_version << "\n";
+    }
+#endif
+#ifdef GL_MAX_TEXTURE_UNITS
+    GLint maxTextureUnits[1];
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS, maxTextureUnits);
+    os << "  max texture units:  " << maxTextureUnits[0] << "\n";
+#endif
+    //os << "Extensions: " << extensions << "\n";
+    //os << "GLU Version: " << GLUversion << std::endl;
+    os << std::flush;
+}
+
 void begin(Config* cfg)
 {
     // set BATB configuration-object
@@ -35,6 +63,11 @@ void begin(Config* cfg)
 
     // create log stream
     Log::create( /* F */ block );
+
+    // info: Env
+    Env::info( log );
+    // info: OpenGL
+    gl_info( log );
 
     // create values, from file
     Values::create( /* F */ block );

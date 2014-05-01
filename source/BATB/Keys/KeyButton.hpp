@@ -26,27 +26,39 @@ class KeyButton : public Key
 public:
     typedef int Code;
 
-    KeyButton(Code c) : code_( c )
-    {
-    }
+    KeyButton(Code c);
     void clear();
     void update(tick_t );
     float_t alpha();
 
-    bool click();
-    bool click_double();
-    bool pressed();
-    bool released();
-    bool hold();
+    bool click()          { return released_ && 1 <= clicks_; }
+    bool click_double()   { return released_ && 2 <= clicks_; }
+    uint click_count()    { if ( released_ ) return clicks_; return 0; }
+
+    bool pressed()  { return pressed_; }
+    bool released() { return released_; }
+    bool press()    { return down_; }
+    bool press(tick_t& ticks) { ticks = tick_ - tick_prev_; return down_; }
+
+    float_t press_alpha();
     
     // set alpha function
-    set_alpha_hold();
-    set_alpha_();
+    //bool press_alpha() { return alpha_; }
+
 private:
-    
-    Code code_;
+    static const uint ticks_clicks_;    
+    const Code code_;
 
+    bool down_prev_;
+    bool down_;
+    tick_t tick_down_;
+    tick_t tick_;
 
+    bool pressed_;
+    bool released_;
+    uint click_count_;
+
+    float_t alpha_;
 };
 
 

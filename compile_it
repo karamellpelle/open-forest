@@ -1,2 +1,2 @@
 cd build
-cmake .. && make
+cmake "$@" .. && make

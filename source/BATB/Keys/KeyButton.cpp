@@ -15,32 +15,67 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef INCLUDE_HPP
-#define INCLUDE_HPP
-//#include <cstdint> // <- c++11
-#include <stdint.h>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <stdexcept>
-#include "helpers.hpp"
-#include "File.hpp"
+#include "BATB/Key/KeyButton.hpp"
 
 
-// main include file to be included through all sources...
+namespace BATB
+{
+
+KeyButton::KeyButton(Code c) : code_( c )
+{
+    clear();
+
+}
 
 
+void KeyButton::clear()
+{
+
+}
 
 
-// requirering a word size of minimum 32 bits
-// size_t is for memory...
-// https://en.wikipedia.org/wiki/Stdint.h#stdint.h
+void KeyButton::update(tick_t tick)
+{
+    pressed_ = false;
+    released_ = false;
 
-//typedef std::uint_fast32_t uint; // <- c++11
-typedef uint_fast32_t uint;
+    down_ = glfwGetKey( Env::screenWindow(), code_ );
 
-// we need a floating type. FIXME: fastest for platform
-typedef double float_t;
+    // low
+    if ( down_ )
+    {
+        // pressed
+        if ( !down_prev_ )
+        {
+            released_ = true;
+            tick_down_ = tick;
+        }
+
+        // FIXME: press alpha
+    }
+    // high
+    else
+    {
+        // reset clicks, if button too long up
+        if ( tick_down_ + ticks_clicks_ <= tick )
+        {
+            clicks_ = 0;
+        }
+
+        // released
+        if ( down_prev_ )
+        {
+            pressed_ = true;
+            // count clicks
+            ++clicks_;
+        }
+
+    }
+    down_prev_ = down_;
+    tick_ = tick;
+
+    
+}
 
 
-#endif
+}

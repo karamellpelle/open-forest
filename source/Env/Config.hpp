@@ -26,10 +26,13 @@ namespace Env
 class Config
 {
 public:
+    typedef void Block;
+
     Config(const std::string& xml)
     {
 
     }
+    Block* block() { return 0; }
 
 private:
 

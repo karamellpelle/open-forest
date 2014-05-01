@@ -10,7 +10,20 @@ font rendering    : custom Valve-font?
 collision         : Bullet3D?
 linear            : custom, just for GL
 3D animation      : ?
-C++               : boost?
+C++               : boost.filesystem
+                    boost.hash
+                    boost.integer
+                    boost.geometry?
+                    boost.predef
+                    boost.random
+                    boost.smart_ptr
+                    boost.string_algo
+                    boost.system_library?
+                    boost.program_options
+                    boost.thread
+                    boost.asio
+                    boost.math?
+                    boost.
 
 
 NOTE: since some of these all uses font rendering, font rendering may be common...

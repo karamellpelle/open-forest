@@ -21,12 +21,13 @@ set( LIBS_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/libs )
 # FIXME: into build option
 set( CMAKE_CXX_FLAGS "-Wall -g -pg" )
 
-# set GLFW path#
-# ifdef GLFW ...
+# set GLFW 
+# there is currently a bug, GLFW_LIBRARIES does not contain libXcursor, if we disable these below.
+# FIXME: enable later...
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
-set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw ) #FIXME: regex for just 3*
+set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
 add_subdirectory( ${GLFW_SOURCE_DIR} )
 include_directories( "${GLFW_SOURCE_DIR}/include" )
 set( BATB_LIBRARIES ${GLFW_LIBRARIES} )
@@ -73,8 +74,7 @@ if ( BATB_BUILD )
                            #VERSION ${})
                          )
     # libraries to target
-    message( "${GLFW_LIBRARIERS}" )
-    target_link_libraries( batb glfw ${GLFW_LIBRARIES} )
+    target_link_libraries( batb glfw ${BATB_LIBRARIES} )
 endif()
 
 
