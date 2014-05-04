@@ -25,6 +25,7 @@ namespace BATB
 {
 
 typedef Game::Iteration<ForestWorld> IterationForestWorld;
+typedef Game::IterationStack<ForestWorld> IterationStackForestWorld;
 
 }
 

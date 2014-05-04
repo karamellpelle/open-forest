@@ -25,8 +25,12 @@ namespace Env
 GLFWwindow* theWindow_ = 0;
 
 
-void screenBegin(Config::Block* )
+void screenBegin(xml::XMLElement* elem)
 {
+    using namespace xml;
+
+    XMLHandle xml( elem );
+
     // set hints to window
     // http://www.glfw.org/docs/latest/window.html#window_hints
     //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
@@ -36,12 +40,29 @@ void screenBegin(Config::Block* )
     glfwWindowHint( GLFW_DECORATED, GL_FALSE );
     glfwWindowHint( GLFW_SAMPLES, 4 ); // 4 samples for multisampling
 
-    // fullscreen
-    //GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-    // window 
-    GLFWmonitor* monitor = 0;
+    // FIXME: parse hints after above hints
 
-    theWindow_ = glfwCreateWindow( 640, 480, "GLFW screenBegin", monitor, 0 );
+    // size
+    uint wth = 640;
+    uint hth = 480;
+    XMLElement* xml_size = xml.FirstChildElement("size").ToElement();
+    if ( xml_size )
+    {
+        xml_size->QueryUnsignedAttribute( "wth", &wth );
+        xml_size->QueryUnsignedAttribute( "hth", &hth );
+    }
+
+    // fullscreen?
+    bool fullscreen = false;
+    XMLElement* xml_fullscreen = xml.FirstChildElement( "fullscreen" ).ToElement();
+    if ( xml_fullscreen )
+    {
+        xml_fullscreen->QueryBoolAttribute( &fullscreen );
+    }
+    GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : 0;
+
+
+    theWindow_ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
 
     // set GL context as 'theWindow_'
     glfwMakeContextCurrent( theWindow_ );

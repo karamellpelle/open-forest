@@ -17,14 +17,13 @@
 //
 #ifndef ENV_SCREEN_HPP
 #define ENV_SCREEN_HPP
-#include "Env/Config.hpp"
-
+#include "Env/Env_include.hpp"
 
 namespace Env
 {
 
 
-void screenBegin(Config::Block* );
+void screenBegin(xml::XMLElement* elem);
 
 void screenEnd();
 

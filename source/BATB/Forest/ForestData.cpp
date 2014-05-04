@@ -26,7 +26,7 @@ ForestPrim ForestData::theForestPrim_;
 ForestSettings ForestData::theForestSettings_;
 
 
-void ForestData::create(Config::Block* cfg)
+void ForestData::create(xml::XMLElement* cfg)
 {
     // FIXME: from file/config?
   

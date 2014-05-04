@@ -23,14 +23,15 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
-#include "helpers.hpp"
 #include "File.hpp"
 
 
 // main include file to be included through all sources...
 
 
-
+// we need a namespace, since we get typedef-clashes from cstdint -> sys/types.h/bits/mathdefs.h
+namespace main
+{
 
 // requirering a word size of minimum 32 bits
 // size_t is for memory...
@@ -42,5 +43,6 @@ typedef uint_fast32_t uint;
 // we need a floating type. FIXME: fastest for platform
 typedef double float_t;
 
+}
 
 #endif

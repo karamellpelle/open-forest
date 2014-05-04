@@ -31,4 +31,11 @@ void Values::destroy()
 
 }
 
+
+float_t valueProj3DNear = 0.1;
+
+float_t valueProj3DFar = 512.0;
+
+float_t valueProj3DFOVY = 1.047;
+
 }

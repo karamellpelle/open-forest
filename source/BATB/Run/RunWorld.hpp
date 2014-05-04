@@ -18,13 +18,17 @@
 #ifndef BATB_RUNWORLD_HPP
 #define BATB_RUNWORLD_HPP
 #include "BATB/BATB_include.hpp"
+#include "BATB/Run/Scene.hpp"
+#include "BATB/Forest.hpp"
 
 
 class RunWorld
 {
 public:
     RunWorld() { }    // worlds shall not be singletons!
-
+    Scene scene;
+    ForestWorld forest;
+    IterationStackForestWorld forest_stack;
 private:
     //ForestWorld forest;
 };

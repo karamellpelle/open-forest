@@ -30,9 +30,13 @@ namespace BATB
 class Values
 {
 public:
-    static void create(Config::Block* );
+    static void create(xml::XMLElement* );
     static void destroy();
 };
+
+extern float_t valueProj3DNear;
+extern float_t valueProj3DFar;
+extern float_t valueProj3DFOVY;
 
 //static const uint valueXXX = 0;
 //extern uint valueYYY = 0;

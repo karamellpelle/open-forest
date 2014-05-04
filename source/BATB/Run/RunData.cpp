@@ -28,7 +28,7 @@ RunPrim RunData::theRunPrim_;
 RunSettings RunData::theRunSettings_;
 
 
-void RunData::create(Config::Block* cfg)
+void RunData::create(xml::XMLElement* elem)
 {
     // FIXME: from file/config?
   

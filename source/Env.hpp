@@ -19,20 +19,20 @@
 #define ENV_HPP
 #include "Env/Screen.hpp"
 #include "Env/Sound.hpp"
-#include "Env/Config.hpp"
 #include "Env/Tick.hpp"
 
 namespace Env
 {
 
-void begin(Config* );
+
+void begin(xml::XMLElement* );
 
 void end();
 
 // print info
 void info(std::ostream& os);
 
-Config* config();
+xml::XMLElement* xmlElement();
 
 // begin frame
 inline void frameBegin()

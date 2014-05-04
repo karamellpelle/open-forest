@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include "tinyxml2.h"
 #include "include.hpp"
 
 #include <GL/glew.h>    // must be done before GLFW!!
@@ -31,12 +32,13 @@ namespace Env
 {
 
 
-typedef ::uint uint;
+typedef main::uint uint;
 
 
 // float or double?
-typedef ::float_t float_t;
+typedef main::float_t float_t;
 
+namespace xml = tinyxml2;
 
 }
 

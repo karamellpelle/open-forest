@@ -22,17 +22,31 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+//#define GLM_MESSAGES          // let glm print system messages
+#define GLM_FORCE_RADIANS     // let glm angles be in radians
+//#define GLM_FORCE_INLINE      // let glm be inlined
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_access.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
+#include "glm/gtc/epsilon.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/constants.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "Env.hpp"
+#include "helpers.hpp"
+#include "BATB/Values.hpp"
 
 namespace BATB
 {
 
-typedef ::uint uint;
+typedef main::uint uint;
 
 
 // float or double?
-typedef ::float_t float_t;
+typedef main::float_t float_t;
 
+namespace xml = tinyxml2;
 
 typedef Env::tick_t tick_t;
 

@@ -20,7 +20,9 @@
 namespace Env
 {
 
-static Config* theConfig_;
+static xml::XMLElement* theXMLElement_;
+
+
 
 static void glfw_error_callback(int error, const char* str)
 {
@@ -28,9 +30,12 @@ static void glfw_error_callback(int error, const char* str)
 }
 
 
-void begin(Config* cfg)
+// XMLElement must be valid through Env whole lifetime
+void begin(xml::XMLElement* elem)
 {
-    theConfig_ = cfg;
+     theXMLElement_ = elem;
+
+     xml::XMLHandle xml( elem );
 
     // cfg GLFW
     glfwSetErrorCallback( glfw_error_callback );
@@ -42,7 +47,7 @@ void begin(Config* cfg)
     try
     {
         // create Screen
-        screenBegin( /* F */ cfg->block() );
+        screenBegin( xml.FirstChildElement( "Screen" ).ToElement() );
     }
     catch (std::exception& e)
     {
@@ -67,9 +72,9 @@ void info(std::ostream& os)
     screenInfo( os );
 }
 
-Config* config()
+xml::XMLElement* xmlElement()
 {
-    return theConfig_;
+    return theXMLElement_;
 }
 
 }

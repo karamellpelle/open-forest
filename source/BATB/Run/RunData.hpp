@@ -29,7 +29,7 @@ namespace BATB
 class RunData
 {
 public:
-    static void create(Config::Block* );
+    static void create(xml::XMLElement* );
     static void destroy();
     static RunData* theRunData() { return &theRunData_; }
 

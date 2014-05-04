@@ -1,0 +1,23 @@
+
+
+BATB
+  Values
+    valuePRoj2DXXX
+    valueProj3DXXX
+  Env
+    Screen
+      size X Y
+      fullscreen
+      multisamples
+      hints
+        GLFW_XXX YYY
+        GLFW_ZZZ WWW
+  Run
+    if filepath then read else continue parsing... 
+    PATH 
+      "eueoueo"
+
+  Forest
+    ...
+    Keys
+      ...

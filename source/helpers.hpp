@@ -18,6 +18,7 @@
 #ifndef HELPERS_HPP
 #define HELPERS_HPP
 #include <stdint.h>
+#include "include.hpp"
 
 template <typename A>
 inline void keep_inside(const A& b, const A& e, A& x)
@@ -26,5 +27,8 @@ inline void keep_inside(const A& b, const A& e, A& x)
     if ( e <= x ) return e;
     return x;
 }
+
+// circumference of unit circle
+static const float_t twopi = 6.2831853071795864769252867665590057683943387987502116;
 
 #endif

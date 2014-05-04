@@ -28,7 +28,7 @@ namespace BATB
 class ForestData
 {
 public:
-    static void create(Config::Block* );
+    static void create(xml::XMLElement* );
     static void destroy();
     static ForestData* theForestData() { return &theForestData_; }
 

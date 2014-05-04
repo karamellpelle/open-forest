@@ -17,21 +17,26 @@
 //
 #ifndef BATB_CONFIG_HPP
 #define BATB_CONFIG_HPP
-#include "BATB/BATB_include.hpp"
+#include <string>
+#include "tynixml2.h"
+
 
 
 namespace BATB
 {
 
 
-class Config
+class Config : public xml::XMLDocument
 {
 public:
-    Config(const std::string& xml) { }
+    Config(const std::string& path) : path_( path )
+    {
+        LoadFile( path.c_str() );
+    }
 
-    typedef void Block; // FIXME: tinyxml object
 
-    Block* block() { return 0; } 
+private:
+    const std::string path_;
 };
 
 }

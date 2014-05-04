@@ -22,17 +22,11 @@
 
 
 
-// control Env from commandline, by modifying Config object
-Env::Config* cmdline_env(int argc, char** argv, Env::Config* init)
-{
-    return init;
-}
-
 
 // control BATB from commandline, by modifying BATB::Config object
-BATB::Config* cmdline_batb(int argc, char** argv, BATB::Config* cfg)
+int cmdline(int argc, char** argv, xml::XMLElement* xml)
 {
-    return cfg;
+    return 0;
 }
 
 
@@ -42,9 +36,20 @@ int main(int argc, char** argv)
 {
     try
     {
-        // init Env
-        Env::Config env_config( File::dynamicData( "env.xml" ) );
-        Env::begin( cmdline_env( argc, argv, &env_config ) );
+        using namespace BATB::xml;
+
+        // this is our program configuration
+        BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
+        XMLHandle xml( batb_cfg->GetFirstChildElement("BATB") );
+       
+        // modify from command line, take actions
+        if ( int ret = cmdline( argc, argv, xml.GetElement() ) )
+        {
+            return ret;
+        }
+
+        // init Env, from configuration
+        Env::begin( xml.GetFirstChildElement("Env").GetElement() );
 
         // FIXME: now set up
         //        - GL invariants (defined in readme/)
@@ -58,7 +63,6 @@ int main(int argc, char** argv)
         // init BATB.
         // this creates only the necessary part of resourceRunData, and the rest
         // is created by 'iterationRunDataBegin'
-        BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
         BATB::begin( cmdline_batb( argc, argv, &batb_cfg ) );
 
         RunWorld run;
