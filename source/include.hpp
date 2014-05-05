@@ -23,20 +23,18 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
-#include "File.hpp"
 
 
 // main include file to be included through all sources...
 
 
 // we need a namespace, since we get typedef-clashes from cstdint -> sys/types.h/bits/mathdefs.h
-namespace main
+namespace include
 {
 
 // requirering a word size of minimum 32 bits
 // size_t is for memory...
 // https://en.wikipedia.org/wiki/Stdint.h#stdint.h
-
 //typedef std::uint_fast32_t uint; // <- c++11
 typedef uint_fast32_t uint;
 

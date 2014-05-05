@@ -24,7 +24,7 @@ namespace BATB
 class Keys
 {
 public:
-    static void create(Config::Block* );
+    static void create(xml::XMLElement* );
     static void destroy();
 
     // clear all keys:

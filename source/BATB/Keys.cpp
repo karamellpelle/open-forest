@@ -25,7 +25,7 @@ namespace BATB
 static Keys theKeys_;
 
 
-void Keys::create(Config::Block* cfg)
+void Keys::create(xml::XMLElement* cfg)
 {
     Keys* this_ = &theKeys_;
 

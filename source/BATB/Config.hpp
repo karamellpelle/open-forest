@@ -18,7 +18,8 @@
 #ifndef BATB_CONFIG_HPP
 #define BATB_CONFIG_HPP
 #include <string>
-#include "tynixml2.h"
+#include <stdexcept>
+#include "BATB/BATB_include.hpp"
 
 
 
@@ -31,7 +32,14 @@ class Config : public xml::XMLDocument
 public:
     Config(const std::string& path) : path_( path )
     {
-        LoadFile( path.c_str() );
+        using namespace xml;
+        XMLError err = LoadFile( path.c_str() );
+        switch ( err )
+        {
+        case XML_ERROR_FILE_NOT_FOUND: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_NOT_FOUND)" );
+        case XML_ERROR_FILE_COULD_NOT_BE_OPENED: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_COULD_NOT_BE_OPENED)" );  
+        case XML_ERROR_FILE_READ_ERROR: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_READ_ERROR)" );
+        }
     }
 
 

@@ -22,6 +22,9 @@
 #include "BATB/Forest.hpp"
 
 
+namespace BATB
+{
+
 class RunWorld
 {
 public:
@@ -32,5 +35,8 @@ public:
 private:
     //ForestWorld forest;
 };
+
+
+}
 
 #endif

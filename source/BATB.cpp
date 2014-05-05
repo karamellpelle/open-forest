@@ -55,31 +55,33 @@ static void gl_info(std::ostream& os)
 
 void begin(Config* cfg)
 {
+    using namespace xml;
+
     // set BATB configuration-object
     theConfig_ = cfg;
 
-    // get XML-objects
-    Config::Block* block = cfg->block();
+    XMLHandle xml( cfg );
 
     // create log stream
-    Log::create( /* F */ block );
+    Log::create( xml.FirstChildElement("Log").ToElement() );
 
-    // info: Env
+
+    // print info
     Env::info( log );
-    // info: OpenGL
     gl_info( log );
 
+
     // create values, from file
-    Values::create( /* F */ block );
+    Values::create( xml.FirstChildElement("Values").ToElement() );
 
     // create keys
-    Keys::create( /* F */ block );
+    Keys::create( xml.FirstChildElement("Keys").ToElement() );
 
     // create RunData-resource
-    RunData::create( /* F */ block );
+    RunData::create( xml.FirstChildElement("RunData").ToElement() );
 
     // create ForestData-resource
-    ForestData::create( /* F */ block );
+    ForestData::create( xml.FirstChildElement("ForestData").ToElement() );
      
 }
 

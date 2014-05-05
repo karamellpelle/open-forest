@@ -5,11 +5,11 @@ namespace BATB
 {
 
 
-IterationRunBegin0* IterationRunBegin0::create(Config::Block* cfg)
+IterationRunBegin0* IterationRunBegin0::create(xml::XMLElement* elem)
 {
     static IterationRunBegin0 ret;
 
-    ret.next_ = IterationRunBegin1::create( cfg );
+    ret.next_ = IterationRunBegin1::create( elem );
     return &ret;
 }
 
@@ -19,7 +19,7 @@ void IterationRunBegin0::destroy(IterationRunBegin0* iter)
     IterationRunBegin1::destroy( iter->next_ );
 }
 
-IterationRunBegin1* IterationRunBegin1::create(Config::Block* cfg)
+IterationRunBegin1* IterationRunBegin1::create(xml::XMLElement* elem)
 {
     static IterationRunBegin1 ret;
    

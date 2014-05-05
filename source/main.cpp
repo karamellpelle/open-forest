@@ -19,12 +19,12 @@
 #include "Env.hpp"
 #include "BATB.hpp"
 #include "Game.hpp"
-
+#include "File.hpp"
 
 
 
 // control BATB from commandline, by modifying BATB::Config object
-int cmdline(int argc, char** argv, xml::XMLElement* xml)
+int cmdline(int argc, char** argv, BATB::xml::XMLElement* xml)
 {
     return 0;
 }
@@ -40,19 +40,24 @@ int main(int argc, char** argv)
 
         // this is our program configuration
         BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
-        XMLHandle xml( batb_cfg->GetFirstChildElement("BATB") );
+        XMLHandle xml( batb_cfg.FirstChildElement("BATB") );
        
         // modify from command line, take actions
-        if ( int ret = cmdline( argc, argv, xml.GetElement() ) )
+        if ( int ret = cmdline( argc, argv, xml.ToElement() ) )
         {
             return ret;
         }
 
         // init Env, from configuration
-        Env::begin( xml.GetFirstChildElement("Env").GetElement() );
+        Env::begin( xml.FirstChildElement("Env").ToElement() );
 
         // FIXME: now set up
-        //        - GL invariants (defined in readme/)
+        //////////////////////////////////////////////////////////
+        //      OpenGL
+        //  set up our GL-invariants:
+        //
+        //glEnable( GL_MULTISAMPLE );
+
         //        - AL invariants
         //        - ...
 
@@ -63,7 +68,7 @@ int main(int argc, char** argv)
         // init BATB.
         // this creates only the necessary part of resourceRunData, and the rest
         // is created by 'iterationRunDataBegin'
-        BATB::begin( cmdline_batb( argc, argv, &batb_cfg ) );
+        BATB::begin( &batb_cfg );
 
         RunWorld run;
         Game::IterationStack<RunWorld> stack;

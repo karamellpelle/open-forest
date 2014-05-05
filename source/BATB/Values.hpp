@@ -17,7 +17,7 @@
 //
 #ifndef BATB_VALUES_HPP
 #define BATB_VALUES_HPP
-#include "BATB/Config.hpp"
+#include "tinyxml2.h"
 
 
 // this file contains values to be used throughout the BATB-program. some are constants, but other are not. the 
@@ -30,18 +30,21 @@ namespace BATB
 class Values
 {
 public:
-    static void create(xml::XMLElement* );
+    static void create(tinyxml2::XMLElement* );
     static void destroy();
 };
+
+}
+
+#include "BATB/BATB_include.hpp"
+
+namespace BATB
+{
 
 extern float_t valueProj3DNear;
 extern float_t valueProj3DFar;
 extern float_t valueProj3DFOVY;
 
-//static const uint valueXXX = 0;
-//extern uint valueYYY = 0;
-
-
-};
+}
 
 #endif

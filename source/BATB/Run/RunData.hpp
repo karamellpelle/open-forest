@@ -43,7 +43,7 @@ private:
     static RunPrim theRunPrim_;
     static RunSettings theRunSettings_;
 
-    RunData()
+    RunData() : prim( 0 ), settings( 0 )
     {
 
     }

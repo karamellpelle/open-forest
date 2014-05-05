@@ -48,17 +48,17 @@ void screenBegin(xml::XMLElement* elem)
     XMLElement* xml_size = xml.FirstChildElement("size").ToElement();
     if ( xml_size )
     {
-        xml_size->QueryUnsignedAttribute( "wth", &wth );
-        xml_size->QueryUnsignedAttribute( "hth", &hth );
+        unsigned int w = wth;
+        unsigned int h = hth;
+        xml_size->QueryUnsignedAttribute( "wth", &w );
+        xml_size->QueryUnsignedAttribute( "hth", &h );
+        wth = w;
+        hth = h;
     }
 
     // fullscreen?
     bool fullscreen = false;
-    XMLElement* xml_fullscreen = xml.FirstChildElement( "fullscreen" ).ToElement();
-    if ( xml_fullscreen )
-    {
-        xml_fullscreen->QueryBoolAttribute( &fullscreen );
-    }
+    xml.ToElement()->QueryBoolAttribute( "fullscreen", &fullscreen );
     GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : 0;
 
 

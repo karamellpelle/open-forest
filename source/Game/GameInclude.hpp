@@ -31,7 +31,7 @@
 namespace Game
 {
 
-typedef ::uint uint;
+typedef include::uint uint;
 
 
 }

@@ -23,7 +23,7 @@ namespace BATB
 std::ostream& log = std::cout;
 
 
-void Log::create(Config::Block* block)
+void Log::create(xml::XMLElement* block)
 {
     // FIXME: custom ostream object
 }

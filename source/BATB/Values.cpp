@@ -21,8 +21,10 @@
 namespace BATB
 {
 
-void Values::create(Config::Block* cfg)
+void Values::create(xml::XMLElement* elem)
 {
+    using namespace xml;
+    XMLHandle xml( elem );
 
 }
 

@@ -71,7 +71,7 @@ inline void Scene::remake(uint wth, uint hth)
     // GLM <3 <3 <3
 
     // set 2D-projection
-    proj2D = glm::ortho( 0, shape.wth, shape.hth, 0 );
+    proj2D = glm::ortho( 0.0, shape.wth, shape.hth, 0.0 );
 
     // set 3D-projection
     proj3D = glm::perspective( valueProj3DFOVY, shape.wth / shape.hth, valueProj3DNear, valueProj3DFar );

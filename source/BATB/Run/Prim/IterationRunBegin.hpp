@@ -31,7 +31,7 @@ class IterationRunBegin1;
 class IterationRunBegin0 : public IterationRunWorld
 {
 public:
-    static IterationRunBegin0* create(Config::Block* cfg);
+    static IterationRunBegin0* create(xml::XMLElement* );
     static void destroy(IterationRunBegin0* iter);
 
     void iterate(IterationStackRunWorld& stack, RunWorld& run);           // to be run once, then calling IterationRunBegin1
@@ -48,7 +48,7 @@ class IterationRunBegin1 : /*public Game::IterationDefault<RunWorld>*/ Iteration
 friend class IterationRunBegin0;
 
 public:
-    static IterationRunBegin1* create(Config::Block* cfg);
+    static IterationRunBegin1* create(xml::XMLElement* cfg);
     static void destroy(IterationRunBegin1* iter);
 
     void iterate(IterationStackRunWorld& stack, RunWorld& run);   // FIXME: define in .cpp

@@ -30,8 +30,10 @@ RunSettings RunData::theRunSettings_;
 
 void RunData::create(xml::XMLElement* elem)
 {
-    // FIXME: from file/config?
-  
+    using namespace xml;
+
+    XMLHandle xml( elem );
+     
     RunData* this_ = &theRunData_;
 
     log << "RunData::create() " << std::endl;    
@@ -41,7 +43,7 @@ void RunData::create(xml::XMLElement* elem)
     // create outputs
     // create steps
     // create iterations
-    this_->prim->iterationRunBegin =      IterationRunBegin::create( /* F */ cfg );
+    this_->prim->iterationRunBegin =      IterationRunBegin::create( xml.FirstChildElement("Prim").FirstChildElement("IterationRunBegin").ToElement() );
     this_->prim->iterationRunEnd   =      Game::NoIteration<RunWorld>::create();
     this_->prim->iterationRunIntro     =  Game::NoIteration<RunWorld>::create();
     this_->prim->iterationRunMain      =  Game::NoIteration<RunWorld>::create();
@@ -50,18 +52,25 @@ void RunData::create(xml::XMLElement* elem)
     // create settings
     this_->settings = &theRunSettings_;
     //this_->settings->
-
-
+    
 }
 
-
+// FIXME: destroy w
 void RunData::destroy()
 {
     log << "RunData::destroy() " << std::endl;    
 
     RunData* this_ = &theRunData_;
-
-    IterationRunBegin::destroy( this_->prim->iterationRunBegin );
+    
+    if ( this_->prim )
+    {
+        IterationRunBegin::destroy( this_->prim->iterationRunBegin );
+    }
+    if ( this_->settings )
+    {
+    }
+    this_->prim = 0;
+    this_->settings = 0;
 
 }
 

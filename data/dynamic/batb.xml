@@ -1,11 +1,10 @@
 <BATB>
   <Env>
-    <fullscreen="true"></fullscreen>
+    <fullscreen="true" />
     <size="wth"> 640 </size>
     <size="hth"> 480 </size>
     <multisamples> 4 </multisamples>
     <hints="XXX"> YYY </hints>
   </Env>
-
 
 </BATB>

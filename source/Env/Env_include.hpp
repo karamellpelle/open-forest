@@ -32,11 +32,11 @@ namespace Env
 {
 
 
-typedef main::uint uint;
+typedef include::uint uint;
 
 
 // float or double?
-typedef main::float_t float_t;
+typedef include::float_t float_t;
 
 namespace xml = tinyxml2;
 

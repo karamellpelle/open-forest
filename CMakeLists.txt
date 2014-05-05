@@ -8,6 +8,10 @@ project ( batb )
 set(BATB_VERSION_MAJOR 0)
 set(BATB_VERSION_MAJOR 1)
 
+# set compiler flags
+# FIXME: into build option
+set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -g -pg" )
+
 # set folders
 set( MAIN_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source )
 set( BATB_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source/BATB )
@@ -16,23 +20,21 @@ set( TEST_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source/test )
 set( LIBS_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/libs )
 #set( MISC_SOURCE_DIRS   ${CMAKE_SOURCE_DIR}/source/test )
 
-
-# set compiler flags
-# FIXME: into build option
-set( CMAKE_CXX_FLAGS "-Wall -g -pg" )
+# set include directories
+include_directories( "${MAIN_SOURCE_DIR}" )
+include_directories( "${LIBS_SOURCE_DIR}/tinyxml2" )
+include_directories( "${LIBS_SOURCE_DIR}/glm" )
+include_directories( "${GLFW_SOURCE_DIR}/include" )
 
 # set GLFW 
-# there is currently a bug, GLFW_LIBRARIES does not contain libXcursor, if we disable these below.
-# FIXME: enable later...
+# there seems to be a bug, GLFW_LIBRARIES does not contain libXcursor.
+# bug may go away if uncomment these disables below
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
 add_subdirectory( ${GLFW_SOURCE_DIR} )
-include_directories( "${GLFW_SOURCE_DIR}/include" )
 set( BATB_LIBRARIES ${GLFW_LIBRARIES} )
-
-#endif GLFW...
 
 
 # set CMake working directory
@@ -47,9 +49,6 @@ option( BATB_INSTALL "Install BATB" OFF)
 
 
 # define sources
-include_directories( ${MAIN_SOURCE_DIR} )
-include_directories( ${LIBS_SOURCE_DIR}/tinyxml2 )
-include_directories( ${LIBS_SOURCE_DIR}/glm )
 set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/main.cpp
       ${MAIN_SOURCE_DIR}/Env.cpp
@@ -66,6 +65,8 @@ set( BATB_SOURCES
 
 ### BUILD ###
 if ( BATB_BUILD )
+    add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
+
     # create executable target 'batb'
     add_executable( batb ${BATB_SOURCES})
     # define target properties
@@ -75,7 +76,7 @@ if ( BATB_BUILD )
                            #VERSION ${})
                          )
     # libraries to target
-    target_link_libraries( batb glfw ${BATB_LIBRARIES} )
+    target_link_libraries( batb glfw tinyxml2 ${BATB_LIBRARIES} )
 endif()
 
 
