@@ -15,39 +15,24 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FORESTWORLD_HPP
-#define BATB_FORESTWORLD_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Forest/Camera.hpp"
-#include "BATB/Forest/Terrain.hpp"
-#include "BATB/Forest/Map.hpp"
-#include "BATB/Forest/Course.hpp"
-#include "BATB/Forest/Weather.hpp"
+#ifndef BATB_TERRAIN_HPP
+#define BATB_TERRAIN_HPP
+#include "BATB/Config.hpp"
+
 
 namespace BATB
 {
 
-
-class ForestWorld
+class Terrain
 {
 public:
-    ForestWorld() { }    // worlds shall not be singletons!
 
-    Camera camera;
-    Terrain terrain;
-    Map map;
-    Course course;
-
-    Weather weather;
-    // [Runner] runners;
-    // [ForestEvent] events;
-    // ForestNetwork (connected to RunNetwork, with a filter)
-    
 private:
-
 };
 
 
 }
 
+
 #endif
+

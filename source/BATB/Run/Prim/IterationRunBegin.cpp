@@ -1,5 +1,5 @@
 #include "BATB/Run/Prim/IterationRunBegin.hpp"
-
+#include <unistd.h> // FIXME: remove...
 
 namespace BATB
 {
@@ -52,8 +52,25 @@ void IterationRunBegin0::iterate(IterationStackRunWorld& stack, RunWorld& run)
 
 void IterationRunBegin1::iterate(IterationStackRunWorld& stack, RunWorld& run)
 {
+    // begin Scene for this frame
+    scene_begin( run.scene );
+
     // FIXME: define iteration...
-    log << "IterationRunBegin1::iterate" << std::endl;
+
+    static uint ix = 8;
+    log << "IterationRunBegin1::iterate " << ix << std::endl;
+    --ix;
+
+    usleep( 1500000 );
+
+    if ( ix == 0 )
+    {
+        stack.push();
+    }
+    else
+    {
+        stack.push( this );
+    }
 
 }
 

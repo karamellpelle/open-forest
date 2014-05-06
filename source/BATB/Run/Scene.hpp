@@ -17,7 +17,7 @@
 //
 #ifndef BATB_SCENE_HPP
 #define BATB_SCENE_HPP
-#include "BATB/BATB_include.hpp"
+#include "BATB/Config.hpp"
 #include "BATB/Shape.hpp"
 
 namespace BATB
@@ -96,7 +96,7 @@ inline void scene_begin(Scene& scene)
     }
 
     // bind FBO to work on, i.e. screen
-    //glBindFramebuffer( gl_FRAMEBUFFER, scene.fbo ); // FIXME
+    //glBindFramebuffer( gl_FRAMEBUFFER, scene.fbo );
     // clear screen
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 }

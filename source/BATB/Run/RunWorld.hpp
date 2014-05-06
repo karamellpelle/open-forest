@@ -19,6 +19,7 @@
 #define BATB_RUNWORLD_HPP
 #include "BATB/BATB_include.hpp"
 #include "BATB/Run/Scene.hpp"
+#include "BATB/Run/RunEvent.hpp"
 #include "BATB/Forest.hpp"
 
 
@@ -29,11 +30,14 @@ class RunWorld
 {
 public:
     RunWorld() { }    // worlds shall not be singletons!
+
     Scene scene;
     ForestWorld forest;
     IterationStackForestWorld forest_stack;
+    // RunNetwork network;
+    // [RunEvent] events;
+
 private:
-    //ForestWorld forest;
 };
 
 

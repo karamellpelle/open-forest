@@ -17,6 +17,9 @@
 //
 #ifndef BATB_RUN_EVENT_HPP
 #define BATB_RUN_EVENT_HPP
+#include "BATB/Config.hpp"
+
+
 
 namespace BATB
 {

@@ -40,6 +40,7 @@ int main(int argc, char** argv)
 
         // this is our program configuration
         BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
+        batb_cfg.Print();
         XMLHandle xml( batb_cfg.FirstChildElement("BATB") );
        
         // modify from command line, take actions
@@ -51,15 +52,15 @@ int main(int argc, char** argv)
         // init Env, from configuration
         Env::begin( xml.FirstChildElement("Env").ToElement() );
 
-        // FIXME: now set up
+
         //////////////////////////////////////////////////////////
         //      OpenGL
         //  set up our GL-invariants:
-        //
-        //glEnable( GL_MULTISAMPLE );
+        glEnable( GL_MULTISAMPLE );
 
-        //        - AL invariants
-        //        - ...
+        //////////////////////////////////////////////////////////
+        //      OpenAL
+        //  set up our AL-invariants:  
 
 
         using namespace BATB;
