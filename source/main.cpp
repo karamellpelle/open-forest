@@ -67,15 +67,15 @@ int main(int argc, char** argv)
 
 
         // init BATB.
-        // this creates only the necessary part of resourceRunData, and the rest
-        // is created by 'iterationRunDataBegin'
+        // this creates only the necessary part of Run, and the rest
+        // is created by 'iterationRunBegin'
         BATB::begin( &batb_cfg );
 
         RunWorld run;
         Game::IterationStack<RunWorld> stack;
 
-        stack.push( resourceRunData()->prim->iterationRunBegin,    // create game data, continue with iterationRunMain (if success)
-                    resourceRunData()->prim->iterationRunEnd       // destroy game data
+        stack.push( theRun()->prim->iterationRunBegin,    // create game data, continue with iterationRunMain (if success)
+                    theRun()->prim->iterationRunEnd       // destroy game data
                   );
 
         BATB::log << "Game::IterationStack<RunWorld> starting. " << std::endl;

@@ -15,31 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_HPP
-#define BATB_FOREST_PRIM_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Forest/Prim/Iteration.hpp"
-
-
+#ifndef BATB_KEY_MOUSE_BUTTON_HPP
+#define BATB_KEY_MOUSE_BUTTON_HPP
+#include "BATB/Keys/Key.hpp"
 
 namespace BATB
 {
 
 
-
-class ForestPrim
+class KeyMouseButton : public Key
 {
+friend class Keys;
 public:
-    void create(xml::XMLElement* );
-    void destroy();
-
-    // 
-    //IterationXXX
+    typedef int Code;
 private:
+    KeyMouseButton(Code c) : code_( c )   { } 
+
+public:
+    void clear()                          { }
+    void update(tick_t )                  { }
+    float_t alpha()                       { return glfwGetMouseButton( Env::screenWindow(), code_ ) ? 1.0 : 0.0; }
+
+    
+    static const Code left   = GLFW_MOUSE_BUTTON_LEFT;
+    static const Code right  = GLFW_MOUSE_BUTTON_RIGHT;
+
+
+private:
+    const Code code_;
 };
 
 
 
+
 }
+
 #endif

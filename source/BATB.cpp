@@ -23,7 +23,7 @@
 namespace BATB
 {
 
-static Config* theConfig_;
+static Config* config_;
 
 static void gl_info(std::ostream& os)
 {
@@ -58,7 +58,7 @@ void begin(Config* cfg)
     using namespace xml;
 
     // set BATB configuration-object
-    theConfig_ = cfg;
+    config_ = cfg;
 
     XMLHandle xml( cfg );
 
@@ -74,15 +74,13 @@ void begin(Config* cfg)
     // create values, from file
     Values::create( xml.FirstChildElement("Values").ToElement() );
 
-    // create keys
-    Keys::create( xml.FirstChildElement("Keys").ToElement() );
+    // create Run part of BATB
+    theRun()->create( xml.FirstChildElement("Run").ToElement() );
 
-    // create RunData-resource
-    RunData::create( xml.FirstChildElement("RunData").ToElement() );
-
-    // create ForestData-resource
-    ForestData::create( xml.FirstChildElement("ForestData").ToElement() );
-     
+    // create Forest part of BATB
+    theForest()->create( xml.FirstChildElement("Forest").ToElement() );
+    
+    // creat
 }
 
 void end()
@@ -90,15 +88,11 @@ void end()
     // FIXME: save config
 
 
-    ForestData::destroy();
-    RunData::destroy();
+    theForest()->destroy();
+    theRun()->destroy();
 
 }
 
-Config* config()
-{
-    return theConfig_;
-}
 
 
 }

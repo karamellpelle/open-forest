@@ -15,31 +15,26 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_HPP
-#define BATB_FOREST_PRIM_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Forest/Prim/Iteration.hpp"
-
-
+#ifndef BATB_RUN_KEYS_HPP
+#define BATB_RUN_KEYS_HPP
+#include "BATB/Keys.hpp"
 
 namespace BATB
 {
 
-
-
-class ForestPrim
+class RunKeys : public Keys
 {
 public:
     void create(xml::XMLElement* );
     void destroy();
 
-    // 
-    //IterationXXX
-private:
+    // keys to control Run
+    KeyClicker* pause;
+
+
 };
 
-
-
 }
+
+
 #endif

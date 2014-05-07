@@ -61,7 +61,7 @@ void IterationRunBegin1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     log << "IterationRunBegin1::iterate " << ix << std::endl;
     --ix;
 
-    usleep( 1500000 );
+    usleep( 800000 );
 
     if ( ix == 0 )
     {

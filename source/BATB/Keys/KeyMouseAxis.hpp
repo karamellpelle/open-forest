@@ -15,33 +15,69 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEY_BUTTON_HPP
-#define BATB_KEY_BUTTON_HPP
+#ifndef BATB_KEY_MOUSE_AXIS_HPP
+#define BATB_KEY_MOUSE_AXIS_HPP
 #include "BATB/Keys/Key.hpp"
 
 namespace BATB
 {
 
 
-class KeyButton : public Key
+class KeyMouseAxisX : public Key
 {
 friend class Keys;
-public:
-    typedef int Code;
 private:
-    KeyButton(Code c) : code_( c )    { } 
+    KeyMouseAxisX()
+    {
+    }
 
 public:
     void clear()                      { }
     void update(tick_t )              { }
-    float_t alpha()                   { return glfwGetKey( Env::screenWindow(), code_ ) ? 1.0 : 0.0; }
+    float_t alpha()
+    {
+        int wth;
+        int hth;
+        glfwGetWindowSize( Env::screenWindow(), &wth, &hth );
+        double x;
+        double y;
+        glfwGetCursorPos( Env::screenWindow(), &x, &y );
+
+        return x / (double)( wth );
+    }
 
 
 private:
-    const Code code_;
-
+    
 };
 
+class KeyMouseAxisY: public Key
+{
+friend class Keys;
+private:
+    KeyMouseAxisY()
+    {
+    }
+
+public:
+    void clear()                      { }
+    void update(tick_t )              { }
+    float_t alpha()
+    {
+        int wth;
+        int hth;
+        glfwGetWindowSize( Env::screenWindow(), &wth, &hth );
+        double x;
+        double y;
+        glfwGetCursorPos( Env::screenWindow(), &x, &y );
+
+        return y / (double)( hth );
+    }
+
+
+private:
+    
+};
 
 }
 

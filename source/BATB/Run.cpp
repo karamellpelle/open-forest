@@ -15,31 +15,44 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RESOURCE_HPP
-#define BATB_RESOURCE_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Run/RunData.hpp"
-#include "BATB/Forest/ForestData.hpp"
-
+#include "BATB/Run.hpp"
+#include "BATB/Log.hpp"
 
 
 namespace BATB
 {
 
 
-inline RunData* resourceRunData()
+
+
+void Run::create(xml::XMLElement* elem)
 {
-    return RunData::theRunData();
+    using namespace xml;
+
+    log << "RunData::create() " << std::endl;    
+
+    XMLHandle xml( elem );
+     
+
+  
+    // create primitives
+    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
+
+    // create settings
+    //settings-> = 
+    keys->create( xml.FirstChildElement("Keys").ToElement() );
+    
 }
 
-inline ForestData* resourceForestData()
+
+void Run::destroy()
 {
-    return ForestData::theForestData();
+    log << "RunData::destroy() " << std::endl;    
+
+    keys->destroy();
+
+    IterationRunBegin::destroy( prim->iterationRunBegin );
+
 }
 
-
-
 }
-
-
-#endif

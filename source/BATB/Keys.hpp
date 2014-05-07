@@ -15,48 +15,66 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Config.hpp"
+#ifndef BATB_KEYS_HPP
+#define BATB_KEYS_HPP
+#include "BATB/Keys/KeyButton.hpp"
+#include "BATB/Keys/KeyMouseButton.hpp"
+#include "BATB/Keys/KeyMouseAxis.hpp"
+#include "BATB/Keys/KeyClicker.hpp"
+#include "BATB/Keys/KeyAlpha.hpp"
+#include "BATB/Keys/KeyPointer.hpp"
 
 
 namespace BATB
 {
 
+
+// Key's to be used to modify a world.
+// typically ForestWorld, since RunWorld is typically controlled by GUI
 class Keys
 {
 public:
-    static void create(xml::XMLElement* );
-    static void destroy();
+    // create Key's, and let 'this' handle memory
+
+    // prims
+    KeyButton*      createKeyButton(KeyButton::Code code)            { return push_( new KeyButton( code ) ); }
+    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)  { return push_( new KeyMouseButton( code ) ); }
+    KeyMouseAxisX*  createKeyMouseAxisX()                            { return push_( new KeyMouseAxisX() ); }
+    KeyMouseAxisY*  createKeyMouseAxisY()                            { return push_( new KeyMouseAxisY() ); }
+    // cons
+    KeyClicker*     createKeyClicker(Key* k)                          { return push_( new KeyClicker( k ) ); }
+    KeyAlpha*       createKeyAlpha(Key* k)                            { return push_( new KeyAlpha( k ) ); }
+    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push_( new KeyPointer( x, y, l, r ) ); }
+
+    // invalidate and delete all keys
+    void clear()
+    {
+        for (std::vector<Key*>::iterator i = keys_.begin(); i != keys_.end(); ++i)
+        {
+            delete *i;
+        }
+        keys_.clear();
+    }
 
     // clear all keys:
-    void clear();
+    void keys_clear();
     // update all keys:
-    void update(tick_t );     
-/*
-    // Key's to be used in game, typicall for ForestWorld (since RunWorld is
-    // typically controlled by GUI)
-    //
-    // TODO: create classes KeyXXXAbstraction, constructing KeyXXXAbstraction
-    //       from Key*, with the similar functionality as KeyXXX. Then use
-    //       XML file to define the actual key binding. later, only use the 
-    //       abstraction Key for control.
-    //       
-    KeyMouse*  mouse;
-    KeyButton* button_pause;
-    KeyButton* button_forward;
-    KeyButton* button_backward;
-    KeyButton* button_left;
-    KeyButton* button_right;
-    KeyButton* button_jump;
+    void keys_update(tick_t );     
 
 private:
-    Keys() { }
+    std::vector<Key*> keys_;
 
-    // abstraction
-    //Key* key_create(Config::Block* );
-    //std::vector<Key*> keys_allocations_;
-*/
+    template <typename KeyPtr>
+    KeyPtr push_(KeyPtr k)
+    {
+        keys_.push_back( k );
+        return k;
+    }
+
 };
 
-Keys* keys();
 
 }
+
+
+#endif

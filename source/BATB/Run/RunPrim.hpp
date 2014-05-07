@@ -36,6 +36,9 @@ namespace BATB
 class RunPrim
 {
 public:
+    void create(xml::XMLElement* );
+    void destroy();
+    
     // TODO: custom types for each iteration!
     IterationRunBegin* iterationRunBegin;
     IterationRunEnd* iterationRunEnd;

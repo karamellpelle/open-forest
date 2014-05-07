@@ -15,23 +15,47 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "BATB/Forest.hpp"
+#include "BATB/Log.hpp"
 
-
-
-class KeysMouse
+namespace BATB
 {
-public:
-    KeysMouse()
-    {
-    }
 
-    KeyButton* button_left() { return left_; }
-    KeyButton* button_right() { return right_; }
 
-private:
-    Keys* axis_x_;
-    Keys* axis_y_;
-    Keys* button_left_;
-    Keys* button_right_;
-    
-};
+
+void Forest::create(xml::XMLElement* elem)
+{
+    using namespace xml;
+
+    log << "Forest::create() " << std::endl;    
+
+
+    XMLHandle xml( elem );
+    // FIXME: parse xml...
+  
+
+  
+    // create primitives
+    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
+
+    // create settings
+    //settings->create( xml.FirstChildElement( "Settings" ).ToElement() );
+
+    // create keys
+    keys->create( xml.FirstChildElement( "Keys" ).ToElement() );
+
+
+}
+
+
+void Forest::destroy()
+{
+    log << "Forest::destroy() " << std::endl;    
+
+    prim->destroy();
+
+    keys->destroy();
+}
+
+
+}

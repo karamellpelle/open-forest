@@ -15,42 +15,32 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Forest/ForestData.hpp"
-#include "BATB/Log.hpp"
+#include "BATB/Run/RunPrim.hpp"
+
 
 namespace BATB
 {
 
-ForestData ForestData::theForestData_;
-ForestPrim ForestData::theForestPrim_;
-ForestSettings ForestData::theForestSettings_;
 
-
-void ForestData::create(xml::XMLElement* cfg)
+void RunPrim::create(xml::XMLElement* elem)
 {
-    // FIXME: from file/config?
-  
-    ForestData* this_ = &theForestData_;
+    using namespace xml;
 
-    log << "ForestData::create() " << std::endl;    
-  
-    // create primitives
-    this_->prim = &theForestPrim_;
-    //this_->prim-> = 
+    XMLHandle xml( elem );
+    // FIXME: parse 
 
-    // create settings
-    this_->settings = &theForestSettings_;
-    //this_->settings->
+    iterationRunBegin     = IterationRunBegin::create( xml.FirstChildElement("IterationRunBegin").ToElement() );
+    iterationRunEnd       = Game::NoIteration<RunWorld>::create();
+    iterationRunIntro     = Game::NoIteration<RunWorld>::create();
+    iterationRunMain      = Game::NoIteration<RunWorld>::create();
+    iterationRunOutro     = Game::NoIteration<RunWorld>::create();
 
 
 }
 
-
-void ForestData::destroy()
+void RunPrim::destroy()
 {
-    log << "ForestData::destroy() " << std::endl;    
+}
 
 }
 
-
-}

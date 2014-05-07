@@ -18,24 +18,30 @@
 #ifndef BATB_HPP
 #define BATB_HPP
 #include "BATB/BATB_include.hpp"
-#include "BATB/Resource.hpp"
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/RunData.hpp"
-#include "BATB/Forest/ForestData.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Log.hpp"
 #include "BATB/Config.hpp"
+#include "BATB/Log.hpp"
+#include "BATB/Run.hpp"
+#include "BATB/Forest.hpp"
 
 
 namespace BATB
 {
 
 
+// start BATB-environment
 void begin(Config* cfg);
 
+
+// end BATB-environment
 void end();
 
-Config* config();
+
+// the configuration for BATB
+inline Config* theConfig()
+{
+    extern Config* config_;
+    return config_;
+}
 
 }
 

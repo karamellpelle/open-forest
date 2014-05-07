@@ -15,20 +15,35 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "BATB/Run/RunKeys.hpp"
 
 
-
-class KeysMouse
+namespace BATB
 {
-public:
-    KeysMouse(Keys* x, Keys* y, Keys* l, Keys* r) : axis_x_( x ), axis_y_( y ), left_( l ), right_( r )
-    {
-    }
 
-private:
-    Keys* axis_x_;
-    Keys* axis_y_;
-    Keys* button_left_;
-    Keys* button_right_;
+
+
+void RunKeys::create(xml::XMLElement* elem)
+{
+    using namespace xml;
+
+    XMLHandle xml( elem );
+    // FIXME: parse controls from xml...
+
+    // instead, hardcode!
+
+    pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
+
+}
+
+void RunKeys::destroy()
+{
+    pause = 0;
     
-};
+    // delet all
+    clear();
+
+}
+
+}
+

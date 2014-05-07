@@ -15,43 +15,25 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FORESTDATA_HPP
-#define BATB_FORESTDATA_HPP
-#include "BATB/Config.hpp"
 #include "BATB/Forest/ForestPrim.hpp"
-#include "BATB/Forest/ForestSettings.hpp"
+
 
 namespace BATB
 {
 
 
-class ForestData
+void ForestPrim::create(xml::XMLElement* elem)
 {
-public:
-    static void create(xml::XMLElement* );
-    static void destroy();
-    static ForestData* theForestData() { return &theForestData_; }
+    using namespace xml;
 
-    ForestPrim* prim;
-    ForestSettings* settings;
-    
-
-
-private:
-    static ForestData theForestData_;
-    static ForestPrim theForestPrim_;
-    static ForestSettings theForestSettings_;
-
-    ForestData()
-    {
-
-    }
-
-};
+    XMLHandle xml( elem );
+    // FIXME: parse 
 
 
 }
 
+void ForestPrim::destroy()
+{
+}
 
-#endif
-
+}

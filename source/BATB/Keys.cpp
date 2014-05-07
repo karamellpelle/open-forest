@@ -22,30 +22,7 @@
 namespace BATB
 {
 
-static Keys theKeys_;
 
-
-void Keys::create(xml::XMLElement* cfg)
-{
-    Keys* this_ = &theKeys_;
-
-//    this_->mouse = KeysMouseAbstraction::create( /* F */ cfg );
-//    this_->button_pause = KeysButtonAbstraction::create( /* F */ c );
-
-
-}
-
-void Keys::destroy()
-{
-    Keys* this_ = &theKeys_;
-
-}
-
-Keys* keys()
-{
-    return &theKeys_;
-
-}
 
 }
 

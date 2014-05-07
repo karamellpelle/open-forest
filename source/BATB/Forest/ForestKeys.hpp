@@ -15,44 +15,31 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUNDATA_HPP
-#define BATB_RUNDATA_HPP
-#include "BATB/Config.hpp"
-#include "BATB/Run/RunPrim.hpp"
-#include "BATB/Run/RunSettings.hpp"
-
+#ifndef BATB_FOREST_KEYS_HPP
+#define BATB_FOREST_KEYS_HPP
+#include "BATB/Keys.hpp"
 
 namespace BATB
 {
 
-
-class RunData
+class ForestKeys : public Keys
 {
 public:
-    static void create(xml::XMLElement* );
-    static void destroy();
-    static RunData* theRunData() { return &theRunData_; }
+    void create(xml::XMLElement* );
+    void destroy();
 
-    // 
-    RunPrim* prim;
-    RunSettings* settings;
+    // keys to control Forest
+    KeyPointer* pointer;
+    Key* forward;
+    Key* backward;
+    Key* left;
+    Key* right;
+    Key* jump;
 
-
-private:
-    static RunData theRunData_;
-    static RunPrim theRunPrim_;
-    static RunSettings theRunSettings_;
-
-    RunData() : prim( 0 ), settings( 0 )
-    {
-
-    }
 
 };
-
 
 }
 
 
 #endif
-

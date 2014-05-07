@@ -51,16 +51,24 @@ option( BATB_INSTALL "Install BATB" OFF)
 # define sources
 set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/main.cpp
+
       ${MAIN_SOURCE_DIR}/Env.cpp
       ${MAIN_SOURCE_DIR}/Env/Screen.cpp
+
       ${MAIN_SOURCE_DIR}/File.cpp
+
       ${MAIN_SOURCE_DIR}/BATB.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/RunData.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunBegin.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Forest/ForestData.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Log.cpp
       ${MAIN_SOURCE_DIR}/BATB/Values.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Log.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Run.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Run/RunKeys.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Run/RunPrim.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunBegin.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Forest.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Forest/ForestKeys.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Forest/ForestPrim.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp
    )
 
 ### BUILD ###

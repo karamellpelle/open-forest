@@ -20,8 +20,11 @@
 #include <stdint.h>
 #include "include.hpp"
 
+namespace helpers
+{
+
 template <typename A>
-inline void keep_inside(const A& b, const A& e, A& x)
+inline A keep_inside(const A& b, const A& e, const A& x)
 {
     if ( x <= b ) return b;
     if ( e <= x ) return e;
@@ -30,5 +33,7 @@ inline void keep_inside(const A& b, const A& e, A& x)
 
 // circumference of unit circle
 static const float_t twopi = 6.2831853071795864769252867665590057683943387987502116;
+
+}
 
 #endif

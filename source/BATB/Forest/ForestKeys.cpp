@@ -15,12 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_HPP
-#define BATB_FOREST_PRIM_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Forest/Prim/Iteration.hpp"
-
+#include "BATB/Forest/ForestKeys.hpp"
 
 
 namespace BATB
@@ -28,18 +23,38 @@ namespace BATB
 
 
 
-class ForestPrim
+void ForestKeys::create(xml::XMLElement* elem)
 {
-public:
-    void create(xml::XMLElement* );
-    void destroy();
+    using namespace xml;
 
-    // 
-    //IterationXXX
-private:
-};
+    XMLHandle xml( elem );
+    // FIXME: parse controls from xml...
 
+    // instead, hardcode!
+    pointer = createKeyPointer( createKeyMouseAxisX(), createKeyMouseAxisY(),
+                                createKeyMouseButton( KeyMouseButton::left ), createKeyMouseButton( KeyMouseButton::right) );
 
+    forward = createKeyButton( GLFW_KEY_W );
+    backward = createKeyButton( GLFW_KEY_S );
+    left = createKeyButton( GLFW_KEY_A );
+    right = createKeyButton( GLFW_KEY_D );
+    jump = createKeyButton( GLFW_KEY_SPACE );
 
 }
-#endif
+
+void ForestKeys::destroy()
+{
+    pointer = 0;
+    forward = 0;
+    backward = 0;
+    left = 0;
+    right = 0;
+    jump = 0;
+
+    
+    // delet all
+    clear();
+
+}
+
+}

@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <vector>
 //#define GLM_MESSAGES          // let glm print system messages
 #define GLM_FORCE_RADIANS     // let glm angles be in radians
 //#define GLM_FORCE_INLINE      // let glm be inlined
@@ -48,6 +49,10 @@ typedef include::float_t float_t;
 namespace xml = tinyxml2;
 
 typedef Env::tick_t tick_t;
+
+using helpers::keep_inside;
+
+using helpers::twopi;
 
 }
 

@@ -17,11 +17,57 @@
 //
 #ifndef BATB_FOREST_HPP
 #define BATB_FOREST_HPP
-#include "BATB/Forest/ForestData.hpp"
-#include "BATB/Forest/ForestEvent.hpp"
+#include "BATB/Config.hpp"
 #include "BATB/Forest/ForestPrim.hpp"
 #include "BATB/Forest/ForestSettings.hpp"
 #include "BATB/Forest/ForestWorld.hpp"
+#include "BATB/Forest/ForestKeys.hpp"
+
+
+namespace BATB
+{
+
+
+
+// class for Forest-part of BATB
+class Forest
+{
+public:
+    Forest() : prim( &prim_ ), settings( &settings_ ), keys( &keys_ ) { }
+
+    void create(xml::XMLElement* );
+    void destroy();
+
+    // we access children by pointers (syntax...)
+    ForestPrim* const     prim;
+    ForestSettings* const settings;
+    ForestKeys* const     keys;
+    
+
+
+private:
+    ForestPrim prim_;
+    ForestSettings settings_;
+    ForestKeys keys_;
+
+
+
+};
+
+
+
+// the only Forest, access
+inline Forest* theForest()
+{
+    static Forest ret_;
+    return &ret_;
+}
+
+
+
+
+}
 
 
 #endif
+

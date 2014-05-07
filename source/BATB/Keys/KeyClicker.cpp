@@ -15,31 +15,45 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Key/KeyButton.hpp"
+#include "BATB/Keys/KeyClicker.hpp"
 
 
 namespace BATB
 {
 
-KeyButton::KeyButton(Code c) : code_( c )
+KeyClicker::KeyClicker(Key* k) : key_( k )
 {
     clear();
+}
+
+
+void KeyClicker::clear()
+{
+    // child
+    key_->clear();
+
+    down_prev_ = false;
+    down_ = false;
+    tick_down_ = false;
+    tick_ = 0.0;
+
+    pressed_ = false;
+    released_ = false;
+    click_count_ = 0;
 
 }
 
 
-void KeyButton::clear()
+void KeyClicker::update(tick_t tick)
 {
+    // child
+    key_->update( tick );
 
-}
-
-
-void KeyButton::update(tick_t tick)
-{
     pressed_ = false;
     released_ = false;
 
-    down_ = glfwGetKey( Env::screenWindow(), code_ );
+    down_ = is_down_(); 
+    tick_ = tick;
 
     // low
     if ( down_ )
@@ -48,18 +62,17 @@ void KeyButton::update(tick_t tick)
         if ( !down_prev_ )
         {
             released_ = true;
-            tick_down_ = tick;
+            tick_down_ = tick_;
         }
 
-        // FIXME: press alpha
     }
     // high
     else
     {
         // reset clicks, if button too long up
-        if ( tick_down_ + ticks_clicks_ <= tick )
+        if ( tick_down_ + ticks_clicks_ <= tick_ )
         {
-            clicks_ = 0;
+            click_count_ = 0;
         }
 
         // released
@@ -67,12 +80,11 @@ void KeyButton::update(tick_t tick)
         {
             pressed_ = true;
             // count clicks
-            ++clicks_;
+            ++click_count_;
         }
 
     }
     down_prev_ = down_;
-    tick_ = tick;
 
     
 }
