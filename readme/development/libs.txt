@@ -10,7 +10,7 @@ font rendering    : custom Valve-font?
 collision         : Bullet3D?
 linear            : custom, just for GL
 3D animation      : ?
-video             : ?                                             (ffmpeg? libav?)
+video             : libvpx                                        (libTheora?)
 C++               : boost.filesystem
                     boost.hash
                     boost.integer

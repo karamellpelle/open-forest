@@ -1,0 +1,8 @@
+== libvpx ==
+
+For video rendering, we use files of type .ivl, and using libvpx to decode. Using VP9 instead of VP8?
+
+Information:
+* http://wiki.multimedia.cx/index.php?title=IVF (binary explaination)
+* http://www.philhassey.com/blog/2012/02/02/how-to-create-and-play-ivf-vp8-webm-libvpx-video-in-opengl/ (blog about vpx format)
+* http://www.webmproject.org/code/ (libvpx SDK)

@@ -1,19 +1,31 @@
 #!/bin/bash
 
 # create git submodules (libs/)
-#git submodule init libs/boost
-git submodule init libs/glfw
-#git submodule init libs/nanovg
-git submodule init libs/tinyxml2
-#git submodule init libs/turbobadger
 
-#git submodule update libs/boost
+# glfw
+git submodule init libs/glfw          #glfw
 git submodule update libs/glfw
+
+# nanovg
+#git submodule init libs/nanovg        #nanovg
 #git submodule update libs/nanovg 
+
+# tinyxml2
+git submodule init libs/tinyxml2      #tinyxml
 git submodule update libs/tinyxml2
+
+# turbobadger
+#git submodule init libs/turbobadger   #turbobadger
 #git submodule update libs/turbobadger
 
-# create boost submodules (libs/boost/)
+# libvpx
+#git submodule init libs/libvpx        #libvpx
+#git submodule update libs/libvpx
+
+
+# boost
+#git submodule init libs/boost         #boost
+#git submodule update libs/boost       
 #cd libs/boost
-#git submodule init
-#git submodule update
+#git submodule init     xxx
+#git submodule update   xxx
