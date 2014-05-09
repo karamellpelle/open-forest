@@ -17,12 +17,12 @@
 //
 #ifndef GLVPX_HPP
 #define GLVPX_HPP
+#include <stdint.h>
 
 #define GLVPX_USE_VP8
 
 namespace glvpx
 {
-#include <stdint.h>
 
 
 // see libs/libvpx/examples/simpel_decoder.c
@@ -33,6 +33,72 @@ namespace glvpx
   #include "vpx/vp8dx.h"
   #include "vpx/vpx_decoder.h"
 #endif
+
+typedef uint_fast32_t uint;
+
+
+void begin();
+void end();
+
+class file
+{
+public:
+    file(const char* );
+
+private:
+    uint version_;
+    uint frame_rate_;
+    uint time_scale_;
+    uint wth_;
+    uint hth_;
+
+    frame frame_;
+
+    uint frames_;
+
+};
+
+
+// create object for frames (tex (+ audio, for WebM))
+class frame
+{
+friend class file;
+public:
+    
+    GLuint tex()            { return tex_; }
+    void size(uint& wth, uint& hth)
+    {
+        wth = wth_;
+        hth = hth_;
+    }
+
+private:
+    frame();
+
+    GLuint tex_;
+
+    // vars
+    double tick_;
+    uint wth_;
+    uint hth_;
+
+
+};
+
+
+frame* render_frame(file& f, double tick)
+{
+
+}
+
+
+// default presenter, just render straight into screen.
+void frame_present_std(const frame& f);
+
+
+
+
+
 }
 
 
