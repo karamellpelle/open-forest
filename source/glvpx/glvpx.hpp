@@ -18,6 +18,9 @@
 #ifndef GLVPX_HPP
 #define GLVPX_HPP
 #include <stdint.h>
+#include <ostringstream>
+#include <stdexcept>
+
 
 #define GLVPX_USE_VP8
 
@@ -40,10 +43,24 @@ typedef uint_fast32_t uint;
 void begin();
 void end();
 
+
+
+class exception : public std::runtime_error
+{
+
+
+};
+
+
+
 class file
 {
+friend frame* render_frame(file& f, double tick);
 public:
     file(const char* );
+    ~file();
+
+    // FIXME: implement copy, assigment, ...
 
 private:
     uint version_;
@@ -53,24 +70,30 @@ private:
     uint hth_;
 
     frame frame_;
-
+    // 
+    VpxVideoReader* reader_;
+    VpxInterface* decoder_;
+    vpx_codec_ctx_t codec_;
+    
+    // stats
     uint frames_;
 
 };
 
 
-// create object for frames (tex (+ audio, for WebM))
+//  object for frames (tex (+ audio, for WebM))
 class frame
 {
 friend class file;
 public:
     
-    GLuint tex()            { return tex_; }
-    void size(uint& wth, uint& hth)
+    GLuint tex() const                    { return tex_; }
+    void size(uint& wth, uint& hth) const
     {
         wth = wth_;
         hth = hth_;
     }
+    double tick() const                   { return tick_; }
 
 private:
     frame();
@@ -86,10 +109,7 @@ private:
 };
 
 
-frame* render_frame(file& f, double tick)
-{
-
-}
+frame* const render_frame(file& f, double tick);
 
 
 // default presenter, just render straight into screen.

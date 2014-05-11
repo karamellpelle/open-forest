@@ -1,1 +1,1 @@
-OpenGL should be done with shaders, not the old fixed-pipeline way (glVertex, glColor, etc.), since the technology has moved forwards, and we don't want to create an outdated product, despite we are not developing an AAA game.
+OpenGL should be done with shaders and no fixed-pipeline (glVertex, glColor, etc.), and general vertex attributes. 

@@ -57,7 +57,7 @@ public:
     }
     bool is_down()
     {
-        return alpha() < 0.5; // NOTE: strict less than
+        return 0.5 < alpha(); // NOTE: strict larger than
     }
 
 private:

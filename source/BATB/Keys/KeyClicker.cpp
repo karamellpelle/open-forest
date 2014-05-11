@@ -34,7 +34,8 @@ void KeyClicker::clear()
 
     down_prev_ = false;
     down_ = false;
-    tick_down_ = false;
+    tick_down_ = 0.0;
+    tick_up_ = 0.0;
     tick_ = 0.0;
 
     pressed_ = false;
@@ -55,32 +56,38 @@ void KeyClicker::update(tick_t tick)
     down_ = is_down_(); 
     tick_ = tick;
 
-    // low
+    // high
     if ( down_ )
     {
         // pressed
         if ( !down_prev_ )
         {
-            released_ = true;
+            pressed_ = true;
             tick_down_ = tick_;
         }
 
     }
-    // high
+    // low
     else
     {
-        // reset clicks, if button too long up
-        if ( tick_down_ + ticks_clicks_ <= tick_ )
-        {
-            click_count_ = 0;
-        }
 
         // released
         if ( down_prev_ )
         {
-            pressed_ = true;
-            // count clicks
-            ++click_count_;
+            released_ = true;
+            tick_up_ = tick_;
+
+            // click: fast press/release
+            if ( tick_ <= tick_down_ + ticks_clicks_a_ )
+            {
+                ++click_count_;
+            }
+        }
+
+        // reset count of multiple clicks, if fail
+        if ( tick_down_ + ticks_clicks_b_ <= tick_ )
+        {
+            click_count_ = 0;
         }
 
     }

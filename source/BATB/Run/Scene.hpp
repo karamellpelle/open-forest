@@ -65,8 +65,7 @@ inline void Scene::remake(uint wth, uint hth)
     // FIXME: destroy GL-stuff, create new GL-stuff
 
     // set Shape
-    shape.wth = wth;
-    shape.hth = hth;
+    shape.size( wth, hth );
 
     // GLM <3 <3 <3
 

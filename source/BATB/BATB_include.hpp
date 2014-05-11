@@ -23,6 +23,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <cstdio>
 //#define GLM_MESSAGES          // let glm print system messages
 #define GLM_FORCE_RADIANS     // let glm angles be in radians
 //#define GLM_FORCE_INLINE      // let glm be inlined
@@ -53,6 +54,13 @@ typedef Env::tick_t tick_t;
 using helpers::keep_inside;
 
 using helpers::twopi;
+
+template <typename Cont>
+Cont smooth(Cont a, Cont b, Cont x)
+{
+    return (1.0 - x) * a + x * b;
+}
+
 
 }
 

@@ -44,13 +44,7 @@ public:
         clicker_right_.clear();
 
     }
-    void update(tick_t t)
-    {
-        axis_x_->update( t );
-        axis_y_->update( t );
-        clicker_left_.update( t );
-        clicker_right_.update( t );
-    }
+    void update(tick_t );
     float_t alpha()
     {
         // FIXME: implement something
@@ -58,32 +52,150 @@ public:
     }
 
 
-
+    
     void axis(float_t& x, float_t& y)
     {
         x = axis_x_->alpha();
         y = axis_y_->alpha();
     }
-    void axis(float wth, float hth, float& x, float& y)
+    void axis(float_t wth, float_t hth, float_t& x, float_t& y)
     {
         x = axis_x_->alpha(0, wth);
         y = axis_y_->alpha(0, hth);
     }
-    void axis_center(float wth, float hth, float& x, float& y)
+    void axis_center(float_t wth, float_t hth, float_t& x, float_t& y)
     {
         x = axis_x_->alpha( -0.5 * wth, 0.5 * wth );
         y = axis_y_->alpha( -0.5 * hth, 0.5 * hth );
     }
-    // FIXME: drag, drop, movement
+
+
+    bool drag(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( 1.0, 1.0, x0, y0, x1, y1, ticks );
+    }
+    bool drag(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
+    }
+    bool drag_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
+    }
+    bool drop(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( 1.0, 1.0, x0, y0, x1, y1, ticks );
+    }
+    bool drop(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
+    }
+    bool drop_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
+    }
+    
+    bool left_pressed(float_t& x, float_t& y)
+    {
+        return left_pressed( 0.0, 1.0, 0.0, 1.0, x, y );
+    }
+    bool left_pressed(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return left_pressed( 0.0, wth, 0.0, hth, x, y );
+    }
+    bool left_pressed_center(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return left_pressed( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
+    }
+    bool left_released(float_t& x, float_t& y)
+    {
+        return left_released( 0.0, 1.0, 0.0, 1.0, x, y );
+    }
+    bool left_released(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return left_released( 0.0, wth, 0.0, hth, x, y );
+    }
+    bool left_released_center(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return left_released( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
+    }
+    bool right_pressed(float_t& x, float_t& y)
+    {
+        return right_pressed( 0.0, 1.0, 0.0, 1.0, x, y );
+    }
+    bool right_pressed(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return right_pressed( 0.0, wth, 0.0, hth, x, y );
+    }
+    bool right_pressed_center(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return right_pressed( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
+    }
+    bool right_released(float_t& x, float_t& y)
+    {
+        return right_released( 0.0, 1.0, 0.0, 1.0, x, y );
+    }
+    bool right_released(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return right_released( 0.0, wth, 0.0, hth, x, y );
+    }
+    bool right_released_center(float_t wth, float_t hth, float_t& x, float_t& y)
+    {
+        return right_released( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
+    }
   
     KeyClicker* left()      { return &clicker_left_; }
     KeyClicker* right()     { return &clicker_right_; }
 
 private:
+    bool drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
+    bool drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
+    bool left_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
+    {
+        if ( left()->pressed() )
+        {
+            x = axis_x_->alpha(x_a, x_b);
+            y = axis_y_->alpha(y_a, y_b);
+        }
+        return left()->pressed();
+    }
+    bool left_released(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
+    {
+        if ( left()->released() )
+        {
+            x = axis_x_->alpha(x_a, x_b);
+            y = axis_y_->alpha(y_a, y_b);
+        }
+        return left()->released();
+
+    }
+    bool right_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
+    {
+        if ( right()->pressed() )
+        {
+            x = axis_x_->alpha(x_a, x_b);
+            y = axis_y_->alpha(y_a, y_b);
+        }
+        return right()->pressed();
+    }
+    bool right_released(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
+    {
+        if ( right()->released() )
+        {
+            x = axis_x_->alpha(x_a, x_b);
+            y = axis_y_->alpha(y_a, y_b);
+        }
+        return right()->released();
+
+    }
+
     Key* const axis_x_;
     Key* const axis_y_;
     KeyClicker clicker_left_;
     KeyClicker clicker_right_;
+
+    float_t x0_;
+    float_t y0_;
     
 };
 

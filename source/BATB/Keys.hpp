@@ -49,7 +49,7 @@ public:
     // invalidate and delete all keys
     void clear()
     {
-        for (std::vector<Key*>::iterator i = keys_.begin(); i != keys_.end(); ++i)
+        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
         {
             delete *i;
         }
@@ -57,12 +57,26 @@ public:
     }
 
     // clear all keys:
-    void keys_clear();
+    void keys_clear()
+    {
+        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
+        {
+            (*i)->clear();
+        }
+    }
+
     // update all keys:
-    void keys_update(tick_t );     
+    void keys_update(tick_t t)
+    {
+        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
+        {
+            (*i)->update( t );
+        }
+    }
 
 private:
-    std::vector<Key*> keys_;
+    typedef std::vector<Key*> Container;
+    Container keys_;
 
     template <typename KeyPtr>
     KeyPtr push_(KeyPtr k)

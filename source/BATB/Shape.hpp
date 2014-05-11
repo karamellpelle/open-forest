@@ -23,6 +23,7 @@ namespace BATB
 {
 
 // normalized size
+// FIXME: force normalization?
 class Shape
 {
 public:

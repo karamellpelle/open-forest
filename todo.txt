@@ -1,8 +1,11 @@
-* run oldBATB from iterations, together with GLFW (Env)
-* define RunWorldEvent's and ForestWorldEvent's. Since two worlds A and B of different types
-  shall be mostly unaware of each other (at least the subworld unaware of superworld), iterations
-  on A and B should create events for the respective worlds. then a superworld can look at the
-  events for a subworld, in order to make actions.
-* setting/values. changes during program? how reflected in config file?
-* remove fixed pipeline rendering, use OpenGL 3.3/4.0+ (shaders and buffer objects)
-* rename IterationRunDataXXX -> IterationRunXXX
+
+* Keys: up and running with iteratino. test button. test mouse. implement drag/drop for mouse.
+* run oldBATB from iterations
+* Scene and iterations
+* add turbobadger, run old from that
+* fix glhelpers (texture loading)
+* nanovg implement??
+* Ogre3D add. check out terrain functionality
+* add libvpx movie
+* create Font?
+* get more developers involved!

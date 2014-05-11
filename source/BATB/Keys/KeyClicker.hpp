@@ -40,21 +40,37 @@ public:
     uint click_count()        { if ( released_ ) return click_count_; return 0; }
 
     bool pressed()            { return pressed_; }
+    bool pressed(tick_t& ticks)
+    {
+        if ( pressed() )
+        {
+            ticks = tick_ - tick_up_;
+        }
+        return pressed();
+    }
     bool released()           { return released_; }
+    bool released(tick_t& ticks)
+    {
+        if ( released() )
+        {
+            ticks = tick_ - tick_down_;
+        }
+        return released();
+    }
     bool press()              { return down_; }
     bool press(tick_t& ticks)
     {
-        if ( down_ )
+        if ( press() )
         {
-            // only write out, if ticks
             ticks = tick_ - tick_down_;
         }
-        return down_;
+        return press();
     }
 
 
 private:
-    static const uint ticks_clicks_ = 0.5;    
+    static const tick_t ticks_clicks_a_ = 0.2;
+    static const tick_t ticks_clicks_b_ = 0.2;    
 
     Key* const key_;
 
@@ -63,6 +79,7 @@ private:
     bool down_prev_;
     bool down_;
     tick_t tick_down_;
+    tick_t tick_up_;
     tick_t tick_;
 
     bool pressed_;

@@ -69,6 +69,7 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/BATB/Forest/ForestKeys.cpp
       ${MAIN_SOURCE_DIR}/BATB/Forest/ForestPrim.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp
+      ${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp
    )
 
 ### BUILD ###
