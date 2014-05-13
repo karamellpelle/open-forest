@@ -37,7 +37,7 @@ public:
 
 private:
     IterationRunXxx();                                               // FIXME: define in .cpp
-    void destroy_();                                              // FIXME: define in .cpp iff releasable, i.e. not a typical Run-iteration.
+    void destroy();                                              // FIXME: define in .cpp iff releasable, i.e. not a typical Run-iteration.
 };
 */
 }

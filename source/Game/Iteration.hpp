@@ -37,11 +37,14 @@ public:
     virtual ~Iteration() { }                  // FIXME: proctected, for named destructors?
 
 
-    // we prefer named constructors and destructors, so for 
-    // subclass IterationX, make static functions:
+    // I prefer named constructors and destructors for Iteration, 
+    // so for subclass IterationX, I create static functions:
     //
     // static IterationX<A>*  create(Y y)             { ... }
     // static void            destroy(Iteration<A>* ) { ... }
+    // 
+    // , and let the constructor be private
+
 
     // define this in subclass:
     virtual void iterate(IterationStack<A>& stack, A& a) = 0;

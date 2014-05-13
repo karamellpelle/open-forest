@@ -29,7 +29,7 @@ void Run::create(xml::XMLElement* elem)
 {
     using namespace xml;
 
-    log << "RunData::create() " << std::endl;    
+    log << "Run::create() " << std::endl;    
 
     XMLHandle xml( elem );
      
@@ -51,7 +51,6 @@ void Run::destroy()
 
     keys->destroy();
 
-    IterationRunBegin::destroy( prim->iterationRunBegin );
 
 }
 

@@ -28,6 +28,7 @@ ForestWorld
   * Network*                        (created by RunWorld)
   * [Runner]
   * Course
+  * Competition
   * [ForestEvent]
 
 // Run will look at these, and take actions:
@@ -40,6 +41,7 @@ Player
   * Physics     // position, movement, head view, collision shape (?), ...
   * fatigue, etc...
   * controls taken
+  * recorded movement, 
   * stats
 
 // implies a Map

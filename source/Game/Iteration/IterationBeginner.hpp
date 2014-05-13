@@ -15,40 +15,38 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_FUNCTION_HPP
-#define ITERATION_FUNCTION_HPP
-#include "../Iteration.hpp"
+#ifndef GAME_ITERATION_BEGINNER_HPP
+#define GAME_ITERATION_BEGINNER_HPP
+#include "Game/Iteration.hpp"
 
 namespace Game
 {
 
 
-// create 'Iteration' from function
+
+// encapsulating an existing iteration X, so that the world is modified
+// before the actual iteration X. 
+// implement world_begin.
 template <typename A>
-class IterationFunction : public Iteration<A>
+class IterationBeginner : public Iteration<A>
 {
 public:
-    typedef void (*FunctionT)(Iteration<A>* , IterationStack<A>& , A& );
+    IterationBeginner(Iteration<A>* next) : next_(next) { }
 
-
-    // create/destroy
-    static IterationFunction<A>* create(FunctionT f) { return new IterationFunction( f ); }   // create
-    static void destroy(IterationFunction<A>* iter)  { delete iter; }                        // free mem, for user-release
-
-    void iterate(IterationStack<A>& stack, A& a) { function_(this, stack, a); }
-
-protected:
-    IterationFunction(FunctionT f) : function_( f ) { }
-    ~IterationFunction() { } 
-    void destroy()
+    void iterate(IterationStack<A>& stack, A& a)
     {
-        delete this;
+        world_begin( a );
+        next_->iterate( stack, a );
     }
 
-private:
+protected:
+    virtual void world_begin(A& a) = 0;
+    Iteration<A>* next()
+    {
+        return next_;
+    }
 
-    FunctionT function_;
-
+    Iteration<A>* next_;
 };
 
 

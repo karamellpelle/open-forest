@@ -31,7 +31,7 @@ class IterationDefault : public Iteration<A>
 {
 public:
     static IterationDefault<A>* create(Output<A>* out, Step<A>* step) { return new IterationDefault( out, step ); }
-    static void destroy(IterationDefault<A>* iter)                    { iter->destroy_(); }
+    static void destroy(IterationDefault<A>* iter)                    { iter->destroy(); }
 
     void iterate(IterationStack<A>& stack, A& a)
     {
@@ -50,7 +50,7 @@ protected:
         Ref::release( step_ );
         Ref::release( output_ );
     }
-    void destroy_()
+    void destroy()
     {
         delete this;
     }

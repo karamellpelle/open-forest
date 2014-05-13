@@ -1,0 +1,399 @@
+=== MainWindow ===
+motionfn:
+  if map 
+    rotate/move/etc.
+  else
+    OrienteerProxy::addDirection x, addVertical y
+
+
+displayMapDay:
+  checkSockets
+  glClear
+  OrienteerProxy orienteer
+  MapProxy map
+  map.draw( thumb )
+  course->draw( orinteer.getNextControlNumber )
+  puDisplay // GUI
+
+
+displayTerrain[Day/Night]:
+  checkSockets
+  glClear
+  OrienteerProxy orienteer
+  orienteer.adjustStepLength( standingStill )
+  orienteer.newPosition()
+  orienteer.adjustStepLength( lookingAround )
+  orienteer.view[Day/Night]()
+  puDisplay() // GUI
+
+
+generateMapDisplayFn:
+  if complete
+    EventProxy event
+    event.realize();
+    // set high/low terrain uniforms for shaders
+    OrienteerProxy orienteer
+    orienteer.reset( id )
+    orienteer.setEventProxy( event )
+    course = Database.getEventCourse()
+generateTerrainDisplayFn:
+  if complete
+    // delete GUI
+    TerrainProxy terrain
+    terrain.finishRealize()
+    realizeMap
+
+realizeMap: // -> generateMapDisplayFn
+realizeTerrain // -> generateTerrainDisplayFn
+
+init
+  OrienteerProxy orienteer
+  orienteer.setOpOpserver
+  xmlParser.readFile( "batbdb.xml" );
+  Database.addObserver
+  pushDisplayFuncs()
+  initTextures()
+  displayTerrain()
+  resetState( game_on = false, show_dialogs = true )
+  realizeTerrain
+
+main
+  glutInit
+  enableDisplayFunc()
+  glut[Keyboard/Special/Mouse/Motion/ReshapeVisibility]Func
+  puInit() // plib
+  glewInit()
+  mainWindow.initLights()
+  mainWindow.init()
+  // create shaders day,night3,nightTree
+  if (nightShader && dayShader )
+    glutMainLoop
+
+  
+=== point.h ===  
+Location :: point.h
+  // point + horizontal angle + vertical angle
+  eou>
+
+=== OrienteerProxy ===
+OrienteerProxy
+  Location*
+  Control*
+  Orienteer*
+  Run* 
+  Mesh*
+  EventProxy*
+  OpObserver*
+  Point prevRecordedPosition
+  Point prevPosition
+  // coordinates for each orienteer
+    GLfloat model[32]
+    static const int maxLights = 8
+    GLfloat pos[maxLights * 3]
+    GLfloat hor[maxLights]
+    GLfloat ver[maxLights]
+
+
+newPosition
+  // update location from steplength * dircos + steplength * dirsin
+
+
+reset
+  Course course = database.getEventCourse
+  nextControlNumber
+  Control* start = course->getControl(0)
+  nextControl = course->getControl(1)
+  location->horizontal   = // angle start -> nextControl
+  location->rundirection = // angle start -> nextControl
+  location->vertical = twopi / 4
+
+  x,y = // start->position + epsilon
+
+  mesh = TerrainProxy.getMesh()
+  terrainWidth = mesh->getWidth
+  terrainHeight = mesh->getHeight
+  
+  setPosition(x ,y)
+  course->reset()
+  
+  stepLength = 0.0
+
+start
+  Database db
+  Event* event
+  orienteer = db.getSelectedOrienteer
+  run = newRun("test", event->id, orienteer->id)
+  run->recordPosition( location->position )
+  run->setStatus( OK )
+  prevRecordedPosition.xy = location.position.xy
+  ++nextControlNumber
+  run->start()
+
+punch
+  Couse* course = Database.getEventCourse()
+  Control* prevControl = course->getControl( nextControlNumber - 1 )
+  // record position
+
+drawToMap
+  // draw orienteer position and direction on map
+
+drawRunToMap
+  run->draw
+
+setPosition(x, y)
+  location->position = // inside 1 and terrain[Width/Height] - 1
+  location->position.z = mesh->calcZ( x, y ) + orienteerHeight
+  if ( distance( prevRecordedPosition -> location.position ) > 5 )
+      run->recordPosition
+      prevRecordedPosition = location->position
+
+
+addDirection(value, bool still, bool looking)
+  // if not still and not looking, add value to location->runDirection
+  // if not still and looking, add value to location->horizontal
+  // if still and looking, add value to location->runDirection and location->horizontal
+addVertical(value)
+  // add value to location->vertical
+
+adjustStepLength/getTargetSpeed
+  // set stepLength and location->runDirection from mesh and location. that is, 
+  // adjust running speed and direction based on terrain
+
+adjustHorizontal
+  // update location->horizontal based on location->runDirection
+
+view[/Day/Night]
+  // load identity
+  // set view transformation from location (position, direction, ...)
+
+  eventProxy.draw[/Day/Night]( location )
+
+  if distance(nextControl -> location) inside draw-treshold
+    nextControl->draw()
+  if distance(nextControl -> location) inside punch-threshold
+    opObserver->punch( nextControlNumber )
+
+=== EventProxy ===
+EventProxy
+  Mesh* mesh
+  Observable observers
+  
+realize
+  mesh = TerrainProxy.getMesh
+
+draw[/Day/Night](location)
+  mesh->draw[/Day/Night]( location->position, location->horizonta )
+  observers.drawToTerrain( location )
+
+drawToMap(location)
+  observers.drawToMap(location)
+
+=== mapproxy.hpp ===
+Contour
+  std::deque<Point> points
+  fptype height
+  ContourDirection { LEFT, RIGHT, DONTKNOW } dir
+  int left
+  int right
+
+draw
+  int mult = case dir of
+             LEFT -> mult = 1
+             RIGHT-> mult = -1
+             _    -> 0
+  int count = 45
+  Point* point
+  Point* point2
+  glBegin( LINE_STRIP)
+    for points i
+      point = i
+      glVertex( point.x, point.y )
+      if ++count `mod` 50 == 0
+        // draw slope direction line from point
+        fptype radians = angle(point -> point2)
+        glVertex2f( point->x + mult * cos(radians),
+                    point->y + mult * sin(radians))
+        glVertex2f( point->x, point->y)
+      point2 = point;
+  glEnd
+
+MapProxy
+  std::vector<Contour*> contours;
+  Map* map
+  GLuint dliMap // display list id
+  int contourInterval
+  fptype highestPoint
+  int altitude
+  int lowestContourLevel
+
+drawNSLines
+  // draw North/South-lines
+
+
+initRealize
+  Database db
+  TerrainProxy tp
+  Mesh* mesh = tp.getMesh
+  Map* selectedMap = db.getEventMap()
+  float percentComplete
+  
+  if ( map != selectedMap )
+    map = selectedMap
+    contourInterval = map->getContourInterval
+    width = mesh->getWidth
+    height = mesh->getHeight
+    map->setWidth( witdt)
+    map->setHegiht(height)
+    highestPoint = mesh->getHighestPoint()
+    fptype low = mesh->getLowestPoint()
+    fptype c = fmod( low, contourInterval )
+    lowestContourLevel = (int)( low - c );
+    altitude = lowentContourLevel
+    percentComplete = 0.0
+  else
+    percentComplete = 1.0
+ 
+ continueRealize
+  TerrainProxy tp 
+  Mesh* mesh = tp.getMesh
+  float percentComplete
+  int width = mesh->getXSize()
+  int height = mesh->getYSize()
+  if ( altitude < highestPoint )
+    mesh->clearTriangles()
+    for ( i, j -> width, height )
+      mesh->findContours2( contours, altitude, i, j )
+      altitude += contourInterval
+
+  percentComplete = altitude/highestPoint
+  return percentComplete
+
+draw(Point& thumb)
+  // draw NSLines and contours, from either displaylist or directly
+  drawThumb
+
+
+=== mesh.h ===
+// x -> east
+// y -> north
+// z -> up
+
+// Facet: two triangles, inside rectangle spanned by 4 Coord's
+// a mesh width of w, implies w facets and w+1 x-coords
+// a mesh height of h, ...
+// Mesh represents terrain as a height field
+
+
+Tree
+  GLuint textureId
+  fptype x,y,z
+  fptype width
+  fptype height
+  fptype vertex[24], normal[24], texture[16] // vertex arrays
+
+Coord
+  fptype vertex[3]
+  fptype normal[3]
+
+Facet
+  fptype lowerNormal[3] // lower triangle 0
+  fptype upperNormal[3] // upper triangle 1
+  bool lowerUsed  // triangle 0 used for Contour
+  bool upperUsed  // triangle 1 used for Contour
+  std::vector<Tree*> trees; // trees in area specified by 'this'
+  Tree* tree
+
+MeshCoordinate 
+  int facetx
+  int facety
+  int triangle // 0,1
+  int edge;    // 1,2,3
+  Mesh* mesh
+
+Edge
+  Point p0
+  Point p1
+
+
+Mesh
+  // desity: scale between xmountains and mesh.
+  //         density == n => mesh-coord for each n'th xmountains-coord
+  //         smaller density => smoother terrain
+
+  int width
+  int height
+  Matrix<Coord>* coords
+  Matrix<Facet>* facets
+  int drawRadius
+  
+initTrees
+  int ntrees = width * height / treeDensity
+  for (i -> ntrees)
+    fptype x = myrandom(5, width - 5)
+    fptype y = myrandom(5, width - 5)
+    fptype z = calcZ(x, y)
+    treeWidth = 3.0
+    treeHeight = myandom(3, 15)
+    GLuint textureId = treeTextures[myrandom(0, 4)]
+    Tree* = new Tree(textureId, x, y, z, treeWidth, treeHeight)
+    Facet* facet = getFacet(x,y)
+    facet->addTree(tree)
+
+drawXXX(int min_x, int max_x, int min_y, int max_y)
+  // draw XXX for objects in area defined by facets [min_x, max_x]x[min_y, max_y]
+
+drawWithShaders[Day/Night](Point pos, fptype horizontal)
+  int drawRadius = 15   // in Facet-coords
+  int x,y = // draw point (Facet-coords), which is in front of direction (horizontal)
+  int minx,maxx,miny,maxy = // compute from x, y + radius
+  glUseProgram( [day/night]Shader )
+  drawGroundVertexArray2( minx, maxx, miny, maxy )
+  glUseProgram(0)
+  drawTrees( minx, maxx, miny, maxy )
+
+
+=== Terrain ===
+  // contains parameters for xmountains (an old heightmap generator)
+  // 
+
+=== TerrainProxy ===
+
+TerrainProxy
+  Terrain* terrain
+  fptype highest
+  fptype lowest
+  Matrix<fptype>* data // xmountains data
+  Mesh* mesh
+
+meshRealize
+  // set heights for each Facet in mesh, based on TerrainProxy::getData, i.e. xmountains
+  // then calculate normals, create trees
+
+initRealized
+  Terrain* selectedTerrain = Database.getEventTerrain
+  if ( terrain != selectedTerrain )
+    terrain = selectedTerrain
+    // create memory for TerrainProxy::data, xmInit( this ) // (init xmountains-populate)
+
+continueRealize
+  if ( terrainRealizeCounter < terrainWidth )
+    // populate 'data' from first column)
+    // return percent
+  else
+    meshRealize
+    return 1.0
+
+
+=== database.hpp ===
+// Database contains:
+// Terrain's, Map's, Course's, Run's, Orienteer's, Event's, ServerInfo's
+//                   DatabaseObserver's
+//          
+// Database holds:
+// selected course, selected event, selected orienteer, selected run
+// 
+// Database can:
+// read itself from xml-file, write itself to xml-file
+//
+//
+// Database seems to be the state of the whole old-batb

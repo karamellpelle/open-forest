@@ -74,6 +74,7 @@ void begin(Config* cfg)
     // create values, from file
     Values::create( xml.FirstChildElement("Values").ToElement() );
 
+
     // create Run part of BATB
     theRun()->create( xml.FirstChildElement("Run").ToElement() );
 

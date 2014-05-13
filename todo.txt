@@ -1,7 +1,7 @@
-
-* Keys: up and running with iteratino. test button. test mouse. implement drag/drop for mouse.
+* GLEW as git library (libs/)
 * run oldBATB from iterations
 * Scene and iterations
+* Define gameobjects more preciseand start to implement them
 * add turbobadger, run old from that
 * fix glhelpers (texture loading)
 * nanovg implement??

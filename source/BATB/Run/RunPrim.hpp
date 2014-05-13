@@ -17,8 +17,7 @@
 //
 #ifndef RUN_PRIM_HPP
 #define RUN_PRIM_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Run/RunWorld.hpp"
+#include "BATB/Run/Prim/Scene.hpp"
 #include "BATB/Run/Prim/IterationRunBegin.hpp"
 #include "BATB/Run/Prim/IterationRunEnd.hpp"
 #include "BATB/Run/Prim/IterationRunIntro.hpp"

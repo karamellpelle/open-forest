@@ -28,6 +28,7 @@ namespace BATB
 
 typedef Game::Iteration<RunWorld> IterationRunWorld;
 typedef Game::IterationStack<RunWorld> IterationStackRunWorld;
+typedef Game::IterationBeginner<RunWorld> IterationBeginnerRun;
 }
 
 #endif

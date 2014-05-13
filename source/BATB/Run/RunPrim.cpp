@@ -40,6 +40,7 @@ void RunPrim::create(xml::XMLElement* elem)
 
 void RunPrim::destroy()
 {
+    //IterationRunBegin::destroy( prim->iterationRunBegin );
 }
 
 }

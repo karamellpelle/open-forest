@@ -1,80 +1,99 @@
-#include "BATB/Run/Prim/IterationRunBegin.hpp"
 #include "BATB/Run.hpp"
+#include "BATB/Run/Prim/Scene.hpp"
 
 
 namespace BATB
 {
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 IterationRunBegin0* IterationRunBegin0::create(xml::XMLElement* elem)
 {
-    static IterationRunBegin0 ret;
+    log << __PRETTY_FUNCTION__ << std::endl;
+    static IterationRunBegin1 iter1;
+    static IterationRunBegin0 iter0( &iter1 );
 
-    ret.next_ = IterationRunBegin1::create( elem );
-    return &ret;
+    // FIXME: create iter0 (cannot be overloaded)
+
+    iter1.create( elem );
+
+    return &iter0;
 }
 
 
-void IterationRunBegin0::destroy(IterationRunBegin0* iter)
+void IterationRunBegin0::destroy(IterationRunBegin0* iter0)
 {
-    IterationRunBegin1::destroy( iter->next_ );
+    // destroy 'iter'
+    iter0->next()->destroy();
+    iter0->destroy();
+
 }
 
-IterationRunBegin1* IterationRunBegin1::create(xml::XMLElement* elem)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void IterationRunBegin1::create(xml::XMLElement* elem)
 {
-    static IterationRunBegin1 ret;
-   
-    // FIXME: begin iteration from cfg...
+    using namespace xml;
+
+    XMLHandle xml( elem );
+    // init data for this from xml config
     
-    return &ret;
 }
 
-void IterationRunBegin1::destroy(IterationRunBegin1* iter)
+void IterationRunBegin1::destroy()
 {
-    // FIXME: end iteration
+
+}
+
+void IterationRunBegin0::destroy()
+{
+
 }
 
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-// to be run once, then calling IterationRunBegin1
-void IterationRunBegin0::iterate(IterationStackRunWorld& stack, RunWorld& run)
+void IterationRunBegin0::world_begin(RunWorld& run)
 {
     log << "IterationRunBegin0::iterate" << std::endl;
 
+    // create Scene
+    uint wth, hth;
+    Env::screenSize( wth, hth );
+    theScene()->size( wth, hth );
+
     theRun()->keys->keys_clear(); 
     theForest()->keys->keys_clear();
-    // now next iteration
-    //stack.next( next_ );
-    stack.push( next_ );
+
 }
+
 
 void IterationRunBegin1::iterate(IterationStackRunWorld& stack, RunWorld& run)
 {
     // begin Scene for this frame
-    scene_begin( run.scene );
+    scene_begin( theScene() );
     
     theRun()->keys->keys_update( Env::tick() );
     theForest()->keys->keys_update( Env::tick() );
     
-    float_t wth = run.scene.shape.wth;
-    float_t hth = run.scene.shape.hth;
+    float_t wth = theScene()->shape()->wth;
+    float_t hth = theScene()->shape()->hth;
 
 
     KeyPointer* pointer = theForest()->keys->pointer;
     float_t x0, y0, x1, y1;
     tick_t ticks;
-    if ( pointer->drag( run.scene.shape.wth, run.scene.shape.hth, x0, x1, y0, y1, ticks ) )
+    if ( pointer->drag( wth, hth, x0, x1, y0, y1, ticks ) )
     {
         std::printf("drag (%#5.2f, %#5.2f) -> (%#5.2f, %#5.2f), time %#5.2f \n", x0, x1, y0, y1, ticks );
     }
-    if ( pointer->drop( run.scene.shape.wth, run.scene.shape.hth, x0, x1, y0, y1, ticks ) )
+    if ( pointer->drop( wth, hth, x0, x1, y0, y1, ticks ) )
     {
         std::printf("drop (%#5.2f, %#5.2f) -> (%#5.2f, %#5.2f), time %#5.2f \n", x0, x1, y0, y1, ticks );
     }

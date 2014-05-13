@@ -25,41 +25,44 @@ namespace BATB
 {
 
 
-class IterationRunBegin1;
-
-// start 
-class IterationRunBegin0 : public IterationRunWorld
-{
-public:
-    static IterationRunBegin0* create(xml::XMLElement* );
-    static void destroy(IterationRunBegin0* iter);
-
-    void iterate(IterationStackRunWorld& stack, RunWorld& run);           // to be run once, then calling IterationRunBegin1
-
-private:
-    IterationRunBegin1* next_;
-};
-
-
-
-// main-iteration
+// iterate-iteration
 class IterationRunBegin1 : /*public Game::IterationDefault<RunWorld>*/ IterationRunWorld
 {
 friend class IterationRunBegin0;
 
 public:
-    static IterationRunBegin1* create(xml::XMLElement* cfg);
-    static void destroy(IterationRunBegin1* iter);
-
-    void iterate(IterationStackRunWorld& stack, RunWorld& run);   // FIXME: define in .cpp
+    void iterate(IterationStackRunWorld& stack, RunWorld& run);
 
 private:
+    void create(xml::XMLElement* cfg);
+    void destroy();
 };
+
+
+
+// begin-iteration 
+class IterationRunBegin0 : public IterationBeginnerRun
+{
+public:
+    IterationRunBegin0(IterationRunBegin1* iter1) : IterationBeginnerRun( iter1 ) { }
+
+    static IterationRunBegin0*  create(xml::XMLElement* );
+    static void                 destroy(IterationRunBegin0* iter);
+
+
+protected:
+    void world_begin(RunWorld& );
+
+    void destroy();
+};
+
+
 
 
 
 // externals are only referring to the starting iteration:
 typedef IterationRunBegin0 IterationRunBegin;
+//typedef Game::NoIteration<RunWorld> IterationRunBegin;
 
 }
 

@@ -22,6 +22,7 @@
 #include "Game/IterationStack.hpp"
 #include "Game/Iteration/IterationFunction.hpp"
 #include "Game/Iteration/IterationDefault.hpp"
+#include "Game/Iteration/IterationBeginner.hpp"
 #include "Game/Iteration/NoIteration.hpp"
 #include "Game/Output/NoOutput.hpp"
 

@@ -34,7 +34,7 @@ set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build do
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
 add_subdirectory( ${GLFW_SOURCE_DIR} )
-set( BATB_LIBRARIES ${GLFW_LIBRARIES} )
+set( BATB_LIBRARIES ${BATB_LIBRARIES} ${GLFW_LIBRARIES} )
 
 
 # set CMake working directory
@@ -75,6 +75,7 @@ set( BATB_SOURCES
 ### BUILD ###
 if ( BATB_BUILD )
     add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
+    set( BATB_LIBRARIES ${BATB_LIBRARIES} -lGLEW )
 
     # create executable target 'batb'
     add_executable( batb ${BATB_SOURCES})

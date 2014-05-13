@@ -29,8 +29,8 @@ namespace Game
 // subclassing Ref for an deriving object O:
 //
 //  A:  if O should have the ability to be container-released,
-//      implement the free-mem capability in 'void Ref::destroy_()'
-//  B:  else, do not implement 'void Ref::destroy_()'
+//      implement the free-mem capability in 'void Ref::destroy()'
+//  B:  else, do not implement 'void Ref::destroy()'
 // 
 //  for case B, if O is unintentionally is container-released, 
 //  then this releasment will not free memory too early
@@ -64,9 +64,9 @@ public:
                 if ( ref->count_ == 0 )
                 {
 #ifdef GAME_DEBUG_REF_OUTPUT
-                std::clog << "Ref::destroy_()";
+                std::clog << "Ref::destroy()";
 #endif
-                    ref->destroy_();
+                    ref->destroy();
                 }
 
             }
@@ -85,20 +85,20 @@ public:
         return ref;
     }
 
+    // implement memory release here (used by auto-release)
+    virtual void destroy() { };
+
     // destroy object (static interface)
     /*
     static void destroy(Ref* ref)
     {
-        ref->destroy_();
+        ref->destroy();
     }
     */
     
 protected:
     Ref() : count_( 0 ), release_( false ) { }
     // FIXME: prevent public operator delete?
-
-    // implement memory release here (for container-release)
-    virtual void destroy_() { };
 
     static uint count(Ref* ref)
     {

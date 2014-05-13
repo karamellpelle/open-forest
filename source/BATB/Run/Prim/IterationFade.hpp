@@ -28,7 +28,7 @@ class IterationFade : public IterationRunWorld
 {
 public:
     static IterationFade* create(IterationRunWorld* a, IterationRunWorld* b) { return new IterationFade( a, b ); }
-    static void destroy(IterationFade* iter) { destroy_(); }
+    static void destroy(IterationFade* iter) { destroy(); }
 
     void ticks(tick_t t) { ticks_ = t; }
 
@@ -85,7 +85,7 @@ private:
     IterationFade(IterationRunWorld* a, IterationRunWorld* b) : iterationA_( a ), iterationB_( b ), tick_empty_( true )
     {
     }
-    void destroy_() { delete this; }
+    void destroy() { delete this; }
 
     IterationRunWorld* iterationA_;
     IterationRunWorld* iterationB_;

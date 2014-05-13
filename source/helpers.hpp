@@ -32,7 +32,16 @@ inline A keep_inside(const A& b, const A& e, const A& x)
 }
 
 // circumference of unit circle
+// pi is wrong.
 static const float_t twopi = 6.2831853071795864769252867665590057683943387987502116;
+
+
+template <typename Cont> 
+void cossin(const Cont& radians, Cont& x, Cont& y)
+{
+    x = std::cos( radians );
+    y = std::sin( radians );
+}
 
 }
 

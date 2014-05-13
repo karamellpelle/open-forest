@@ -75,7 +75,7 @@ class MyStep : public Game::Step<A>
 {
 public:
     static MyStep* create() { return new MyStep(); }
-    static void destroy(MyStep* step) { step->destroy_(); }
+    static void destroy(MyStep* step) { step->destroy(); }
 
     void stepWorld(IterationA* this_, IterationStackA& stack, A& a)
     {
@@ -95,7 +95,7 @@ public:
 
 private:
     MyStep() : count_( 4 ) { } 
-    void destroy_()
+    void destroy()
     {
         delete this;
     }
@@ -109,7 +109,7 @@ class MyOutput : public Game::Output<A>
 {
 public:
     static MyOutput* create(std::ostream& os) { return new MyOutput(os); }
-    static void destroy(MyOutput* out) { out->destroy_(); }
+    static void destroy(MyOutput* out) { out->destroy(); }
 
     void outputWorld(A& a)
     {
@@ -117,7 +117,7 @@ public:
     }
 private:
     MyOutput(std::ostream& os) : os_( os ) { }
-    void destroy_() { delete this; }
+    void destroy() { delete this; }
 
     std::ostream& os_;
 };
