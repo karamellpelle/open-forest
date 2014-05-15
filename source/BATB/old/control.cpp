@@ -2,11 +2,11 @@
 #include <sstream>
 #include <cmath>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include "common.h"
 #include "matrix.h"

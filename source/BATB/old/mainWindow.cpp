@@ -14,15 +14,15 @@
 #define GLEW_STATIC 1
 #include <GL/glew.h>
 
-#ifdef FREEGLUT_IS_PRESENT
-#  include <GL/freeglut.h>
-#else
-#  ifdef __APPLE__
-#    include <GLUT/glut.h>
-#  else
-#    include <GL/glut.h>
-#  endif
-#endif
+//#ifdef FREEGLUT_IS_PRESENT
+//#  include <GL/freeglut.h>
+//#else
+//#  ifdef __APPLE__
+//#    include <GLUT/glut.h>
+//#  else
+//#    include <GL/glut.h>
+//#  endif
+//#endif
 
 #include <plib/pu.h>
 
@@ -256,21 +256,77 @@ void MainWindow::displaySwitch()
  * from GLUT and pass them on to PUI.   *
  *                                      *
 \**************************************/
+void glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
+{
+    // old-BATB only handles down...
+    if ( action == GLFW_RELEASE )
+    {
+        return;
+    }
+
+    // keyDownFn
+    unsigned char c = 0; 
+    switch ( key )
+    {
+    case GLFW_KEY_ESCAPE: c = 27; break;
+    case GLFW_KEY_BACKSPACE: c = 8; break;
+    case GLFW_KEY_DELETE: c = 127; break;
+    case GLFW_KEY_SPACE: c = ' '; break;
+    case GLFW_KEY_ENTER: c = 13;
+    default: 
+        if ( GLFW_KEY_A <= key && key <= GLFW_KEY_Z )
+        {
+            c = 'a' + (key - GLFW_KEY_A); 
+        }
+    }
+
+    if ( c != 0 )
+    {
+        MainWindow::keyDownFn( key, 0, 0 );
+    }
+
+    // specialDownFn
+    // F1,...,F12,ARROWS,PAGE_UP,PAGE_DOWN,HOME,END,INSERT
+
+    // 290-301: F1..F12
+    // 266: PAGE_UP
+    // 267: PAGE_DOWN
+    // RIGHT
+    // LEFT
+    // DOWN
+    // UP
+    int k = 0;
+    switch ( key )
+    {
+    case GLFW_KEY_PAGE_UP: k = GLUT_KEY_PAGE_UP; break;
+    case GLFW_KEY_PAGE_DOWN: k = GLUT_KEY_PAGE_DOWN; break;
+    case GLFW_KEY_RIGHT: k = GLUT_KEY_RIGHT; break;
+    case GLFW_KEY_LEFT: k = GLUT_KEY_LEFT; break;
+    case GLFW_KEY_DOWN: k = GLUT_KEY_DOWN; break;
+    case GLFW_KEY_UP: k = GLUT_KEY_UP; break;
+    case GLFW_KEY_HOME: k = GLUT_KEY_HOME; break;
+    case GLFW_KEY_END: k = GLUT_KEY_END; break;
+    case GLFW_KEY_INSERT: k = GLUT_KEY_INSERT; break;
+    case GLFW_KEY_: k = GLUT_KEY_; break;
+    default:
+      if ( GLFW_KEY_F1 <= key && key < GLFW_KEY_F13 )
+      {
+          k = GLUT_KEY_F1 + (key - GLFW_KEY_F1);
+      }
+
+    }
+    if ( k != 0 )
+    {
+        MainWindow::specialDownFn( k, 0, 0 );
+    }
+}
 
 void MainWindow::specialDownFn(int key, int, int)
 {
     puKeyboard(key + PU_KEY_GLUT_SPECIAL_OFFSET, PU_DOWN);
-    glutPostRedisplay();
+    //glutPostRedisplay();
     printf("special key down: %c\n", key);
 }
-
-void MainWindow::specialUpFn(int key, int, int)
-{
-    puKeyboard(key + PU_KEY_GLUT_SPECIAL_OFFSET, PU_UP);
-    glutPostRedisplay();
-    printf("special key up: %c\n", key);
-}
-
 void MainWindow::keyDownFn(unsigned char key, int, int)
 {
     puKeyboard(key, PU_DOWN);
@@ -361,126 +417,61 @@ void MainWindow::keyDownFn(unsigned char key, int, int)
 	{
 	    oldWinWidth = winWidth;
 	    oldWinHeight = winHeight;
-	    glutFullScreen();
+	    //glutFullScreen();
 	}
 	else
 	{
-	    glutPositionWindow(winPosX, winPosY);
-	    glutReshapeWindow(oldWinWidth, oldWinHeight);
+	    //glutPositionWindow(winPosX, winPosY);
+	    //glutReshapeWindow(oldWinWidth, oldWinHeight);
 	}
 	break;
     }
 
-    glutPostRedisplay();
+    //glutPostRedisplay();
 }
 
+// not used
 void MainWindow::keyUpFn(unsigned char key, int, int)
 {
     puKeyboard(key, PU_UP);
     printf("keyUp: %c\n", key);
 }
-
-void MainWindow::motionfn(int x, int y)
+//not used
+void MainWindow::specialUpFn(int key, int, int)
 {
-    if (showMap)
-    {
-	if (zoomingMap) 
-	{
-	    // move the mouse with both left and right button depressed, zoom the map
-	    fptype deltay = mouse.y - y;
-	    mapScale += deltay/30.0;
-	    if (mapScale < mapScaleMin) mapScale = mapScaleMin;
-	    if (mapScale > mapScaleMax) mapScale = mapScaleMax;
-	} 
-	else if (movingMap) 
-	{
-	    // moving the mouse with left button depressed, move the map
-	    fptype deltax = mouse.x - x;
-	    fptype deltay = mouse.y - y;
-	    fptype angle = atan2(deltay, deltax);
-	    fptype length = sqrt(deltax*deltax + deltay*deltay)/mapScale;
-	    mapEye.x += length*cos(angle + mapRotate);
-	    mapEye.y -= length*sin(angle + mapRotate);
-	} 
-	else if (rotatingMap) 
-	{
-	    // moving the mouse with right button depressed, rotate the map
-	    int centerx = winWidth/2;
-	    int centery = winHeight/2;
-	    fptype deltaAngle = atan2(mouse.y-centery, mouse.x-centerx);
-	    deltaAngle -= atan2(fptype(y-centery), fptype(x-centerx));
-	    mapRotate += deltaAngle;
-	}
-    }
-    else if (showDialogs)
-    {
-    }
-    else
-    {
-	OrienteerProxy& op = OrienteerProxy::instance();
-	op.addDirection(-((x - mouse.x)/(fptype)100), standingStill, lookingAround);
-	op.addVertical(-((y - mouse.y)/(fptype)100));
-    }
-
-    mouse.x = x;
-    mouse.y = y;
-    puMouse(x, y);
-    glutPostRedisplay();
+    puKeyboard(key + PU_KEY_GLUT_SPECIAL_OFFSET, PU_UP);
+    //glutPostRedisplay();
+    printf("special key up: %c\n", key);
 }
 
-void MainWindow::actionMapping(int mouseButton)
-{
-    if (showMap)
-    {
-	movingMap = bool((mouseButton & 1));
-	rotatingMap = bool((mouseButton & 4));
-	zoomingMap = bool((mouseButton & 1) && (mouseButton & 4));
-	standingStill = true;
-	lookingAround = false;
-    }
-    else if (!gameOn)
-    {
-	movingMap = false;
-	rotatingMap = false;
-	zoomingMap = false;
-	standingStill = true;
-	lookingAround = true;
-    }
-    else // gameOn
-    {
-	movingMap = false;
-	rotatingMap = false;
-	zoomingMap = false;
-	standingStill = !(mouseButton & 1);
-	lookingAround = (mouseButton & 4);
-    }
 
-#if 0
-    std::cout << "movingMap " << movingMap << std::endl 
-	      << "rotatingMap " << rotatingMap << std::endl 
-	      << "zoomingMap " << zoomingMap << std::endl 
-	      << "standingStill " << standingStill << std::endl 
-	      << "lookingAround " << lookingAround << std::endl;
-#endif
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::glfwCursorPos(GLFWwindow* win, double x, double y)
+{
+    bool left_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_LEFT );
+    bool right_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_RIGHT ); 
+    bool middle_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_MIDDLE ); 
+
+    // motionfn
+    if ( left_press || right_press || middle_press )
+    {
+        MainWindow::motionfn( floor( x ), floor( y ) );
+    }
 }
-
-void MainWindow::unproject(fptype x, fptype y, fptype z,
-			   fptype* objx, fptype* objy, fptype* objz)
+void MainWindow::glfwMouseButton(GLFWwindow* win, int button, int action, int mods)
 {
-    GLdouble model[16];
-    GLdouble projection[16];
-    GLint viewport[4];
-    GLdouble ox, oy, oz;
+    int but = 0;
+    if ( button == GLFW_MOUSE_BUTTON_LEFT ) but = GLUT_LEFT_BUTTON;
+    if ( button == GLFW_MOUSE_BUTTON_RIGHT) but = GLUT_RIGHT_BUTTON;
+    if ( button == GLFW_MOUSE_BUTTON_MIDDLE ) but = GLUT_MIDDLE_BUTTON;
+    int updown = action == GLFW_PRESS ? GLUT_DOWN : GLUT_UP;
+    double x;
+    double y;
+    glfwGetCursorPos( win, &x, &y );
 
-    glGetDoublev(GL_MODELVIEW_MATRIX, model);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble)z,
-                 model, projection, viewport,
-                 &ox, &oy, &oz);
-    *objx = (fptype)ox;
-    *objy = (fptype)oy;
-    *objz = (fptype)oz;
+    MainWindow::mousefn( but, updown, floor(x), floor(y) );
+
 }
 
 void MainWindow::mousefn(int button, int updown, int x, int y)
@@ -559,7 +550,146 @@ void MainWindow::mousefn(int button, int updown, int x, int y)
     }
 
     puMouse(button, updown, x, y);
-    glutPostRedisplay();
+    //glutPostRedisplay();
+}
+// movement while 1 or more buttons pressed:
+void MainWindow::motionfn(int x, int y)
+{
+    if (showMap)
+    {
+	if (zoomingMap) 
+	{
+	    // move the mouse with both left and right button depressed, zoom the map
+	    fptype deltay = mouse.y - y;
+	    mapScale += deltay/30.0;
+	    if (mapScale < mapScaleMin) mapScale = mapScaleMin;
+	    if (mapScale > mapScaleMax) mapScale = mapScaleMax;
+	} 
+	else if (movingMap) 
+	{
+	    // moving the mouse with left button depressed, move the map
+	    fptype deltax = mouse.x - x;
+	    fptype deltay = mouse.y - y;
+	    fptype angle = atan2(deltay, deltax);
+	    fptype length = sqrt(deltax*deltax + deltay*deltay)/mapScale;
+	    mapEye.x += length*cos(angle + mapRotate);
+	    mapEye.y -= length*sin(angle + mapRotate);
+	} 
+	else if (rotatingMap) 
+	{
+	    // moving the mouse with right button depressed, rotate the map
+	    int centerx = winWidth/2;
+	    int centery = winHeight/2;
+	    fptype deltaAngle = atan2(mouse.y-centery, mouse.x-centerx);
+	    deltaAngle -= atan2(fptype(y-centery), fptype(x-centerx));
+	    mapRotate += deltaAngle;
+	}
+    }
+    else if (showDialogs)
+    {
+    }
+    else
+    {
+	OrienteerProxy& op = OrienteerProxy::instance();
+	op.addDirection(-((x - mouse.x)/(fptype)100), standingStill, lookingAround);
+	op.addVertical(-((y - mouse.y)/(fptype)100));
+    }
+
+    mouse.x = x;
+    mouse.y = y;
+    puMouse(x, y);
+    //glutPostRedisplay();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::glfwWindowSize(GLFWwindow* win, int x, int y)
+{
+    MainWindow::reshapefn( x, y );
+}
+void MainWindow::reshapefn(int width, int height)
+{
+    MainWindow::winWidth = width;
+    MainWindow::winHeight = height;
+    MainWindow::projection();
+    DlgStack::instance().reshape(50, 50, width-100, height-100);
+    MainWindow::windowMessages->reshape(winWidth, winHeight);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::glfwWindowFocus(GLFWwindow* win, int focused)
+{
+    MainWindow::visibility( focused == GL_TRUE ? GLUT_VISIBLE : GLUT_NOT_VISIBLE )
+    
+}
+
+void MainWindow::visibility(int state)
+{ 
+    switch (state)
+    {
+
+    case GLUT_NOT_VISIBLE:
+	disableDisplayFunc();
+	break;
+    case GLUT_VISIBLE:
+	enableDisplayFunc();
+	break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::actionMapping(int mouseButton)
+{
+    if (showMap)
+    {
+	movingMap = bool((mouseButton & 1));
+	rotatingMap = bool((mouseButton & 4));
+	zoomingMap = bool((mouseButton & 1) && (mouseButton & 4));
+	standingStill = true;
+	lookingAround = false;
+    }
+    else if (!gameOn)
+    {
+	movingMap = false;
+	rotatingMap = false;
+	zoomingMap = false;
+	standingStill = true;
+	lookingAround = true;
+    }
+    else // gameOn
+    {
+	movingMap = false;
+	rotatingMap = false;
+	zoomingMap = false;
+	standingStill = !(mouseButton & 1);
+	lookingAround = (mouseButton & 4);
+    }
+
+#if 0
+    std::cout << "movingMap " << movingMap << std::endl 
+	      << "rotatingMap " << rotatingMap << std::endl 
+	      << "zoomingMap " << zoomingMap << std::endl 
+	      << "standingStill " << standingStill << std::endl 
+	      << "lookingAround " << lookingAround << std::endl;
+#endif
+}
+
+void MainWindow::unproject(fptype x, fptype y, fptype z,
+			   fptype* objx, fptype* objy, fptype* objz)
+{
+    GLdouble model[16];
+    GLdouble projection[16];
+    GLint viewport[4];
+    GLdouble ox, oy, oz;
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, model);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    gluUnProject((GLdouble)x, (GLdouble)y, (GLdouble)z,
+                 model, projection, viewport,
+                 &ox, &oy, &oz);
+    *objx = (fptype)ox;
+    *objy = (fptype)oy;
+    *objz = (fptype)oz;
 }
 
 void MainWindow::checkSockets()
@@ -699,8 +829,8 @@ void MainWindow::displayMapDay(void)
     puDisplay();
   
     /* Off we go again... */
-    glutSwapBuffers();
-    glutPostRedisplay();
+    //glutSwapBuffers();
+    //glutPostRedisplay();
 }
 
 void MainWindow::displayTerrainDay(void)
@@ -722,8 +852,8 @@ void MainWindow::displayTerrainDay(void)
     puDisplay();
   
     /* Off we go again... */
-    glutSwapBuffers();
-    glutPostRedisplay();
+    //glutSwapBuffers();
+    //glutPostRedisplay();
 }
 
 void MainWindow::displayTerrainNight(void)
@@ -744,8 +874,8 @@ void MainWindow::displayTerrainNight(void)
     puDisplay();
   
     /* Off we go again... */
-    glutSwapBuffers();
-    glutPostRedisplay();
+    //glutSwapBuffers();
+    //glutPostRedisplay();
 }
 
 void MainWindow::callContinuation(void)
@@ -791,8 +921,8 @@ void MainWindow::generateMapDisplayFn(void)
 
     puDisplay();
   
-    glutSwapBuffers();
-    glutPostRedisplay();
+    //glutSwapBuffers();
+    //glutPostRedisplay();
 }
 
 void MainWindow::generateTerrainDisplayFn(void)
@@ -818,8 +948,8 @@ void MainWindow::generateTerrainDisplayFn(void)
     
     puDisplay();
   
-    glutSwapBuffers();
-    glutPostRedisplay();
+    //glutSwapBuffers();
+    //glutPostRedisplay();
 }
 
 void MainWindow::realizeMap()
@@ -879,15 +1009,6 @@ void MainWindow::realizeTerrain(continuationFunction cf)
     {
 	realizeMap();
     }
-}
-
-void MainWindow::reshapefn(int width, int height)
-{
-    MainWindow::winWidth = width;
-    MainWindow::winHeight = height;
-    MainWindow::projection();
-    DlgStack::instance().reshape(50, 50, width-100, height-100);
-    MainWindow::windowMessages->reshape(winWidth, winHeight);
 }
 
 void MainWindow::single_start_continuation()
@@ -1308,12 +1429,18 @@ void MainWindow::updateDisplayFunc()
 	if (!displayFuncEnabled && displayFunc == MainWindow::terrainDF)
 	{
 	    //glutDisplayFunc(NULL);
-	    glutIdleFunc(NULL);
+	    //glutIdleFunc(NULL);
+
+            // display func...
+            set_display_func( NULL );
 	}
 	else
 	{
-	    glutDisplayFunc(displayFunc);
-	    glutIdleFunc(displayFunc);
+	    //glutDisplayFunc(displayFunc);
+	    //glutIdleFunc(displayFunc);
+
+            // display func...
+            set_display_func( displayFunc );
 	}
     }
     catch (std::out_of_range& ex)
@@ -1355,19 +1482,6 @@ void MainWindow::disableDisplayFunc()
     updateDisplayFunc();
 }
 
-void MainWindow::visibility(int state)
-{ 
-    switch (state)
-    {
-
-    case GLUT_NOT_VISIBLE:
-	disableDisplayFunc();
-	break;
-    case GLUT_VISIBLE:
-	enableDisplayFunc();
-	break;
-    }
-}
 
 /***************************************************************************/
 /* Parse GL_VERSION and return the major and minor numbers in the supplied
@@ -1386,6 +1500,7 @@ static void getGlVersion( int *major, int *minor )
     }
 }
 
+/*
 int main(int argc, char **argv)
 {
     MainWindow::winPosX = 100;
@@ -1484,6 +1599,8 @@ int main(int argc, char **argv)
 
     return 0;
 }
+*/
+
 
 void MainWindow::single_start_cb(puObject *)
 {
@@ -2125,4 +2242,23 @@ bool MainWindow::handle(const MsgDiscConf& msg, TcpServer* fromTcpServer)
     return false;
 }
 
+
+
 // End MessageHandler implementation
+
+
+// we need these for display functions, since we are not using GLUT:
+// also, the old-BATB display functions drive the whole game, i.e. iterates it.
+
+static DisplayFunc display_func_ = 0;
+
+void set_display_func(DisplayFunc f)
+{
+    display_func_ = f;
+
+}
+
+DisplayFunc get_display_func()
+{
+    return display_func_;
+}

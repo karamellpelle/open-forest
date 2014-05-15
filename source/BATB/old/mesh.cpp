@@ -7,11 +7,11 @@
 #define GLEW_STATIC 1
 #include <GL/glew.h>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include <stdexcept>
 #include "common.h"

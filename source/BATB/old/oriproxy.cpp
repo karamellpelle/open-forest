@@ -6,11 +6,11 @@
 #define GLEW_STATIC 1
 #include <GL/glew.h>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include "common.h"
 #include "matrix.h"
@@ -486,7 +486,7 @@ void OrienteerProxy::adjustStepLength(bool standingStill)
     frames++;
 
     // calculate our speed and adjust step length accordingly
-    time = glutGet(GLUT_ELAPSED_TIME);
+    //time = glutGet(GLUT_ELAPSED_TIME); // FIXME!
     if (time - time0 > frequency) 
     {
 	float seconds = (time - time0) / 1000.0;

@@ -5,11 +5,11 @@
 #include <string.h>
 #include <strings.h>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include "database.h"
 #include "client.h"
@@ -89,7 +89,7 @@ void UdpClient::drawToTerrain()
 
     glPushAttrib(GL_POLYGON_BIT);
     glDisable(GL_CULL_FACE);
-    glutSolidSphere(3.0, 10, 10);
+    //glutSolidSphere(3.0, 10, 10);
     glPopAttrib();
 
     glPopMatrix();
@@ -142,7 +142,7 @@ void UdpClient::drawToMap()
 int UdpClient::drawToTerrain(Location* location)
 {
     static GLint time0 = 0;
-    GLint time = glutGet(GLUT_ELAPSED_TIME);
+    //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME!
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {
@@ -158,7 +158,7 @@ int UdpClient::drawToTerrain(Location* location)
 int UdpClient::drawToTerrainDay(Location* location)
 {
     static GLint time0 = 0;
-    GLint time = glutGet(GLUT_ELAPSED_TIME);
+    //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME/
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {
@@ -174,7 +174,7 @@ int UdpClient::drawToTerrainDay(Location* location)
 int UdpClient::drawToTerrainNight(Location* location)
 {
     static GLint time0 = 0;
-    GLint time = glutGet(GLUT_ELAPSED_TIME);
+    //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME:
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {

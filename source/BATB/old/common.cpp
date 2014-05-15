@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 
 static const char* DisplayErrorMessage(GLint err)

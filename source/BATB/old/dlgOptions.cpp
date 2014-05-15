@@ -46,48 +46,63 @@ void DlgOptions::reshape(int x, int y, int width, int height)
 
 void DlgOptions::window_cb(puObject *btn)
 {
+// FIXME:
+/*
 	if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) != 0)
 		glutLeaveGameMode();
+*/
 }
 
 void DlgOptions::fullscreen_640x480_cb(puObject *btn)
 {
+// FIXME:
+/*
 	glutGameModeString("640x480");
 	if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
 		glutEnterGameMode();
 	else {
 		printf("The select mode is not available\n");
 	}
+*/
 }
 
 void DlgOptions::fullscreen_800x600_cb(puObject *btn)
 {
+// FIXME
+/*
 	glutGameModeString("800x600");
 	if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
 		glutEnterGameMode();
 	else {
 		printf("The select mode is not available\n");
 	}
+*/
 }
 
 void DlgOptions::fullscreen_1024x800_cb(puObject *btn)
 {
+// FIXME
+/*
 	glutGameModeString("1024x800");
 	if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
 		glutEnterGameMode();
 	else {
 		printf("The select mode is not available\n");
 	}
+*/
 }
 
 void DlgOptions::fullscreen_1280x1024_cb(puObject *btn)
 {
+// FIXME
+/*
 	glutGameModeString("1280x1024");
 	if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
 		glutEnterGameMode();
 	else {
 		printf("The select mode is not available\n");
 	}
+*/
 }
 
 void DlgOptions::ok_cb(puObject *btn)

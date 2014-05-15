@@ -7,11 +7,11 @@
 #include <stdexcept>
 #include <ctime>
 
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include "database.h"
 #include "run.h"

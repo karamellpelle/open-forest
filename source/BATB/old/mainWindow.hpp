@@ -77,24 +77,40 @@ class MainWindow
     static void callContinuation(void);
 
 	// glut callbacks
-    static void reshapefn(int width, int height);
     static void generatedisplayfn();
     static void displayfnDay();
     static void displayMapDay(void);
     static void displayTerrainDay(void);
     static void displayTerrainNight(void);
-    static void visibility(int state);
-    static void mousefn(int button, int updown, int x, int y);
 
     static void checkSockets();
     static void actionMapping(int mouseButton);
     static void generateMapDisplayFn(void);
     static void generateTerrainDisplayFn(void);
-    static void motionfn(int x, int y);
+
+    // glfwKey
+    static void glfwKey(GLFWwindow*, int, int, int, int );
     static void keyDownFn(unsigned char key, int, int);
-    static void keyUpFn(unsigned char key, int, int);
     static void specialDownFn(int key, int, int);
+
+    // glfwCursor
+    static void glfwCursorPos(GLFWwindow*, double, double );
+    static void glfwMouseButton(GLFWwindow* win, int button, int action, int mods);
+    static void mousefn(int button, int updown, int x, int y);
+    static void motionfn(int x, int y);
+
+    // glfwWindowSize
+    static void glfwWindowSize(GLFWwindow*, int, int);
+    static void reshapefn(int width, int height);
+
+    // glfwWindowFocus
+    static void glfwWindowFocus(GLFWwindow*, int);
+    static void visibility(int state);
+
+    // not used:
+    static void keyUpFn(unsigned char key, int, int);
     static void specialUpFn(int key, int, int);
+
     static void displaySwitch();
     static void displayTerrain();
     static void displayMap();
@@ -223,6 +239,14 @@ extern MainWindow mainWindow;
 extern GLuint dayShader;   // shader for day
 extern GLuint nightShader; // shader for night
 extern GLuint nightTrees;  // shader for night
+
+
+
+// we need these to port old-BATB into new-BATB
+// the display functions drive the whole old-BATB...
+typedef void (*DisplayFunc)();
+void set_display_func(DisplayFunc );
+DisplayFunc get_display_func();
 
 
 #endif // _MAINWINDOW_H

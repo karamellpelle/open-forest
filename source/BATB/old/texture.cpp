@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include "texture.h"
 

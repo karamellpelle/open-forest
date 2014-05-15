@@ -69,7 +69,6 @@ void IterationRunBegin0::world_begin(RunWorld& run)
     theScene()->size( wth, hth );
 
     theRun()->keys->keys_clear(); 
-    theForest()->keys->keys_clear();
 
 }
 
@@ -80,7 +79,6 @@ void IterationRunBegin1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     scene_begin( theScene() );
     
     theRun()->keys->keys_update( Env::tick() );
-    theForest()->keys->keys_update( Env::tick() );
     
     float_t wth = theScene()->shape()->wth;
     float_t hth = theScene()->shape()->hth;
