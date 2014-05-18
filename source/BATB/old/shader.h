@@ -1,5 +1,6 @@
 #ifndef _SHADER_H
 #define _SHADER_H
+#include "old.hpp"
 
 int readShaderSource(const char *fileName, GLchar **vertexShader, GLchar **fragmentShader);
 int installShaders(const GLchar *vertexShader, const GLchar *fragmentShader);

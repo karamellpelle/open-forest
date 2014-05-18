@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "old.hpp"
+
 //#ifdef __APPLE__
 //#  include <GLUT/glut.h>
 //#else
@@ -467,7 +470,8 @@ static void loadImage128(char* filename)
     if (!image)
     {
 	fprintf(stderr, "Error reading a texture.\n");
-	exit(-1);
+	//exit(-1);
+        BATB::exit( -1 );
     }
 
     for (y = 0; y < 128; y++)
@@ -496,7 +500,8 @@ static void loadImage128(char* filename)
 				    GL_UNSIGNED_BYTE, (GLvoid *) (tex))))
     {
 	fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
-	exit(-1);
+	//exit(-1);
+        BATB::exit( -1 );
     }
 }
 
@@ -509,7 +514,8 @@ static void loadImage(const char* filename)
     if (!image)
     {
 	fprintf(stderr, "Error reading a texture.\n");
-	exit(-1);
+	//exit(-1);
+        BATB::exit( -1 );
     }
 
     int nComponents = 0;
@@ -561,7 +567,8 @@ static void loadImage(const char* filename)
 				    GL_UNSIGNED_BYTE, (GLvoid *) (tex))))
     {
 	fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
-	exit(-1);
+	//exit(-1);
+        BATB::exit( -1 );
     }
     free(tex);
 }

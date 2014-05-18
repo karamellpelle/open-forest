@@ -7,7 +7,7 @@
  *		ANSI C
  *		not callable from Fortran (yet)
  */
-
+#include "old.hpp"
 
 
 char uni_id[] = "$Id: random.c,v 1.5 2005/08/21 12:06:48 tmj Exp $" ;
@@ -111,7 +111,8 @@ seed_uni(int ijkl)
     if( (ijkl < 0) || (ijkl > 900000000) )
     {
 	fprintf(stderr,"seed_uni: ijkl = %d -- out of range\n\n", ijkl);
-	exit(3);
+	//exit(3);
+        BATB::exit( 3 );
     }
 
 
@@ -134,31 +135,36 @@ seed_uni(int ijkl)
     if( (i <= 0) || (i > 178) )
     {
 	fprintf(stderr,"seed_uni: i = %d -- out of range\n\n", i);
-	exit(3);
+	//exit(3);
+        BATB::exit( 3 );
     }
     
     if( (j <= 0) || (j > 178) )
     {
 	fprintf(stderr,"seed_uni: j = %d -- out of range\n\n", j);
-	exit(3);
+	//exit(3);
+        BATB::exit( 3 );
     }
     
     if( (k <= 0) || (k > 178) )
     {
 	fprintf(stderr,"seed_uni: k = %d -- out of range\n\n", k);
-	exit(3);
+	//exit(3);
+        BATB::exit( 3 );
     }
     
     if( (l < 0) || (l > 168) )
     {
 	fprintf(stderr,"seed_uni: l = %d -- out of range\n\n", l);
-	exit(3);
+	//exit(3);
+        BATB::exit( 3 );
     }
     
     if (i == 1 && j == 1 && k == 1)
     {
 	fprintf(stderr,"seed_uni: 1 1 1 not allowed for 1st 3 seeds\n\n");
-	exit(4);
+	//exit(4);
+        BATB::exit( 4 );
     }
 #endif
     rstart(i, j, k, l);

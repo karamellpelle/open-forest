@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_ITERATION_RUN_BEGIN_HPP
-#define BATB_ITERATION_RUN_BEGIN_HPP
+#ifndef BATB_ITERATION_RUN_OLD_HPP
+#define BATB_ITERATION_RUN_OLD_HPP
 #include "BATB/Run/Prim/Iteration.hpp"
 #include "BATB/Config.hpp"
 
@@ -41,12 +41,12 @@ private:
 
 
 // begin-iteration 
-class IterationRunOld0 : public IterationOldnerRun
+class IterationRunOld0 : public IterationBeginnerRun
 {
 public:
-    IterationRunOld0(IterationRunOld1* iter1) : IterationOldnerRun( iter1 ) { }
+    IterationRunOld0(IterationRunOld1* iter1) : IterationBeginnerRun( iter1 ) { }
 
-    static IterationRunOld0*  create(xml::XMLElement* );
+    static IterationRunOld0*    create(xml::XMLElement* );
     static void                 destroy(IterationRunOld0* iter);
 
 
@@ -62,7 +62,6 @@ protected:
 
 // externals are only referring to the starting iteration:
 typedef IterationRunOld0 IterationRunOld;
-//typedef Game::NoIteration<RunWorld> IterationRunOld;
 
 }
 

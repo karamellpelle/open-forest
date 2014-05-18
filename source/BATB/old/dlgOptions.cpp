@@ -1,4 +1,5 @@
 #include <algorithm>
+#include "old.hpp"
 
 #include "database.h"
 #include "matrix.h"
@@ -51,6 +52,7 @@ void DlgOptions::window_cb(puObject *btn)
 	if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) != 0)
 		glutLeaveGameMode();
 */
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void DlgOptions::fullscreen_640x480_cb(puObject *btn)
@@ -64,6 +66,7 @@ void DlgOptions::fullscreen_640x480_cb(puObject *btn)
 		printf("The select mode is not available\n");
 	}
 */
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void DlgOptions::fullscreen_800x600_cb(puObject *btn)
@@ -77,6 +80,7 @@ void DlgOptions::fullscreen_800x600_cb(puObject *btn)
 		printf("The select mode is not available\n");
 	}
 */
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void DlgOptions::fullscreen_1024x800_cb(puObject *btn)
@@ -90,6 +94,7 @@ void DlgOptions::fullscreen_1024x800_cb(puObject *btn)
 		printf("The select mode is not available\n");
 	}
 */
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void DlgOptions::fullscreen_1280x1024_cb(puObject *btn)
@@ -103,6 +108,7 @@ void DlgOptions::fullscreen_1280x1024_cb(puObject *btn)
 		printf("The select mode is not available\n");
 	}
 */
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
 }
 
 void DlgOptions::ok_cb(puObject *btn)

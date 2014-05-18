@@ -18,12 +18,51 @@
 #ifndef BATB_ITERATION_RUN_MAIN_HPP
 #define BATB_ITERATION_RUN_MAIN_HPP
 #include "BATB/Run/Prim/Iteration.hpp"
+#include "BATB/Config.hpp"
+
 
 namespace BATB
 {
 
-typedef IterationRunWorld IterationRunMain;
 
+// iterate-iteration
+class IterationRunMain1 :  IterationRunWorld
+{
+friend class IterationRunMain0;
+
+public:
+    void iterate(IterationStackRunWorld& stack, RunWorld& run);
+
+private:
+    void create(xml::XMLElement* cfg);
+    void destroy();
+};
+
+
+
+// begin-iteration 
+class IterationRunMain0 : public IterationBeginnerRun
+{
+public:
+    IterationRunMain0(IterationRunMain1* iter1) : IterationBeginnerRun( iter1 ) { }
+
+    static IterationRunMain0*  create(xml::XMLElement* );
+    static void                 destroy(IterationRunMain0* iter);
+
+
+protected:
+    void world_begin(RunWorld& );
+
+    void destroy();
+};
+
+
+
+
+
+// externals are only referring to the starting iteration:
+typedef IterationRunMain0 IterationRunMain;
+//typedef Game::NoIteration<RunWorld> IterationRunMain;
 
 }
 

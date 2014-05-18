@@ -1,6 +1,7 @@
 #ifndef _CONTROL_H
 #define _CONTROL_H
 
+#include "old.hpp"
 #include "point.h"
 
 struct Control

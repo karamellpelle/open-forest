@@ -26,8 +26,13 @@ namespace BATB
 class Terrain
 {
 public:
+    // [Control] :      Terrain is populated with controls
+    // [Tree] :         Terrain is populated with trees
+    // other objects :  Terrain is populated with other objects
 
 private:
+    // GL stuff:
+    // * terrain mesh, i.e. Ogre3D terrain
 };
 
 

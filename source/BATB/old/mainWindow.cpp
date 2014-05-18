@@ -1,3 +1,5 @@
+#include "old.hpp"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -10,9 +12,6 @@
 #else
 #  include <unistd.h>
 #endif
-
-#define GLEW_STATIC 1
-#include <GL/glew.h>
 
 //#ifdef FREEGLUT_IS_PRESENT
 //#  include <GL/freeglut.h>
@@ -137,10 +136,10 @@ static void initTextures()
     // for each tree type assign: min and max height and width,
     // occurrence frequency (probability it will be chosen)
 #if 1
-    loadTexture(treeTextures[0], "images/manty.rgb");
-    loadTexture(treeTextures[1], "images/kuusi.rgb");
-    loadTexture(treeTextures[2], "images/rauduskoivu.rgb");
-    loadTexture(treeTextures[3], "images/pihlaja.rgb");
+    loadTexture(treeTextures[0], old_file( "images/manty.rgb" ).c_str() );
+    loadTexture(treeTextures[1], old_file( "images/kuusi.rgb").c_str() );
+    loadTexture(treeTextures[2], old_file( "images/rauduskoivu.rgb").c_str());
+    loadTexture(treeTextures[3], old_file( "images/pihlaja.rgb").c_str());
 #else
     Forest forest;
     forest.addTreeType(20, 35, 10, 15, 10,
@@ -171,7 +170,7 @@ static void initTextures()
 #endif
 
     glActiveTexture(GL_TEXTURE1);
-    loadTexture(altgradTextures[0], "images/altgrad.rgb");
+    loadTexture(altgradTextures[0], old_file( "images/altgrad.rgb").c_str());
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_3D, noiseTextures[0]);
@@ -256,7 +255,7 @@ void MainWindow::displaySwitch()
  * from GLUT and pass them on to PUI.   *
  *                                      *
 \**************************************/
-void glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
+void MainWindow::glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
 {
     // old-BATB only handles down...
     if ( action == GLFW_RELEASE )
@@ -264,27 +263,7 @@ void glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
         return;
     }
 
-    // keyDownFn
-    unsigned char c = 0; 
-    switch ( key )
-    {
-    case GLFW_KEY_ESCAPE: c = 27; break;
-    case GLFW_KEY_BACKSPACE: c = 8; break;
-    case GLFW_KEY_DELETE: c = 127; break;
-    case GLFW_KEY_SPACE: c = ' '; break;
-    case GLFW_KEY_ENTER: c = 13;
-    default: 
-        if ( GLFW_KEY_A <= key && key <= GLFW_KEY_Z )
-        {
-            c = 'a' + (key - GLFW_KEY_A); 
-        }
-    }
-
-    if ( c != 0 )
-    {
-        MainWindow::keyDownFn( key, 0, 0 );
-    }
-
+    // handle special-buttons before normal buttons
     // specialDownFn
     // F1,...,F12,ARROWS,PAGE_UP,PAGE_DOWN,HOME,END,INSERT
 
@@ -307,7 +286,7 @@ void glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
     case GLFW_KEY_HOME: k = GLUT_KEY_HOME; break;
     case GLFW_KEY_END: k = GLUT_KEY_END; break;
     case GLFW_KEY_INSERT: k = GLUT_KEY_INSERT; break;
-    case GLFW_KEY_: k = GLUT_KEY_; break;
+    //case GLFW_KEY_: k = GLUT_KEY_; break;
     default:
       if ( GLFW_KEY_F1 <= key && key < GLFW_KEY_F13 )
       {
@@ -317,8 +296,33 @@ void glfwKey(GLFWwindow* win, int key, int scan, int action, int mod)
     }
     if ( k != 0 )
     {
+        std::cout << "specialDownFn: " << k << std::endl;
         MainWindow::specialDownFn( k, 0, 0 );
+        return;
     }
+
+    // keyDownFn
+    unsigned char c = 0; 
+    switch ( key )
+    {
+    case GLFW_KEY_ESCAPE: c = 27; break;
+    case GLFW_KEY_BACKSPACE: c = 8; break;
+    case GLFW_KEY_DELETE: c = 127; break;
+    case GLFW_KEY_SPACE: c = ' '; break;
+    case GLFW_KEY_ENTER: c = 13;
+    default: 
+        if ( GLFW_KEY_A <= key && key <= GLFW_KEY_Z )
+        {
+            c = 'a' + (key - GLFW_KEY_A); 
+        }
+    }
+
+    if ( c != 0 )
+    {
+        std::cout << "keyDownFn: " << (int)(c) << std::endl;
+        MainWindow::keyDownFn( key, 0, 0 );
+    }
+
 }
 
 void MainWindow::specialDownFn(int key, int, int)
@@ -618,7 +622,7 @@ void MainWindow::reshapefn(int width, int height)
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::glfwWindowFocus(GLFWwindow* win, int focused)
 {
-    MainWindow::visibility( focused == GL_TRUE ? GLUT_VISIBLE : GLUT_NOT_VISIBLE )
+    MainWindow::visibility( focused == GL_TRUE ? GLUT_VISIBLE : GLUT_NOT_VISIBLE );
     
 }
 
@@ -1285,7 +1289,7 @@ void MainWindow::init()
     // init database
     Database& db = Database::instance();
     const XmlParser& xmlParser = XmlParser::instance();
-    xmlParser.readFile("batbdb.xml", db);
+    xmlParser.readFile( old_file("batbdb.xml").c_str(), db);
     db.ensureMinimalDB();
     db.addObserver(&mainWindow);
 
@@ -1388,7 +1392,7 @@ void MainWindow::punch(int controlNumber)
     }
 }
 
-static void printVersions()
+void printVersions()
 {
     const GLubyte* vendor = glGetString(GL_VENDOR);
     const GLubyte* renderer = glGetString(GL_RENDERER);
@@ -1490,7 +1494,7 @@ void MainWindow::disableDisplayFunc()
  * Assumes a valid OpenGL context.
 */
 
-static void getGlVersion( int *major, int *minor )
+void getGlVersion( int *major, int *minor )
 {
     const char* verstr = (const char*)glGetString( GL_VERSION );
     if( (verstr == NULL) || (sscanf( verstr, "%d.%d", major, minor ) != 2) )
@@ -1889,7 +1893,7 @@ void MainWindow::set_location_cb(puObject *cb)
 void MainWindow::quit_ok_cb(puObject *)
 {
     Database& db = Database::instance();
-    db.write("batbdb.xml");
+    db.write( old_file("batbdb.xml").c_str() );
     db.discard();
 
     delete windowMessages;
@@ -1904,7 +1908,8 @@ void MainWindow::quit_ok_cb(puObject *)
     socketCleanup();
 #endif
 
-    exit(0);
+    //exit(0);
+    BATB::exit( 0 );
 }
 
 void MainWindow::join2_quit_cb(puObject *dlg)
@@ -2247,18 +2252,3 @@ bool MainWindow::handle(const MsgDiscConf& msg, TcpServer* fromTcpServer)
 // End MessageHandler implementation
 
 
-// we need these for display functions, since we are not using GLUT:
-// also, the old-BATB display functions drive the whole game, i.e. iterates it.
-
-static DisplayFunc display_func_ = 0;
-
-void set_display_func(DisplayFunc f)
-{
-    display_func_ = f;
-
-}
-
-DisplayFunc get_display_func()
-{
-    return display_func_;
-}

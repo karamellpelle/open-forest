@@ -32,14 +32,16 @@ void RunPrim::create(xml::XMLElement* elem)
     iterationRunBegin     = IterationRunBegin::create( xml.FirstChildElement("IterationRunBegin").ToElement() );
     iterationRunEnd       = Game::NoIteration<RunWorld>::create();
     iterationRunIntro     = Game::NoIteration<RunWorld>::create();
-    iterationRunMain      = Game::NoIteration<RunWorld>::create();
+    iterationRunMain      = IterationRunMain::create( xml.FirstChildElement("IterationRunMain").ToElement() );
     iterationRunOutro     = Game::NoIteration<RunWorld>::create();
 
+    iterationRunOld       = IterationRunOld::create( 0 );
 
 }
 
 void RunPrim::destroy()
 {
+    // FIXME:
     //IterationRunBegin::destroy( prim->iterationRunBegin );
 }
 

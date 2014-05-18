@@ -30,7 +30,9 @@ public:
 
     // keys to control Run
     KeyClicker* pause;
-
+    
+    // TMP: toggle old iterations
+    KeyClicker* old; 
 
 };
 

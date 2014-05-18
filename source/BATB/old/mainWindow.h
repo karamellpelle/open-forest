@@ -1,6 +1,7 @@
 #ifndef _MAINWINDOW_H
 #define _MAINWINDOW_H
 
+#include "old.hpp"
 #include "windowMessage.h"
 #include "fdManager.h"
 #include "server.h"
@@ -16,10 +17,23 @@
 #include "eventproxy.h"
 #include "oriproxy.h"
 #include "dlgCommon.h"
+#include "database.h"
+
+//#include "orienteer.h"
+
+#ifdef __APPLE__
+#  include <GLUT/glut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
+void printVersions();
+void getGlVersion( int *major, int *minor );
 
 
 class MainWindow 
-:   public MessageHandler, 
+  :
+    public MessageHandler, 
     public OpObserver, 
     public TimerObserver, 
     public DatabaseObserver
@@ -239,14 +253,5 @@ extern MainWindow mainWindow;
 extern GLuint dayShader;   // shader for day
 extern GLuint nightShader; // shader for night
 extern GLuint nightTrees;  // shader for night
-
-
-
-// we need these to port old-BATB into new-BATB
-// the display functions drive the whole old-BATB...
-typedef void (*DisplayFunc)();
-void set_display_func(DisplayFunc );
-DisplayFunc get_display_func();
-
 
 #endif // _MAINWINDOW_H

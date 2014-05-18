@@ -1,5 +1,8 @@
 #ifndef _ORIPROXY_H
 #define _ORIPROXY_H
+#include "old.hpp"
+
+#include "orienteer.h"
 
 class OpObserver
 {

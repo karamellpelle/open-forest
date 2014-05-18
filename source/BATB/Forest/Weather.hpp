@@ -23,6 +23,8 @@
 namespace BATB
 {
 
+
+// night/day and other properties
 class Weather
 {
 public:

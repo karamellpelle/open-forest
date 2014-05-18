@@ -43,6 +43,10 @@ inline Config* theConfig()
     return config_;
 }
 
+
+// set the OpenGL state BATB assumes
+void set_gl_state();
+
 }
 
 

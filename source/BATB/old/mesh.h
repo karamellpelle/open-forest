@@ -15,6 +15,8 @@
 
 #include "util.h"
 
+#include "old.hpp"
+
 /***
  * OpenGL has right-handed coordinate system.
  *

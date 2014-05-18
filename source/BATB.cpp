@@ -59,11 +59,23 @@ void begin(Config* cfg)
 
     // set BATB configuration-object
     config_ = cfg;
-
     XMLHandle xml( cfg );
 
     // create log stream
     Log::create( xml.FirstChildElement("Log").ToElement() );
+
+
+
+    //////////////////////////////////////////////////////////
+    //      OpenGL
+    glewInit();
+    // BATB assumes this GL state:
+    set_gl_state();
+
+
+    //////////////////////////////////////////////////////////
+    //      OpenAL
+
 
 
     // print info
@@ -86,6 +98,7 @@ void begin(Config* cfg)
 
 void end()
 {
+
     // FIXME: save config
 
 
@@ -95,6 +108,27 @@ void end()
 }
 
 
+void set_gl_state()
+{
+    //  set up our GL-invariants:
+    glEnable( GL_MULTISAMPLE );
+    glClearColor( 0, 0, 0, 0 );
+    glDisable( GL_STENCIL_TEST ); // ??
+    glClearStencil( 0 );          // ??
 
+    // if a fragment shader outputs value intended to be color, then this color should be normalized.
+    // that is, the RGB coordinates should be multiplied by A. this means that if a color (r,g,b) has
+    // opacity a, then the RGBA color should be normalized into (a * r, a * g, a * b, a).
+    // "premultiplied alpha"
+    glEnable( GL_BLEND );
+    glBlendEquationSeparate( GL_FUNC_ADD, 
+                             GL_FUNC_ADD );
+    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    
+    glDepthMask( GL_TRUE );
+    glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
+    glEnable( GL_DEPTH_TEST );
 }
 
+}

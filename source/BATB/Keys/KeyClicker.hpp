@@ -36,7 +36,7 @@ public:
     float_t alpha()           { return key_->alpha(); }
 
     bool click()              { return released_ && 1 <= click_count_; }
-    bool click_double()       { return released_ && 2 <= click_count_; }
+    bool click_double()       { return released_ && 2 == click_count_; }
     uint click_count()        { if ( released_ ) return click_count_; return 0; }
 
     bool pressed()            { return pressed_; }

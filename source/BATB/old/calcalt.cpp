@@ -22,7 +22,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "crinkle.h"
-
+#include "old.hpp"
 #ifdef DEBUG
 #define DB(A,B) dump_pipeline(A,B)
 #else
@@ -40,7 +40,8 @@ Strip *make_strip(int level)
     if (p == NULL)
     {
 	fprintf(stderr,"make_strip: malloc failed\n");
-	exit(1);
+	//exit(1);
+        BATB::exit( 1 );
     }
     p->level = level;
     points = (1 << level) + 1;
@@ -48,7 +49,8 @@ Strip *make_strip(int level)
     if (p->d == NULL)
     {
 	fprintf(stderr,"make_strip: malloc failed\n");
-	exit(1);
+	//exit(1);
+        BATB::exit( 1 );
     }
     return(p);
 }
@@ -131,13 +133,15 @@ Fold* make_fold(struct parm *param, int levels,	int stop, Length length)
     {
 	fprintf(stderr,"make_fold: invalid parameters\n");
 	fprintf(stderr,"make_fold: levels = %d , stop = %d \n",levels,stop);
-	exit(1);
+	//exit(1);
+        BATB::exit( 1 );
     }
     p = (Fold *)malloc(sizeof(Fold));
     if (p == NULL)
     {
 	fprintf(stderr,"make_fold: malloc failed\n");
-	exit(1);
+	//exit(1);
+        BATB::exit( 1 );
     }
     root2=sqrt((double) 2.0 );
     scale = pow((double) length, (double) (2.0 * param->fdim));
@@ -354,7 +358,8 @@ Strip* next_strip(Fold *fold)
 	    default:
 		fprintf(stderr,"next_strip: invalid state level %d state %d\n",
 			fold->level,fold->state);
-		exit(3);
+		//exit(3);
+                BATB::exit( 1 );
 	    }
 	    /*}}}*/
 	}
@@ -383,7 +388,8 @@ void x_update(int count, float scale, float mix,
     if (!b)
     {
 	fprintf(stderr,"x_update: attempt to update NULL strip\n");
-	exit(1);
+	//exit(1);
+        BATB::exit(1);
     }
   
     w = (1.0 - mix)/4.0;
@@ -509,7 +515,8 @@ void t_update(int count, float scale, float mix,
     if (!b)
     {
 	fprintf(stderr,"t_update: attempt to update NULL strip\n");
-	exit(1);
+	//exit(1);
+        BATB::exit(1);
     }
 
     w = (1.0 - mix)/4.0;
@@ -586,7 +593,8 @@ void v_update(int count, float scale, float mix,
     if (!b)
     {
 	fprintf(stderr,"v_update: attempt to update NULL strip\n");
-	exit(1);
+	//exit(1);
+        BATB::exit(1);
     }
 
     w = (1.0 - mix)/4.0;
@@ -711,7 +719,8 @@ void hside_update(int count, float scale, float mix,
     if (!b)
     {
 	fprintf(stderr,"x_update: attempt to update NULL strip\n");
-	exit(1);
+	//exit(1);
+        BATB::exit(1);
     }
 
     w = (1.0 - mix)/2.0;

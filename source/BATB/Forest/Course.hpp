@@ -26,8 +26,30 @@ namespace BATB
 class Course
 {
 public:
+    Terrain* terrain_;
 
+    // controls in Terrain which this course defines. index 0 is start.
+    //[Control*] : 
+
+    // Course does not imply a Map. Terrain can be viewed in different
+    // ways, that is, with different Map's. however, given a Course and 
+    // a Map for the same Terrain, the Course can be injected into the Map.
+
+    // physical props, i.e. position in Terrain
+    // ...
+
+    // length of this course, relative to Terrain measures
+    float_t length() const
+    {
+        return 0.0;
+    }
 private:
+    std::string name_;
+    // other meta stuff:
+    // ...
+
+    // output stuff
+    // GLAnimation anim_;
 };
 
 

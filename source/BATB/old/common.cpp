@@ -6,6 +6,7 @@
 //#  include <GL/glut.h>
 //#endif
 
+#include <GL/glew.h>    // must be done before GLFW!!
 
 static const char* DisplayErrorMessage(GLint err)
 {

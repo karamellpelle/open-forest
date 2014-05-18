@@ -9,11 +9,13 @@ GamePlay
           well, since we have manual punching, we must think more about this. 
           what if for example a player punches the correct one after the mistake?
           so maybe better to have a control for this. lets think about it.
-        * automatic north-alignment on double click?
+        * automatic north-alignment on specific action (f.ex. double click)
   =>  running on trees will not slow down speed, only change run direction based on contact center
         * at least an option for this
         * different amount of direction change based on tree size? i.e. big amount on big tree.
   =>  very fast run speed possible, by controllable setting
         * training orienteering 
   =>  if stopping/slow down while running, again starting running will lose speed (i.e. needs (small) acceleration)
-        * fast running should be rewarded
+        * fast running and map reading should be rewarded
+  =>  running into drinking controls/stations should be rewarded, with physical boost/better fatigue.
+        * punch to drink.

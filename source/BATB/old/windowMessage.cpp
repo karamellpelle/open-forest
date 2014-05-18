@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "windowMessage.h"
 
+
 const int WindowMessages::expireTime = 5000;
 
 WindowMessages::WindowMessages(int ww, int wh)
@@ -70,7 +71,8 @@ void WindowMessages::reshape(int ww, int wh)
 
 void WindowMessages::addMessage(std::string msg)
 {
-    //WindowMessage wm(msg, glutGet(GLUT_ELAPSED_TIME)); // FIXME
+    //WindowMessage wm(msg, glutGet(GLUT_ELAPSED_TIME));
+    WindowMessage wm(msg, oldGetElapsedTime() );
     while (messages.size() >= 5)
         messages.erase(messages.begin());
     messages.push_back(wm);
@@ -78,7 +80,8 @@ void WindowMessages::addMessage(std::string msg)
 
 void WindowMessages::display()
 {
-    //GLint timeNow = glutGet(GLUT_ELAPSED_TIME); // FIXME
+    //GLint timeNow = glutGet(GLUT_ELAPSED_TIME);
+    GLint timeNow = oldGetElapsedTime();
     
     // delete old messages, looks only at the first message
     std::vector<WindowMessage>::iterator iter = messages.begin();
@@ -117,7 +120,9 @@ void WindowMessages::display()
 
 void WindowMessages::startTimer(int useconds, TimerObserver* to, int ud)
 {
-    //GLint timeNow = glutGet(GLUT_ELAPSED_TIME); // FIXME
+    //GLint timeNow = glutGet(GLUT_ELAPSED_TIME);
+    GLint timeNow = oldGetElapsedTime();
+
     timeoutTime = timeNow + useconds;
     timerActive = true;
     userData = ud;

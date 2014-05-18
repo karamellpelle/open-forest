@@ -34,6 +34,8 @@ void RunKeys::create(xml::XMLElement* elem)
 
     pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
 
+    old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
+
 }
 
 void RunKeys::destroy()

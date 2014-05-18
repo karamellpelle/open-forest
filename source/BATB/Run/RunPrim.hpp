@@ -23,6 +23,9 @@
 #include "BATB/Run/Prim/IterationRunIntro.hpp"
 #include "BATB/Run/Prim/IterationRunMain.hpp"
 #include "BATB/Run/Prim/IterationRunOutro.hpp"
+
+#include "BATB/Run/Prim/IterationRunOld.hpp"
+
 #include "Game.hpp"
 
 
@@ -39,11 +42,13 @@ public:
     void destroy();
     
     // TODO: custom types for each iteration!
-    IterationRunBegin* iterationRunBegin;
-    IterationRunEnd* iterationRunEnd;
-    IterationRunIntro* iterationRunIntro;
-    IterationRunMain* iterationRunMain;
-    IterationRunOutro* iterationRunOutro;
+    IterationRunBegin*    iterationRunBegin;
+    IterationRunEnd*      iterationRunEnd;
+    IterationRunIntro*    iterationRunIntro;
+    IterationRunMain*     iterationRunMain;
+    IterationRunOutro*    iterationRunOutro;
+
+    IterationRunOld*      iterationRunOld; 
 
 };
 

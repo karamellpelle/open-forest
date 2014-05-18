@@ -143,6 +143,7 @@ int UdpClient::drawToTerrain(Location* location)
 {
     static GLint time0 = 0;
     //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME!
+    GLint time = oldGetElapsedTime();
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {
@@ -159,6 +160,7 @@ int UdpClient::drawToTerrainDay(Location* location)
 {
     static GLint time0 = 0;
     //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME/
+    GLint time = oldGetElapsedTime();
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {
@@ -175,6 +177,7 @@ int UdpClient::drawToTerrainNight(Location* location)
 {
     static GLint time0 = 0;
     //GLint time = glutGet(GLUT_ELAPSED_TIME); // FIXME:
+    GLint time = oldGetElapsedTime();
     int frequency = 100; // do sending once per this many milliseconds
     if (time - time0 > frequency) 
     {
@@ -264,7 +267,8 @@ void UdpServer::init(int portStart)
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) 
     {
         perror("socket");
-        exit(1);
+        //exit(1);
+        BATB::exit( 1 );
     }
 
     my_addr.sin_family = AF_INET;         /* host byte order */

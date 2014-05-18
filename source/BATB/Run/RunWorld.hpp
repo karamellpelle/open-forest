@@ -19,8 +19,8 @@
 #define BATB_RUNWORLD_HPP
 #include "BATB/BATB_include.hpp"
 #include "BATB/Run/RunEvent.hpp"
+#include "BATB/Run/Scene.hpp"
 #include "BATB/Forest.hpp"
-
 
 namespace BATB
 {
@@ -28,7 +28,7 @@ namespace BATB
 class RunWorld
 {
 public:
-    RunWorld() : frames_( 0 ) // worlds shall not be singletons!
+    RunWorld() : forest( this ), frames_( 0 ) // worlds shall not be singletons!
     {
     }
 
@@ -37,8 +37,16 @@ public:
     // RunNetwork network;
     // [RunEvent] events;
 
+    // Scene for this RunWorld uses
+    Scene* scene()
+    {
+        return &scene_;
+    }
+
 private:
     uint frames_;
+
+    Scene scene_;
 };
 
 

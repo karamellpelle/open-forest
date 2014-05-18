@@ -15,13 +15,31 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PRIM_HPP
-#define BATB_RUN_PRIM_HPP
-#include "BATB/Run/Prim/IterationRunBegin.hpp"
+#ifndef BATB_CONTROL_HPP
+#define BATB_CONTROL_HPP
+
 
 namespace BATB
 {
 
+class Control
+{
+    // Control implies a Terrain, where this control is placed.
+    Terrain* terrain;
+
+    uint code() const
+    {
+        return code;
+    }
+private:
+    uint code_;
+    
+    // stats, like number of punches, Player's been here, etc.
+    // ...
+
+    // output props:
+    // GLAnimation anim_; // regular, start point
+};
 
 
 }

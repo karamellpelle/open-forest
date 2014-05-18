@@ -13,6 +13,7 @@
 #include "point.h"
 #include "util.h"
 
+#include "old.hpp"
 
 class Contour 
 {

@@ -1,11 +1,13 @@
+* define invariants (OpenGL, ...)
+* Scene and iterations. Scene into RunWorld.
+* add turbobadger, run old from that
+* Define gameobjects more preciseand start to implement them
+* find out how to model Competition, relative to Forest. different Competition types:
+  Single/Relay/Special Trainings/...
 * use C++11 (well, I must learn it first...)
 * GLEW as git library (libs/)
-* run oldBATB from iterations
-* Scene and iterations
-* Define gameobjects more preciseand start to implement them
-* add turbobadger, run old from that
 * fix glhelpers (texture loading)
-* nanovg implement??
+* nanovg implement
 * Ogre3D add. check out terrain functionality
 * add libvpx movie
 * create Font?

@@ -57,24 +57,8 @@ int main(int argc, char** argv)
         //      OpenGL
         glewInit();
 
-        //  set up our GL-invariants:
-        glEnable( GL_MULTISAMPLE );
-        glClearColor( 0, 0, 0, 0 );
-        glDisable( GL_STENCIL_TEST ); // ??
-        glClearStencil( 0 );          // ??
-        glEnable( GL_BLEND );
-        glBlendEquationSeparate( GL_FUNC_ADD, 
-                                 GL_FUNC_ADD );
-        glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-                             GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-        
-        glDepthMask( GL_TRUE );
-        glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
-        glEnable( GL_DEPTH_TEST );
-
         //////////////////////////////////////////////////////////
         //      OpenAL
-        //  set up our AL-invariants:  
 
 
         using namespace BATB;

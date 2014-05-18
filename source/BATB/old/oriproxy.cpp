@@ -487,6 +487,8 @@ void OrienteerProxy::adjustStepLength(bool standingStill)
 
     // calculate our speed and adjust step length accordingly
     //time = glutGet(GLUT_ELAPSED_TIME); // FIXME!
+    time = oldGetElapsedTime();
+
     if (time - time0 > frequency) 
     {
 	float seconds = (time - time0) / 1000.0;

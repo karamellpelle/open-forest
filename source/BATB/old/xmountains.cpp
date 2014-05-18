@@ -10,7 +10,7 @@
 #include "paint.h"
 #include "global.h"
 #include "patchlevel.h"
-#include "copyright.h"
+//#include "copyright.h"
 
 #include "matrix.h"
 #include "mesh.h"

@@ -27,21 +27,33 @@
 namespace BATB
 {
 
+class RunWorld;
 
 class ForestWorld
 {
 public:
-    ForestWorld() { }    // worlds shall not be singletons!
+    ForestWorld(RunWorld* r) : run( r )    // worlds shall not be singletons!
+    {
+    }
 
     Camera camera;
     Terrain terrain;
-    Map map;
-    Course course;
+    //[Map] : the different views of Terrain. a Terrain can be viewed in different ways, 
+    //        for example old/new map, corridor orienteering, maps of different parts of terrain
+    //        , etc.
 
     Weather weather;
-    // [Runner] runners;
     // [ForestEvent] events;
     // ForestNetwork (connected to RunNetwork, with a filter)
+
+    // ForestWorld implies a RunWorld, the RunWorld containing 'this'.
+    // it would be nice to let ForestWorld be totally independent of RunWorld,
+    // so that ForestWorld works alone. however, ForestWorld needs access to
+    // external resources. for exapmle Player's, containing information for each
+    // Runner in ForestWorld. we let such external resources be part of RunWorld.
+    // also, since there may (in theory) be more than one RunWorld, some of these
+    // external resources could be different for two different RunWorld's.
+    RunWorld* const run;
     
 private:
 

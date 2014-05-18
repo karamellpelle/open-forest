@@ -90,13 +90,6 @@ inline void Scene::size(uint w, uint h)
 
 
 
-inline Scene* theScene()
-{
-    static Scene ret;
-
-    return &ret;
-}
-
 
 }
 

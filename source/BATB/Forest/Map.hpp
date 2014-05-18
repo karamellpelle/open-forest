@@ -26,8 +26,19 @@ namespace BATB
 class Map
 {
 public:
+    // implies a Terrain
+    Terrain* terrain;
+    
+    // defining how Map is mapped into Terrain
+    // ...
 
 private:
+    std::string name_;
+    // other meta stuff
+
+    //GLuint tex_;
+    //uint tex_wth_;
+    //uint tex_hth_;
 };
 
 

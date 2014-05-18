@@ -3,11 +3,14 @@
 
 #include <string>
 #include <vector>
-#ifdef __APPLE__
-#  include <GLUT/glut.h>
-#else
-#  include <GL/glut.h>
-#endif
+
+#include "old.hpp"
+
+//#ifdef __APPLE__
+//#  include <GLUT/glut.h>
+//#else
+//#  include <GL/glut.h>
+//#endif
 
 #include <plib/pu.h>
 

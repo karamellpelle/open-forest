@@ -15,9 +15,9 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_SCENE_HPP
-#define BATB_RUN_SCENE_HPP
-#include "BATB/Scene.hpp"
+#ifndef BATB_RUN_PRIM_SCENE_HPP
+#define BATB_RUN_PRIM_SCENE_HPP
+#include "BATB/Run/Scene.hpp"
 
 namespace BATB
 {

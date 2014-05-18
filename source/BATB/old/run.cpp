@@ -267,7 +267,7 @@ bool Run::fileExists(std::string filename) const
 
 void Run::writeRoute() const 
 {
-    std::string filename("routes/");
+    std::string filename( old_file( "routes/" ).c_str() );
     filename += _id + ".xml";
     if (!fileExists(filename))
     {

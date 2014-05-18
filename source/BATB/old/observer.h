@@ -13,6 +13,7 @@
 
 #include "point.h"
 
+#include <GL/glew.h>    // must be done before GLFW!!
 
 class Observer
 {
