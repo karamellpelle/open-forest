@@ -41,27 +41,45 @@ void screenBegin(xml::XMLElement* elem)
 
     // FIXME: parse hints after above hints
 
-    // size
+    // default settings, to be overridden by XML
     uint wth = 640;
     uint hth = 480;
-    XMLElement* xml_size = xml.FirstChildElement("size").ToElement();
-    if ( xml_size )
+    GLFWmonitor* monitor = 0;
+    uint samples = 0;
+
+
+    // size
+    XMLElement* xml_size_wth = xml.FirstChildElement("size").FirstChildElement("wth").ToElement();
+    XMLElement* xml_size_hth = xml.FirstChildElement("size").FirstChildElement("hth").ToElement();
+    if ( xml_size_wth && xml_size_hth )
     {
         unsigned int w = wth;
         unsigned int h = hth;
-        xml_size->QueryUnsignedAttribute( "wth", &w );
-        xml_size->QueryUnsignedAttribute( "hth", &h );
+        xml_size_wth->QueryUnsignedText( &w );
+        xml_size_wth->QueryUnsignedText( &h );
         wth = w;
         hth = h;
     }
 
     // fullscreen?
-    bool fullscreen = false;
-    xml.ToElement()->QueryBoolAttribute( "fullscreen", &fullscreen );
-    GLFWmonitor* monitor = fullscreen ? glfwGetPrimaryMonitor() : 0;
+    XMLElement* xml_fullscreen = xml.FirstChildElement("fullscreen").ToElement();
+    if ( xml_fullscreen )
+    {
+        bool fullscreen = false;
+        xml_fullscreen->QueryBoolText( &fullscreen );
+        monitor = fullscreen ? glfwGetPrimaryMonitor() : 0;
+    }
 
-    unsigned int samples = 0;
-    xml.ToElement()->QueryUnsignedAttribute( "multisamples", &samples );
+    XMLElement* xml_multisamples = xml.FirstChildElement("multisamples").ToElement();
+    if ( xml_multisamples )
+    {
+        unsigned int n = samples;
+        xml_multisamples->QueryUnsignedText( &n );
+        samples = n;
+    }
+
+
+    // set MSAA samples
     glfwWindowHint( GLFW_SAMPLES, samples ); 
 
     theWindow_ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );

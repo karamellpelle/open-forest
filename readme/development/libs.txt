@@ -3,13 +3,13 @@ sound  (OpenAL)   : ?
 input             : GLFW
 GUI               : https://github.com/fruxo/turbobadger          (CEGUI? JUCE? https://github.com/betajaen/gorilla?)
 config            : https://github.com/leethomason/tinyxml2
-UDP network       : ? 
+UDP network       : ?                                             (boost ASIO?, https://github.com/joyent/libuv/?)
 screen rendering  : OGRE                                          (OpenSceneGraph? OpenSG? Horde3D? SpeedTree :))
-font rendering    : custom Valve-font?
+font rendering    : ?
 2D GL-rendering   : https://github.com/memononen/nanovg
-collision         : Bullet3D?
-linear            : custom, just for GL
-3D animation      : ?
+collision         : needed at all?                                (Bullet3D?)
+linear            : GLM
+3D animation      : ?                                             (Ogre3D?)
 video             : libvpx                                        (libTheora?)
 C++               : boost.filesystem
                     boost.hash

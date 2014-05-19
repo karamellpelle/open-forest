@@ -14,15 +14,18 @@ set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -g -pg" )
 
 
 # set folders
-set( MAIN_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source )
-set( BATB_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source/BATB )
-set( ENV_SOURCE_DIR    ${CMAKE_SOURCE_DIR}/source/Env )
-set( TEST_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/source/test )
-set( LIBS_SOURCE_DIR   ${CMAKE_SOURCE_DIR}/libs )
+set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
+set( BATB_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/BATB )
+set( ENV_SOURCE_DIR           ${CMAKE_SOURCE_DIR}/source/Env )
+set( TEST_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/test )
+set( LIBS_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/libs )
+set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
 #set( MISC_SOURCE_DIRS   ${CMAKE_SOURCE_DIR}/source/test )
 
 
-# set GLFW 
+################################################################################
+# build library 'glfw'
+#
 # there seems to be a bug, GLFW_LIBRARIES does not contain libXcursor.
 # bug may go away if uncomment these disables below
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
@@ -30,14 +33,29 @@ set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build do
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
 add_subdirectory( ${GLFW_SOURCE_DIR} )
-set( BATB_LIBRARIES ${BATB_LIBRARIES} ${GLFW_LIBRARIES} )
 
-# set include directories
+# add GLFW_LIBRARIES, created by GLFW-CMakeLists.txt, to our libraries 
+set( BATB_LIBRARIES ${BATB_LIBRARIES} ${GLFW_LIBRARIES} )
+include_directories( "${GLFW_SOURCE_DIR}/include" )
+
+################################################################################
+# build library 'custom-nanovg'
+# this will create
+#   custom-nanovg     : target
+#   NANOVG_XX         : XX
+#
+add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/nanovg )
+include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
+message("CUSTOM_NANOVG_INCLUDE_DIRS: ${CUSTOM_NANOVG_INCLUDE_DIRS}" )
+
+# 
+################################################################################
+# set additional include directories
+#
 include_directories( "${MAIN_SOURCE_DIR}" )
 include_directories( "${LIBS_SOURCE_DIR}/tinyxml2" )
 include_directories( "${LIBS_SOURCE_DIR}/glm" )
-include_directories( "${GLFW_SOURCE_DIR}/include" )
-
+include_directories( "${BATB_SOURCE_DIR}/tmp" )
 
 # set CMake working directory
 set( CMAKE_CURRENT_BINARY_DIR ${CMAKE_SOURCE_DIR}/build )
@@ -50,7 +68,10 @@ option( BATB_BUILD   "Build BATB" ON)
 option( BATB_INSTALL "Install BATB" OFF)
 
 
-# these are old:
+
+################################################################################
+# build old sources
+#
 add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
 include_directories( ${MAIN_SOURCE_DIR}/BATB/old/ )
 set( OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
@@ -134,24 +155,36 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp
 
+      # add tmp for now
+      ${MAIN_SOURCE_DIR}/BATB/tmp/demo.c
+      ${MAIN_SOURCE_DIR}/BATB/tmp/perf.c
+
+
+      # add old sources for now
       ${OLD_SOURCES}
    )
 
 ### BUILD ###
 if ( BATB_BUILD )
+    # FIXME: into custom
     add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
+
+
     set( BATB_LIBRARIES ${BATB_LIBRARIES} ${OLD_LIBRARIES} -lGLEW )
 
     # create executable target 'batb'
-    add_executable( batb ${BATB_SOURCES})
+    add_executable( batb ${BATB_SOURCES} )
+
     # define target properties
     set_target_properties( batb PROPERTIES
                            OUTPUT_NAME "batb"
                            #CLEAN_DIRECT_OUTPUT 1
                            #VERSION ${})
                          )
+   
     # libraries to target
-    target_link_libraries( batb glfw tinyxml2 ${BATB_LIBRARIES} )
+    target_link_libraries( batb glfw tinyxml2 custom-nanovg ${BATB_LIBRARIES} )
+
 endif()
 
 

@@ -31,8 +31,10 @@ public:
     // keys to control Run
     KeyClicker* pause;
     
-    // TMP: toggle old iterations
+    // TMP:
     KeyClicker* old; 
+    KeyClicker* u;
+    KeyClicker* i;
 
 };
 

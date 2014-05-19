@@ -5,6 +5,13 @@
 #include "BATB/BATB_include.hpp"
 #include "BATB.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+
+void old_begin();
+
+void old_end();
+
+////////////////////////////////////////////////////////////////////////////////
 inline std::string old_file(const char* path)
 {
     // executable is built into "build/" folder, point to data dir
@@ -27,6 +34,7 @@ inline void exit(int err)
 {
     extern bool old_exit;
     std::cout << "old exiting: " << err << std::endl;
+    old_end();
     old_exit = true;
 }
 
@@ -81,12 +89,6 @@ inline void puInitOLD ()
 		       puSetWindowSizeOLD ) ;
     puRealInit () ;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-
-void old_begin();
-
-void old_end();
 
 
 // we need these for display functions, since we are not using GLUT:

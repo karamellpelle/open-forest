@@ -21,6 +21,9 @@
 #include "BATB/Config.hpp"
 
 
+#include "BATB/tmp/demo.h"
+#include "BATB/tmp/perf.h"
+
 namespace BATB
 {
 
@@ -36,6 +39,9 @@ public:
 private:
     void create(xml::XMLElement* cfg);
     void destroy();
+
+
+
 };
 
 

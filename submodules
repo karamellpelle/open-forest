@@ -15,8 +15,8 @@ git submodule init libs/tinyxml2      #tinyxml
 git submodule update libs/tinyxml2
 
 # turbobadger
-#git submodule init libs/turbobadger   #turbobadger
-#git submodule update libs/turbobadger
+git submodule init libs/turbobadger   #turbobadger
+git submodule update libs/turbobadger
 
 # libvpx
 #git submodule init libs/libvpx        #libvpx

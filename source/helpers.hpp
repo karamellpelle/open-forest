@@ -18,10 +18,16 @@
 #ifndef HELPERS_HPP
 #define HELPERS_HPP
 #include <stdint.h>
+#include <cmath>
 #include "include.hpp"
 
 namespace helpers
 {
+
+
+// 
+typedef include::float_t float_t;
+
 
 template <typename A>
 inline A keep_inside(const A& b, const A& e, const A& x)

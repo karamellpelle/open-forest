@@ -17,13 +17,24 @@
 //
 #ifndef BATB_INCLUDE_HPP
 #define BATB_INCLUDE_HPP
-#include "include.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+// stdlib
 #include <stdint.h>
 #include <iostream>
 #include <string>
 #include <stdexcept>
 #include <vector>
 #include <cstdio>
+
+////////////////////////////////////////////////////////////////////////////////
+// project includes
+#include "include.hpp"
+#include "Env.hpp"
+#include "helpers.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+// GLM
 //#define GLM_MESSAGES          // let glm print system messages
 #define GLM_FORCE_RADIANS     // let glm angles be in radians
 //#define GLM_FORCE_INLINE      // let glm be inlined
@@ -35,9 +46,14 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "Env.hpp"
-#include "helpers.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// nanovg
+#include "nanovg.h"
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 namespace BATB
 {
 
