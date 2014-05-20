@@ -18,7 +18,7 @@ set(  CUSTOM_NANOVG_SOURCES
 
 # DEBUG/NDEBUG
 #add_definitions( -DNDEBUG ) 
-include_directories( $CUSTOM_NANOVG_INCLUDE_DIRS )
+include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
 
 # create static library 'nanovg-custom'
 add_library(custom-nanovg STATIC ${CUSTOM_NANOVG_SOURCES})
@@ -28,3 +28,4 @@ add_library(custom-nanovg STATIC ${CUSTOM_NANOVG_SOURCES})
 # Export CUSTOM_NANOVG_XXX
 #--------------------------------------------------------------------
 set(CUSTOM_NANOVG_INCLUDE_DIRS ${CUSTOM_NANOVG_INCLUDE_DIRS} CACHE STRING "include dirs for custom-nanovg")
+set(CUSTOM_NANOVG_LIBRARIES    ""                            CACHE STRING "libs needed for custom-nanovg")

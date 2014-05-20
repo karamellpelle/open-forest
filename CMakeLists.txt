@@ -27,26 +27,39 @@ set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
 # build library 'glfw'
 #
 # there seems to be a bug, GLFW_LIBRARIES does not contain libXcursor.
-# bug may go away if uncomment these disables below
+# bug may go away if uncomment these 3 disables below, first time (??)
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
+
 add_subdirectory( ${GLFW_SOURCE_DIR} )
 
 # add GLFW_LIBRARIES, created by GLFW-CMakeLists.txt, to our libraries 
 set( BATB_LIBRARIES ${BATB_LIBRARIES} ${GLFW_LIBRARIES} )
 include_directories( "${GLFW_SOURCE_DIR}/include" )
 
+
 ################################################################################
 # build library 'custom-nanovg'
 # this will create
-#   custom-nanovg     : target
-#   NANOVG_XX         : XX
-#
+#   custom-nanovg                     : target
+#   CUSTOM_NANOVG_INCLUDE_DIRS        : include directory for library
+#   CUSTOM_NANOVG_LIBRARIES           : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/nanovg )
 include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
-message("CUSTOM_NANOVG_INCLUDE_DIRS: ${CUSTOM_NANOVG_INCLUDE_DIRS}" )
+set( BATB_LIBRARIES ${BATB_LIBRARIES} ${CUSTOM_NANOVG_LIBRARIES} )
+
+################################################################################
+# build library 'custom-turbobadger'
+# this will create
+#   custom-turbobadger                : target
+#   CUSTOM_TURBOBADGER_INCLUDE_DIRS   : include directories for library
+#   CUSTOM_TURBOBADGER_LIBRARIES      : link libs for library
+add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/turbobadger )
+include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
+set( BATB_LIBRARIES ${BATB_LIBRARIES} ${CUSTOM_TURBOBADGER_LIBRARIES} )
+
 
 # 
 ################################################################################

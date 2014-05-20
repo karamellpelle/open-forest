@@ -33,6 +33,10 @@ void screenBegin(xml::XMLElement* elem)
 
     // set hints to window
     // http://www.glfw.org/docs/latest/window.html#window_hints
+
+    // set default first. (not necessary done automatically, according to doc)
+    glfwDefaultWindowHints();
+
     //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );    :)
     //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
     //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
