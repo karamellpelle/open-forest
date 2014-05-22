@@ -23,15 +23,26 @@ namespace BATB
 {
 
 
-class ForestEvent
+// ControlPunch 
+//    a Runner punched a Control. an Iteration may for example see
+//    if this Control is goal, and take actions based on that, for
+//    example add Runner/Player to a result list. or look at split times
+//    and make status updates about 
+class ForestEvent 
 {
 public:
-    enum Type { Pause };
+    enum Type {  };
     
     Type type;
 
 private:
 };
+
+class ForestEventList /*: public Game::EventList<ForestEvent> */
+{
+
+};
+
 
 }
 

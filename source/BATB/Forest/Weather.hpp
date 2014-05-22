@@ -30,6 +30,8 @@ class Weather
 public:
 
 private:
+    // Date: day, time
+    // ...
 };
 
 

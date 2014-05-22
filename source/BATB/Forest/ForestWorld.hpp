@@ -32,18 +32,39 @@ class RunWorld;
 class ForestWorld
 {
 public:
+    typedef std::forward_list<Control>  ControlList;
+    typedef std::forward_list<Map>      MapList;
+    typedef std::forward_list<Runner>   RunnerList;
+
     ForestWorld(RunWorld* r) : run( r )    // worlds shall not be singletons!
     {
     }
 
+    // viewing 
     Camera camera;
-    Terrain terrain;
-    //[Map] : the different views of Terrain. a Terrain can be viewed in different ways, 
-    //        for example old/new map, corridor orienteering, maps of different parts of terrain
-    //        , etc.
 
+    // physical Terrain.
+    // * ground
+    // * trees
+    // * vegetation
+    // * other objects
+    // ...
+    Terrain terrain;
+
+    // different views of Terrain. a Terrain can be viewed in different ways, 
+    // for example old/new map, corridor orienteering, maps of different parts of terrain
+    // TODO: polymorphism
+    MapList maps;
+
+    // runners 
+    RunnerList runners;
+
+    // current weather
     Weather weather;
-    // [ForestEvent] events;
+
+    // events happened for this ForestWorld    
+    ForestEventList events;
+
     // ForestNetwork (connected to RunNetwork, with a filter)
 
     // ForestWorld implies a RunWorld, the RunWorld containing 'this'.

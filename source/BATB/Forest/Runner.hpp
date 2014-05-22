@@ -23,12 +23,52 @@
 namespace BATB
 {
 
+
 class Runner
 {
 public:
+   
+    // Player defines who is running. Player is a part of RunWorld.
+    // Player defines stuff like network computer, name, ...
+    Player* player()
+    {
+        return player_;
+    }
 
+    // Map, from ForestWorld, this Runner is using. 
+    Map* const map() const
+    {
+        return map_;
+    }
+
+    // a Runner does not imply a Course. Runner's are free to do whatever
+    // they will, in a forest.
+    // a Course for a Runner may come from competition/training/etc.
+    // specific events like competition/training are driven by specific
+    // Iteration-classes. so it is up to these classes to assign a Course
+    // to a Player. 
+    // TODO:  think through this. for example the possibility to have independent
+    //        training and competition for different Runner's at the same time. 
 private: 
+    Player* player_;
 
+    Map* map_;
+
+    // physical stuff
+    // * position (relative to Terrain)
+    // * speed    ( ... )
+    // ...
+
+    // Ground* ground_;       // to be updated by movement. pointer/value
+    // Ground* ground_prev_;  // to something describing where standing
+
+    // gameplay stuff
+    // * fatigue
+    // ...
+
+    // output stuff
+    // * animation
+    // ...
 };
 
 

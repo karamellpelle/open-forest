@@ -23,29 +23,59 @@
 namespace BATB
 {
 
+
+// Course does not imply a Map. a Terrain can be viewed in different
+// ways, that is, with different Map's. however, given a Course and 
+// a Map for the same Terrain, the Course can be injected into the Map.
 class Course
 {
 public:
-    Terrain* terrain_;
+    typedef std::forward_list<Control*> ControlList;
+   
+    // a Course always belongs to a Terrain
+    Course(Terrain* t) : terrain_( t )
+    {
 
-    // controls in Terrain which this course defines. index 0 is start.
-    //[Control*] : 
+    }
 
-    // Course does not imply a Map. Terrain can be viewed in different
-    // ways, that is, with different Map's. however, given a Course and 
-    // a Map for the same Terrain, the Course can be injected into the Map.
+    Terrain* terrain() const
+    {
+        return terrain_;
+    }
 
-    // physical props, i.e. position in Terrain
-    // ...
+    // load course from XML-definition
+    // the XML should define a sequence of points in Terrain,
+    // making up the whole course. for each such point, look
+    // through the current Control's in Terrain for one in the
+    // nearby. if such Control found, add pointer to 'controls_',
+    // otherwise create a Control at this point in Terrain.
+    //
+    // also, we should be able to load a course just from 
+    // a sequence of ControlDefinition::Code, that is, 
+    // a sequence of codes for Control's in Terrain
+    void load(xml::XMLElement* );
+
+
 
     // length of this course, relative to Terrain measures
-    float_t length() const
-    {
-        return 0.0;
-    }
+    //float_t length() const
+    //{
+    //    return 0.0;
+    //}
+
+
+
 private:
+   
+    ControlList controls_;
+
+
+    
+    // a Course implies a Terrain
+    Terrain* const terrain_;
+
+    // meta stuff:
     std::string name_;
-    // other meta stuff:
     // ...
 
     // output stuff
