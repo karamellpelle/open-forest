@@ -22,7 +22,6 @@
 #include "BATB/Forest/Prim/Iteration.hpp"
 
 
-
 namespace BATB
 {
 
@@ -42,4 +41,5 @@ private:
 
 
 }
+
 #endif

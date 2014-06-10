@@ -1,7 +1,9 @@
 == building ==
-Create git submodules (i.e. libraries)
+
+Create git submodules (i.e. libraries) before building, for the first time:
 > ./submodules
-Build application (i.e. BATB)
+
+Build the application (into build/batb)
 > ./compile_it
 
 

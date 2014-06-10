@@ -69,8 +69,8 @@ public:
 
 
 private:
-    static const tick_t ticks_clicks_a_ = 0.2;
-    static const tick_t ticks_clicks_b_ = 0.2;    
+    static constexpr tick_t ticks_clicks_a_ = 0.2;
+    static constexpr tick_t ticks_clicks_b_ = 0.2;    
 
     Key* const key_;
 

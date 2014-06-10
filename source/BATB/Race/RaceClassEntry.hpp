@@ -15,43 +15,35 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUNWORLD_HPP
-#define BATB_RUNWORLD_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Run/RunEvent.hpp"
-#include "BATB/Run/Scene.hpp"
-#include "BATB/Run/Player.hpp"
+#ifndef BATB_RACE_RACE_CLASS_ENTRY_HPP
+#define BATB_RACE_RACE_CLASS_ENTRY_HPP
+#include "BATB/Config.hpp"
 #include "BATB/Forest.hpp"
-#include "BATB/Race.hpp"
+#include "BATB/Race/RacePunch.hpp"
+
 
 namespace BATB
 {
 
-class RunWorld
+class RaceClassEntry
 {
+typedef std::vector<RacePunch> RacePunchList;
+
 public:
-    RunWorld() : race( this ), frames_( 0 ) // worlds shall not be singletons!
+    RaceClassEntry(Runner* r) : runner_( r )
     {
     }
 
-    RaceWorld race;
-    IterationStackRaceWorld race_stack;
-
-    // RunNetwork network;
-    // [RunEvent] events;
-
-    // Scene this RunWorld uses
-    Scene* scene()
+    Runner* runner() const
     {
-        return &scene_;
+        return runner_;
     }
-
 private:
-    uint frames_;
+    Runner* const runner_;
+    
+    RacePunchList punches_;
 
-    Scene scene_;
 };
-
 
 }
 

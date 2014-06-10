@@ -22,7 +22,7 @@
 #include "BATB/Forest/ForestSettings.hpp"
 #include "BATB/Forest/ForestWorld.hpp"
 #include "BATB/Forest/ForestKeys.hpp"
-
+#include "BATB/Forest/Runner.hpp"
 
 namespace BATB
 {
@@ -67,7 +67,6 @@ inline Forest* theForest()
 
 
 }
-
 
 #endif
 

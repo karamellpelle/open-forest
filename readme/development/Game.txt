@@ -1,0 +1,7 @@
+creating an Iteration IterationMy:
+  memory release should be done by implementing the Ref::destroy_ virtual function.
+  if IterationMy is intented to be subclassed often, 
+  then I recommend to implement Ref::destroy_ as "delete this", so that IterationMy can be allocated
+  on the fly by 'new', and automatically released (IterationStack::releasing( iter )).
+
+  

@@ -26,6 +26,8 @@
 #include <stdexcept>
 #include <vector>
 #include <cstdio>
+#include <list>
+#include <forward_list>
 
 ////////////////////////////////////////////////////////////////////////////////
 // project includes
@@ -36,7 +38,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // GLM
 //#define GLM_MESSAGES          // let glm print system messages
-#define GLM_FORCE_RADIANS     // let glm angles be in radians
+#define GLM_FORCE_RADIANS       // let glm angles be in radians
 //#define GLM_FORCE_INLINE      // let glm be inlined
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -60,7 +62,7 @@ namespace BATB
 typedef include::uint uint;
 
 
-// float or double?
+// FIXME: float or double?
 typedef include::float_t float_t;
 
 namespace xml = tinyxml2;
@@ -80,7 +82,6 @@ Cont smooth(Cont a, Cont b, Cont x)
 
 }
 
-#include "BATB/Values.hpp"
 
 
 #endif

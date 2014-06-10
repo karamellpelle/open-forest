@@ -3,7 +3,7 @@
   see for example:
     http://blog.smartbear.com/c-plus-plus/the-biggest-changes-in-c11-and-why-you-should-care/
     http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
-
+* Race, Run, Forest into namespaces BATB::Race::, ...
 * define invariants (OpenGL, ...)
 * add turbobadger, run old from that
 * Define gameobjects more preciseand start to implement them

@@ -15,10 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUNNER_HPP
-#define BATB_RUNNER_HPP
+#ifndef BATB_FOREST_RUNNER_HPP
+#define BATB_FOREST_RUNNER_HPP
 #include "BATB/BATB_include.hpp"
-
+#include "BATB/Run/Player.hpp"
 
 namespace BATB
 {
@@ -71,6 +71,8 @@ private:
     // ...
 };
 
+
+}
 
 
 #endif

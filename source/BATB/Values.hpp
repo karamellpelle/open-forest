@@ -18,6 +18,7 @@
 #ifndef BATB_VALUES_HPP
 #define BATB_VALUES_HPP
 #include "tinyxml2.h"
+#include "BATB/BATB_include.hpp"
 
 
 // this file contains values to be used throughout the BATB-program. some are constants, but other are not. the 
@@ -36,7 +37,6 @@ public:
 
 }
 
-#include "BATB/BATB_include.hpp"
 
 namespace BATB
 {

@@ -20,6 +20,7 @@
 #include <string>
 #include <stdexcept>
 #include "BATB/BATB_include.hpp"
+#include "BATB/Values.hpp"
 
 
 
@@ -27,6 +28,7 @@ namespace BATB
 {
 
 
+// Config is actually just a XMLElement, for now
 class Config : public xml::XMLDocument
 {
 public:

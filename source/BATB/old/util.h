@@ -36,6 +36,7 @@ std::string md5sum(const char* message);
 
 // from "The C++ Programming Language", third edition, pp. 530
 // copy [first, last) to res iff pred p is true
+/*
 template<class In, class Out, class Pred>
 Out copy_if(In first, In last, Out res, Pred p)
 {
@@ -47,6 +48,10 @@ Out copy_if(In first, In last, Out res, Pred p)
     }
     return res;
 }
+*/
+// part of C++11:
+
+using std::copy_if;
 
 template <class T, class T1>
 class compare : public std::unary_function<T, bool>

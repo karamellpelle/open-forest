@@ -13,3 +13,6 @@
 [submodule "libs/nanovg"]
 	path = libs/nanovg
 	url = https://github.com/memononen/nanovg
+[submodule "libs/glew"]
+	path = libs/glew
+	url = https://github.com/nigels-com/glew.git

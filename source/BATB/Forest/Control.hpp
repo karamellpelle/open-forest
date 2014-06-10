@@ -41,9 +41,10 @@ public:
     // code for this Control
     Code code() const
     {
-        return code;
+        return code_;
     }
 
+private:
     Code code_;
 };
 

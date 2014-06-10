@@ -33,9 +33,14 @@ static void glfw_error_callback(int error, const char* str)
 // XMLElement must be valid through Env whole lifetime
 void begin(xml::XMLElement* elem)
 {
-     theXMLElement_ = elem;
 
-     xml::XMLHandle xml( elem );
+    // set the XMLElement for Env
+    theXMLElement_ = elem;
+
+    xml::XMLHandle xml( elem );
+
+    // Env relies on GLFW, which we use GLEW together with
+    glewInit();
 
     // cfg GLFW
     glfwSetErrorCallback( glfw_error_callback );
@@ -48,11 +53,14 @@ void begin(xml::XMLElement* elem)
     {
         // create Screen
         screenBegin( xml.FirstChildElement( "Screen" ).ToElement() );
+
+        // create Sound
+        // ...
     }
     catch (std::exception& e)
     {
         std::ostringstream os;
-        os << "Env : could not create screen (" << e.what() << ") ";
+        os << "Env : could not init: " << e.what(); 
         throw std::runtime_error( os.str() );
     }
 }
@@ -60,6 +68,8 @@ void begin(xml::XMLElement* elem)
 void end()
 {
 
+    // soundEnd();
+    //
     screenEnd();
 
     // end GLFW

@@ -15,7 +15,6 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "include.hpp"
 #include "BATB.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/Values.hpp"
@@ -55,11 +54,16 @@ static void gl_info(std::ostream& os)
 
 void begin(Config* cfg)
 {
-    using namespace xml;
 
-    // set BATB configuration-object
+    // set our BATB configuration-object
     config_ = cfg;
+
+
+    using namespace xml;
     XMLHandle xml( cfg );
+
+    // create our values, using our Config'uration
+    Values::create( xml.FirstChildElement( "Values" ).ToElement() );
 
     // create log stream
     Log::create( xml.FirstChildElement("Log").ToElement() );
@@ -68,7 +72,6 @@ void begin(Config* cfg)
 
     //////////////////////////////////////////////////////////
     //      OpenGL
-    glewInit();
     // BATB assumes this GL state:
     set_gl_state();
 
@@ -86,12 +89,15 @@ void begin(Config* cfg)
     // create values, from file
     Values::create( xml.FirstChildElement("Values").ToElement() );
 
+    // create Forest part of BATB
+    theForest()->create( xml.FirstChildElement("Forest").ToElement() );
+
+    // create Race part of BATB
+    // FIXME!
 
     // create Run part of BATB
     theRun()->create( xml.FirstChildElement("Run").ToElement() );
 
-    // create Forest part of BATB
-    theForest()->create( xml.FirstChildElement("Forest").ToElement() );
     
     // creat
 }
@@ -102,8 +108,8 @@ void end()
     // FIXME: save config
 
 
-    theForest()->destroy();
     theRun()->destroy();
+    theForest()->destroy();
 
 }
 
@@ -116,6 +122,7 @@ void set_gl_state()
     glDisable( GL_STENCIL_TEST ); // ??
     glClearStencil( 0 );          // ??
 
+    // INVARIANT:
     // if a fragment shader outputs value intended to be color, then this color should be normalized.
     // that is, the RGB coordinates should be multiplied by A. this means that if a color (r,g,b) has
     // opacity a, then the RGBA color should be normalized into (a * r, a * g, a * b, a).

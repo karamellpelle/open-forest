@@ -18,7 +18,7 @@
 #ifndef BATB_COURSE_HPP
 #define BATB_COURSE_HPP
 #include "BATB/Config.hpp"
-
+#include "BATB/Forest/Control.hpp"
 
 namespace BATB
 {

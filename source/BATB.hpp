@@ -20,8 +20,8 @@
 #include "BATB/BATB_include.hpp"
 #include "BATB/Config.hpp"
 #include "BATB/Log.hpp"
-#include "BATB/Run.hpp"
 #include "BATB/Forest.hpp"
+#include "BATB/Run.hpp"
 
 
 namespace BATB
@@ -48,6 +48,5 @@ inline Config* theConfig()
 void set_gl_state();
 
 }
-
 
 #endif

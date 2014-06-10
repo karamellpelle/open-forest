@@ -17,10 +17,9 @@
 //
 #include "include.hpp"
 #include "Env.hpp"
-#include "BATB.hpp"
 #include "Game.hpp"
 #include "File.hpp"
-
+#include "BATB.hpp"
 
 
 // control BATB from commandline, by modifying BATB::Config object
@@ -31,16 +30,17 @@ int cmdline(int argc, char** argv, BATB::xml::XMLElement* xml)
 
 
 
-
 int main(int argc, char** argv)
 {
+    int ret = 0;
+
     try
     {
         using namespace BATB::xml;
 
         // this is our program configuration
         BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
-        batb_cfg.Print();
+        batb_cfg.Print(); // TMP
         XMLHandle xml( batb_cfg.FirstChildElement("BATB") );
        
         // modify from command line, take actions
@@ -55,7 +55,6 @@ int main(int argc, char** argv)
 
         //////////////////////////////////////////////////////////
         //      OpenGL
-        glewInit();
 
         //////////////////////////////////////////////////////////
         //      OpenAL
@@ -97,6 +96,7 @@ int main(int argc, char** argv)
     catch (std::exception& e)
     {
         std::cerr << "main:    FATAL: " << e.what() << std::endl;
+        ret = 1;
     }
 
     // end BATB
@@ -104,4 +104,10 @@ int main(int argc, char** argv)
 
     // end Env
     Env::end();
+
+
+
+    // quit...
+    return ret;
 }
+

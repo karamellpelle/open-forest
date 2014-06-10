@@ -10,8 +10,7 @@ set(BATB_VERSION_MAJOR 1)
 
 # set compiler flags
 # FIXME: into build option
-set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -g -pg" )
-
+set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -g -pg -std=c++11" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
@@ -183,7 +182,11 @@ if ( BATB_BUILD )
     add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
 
 
-    set( BATB_LIBRARIES ${BATB_LIBRARIES} ${OLD_LIBRARIES} -lGLEW )
+    list( APPEND BATB_LIBRARIES -lGLEW )
+
+    # OLD
+    list( APPEND BATB_LIBRARIES ${OLD_LIBRARIES} )
+
 
     # create executable target 'batb'
     add_executable( batb ${BATB_SOURCES} )

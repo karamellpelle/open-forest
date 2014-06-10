@@ -18,11 +18,15 @@
 #ifndef BATB_FORESTWORLD_HPP
 #define BATB_FORESTWORLD_HPP
 #include "BATB/BATB_include.hpp"
+#include "BATB/Forest/ForestEvent.hpp"
 #include "BATB/Forest/Camera.hpp"
 #include "BATB/Forest/Terrain.hpp"
 #include "BATB/Forest/Map.hpp"
 #include "BATB/Forest/Course.hpp"
+#include "BATB/Forest/Control.hpp"
+#include "BATB/Forest/Runner.hpp"
 #include "BATB/Forest/Weather.hpp"
+
 
 namespace BATB
 {
@@ -82,5 +86,6 @@ private:
 
 
 }
+
 
 #endif
