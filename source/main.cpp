@@ -36,6 +36,11 @@ int main(int argc, char** argv)
 
     try
     {
+        // BATB is partially created, only the necessary stuff
+        // for iterationRunBegin to function. this Iteration shall
+        // create the rest ("now loading" screen)
+        // FIXME: define the necessary stuff (xml, ...)
+        //
         using namespace BATB::xml;
 
         // this is our program configuration

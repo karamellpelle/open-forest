@@ -27,5 +27,5 @@ add_library(custom-nanovg STATIC ${CUSTOM_NANOVG_SOURCES})
 #--------------------------------------------------------------------
 # Export CUSTOM_NANOVG_XXX
 #--------------------------------------------------------------------
-set(CUSTOM_NANOVG_INCLUDE_DIRS ${CUSTOM_NANOVG_INCLUDE_DIRS} CACHE STRING "include dirs for custom-nanovg")
-set(CUSTOM_NANOVG_LIBRARIES    ""                            CACHE STRING "libs needed for custom-nanovg")
+set(CUSTOM_NANOVG_INCLUDE_DIRS ${CUSTOM_NANOVG_INCLUDE_DIRS} PARENT_SCOPE)
+set(CUSTOM_NANOVG_LIBRARIES    ""                            PARENT_SCOPE)

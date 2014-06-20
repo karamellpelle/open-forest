@@ -1,3 +1,7 @@
+* FPS and other BATB-stats
+* base event class (Game::), implement for Run/Race/Forest/... 
+  true iff handled??
+* glext.h (part of official OpenGL Registry) as git submodule, or something
 * use C++11 coding. even if I do not know this very well, especially
   "move semantics"/lvalues/rvalues/... there are a lot of effective stuff to be used. 
   see for example:
@@ -5,11 +9,9 @@
     http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
 * Race, Run, Forest into namespaces BATB::Race::, ...
 * define invariants (OpenGL, ...)
-* add turbobadger, run old from that
 * Define gameobjects more preciseand start to implement them
 * find out how to model Competition, relative to Forest. different Competition types:
   Single/Relay/Special Trainings/...
-* nanovg implement
 * find a suitable UDP-library (http://www.codeofhonor.com/blog/choosing-a-game-network-lib)
 * GLEW as git library (libs/)
 * Ogre3D add. check out terrain functionality

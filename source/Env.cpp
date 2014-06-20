@@ -39,8 +39,6 @@ void begin(xml::XMLElement* elem)
 
     xml::XMLHandle xml( elem );
 
-    // Env relies on GLFW, which we use GLEW together with
-    glewInit();
 
     // cfg GLFW
     glfwSetErrorCallback( glfw_error_callback );

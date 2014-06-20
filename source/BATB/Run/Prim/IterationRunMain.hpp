@@ -40,6 +40,7 @@ private:
     void create(xml::XMLElement* cfg);
     void destroy();
 
+    // GUI windows...
 
 
 };

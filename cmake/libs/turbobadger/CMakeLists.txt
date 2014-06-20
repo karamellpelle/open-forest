@@ -6,7 +6,10 @@ cmake_minimum_required( VERSION 2.6 )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Dnullptr=0 --std=c++0x" ) # FIXME: not just linux... but gives compile error otherwise in tb_select.cpp
 
 set( CUSTOM_TURBOBADGER_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs/turbobadger )
-set( CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb )
+list( APPEND CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_SOURCE_DIR}/src )
+list( APPEND CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb )
+
+
 #FIXME: set <project-name>_SOURCE_DIR <project-name>_BIN_DIR from these??
 #       (http://www.cmake.org/cmake/help/v2.8.12/cmake.html#command:project)
 
@@ -86,5 +89,6 @@ add_library(custom-turbobadger STATIC ${CUSTOM_TURBOBADGER_SOURCES})
 #--------------------------------------------------------------------
 # Export CUSTOM_TURBOBADGER_XXX
 #--------------------------------------------------------------------
-set(CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_INCLUDE_DIRS}  CACHE STRING "include dirs for custom-turbobadger")
-set(CUSTOM_TURBOBADGER_LIBRARIES    ""                                  CACHE STRING "libs needed for custom-turbobadger")
+set(CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_INCLUDE_DIRS}  PARENT_SCOPE)
+set(CUSTOM_TURBOBADGER_LIBRARIES    ""                                  PARENT_SCOPE)
+

@@ -152,6 +152,7 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/File.cpp
 
       ${MAIN_SOURCE_DIR}/BATB.cpp
+      ${MAIN_SOURCE_DIR}/BATB/GUI.cpp
       ${MAIN_SOURCE_DIR}/BATB/Values.cpp
       ${MAIN_SOURCE_DIR}/BATB/Log.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys.cpp
@@ -199,7 +200,7 @@ if ( BATB_BUILD )
                          )
    
     # libraries to target
-    target_link_libraries( batb glfw tinyxml2 custom-nanovg ${BATB_LIBRARIES} )
+    target_link_libraries( batb glfw tinyxml2 custom-nanovg custom-turbobadger ${BATB_LIBRARIES} )
 
 endif()
 

@@ -18,6 +18,7 @@
 #include "BATB.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/Values.hpp"
+#include "BATB/GUI.hpp"
 
 namespace BATB
 {
@@ -89,6 +90,9 @@ void begin(Config* cfg)
     // create values, from file
     Values::create( xml.FirstChildElement("Values").ToElement() );
 
+    //
+    theGUI()->create( xml.FirstChildElement("GUI").ToElement());
+
     // create Forest part of BATB
     theForest()->create( xml.FirstChildElement("Forest").ToElement() );
 
@@ -107,6 +111,7 @@ void end()
 
     // FIXME: save config
 
+    theGUI()->destroy();
 
     theRun()->destroy();
     theForest()->destroy();
@@ -121,7 +126,8 @@ void set_gl_state()
     glClearColor( 0, 0, 0, 0 );
     glDisable( GL_STENCIL_TEST ); // ??
     glClearStencil( 0 );          // ??
-
+    std::printf("glEnable: %p\n", glEnable);
+    std::printf("glBlendFuncSeparate: %p\n", glBlendFuncSeparate);
     // INVARIANT:
     // if a fragment shader outputs value intended to be color, then this color should be normalized.
     // that is, the RGB coordinates should be multiplied by A. this means that if a color (r,g,b) has

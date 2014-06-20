@@ -95,6 +95,16 @@ void screenBegin(xml::XMLElement* elem)
     {
         throw std::runtime_error( "could not create window" );
     }
+
+
+    // we now have a context, init GLEW
+    GLenum err = glewInit();
+    if ( err != GLEW_OK )
+    {
+        std::ostringstream os;
+        os << "Env: ERROR could not init GLEW, " << glewGetErrorString( err );
+        throw std::runtime_error( os.str() );
+    }
 }
 
 

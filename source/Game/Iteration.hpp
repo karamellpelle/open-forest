@@ -29,11 +29,13 @@ template <typename A>
 class IterationStack;
 
 
+//template <Env=void, A>
 template <typename A>
 class Iteration : public Ref
 {
 friend class IterationStack<A>;
 public:
+    //Iteration(Env* env) : env_( env ) { }
     virtual ~Iteration() { }                  // FIXME: proctected, for named destructors?
 
 
@@ -49,7 +51,9 @@ public:
     // define this in subclass:
     virtual void iterate(IterationStack<A>& stack, A& a) = 0;
 
-
+    //Env* env() { return env_; }
+private:
+    //Env* env_;
 
 };
 

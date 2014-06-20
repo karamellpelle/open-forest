@@ -1,5 +1,6 @@
 #include "BATB/Run.hpp"
 #include "BATB/Run/Prim/Scene.hpp"
+#include "BATB/GUI.hpp"
 
 // this must only be included in 1 source file, because no inline functions!
 //#define NANOVG_GL3_IMPLEMENTATION // this did not work for me :(  FIXME
@@ -90,14 +91,38 @@ void IterationRunMain0::world_begin(RunWorld& run)
 
     // nanovg demo
     tmp_output_begin();
+
+    // GUI
+    theGUI()->keysCallback();
+    // add windows...
+    // just dynamically allocate without manual delete, memory management is performed by TB
+    theGUI()->root()->AddChild( new TBWindow() );
+    // application->GetRoot()->AddChild(this);
 }
 
 
 void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
 {
+    ////////////////////////////////////////////////////////////////////////////////
+    //  OUTPUT
+    //
+
     // begin Scene for this frame
     scene_begin( run.scene() );
+
+    // GUI
+    // FIXME: Scene wth/hth
+    uint wth, hth;
+    Env::screenSize( wth, hth );
+    theGUI()->output( wth, hth );
     
+    ////////////////////////////////////////////////////////////////////////////////
+    //  STEP
+    // 
+
+    // GUI
+    theGUI()->step();
+
     theRun()->keys->keys_update( Env::tick() );
     
     float_t wth = run.scene()->shape()->wth;
