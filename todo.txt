@@ -1,10 +1,10 @@
+* invariant shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
+* stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
 * FPS and other BATB-stats
 * base event class (Game::), implement for Run/Race/Forest/... 
   true iff handled??
 * glext.h (part of official OpenGL Registry) as git submodule, or something
-* use C++11 coding. even if I do not know this very well, especially
-  "move semantics"/lvalues/rvalues/... there are a lot of effective stuff to be used. 
-  see for example:
+* use C++11 coding actively. see for example:
     http://blog.smartbear.com/c-plus-plus/the-biggest-changes-in-c11-and-why-you-should-care/
     http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
 * Race, Run, Forest into namespaces BATB::Race::, ...

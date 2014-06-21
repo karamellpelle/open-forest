@@ -28,8 +28,13 @@ set(  CUSTOM_TURBOBADGER_SOURCES
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_select.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_select_item.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_editfield.cpp" 
-      "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_system_linux.cpp" 
-      "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_clipboard_glfw.cpp" 
+
+      # implemenation done by BATB
+      #"${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_system_linux.cpp"
+
+      # no clipboard support
+      #"${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_clipboard_glfw.cpp" 
+
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_tab_container.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_widgets.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_widgets_common.cpp" 
@@ -66,7 +71,11 @@ set(  CUSTOM_TURBOBADGER_SOURCES
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_geometry.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_node_tree.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_node_ref_tree.cpp" 
-      "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_image_loader_stb.cpp" 
+
+      # we provide our own
+      #"${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/tb_image_loader_stb.cpp" 
+      "${CMAKE_CURRENT_SOURCE_DIR}/src/tb/tb_image_loader_stb.cpp" 
+
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/parser/tb_parser.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/utf8/utf8.cpp" 
       "${CUSTOM_TURBOBADGER_SOURCE_DIR}/src/tb/animation/tb_animation.cpp" 
@@ -81,6 +90,9 @@ set(  CUSTOM_TURBOBADGER_SOURCES
 # include directories.
 # add MAIN_SOURCE_DIR (inherited) before, in order to find our tb_config.h
 include_directories( ${MAIN_SOURCE_DIR} ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )  
+
+# include custom source folder
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/src/tb" )
 
 # create static library 'turbobadger-custom'
 add_library(custom-turbobadger STATIC ${CUSTOM_TURBOBADGER_SOURCES})

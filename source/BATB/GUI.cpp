@@ -21,12 +21,18 @@
 #include "tb/renderers/tb_renderer_gl.h"
 #include "tb/tb_font_renderer.h"
 #include "tb/animation/tb_animation.h"
+#include "tb/animation/tb_widget_animation.h"
+#include "tb/tb_system.h"
 
 
 
-namespace tb { void register_tbbf_font_renderer(); }
-namespace tb { void register_stb_font_renderer(); }
-namespace tb { void register_freetype_font_renderer(); }
+// these are not part of tb::
+//namespace tb { void register_tbbf_font_renderer(); }
+//namespace tb { void register_stb_font_renderer(); }
+//namespace tb { void register_freetype_font_renderer(); }
+void register_tbbf_font_renderer();
+void register_stb_font_renderer();
+void register_freetype_font_renderer(); 
 
 
 namespace BATB
@@ -72,14 +78,15 @@ void GUI::create(xml::XMLElement* elem)
                           File::staticData( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
 
     // Register font renderers.
+    // NOTE: for some reason, these are not part of namespace tb.
 #ifdef TB_FONT_RENDERER_TBBF
-    tb::register_tbbf_font_renderer();
+    register_tbbf_font_renderer();
 #endif
 #ifdef TB_FONT_RENDERER_STB
-    tb::register_stb_font_renderer();
+    register_stb_font_renderer();
 #endif
 #ifdef TB_FONT_RENDERER_FREETYPE
-    tb::register_freetype_font_renderer();
+    register_freetype_font_renderer();
 #endif
 
     // Add fonts we can use to the font manager.
@@ -167,15 +174,15 @@ void GUI::step()
     
 }
 
+    static void glfw_callback_char(GLFWwindow *window, unsigned int character);
+    static void glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod);
+    static void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod);
+    static void glfw_callback_cursor_pos(GLFWwindow *window, double x, double y);
+    static void glfw_callback_scroll(GLFWwindow *window, double x, double y);
+    static void glfw_callback_window_size(GLFWwindow *window, int w, int h);
+
 void GUI::keysCallback()
 {
-    void glfw_callback_char(GLFWwindow *window, unsigned int character);
-    void glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod);
-    void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod);
-    void glfw_callback_cursor_position(GLFWwindow *window, double x, double y);
-    void glfw_callback_scroll(GLFWwindow *window, double x, double y);
-    void glfw_callback_window_size(GLFWwindow *window, int w, int h);
-    extern tb::TBWidget* call_widget;
 
     // FIXME: keys::glfw_callback_window_size( glfw_callback_window_size );
     //        ...
@@ -192,6 +199,15 @@ void GUI::keysCallback()
 	//glfwSetDropCallback(mainWindow, drop_callback);
 #endif
 
+}
+
+//
+// @return Return the upper case of a ascii charcter. Only for shortcut handling.
+static int toupr_ascii(int ascii)
+{
+	if (ascii >= 'a' && ascii <= 'z')
+		return ascii + 'A' - 'a';
+	return ascii;
 }
 
 
@@ -380,7 +396,7 @@ static void glfw_callback_mouse_button(GLFWwindow *window, int button, int actio
 		}
 	}
 }
-static void glfw_callback_cursor_position(GLFWwindow *window, double x, double y)
+static void glfw_callback_cursor_pos(GLFWwindow *window, double x, double y)
 {
 	mouse_x = (int)x;
 	mouse_y = (int)y;
@@ -404,3 +420,121 @@ static void glfw_callback_window_size(GLFWwindow *window, int w, int h)
 
 
 }
+
+// FIXME: portable TBSystem
+#include <sys/time.h>
+#include <stdio.h>
+namespace tb {
+
+// This doesn't really belong here (it belongs in tb_system_[linux/windows].cpp.
+// This is here since the proper implementations has not yet been done.
+void TBSystem::RescheduleTimer(double fire_time)
+{
+	//ReschedulePlatformTimer(fire_time, false);
+        // FIXME!!
+}
+// == TBSystem ========================================
+
+double TBSystem::GetTimeMS()
+{
+	struct timeval now;
+	gettimeofday( &now, NULL );
+	return now.tv_usec/1000 + now.tv_sec*1000;
+}
+
+// Implementation currently done in port_glut.cpp.
+// FIX: Implement here for linux-desktop/android/macos?
+//void TBSystem::RescheduleTimer(double fire_time)
+//{
+//}
+
+int TBSystem::GetLongClickDelayMS()
+{
+	return 500;
+}
+
+int TBSystem::GetPanThreshold()
+{
+	return 5 * GetDPI() / 96;
+}
+
+int TBSystem::GetPixelsPerLine()
+{
+	return 40 * GetDPI() / 96;
+}
+
+int TBSystem::GetDPI()
+{
+	// FIX: Implement!
+	return 96;
+}
+
+// == TBFile =====================================
+
+class TBLinuxFile : public TBFile
+{
+public:
+	TBLinuxFile(FILE *f) : file(f) {}
+	virtual ~TBLinuxFile() { fclose(file); }
+
+	virtual long Size()
+	{
+		long oldpos = ftell(file);
+		fseek(file, 0, SEEK_END);
+		long num_bytes = ftell(file);
+		fseek(file, oldpos, SEEK_SET);
+		return num_bytes;
+	}
+	virtual size_t Read(void *buf, size_t elemSize, size_t count)
+	{
+		return fread(buf, elemSize, count, file);
+	}
+private:
+	FILE *file;
+};
+
+TBFile *TBFile::Open(const char *filename, TBFileMode mode)
+{
+	FILE *f = nullptr;
+	switch (mode)
+	{
+	case MODE_READ:
+		f = fopen(filename, "rb");
+		break;
+	default:
+		break;
+	}
+	if (!f)
+		return nullptr;
+	TBLinuxFile *tbf = new TBLinuxFile(f);
+	if (!tbf)
+		fclose(f);
+	return tbf;
+}
+
+TBStr clipboard; ///< Obviosly not a full implementation since it ignores the OS :)
+
+void TBClipboard::Empty()
+{
+	clipboard.Clear();
+}
+
+bool TBClipboard::HasText()
+{
+	return !clipboard.IsEmpty();
+}
+
+bool TBClipboard::SetText(const char *text)
+{
+	return clipboard.Set(text);
+}
+
+bool TBClipboard::GetText(TBStr &text)
+{
+	return text.Set(clipboard);
+}
+
+}; // namespace tb
+
+
+

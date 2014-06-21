@@ -96,7 +96,9 @@ void IterationRunMain0::world_begin(RunWorld& run)
     theGUI()->keysCallback();
     // add windows...
     // just dynamically allocate without manual delete, memory management is performed by TB
-    theGUI()->root()->AddChild( new TBWindow() );
+    tb::TBWindow* window = new tb::TBWindow();
+    window->SetRect( tb::TBRect(0, 0, 128, 64 ) );
+    theGUI()->root()->AddChild( new tb::TBWindow() );
     // application->GetRoot()->AddChild(this);
 }
 
@@ -110,11 +112,15 @@ void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     // begin Scene for this frame
     scene_begin( run.scene() );
 
+    // nanovg demo:
+    tmp_output_iterate();
+
+
     // GUI
     // FIXME: Scene wth/hth
-    uint wth, hth;
-    Env::screenSize( wth, hth );
-    theGUI()->output( wth, hth );
+    uint s_wth, s_hth;
+    Env::screenSize( s_wth, s_hth );
+    theGUI()->output( s_wth, s_hth );
     
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
@@ -151,10 +157,6 @@ void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     {
         std::printf("right up:   (%#5.2f, %#5.2f) \n", x, y );
     }
-
-    // nanovg demo:
-    tmp_output_iterate();
-
 
     if ( theRun()->keys->pause->click() )
     {
