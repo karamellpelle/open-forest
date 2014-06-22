@@ -152,7 +152,6 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/File.cpp
 
       ${MAIN_SOURCE_DIR}/BATB.cpp
-      ${MAIN_SOURCE_DIR}/BATB/GUI.cpp
       ${MAIN_SOURCE_DIR}/BATB/Values.cpp
       ${MAIN_SOURCE_DIR}/BATB/Log.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys.cpp
@@ -167,6 +166,8 @@ set( BATB_SOURCES
       ${MAIN_SOURCE_DIR}/BATB/Forest/ForestPrim.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp
       ${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp
+      ${MAIN_SOURCE_DIR}/BATB/GUI.cpp
+      ${MAIN_SOURCE_DIR}/BATB/gui/tb_system.cpp
 
       # add tmp for now
       ${MAIN_SOURCE_DIR}/BATB/tmp/demo.c

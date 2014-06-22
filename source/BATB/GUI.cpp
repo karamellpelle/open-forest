@@ -23,6 +23,7 @@
 #include "tb/animation/tb_animation.h"
 #include "tb/animation/tb_widget_animation.h"
 #include "tb/tb_system.h"
+#include "tb/tb_msg.h"
 
 
 
@@ -167,6 +168,11 @@ void GUI::step()
     uint wth, hth;
     Env::screenSize( wth, hth );
     root_.SetRect( tb::TBRect(0, 0, wth, hth));
+
+    // FIXME: set variables for custom TBSystem implementation
+
+    // update messages for TB
+    tb::TBMessageHandler::ProcessMessages(); 
 
     tb::TBAnimationManager::Update();
     root_.InvokeProcessStates();
@@ -420,121 +426,4 @@ static void glfw_callback_window_size(GLFWwindow *window, int w, int h)
 
 
 }
-
-// FIXME: portable TBSystem
-#include <sys/time.h>
-#include <stdio.h>
-namespace tb {
-
-// This doesn't really belong here (it belongs in tb_system_[linux/windows].cpp.
-// This is here since the proper implementations has not yet been done.
-void TBSystem::RescheduleTimer(double fire_time)
-{
-	//ReschedulePlatformTimer(fire_time, false);
-        // FIXME!!
-}
-// == TBSystem ========================================
-
-double TBSystem::GetTimeMS()
-{
-	struct timeval now;
-	gettimeofday( &now, NULL );
-	return now.tv_usec/1000 + now.tv_sec*1000;
-}
-
-// Implementation currently done in port_glut.cpp.
-// FIX: Implement here for linux-desktop/android/macos?
-//void TBSystem::RescheduleTimer(double fire_time)
-//{
-//}
-
-int TBSystem::GetLongClickDelayMS()
-{
-	return 500;
-}
-
-int TBSystem::GetPanThreshold()
-{
-	return 5 * GetDPI() / 96;
-}
-
-int TBSystem::GetPixelsPerLine()
-{
-	return 40 * GetDPI() / 96;
-}
-
-int TBSystem::GetDPI()
-{
-	// FIX: Implement!
-	return 96;
-}
-
-// == TBFile =====================================
-
-class TBLinuxFile : public TBFile
-{
-public:
-	TBLinuxFile(FILE *f) : file(f) {}
-	virtual ~TBLinuxFile() { fclose(file); }
-
-	virtual long Size()
-	{
-		long oldpos = ftell(file);
-		fseek(file, 0, SEEK_END);
-		long num_bytes = ftell(file);
-		fseek(file, oldpos, SEEK_SET);
-		return num_bytes;
-	}
-	virtual size_t Read(void *buf, size_t elemSize, size_t count)
-	{
-		return fread(buf, elemSize, count, file);
-	}
-private:
-	FILE *file;
-};
-
-TBFile *TBFile::Open(const char *filename, TBFileMode mode)
-{
-	FILE *f = nullptr;
-	switch (mode)
-	{
-	case MODE_READ:
-		f = fopen(filename, "rb");
-		break;
-	default:
-		break;
-	}
-	if (!f)
-		return nullptr;
-	TBLinuxFile *tbf = new TBLinuxFile(f);
-	if (!tbf)
-		fclose(f);
-	return tbf;
-}
-
-TBStr clipboard; ///< Obviosly not a full implementation since it ignores the OS :)
-
-void TBClipboard::Empty()
-{
-	clipboard.Clear();
-}
-
-bool TBClipboard::HasText()
-{
-	return !clipboard.IsEmpty();
-}
-
-bool TBClipboard::SetText(const char *text)
-{
-	return clipboard.Set(text);
-}
-
-bool TBClipboard::GetText(TBStr &text)
-{
-	return text.Set(clipboard);
-}
-
-}; // namespace tb
-
-
 
