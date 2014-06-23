@@ -111,6 +111,8 @@ void GUI::create(xml::XMLElement* elem)
     fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
     tb::g_font_manager->SetDefaultFontDescription(fd);
 
+    root_.SetSkinBg( tb::TBIDC("background") );
+
     // Create the font now.
     tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());
 
@@ -154,6 +156,9 @@ void GUI::output(uint wth, uint hth)
 //      g_renderer->BeginPaint(window_w, window_h);
 //      GetRoot()->InvokePaint(TBWidget::PaintProps());
 //      g_renderer->EndPaint();
+//      
+//      FIXME: not here:
+        root_.SetRect( tb::TBRect( 0, 0, wth, hth ) );
 
         tb::g_renderer->BeginPaint( wth, hth );
         root_.InvokePaint( tb::TBWidget::PaintProps() );
@@ -171,7 +176,9 @@ void GUI::step()
 
     // FIXME: set variables for custom TBSystem implementation
 
-    // update messages for TB
+    // update messages for TB, that is, send TBMessage's from
+    // the global message queue to the receiving TBMessageHandler
+    // for each message
     tb::TBMessageHandler::ProcessMessages(); 
 
     tb::TBAnimationManager::Update();

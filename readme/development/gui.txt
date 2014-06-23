@@ -1,0 +1,16 @@
+we use Turbobadger for GUI. 
+* GUI should be usable by multiple Iteration's at the same frame, f.ex. 
+  Run and Forest can have different GUI controls at the same time
+* the GUI should be used for on-screen output of text, f.ex. FPS, ...
+  in this way, we are able to extend this output later with more advanced
+  stuff, f.ex. buttons, interactive output, ...
+  GetRoot()->GetFont()->drawString( ...)
+
+
+globals:
+  extern TBRenderer *g_renderer;
+  extern TBSkin *g_tb_skin;
+  extern TBWidgetsReader *g_widgets_reader;
+  extern TBLanguage *g_tb_lng;
+  extern TBFontManager *g_font_manager;
+

@@ -1,3 +1,4 @@
+* create templates/... for easily construction of Iteration's
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger

@@ -18,6 +18,9 @@
 #define TB_RUNTIME_DEBUG_INFO
 #endif
 
+// enable this anyway
+//#define TB_RUNTIME_DEBUG_INFO
+
 /** Enable if the focus state should automatically be set on edit fields even
 	when using the pointer. It is normally set only while moving focus by keyboard. */
 //#define TB_ALWAYS_SHOW_EDIT_FOCUS
