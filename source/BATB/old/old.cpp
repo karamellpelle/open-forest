@@ -12,6 +12,12 @@ void old_begin()
 {
     
     // old-BATB did not like our GL-state...
+    // still after the following GL-changes, font is not showing up
+    // for gameplay in old-BATB
+    //
+    // also, old-BATB sets state we don't like...
+    //
+    // see: nanovg_gl.h: static void glnvg__renderFlush(void* uptr, int alphaBlend)
     glDisable( GL_BLEND );
     glEnable( GL_DEPTH_TEST );
     glDisable( GL_STENCIL_TEST );

@@ -1,3 +1,9 @@
+* Race, Run, Forest into namespaces BATB::Race::, ...
+  => when starting up only the necessary objects should be up, 
+     the other parts should be initialized by iterationRunBegin.
+  => define the initialized/unitiliazide objects.
+* loading the rest of objects in iterationRunBegin
+* functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github
 * create templates/... for easily construction of Iteration's
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
@@ -9,7 +15,6 @@
 * use C++11 coding actively. see for example:
     http://blog.smartbear.com/c-plus-plus/the-biggest-changes-in-c11-and-why-you-should-care/
     http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
-* Race, Run, Forest into namespaces BATB::Race::, ...
 * define invariants (OpenGL, ...)
 * Define gameobjects more preciseand start to implement them
 * find out how to model Competition, relative to Forest. different Competition types:

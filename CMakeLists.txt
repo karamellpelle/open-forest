@@ -11,6 +11,7 @@ set(BATB_VERSION_MAJOR 1)
 # set compiler flags
 # FIXME: into build option
 set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -std=c++11 -g -pg" )
+set( CMAKE_C_FLAGS "-Wall -Wno-switch -g -pg" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )

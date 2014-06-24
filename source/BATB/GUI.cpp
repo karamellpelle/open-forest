@@ -111,7 +111,7 @@ void GUI::create(xml::XMLElement* elem)
     fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
     tb::g_font_manager->SetDefaultFontDescription(fd);
 
-    root_.SetSkinBg( tb::TBIDC("background") );
+    //root_.SetSkinBg( tb::TBIDC("background") );
 
     // Create the font now.
     tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());

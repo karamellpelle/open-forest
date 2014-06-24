@@ -110,10 +110,17 @@ void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     //
 
     // begin Scene for this frame
+    // FIXME: set our GL-state?
     scene_begin( run.scene() );
 
     // nanovg demo:
-    //tmp_output_iterate();
+    tmp_output_iterate();
+
+    // FIXME: create helpers for this
+    // set back GL after nanovg
+    // see old.cpp and README.md for nanovg
+    glEnable( GL_DEPTH_TEST );
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // this seems to be the problem if no other output that nanovg...
 
 
     // GUI
@@ -121,7 +128,7 @@ void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     uint s_wth, s_hth;
     Env::screenSize( s_wth, s_hth );
     theGUI()->output( s_wth, s_hth );
-    
+
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
@@ -217,12 +224,13 @@ void tmp_output_iterate()
     {
         blowup = !blowup;
     }
+/*
     // set for next iteration...
     if (premult)
             glClearColor(0,0,0,0);
     else
             glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
-    
+*/   
     if ( tmp_empty )
     {
         return;
