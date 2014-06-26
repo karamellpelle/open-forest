@@ -23,6 +23,33 @@ namespace BATB
 {
 
 
+void Keys::charCalling(GLFWcharfun f)
+{
+    glfwSetCharCallback( Env::screenWindow(), f );
+}
+
+void Keys::keyCalling(GLFWkeyfun f)
+{
+    glfwSetKeyCallback( Env::screenWindow(), f );
+}
+
+void Keys::mousebuttonCalling(GLFWmousebuttonfun f)
+{
+    glfwSetMouseButtonCallback( Env::screenWindow(), f );
+}
+
+void Keys::cursorposCalling(GLFWcursorposfun f)
+{
+    glfwSetCursorPosCallback( Env::screenWindow(), f );
+
+}
+
+void Keys::scrollCalling(GLFWscrollfun f)
+{
+    glfwSetScrollCallback( Env::screenWindow(), f );
+}
+
+
 
 }
 

@@ -93,12 +93,15 @@ void IterationRunMain0::world_begin(RunWorld& run)
     tmp_output_begin();
 
     // GUI
-    theGUI()->keysCallback();
+    // let GUI steal Keys callbacks
+    theGUI()->bindKeys();
+
+
     // add windows...
-    // just dynamically allocate without manual delete, memory management is performed by TB
+    // memory management is performed by TB
     tb::TBWindow* window = new tb::TBWindow();
     window->SetRect( tb::TBRect(0, 0, 128, 64 ) );
-    theGUI()->root()->AddChild( window );
+    theGUI()->root().AddChild( window );
     // application->GetRoot()->AddChild(this);
 }
 
@@ -116,18 +119,15 @@ void IterationRunMain1::iterate(IterationStackRunWorld& stack, RunWorld& run)
     // nanovg demo:
     tmp_output_iterate();
 
-    // FIXME: create helpers for this
     // set back GL after nanovg
     // see old.cpp and README.md for nanovg
+    // FIXME: create helpers for this
     glEnable( GL_DEPTH_TEST );
     glBindBuffer(GL_ARRAY_BUFFER, 0); // this seems to be the problem if no other output that nanovg...
 
 
     // GUI
-    // FIXME: Scene wth/hth
-    uint s_wth, s_hth;
-    Env::screenSize( s_wth, s_hth );
-    theGUI()->output( s_wth, s_hth );
+    theGUI()->output();
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP

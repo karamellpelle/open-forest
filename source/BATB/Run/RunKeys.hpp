@@ -25,8 +25,15 @@ namespace BATB
 class RunKeys : public Keys
 {
 public:
+    // crea
     void create(xml::XMLElement* );
     void destroy();
+
+    // load run-keys from map defined by XML
+    void loadMap(xml::XMLElement* );
+
+    /////////////////////////////////////////////////
+    // actual keys
 
     // keys to control Run
     KeyClicker* pause;

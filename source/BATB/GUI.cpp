@@ -17,13 +17,14 @@
 //
 #include "BATB/GUI.hpp"
 #include "BATB/Log.hpp"
+
+// TB
 #include "tb/tb_core.h"
 #include "tb/renderers/tb_renderer_gl.h"
 #include "tb/tb_font_renderer.h"
 #include "tb/animation/tb_animation.h"
 #include "tb/animation/tb_widget_animation.h"
 #include "tb/tb_system.h"
-#include "tb/tb_msg.h"
 
 
 
@@ -39,16 +40,6 @@ void register_freetype_font_renderer();
 namespace BATB
 {
 
-// FIXME: TBWidget::focused_widget and multiple root widgets??
-//        should probably not be a problem!
-static tb::TBWidget* call_widget = 0;
-
-static int mouse_x = 0;
-static int mouse_y = 0;
-static bool key_alt = false;
-static bool key_ctrl = false;
-static bool key_shift = false;
-static bool key_super = false;
 
 
 void GUI::create(xml::XMLElement* elem)
@@ -62,16 +53,13 @@ void GUI::create(xml::XMLElement* elem)
     // FIXME: parse xml...
   
 
-// backend init:
-//  * set up GLFW, set callbacks
-//  * create TBRenderer
-// tb_core_init: init TB
-// set skin
 // register font renderer, and init that
 // set skin background for RootWidget
 // DemoApplication::Init: 
 //  * Application::Init: TBWidgetsAnimationManager::Init();
     tb_renderer_ =  new tb::TBRendererGL();
+
+    // init the core of TB
     tb::tb_core_init( tb_renderer_, File::staticData( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
 
     // Load the default skin, and override skin that contains the graphics specific to the demo.
@@ -108,10 +96,8 @@ void GUI::create(xml::XMLElement* elem)
 #else
     fd.SetID( tb::TBIDC("Vera"));
 #endif
-    fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
+    fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx( 20 ));
     tb::g_font_manager->SetDefaultFontDescription(fd);
-
-    //root_.SetSkinBg( tb::TBIDC("background") );
 
     // Create the font now.
     tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());
@@ -125,13 +111,13 @@ void GUI::create(xml::XMLElement* elem)
                                                     "¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿");
 
     // Give the root widget a background skin
-    //application->GetRoot()->SetSkinBg(TBIDC("background"));
+    //root_.SetSkinBg(TBIDC("background"));
 
     tb::TBWidgetsAnimationManager::Init();
 
 
     // callback widget
-    call_widget = &root_;
+    callback_widget = &root_;
 }
 
 
@@ -149,74 +135,69 @@ void GUI::destroy()
 }
 
 
-// FIXME: argument??
-void GUI::output(uint wth, uint hth)
+void GUI::output()
 {
+    tb::g_renderer->BeginPaint( wth_, hth_ );
 
-//      g_renderer->BeginPaint(window_w, window_h);
-//      GetRoot()->InvokePaint(TBWidget::PaintProps());
-//      g_renderer->EndPaint();
-//      
-//      FIXME: not here:
-        root_.SetRect( tb::TBRect( 0, 0, wth, hth ) );
+    // paint our GUI tree
+    root_.InvokePaint( tb::TBWidget::PaintProps() );
 
-        tb::g_renderer->BeginPaint( wth, hth );
-        root_.InvokePaint( tb::TBWidget::PaintProps() );
-        tb::g_renderer->EndPaint();
-//      Root()->Invalidate(); // ?
+    tb::g_renderer->EndPaint();
 }
 
-// FIXME: argument??
 void GUI::step()
 {
-    // FIXME: Scene
-    uint wth, hth;
-    Env::screenSize( wth, hth );
-    root_.SetRect( tb::TBRect(0, 0, wth, hth));
+    // set size of GUI, using _screen_
+    Env::screenSize( wth_, hth_ );
+    root_.SetRect( tb::TBRect(0, 0, wth_, hth_) );
 
-    // FIXME: set variables for custom TBSystem implementation
+    // FIXME: set variables/update our TBSystem implementation
 
     // update messages for TB, that is, send TBMessage's from
     // the global message queue to the receiving TBMessageHandler
     // for each message
     tb::TBMessageHandler::ProcessMessages(); 
 
+    // update animations
     tb::TBAnimationManager::Update();
+
+    // TB stuff
     root_.InvokeProcessStates();
     root_.InvokeProcess();
     
 }
 
-    static void glfw_callback_char(GLFWwindow *window, unsigned int character);
-    static void glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod);
-    static void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod);
-    static void glfw_callback_cursor_pos(GLFWwindow *window, double x, double y);
-    static void glfw_callback_scroll(GLFWwindow *window, double x, double y);
-    static void glfw_callback_window_size(GLFWwindow *window, int w, int h);
-
-void GUI::keysCallback()
+void GUI::bindKeys()
 {
-
-    // FIXME: keys::glfw_callback_window_size( glfw_callback_window_size );
-    //        ...
-    //
-	glfwSetWindowSizeCallback(Env::screenWindow(), glfw_callback_window_size );
-	//glfwSetWindowRefreshCallback(Env::screenWindow(), );
-	glfwSetCursorPosCallback(Env::screenWindow(), glfw_callback_cursor_pos );
-    glfwSetMouseButtonCallback(Env::screenWindow(), glfw_callback_mouse_button );
-    glfwSetScrollCallback(Env::screenWindow(), glfw_callback_scroll );
-    glfwSetKeyCallback(Env::screenWindow(), glfw_callback_key );
-    glfwSetCharCallback(Env::screenWindow(), glfw_callback_char );
-    //glfwSetTimerCallback(timer_callback);
-#if (GLFW_VERSION_MAJOR >= 3 && GLFW_VERSION_MINOR >= 1)
-	//glfwSetDropCallback(mainWindow, drop_callback);
-#endif
+    // binding keys to this GUI object's root widget
+    callback_widget = &root_;
+    
+    Keys::cursorposCalling(   glfw_callback_cursor_pos );
+    Keys::mousebuttonCalling( glfw_callback_mouse_button );
+    Keys::scrollCalling(      glfw_callback_scroll );
+    Keys::keyCalling(         glfw_callback_key );
+    Keys::charCalling(        glfw_callback_char );
 
 }
 
+
+// the receving widget for keys callbacks (static)
+tb::TBWidget* GUI::callback_widget = nullptr;
+
+////////////////////////////////////////////////////////////////////////////////
+//  callback helpers
 //
+
+static int mouse_x = 0;
+static int mouse_y = 0;
+static bool key_alt = false;
+static bool key_ctrl = false;
+static bool key_shift = false;
+static bool key_super = false;
+
+
 // @return Return the upper case of a ascii charcter. Only for shortcut handling.
-static int toupr_ascii(int ascii)
+static inline int toupr_ascii(int ascii)
 {
 	if (ascii >= 'a' && ascii <= 'z')
 		return ascii + 'A' - 'a';
@@ -224,7 +205,7 @@ static int toupr_ascii(int ascii)
 }
 
 
-tb::MODIFIER_KEYS GetModifierKeys()
+static inline tb::MODIFIER_KEYS GetModifierKeys()
 {
 	tb::MODIFIER_KEYS code = tb::TB_MODIFIER_NONE;
 	if (key_alt)	code |= tb::TB_ALT;
@@ -234,7 +215,7 @@ tb::MODIFIER_KEYS GetModifierKeys()
 	return code;
 }
 
-tb::MODIFIER_KEYS GetModifierKeys(int modifier)
+static inline tb::MODIFIER_KEYS GetModifierKeys(int modifier)
 {
 	tb::MODIFIER_KEYS code = tb::TB_MODIFIER_NONE;
 	if (modifier & GLFW_MOD_ALT)		code |= tb::TB_ALT;
@@ -281,56 +262,65 @@ static bool InvokeShortcut(int key, tb::SPECIAL_KEY special_key, tb::MODIFIER_KE
 	return tb::TBWidget::focused_widget->InvokeEvent(ev);
 }
 
-static bool InvokeKey(GLFWwindow *window, unsigned int key, tb::SPECIAL_KEY special_key, tb::MODIFIER_KEYS modifierkeys, bool down)
+static inline bool InvokeKey(tb::TBWidget* widget, GLFWwindow *window, unsigned int key, tb::SPECIAL_KEY special_key, tb::MODIFIER_KEYS modifierkeys, bool down)
 {
 	if (InvokeShortcut(key, tb::TB_KEY_UNDEFINED, modifierkeys, down))
 		return true;
-	//GetBackend(window)->GetRoot()->InvokeKey(key, special_key, modifierkeys, down);
-        if ( call_widget ) call_widget->InvokeKey( key, special_key, modifierkeys, down );
+
+        if ( widget )
+            widget->InvokeKey( key, special_key, modifierkeys, down );
+
 	return true;
 }
-static void glfw_callback_char(GLFWwindow *window, unsigned int character)
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  GLFW callbacks
+//
+
+void GUI::glfw_callback_char(GLFWwindow *window, unsigned int character)
 {
 	// glfw on osx seems to send us characters from the private
 	// use block when using f.ex arrow keys on osx.
 	if (character >= 0xE000 && character <= 0xF8FF)
 		return;
 
-	InvokeKey(window, character, tb::TB_KEY_UNDEFINED, GetModifierKeys(), true);
-	InvokeKey(window, character, tb::TB_KEY_UNDEFINED, GetModifierKeys(), false);
+	InvokeKey( callback_widget, window, character, tb::TB_KEY_UNDEFINED, GetModifierKeys(), true);    // down
+	InvokeKey( callback_widget, window, character, tb::TB_KEY_UNDEFINED, GetModifierKeys(), false);   // up
 }
-static void glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod)
+
+void GUI::glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod)
 {
 	tb::MODIFIER_KEYS modifier = GetModifierKeys(glfwmod);
 	bool down = (action == GLFW_PRESS || action == GLFW_REPEAT);
 	switch (key)
 	{
-	case GLFW_KEY_F1:			InvokeKey(window, 0, tb::TB_KEY_F1, modifier, down); break;
-	case GLFW_KEY_F2:			InvokeKey(window, 0, tb::TB_KEY_F2, modifier, down); break;
-	case GLFW_KEY_F3:			InvokeKey(window, 0, tb::TB_KEY_F3, modifier, down); break;
-	case GLFW_KEY_F4:			InvokeKey(window, 0, tb::TB_KEY_F4, modifier, down); break;
-	case GLFW_KEY_F5:			InvokeKey(window, 0, tb::TB_KEY_F5, modifier, down); break;
-	case GLFW_KEY_F6:			InvokeKey(window, 0, tb::TB_KEY_F6, modifier, down); break;
-	case GLFW_KEY_F7:			InvokeKey(window, 0, tb::TB_KEY_F7, modifier, down); break;
-	case GLFW_KEY_F8:			InvokeKey(window, 0, tb::TB_KEY_F8, modifier, down); break;
-	case GLFW_KEY_F9:			InvokeKey(window, 0, tb::TB_KEY_F9, modifier, down); break;
-	case GLFW_KEY_F10:			InvokeKey(window, 0, tb::TB_KEY_F10, modifier, down); break;
-	case GLFW_KEY_F11:			InvokeKey(window, 0, tb::TB_KEY_F11, modifier, down); break;
-	case GLFW_KEY_F12:			InvokeKey(window, 0, tb::TB_KEY_F12, modifier, down); break;
-	case GLFW_KEY_LEFT:			InvokeKey(window, 0, tb::TB_KEY_LEFT, modifier, down); break;
-	case GLFW_KEY_UP:			InvokeKey(window, 0, tb::TB_KEY_UP, modifier, down); break;
-	case GLFW_KEY_RIGHT:		InvokeKey(window, 0, tb::TB_KEY_RIGHT, modifier, down); break;
-	case GLFW_KEY_DOWN:			InvokeKey(window, 0, tb::TB_KEY_DOWN, modifier, down); break;
-	case GLFW_KEY_PAGE_UP:		InvokeKey(window, 0, tb::TB_KEY_PAGE_UP, modifier, down); break;
-	case GLFW_KEY_PAGE_DOWN:	InvokeKey(window, 0, tb::TB_KEY_PAGE_DOWN, modifier, down); break;
-	case GLFW_KEY_HOME:			InvokeKey(window, 0, tb::TB_KEY_HOME, modifier, down); break;
-	case GLFW_KEY_END:			InvokeKey(window, 0, tb::TB_KEY_END, modifier, down); break;
-	case GLFW_KEY_INSERT:		InvokeKey(window, 0, tb::TB_KEY_INSERT, modifier, down); break;
-	case GLFW_KEY_TAB:			InvokeKey(window, 0, tb::TB_KEY_TAB, modifier, down); break;
-	case GLFW_KEY_DELETE:		InvokeKey(window, 0, tb::TB_KEY_DELETE, modifier, down); break;
-	case GLFW_KEY_BACKSPACE:	InvokeKey(window, 0, tb::TB_KEY_BACKSPACE, modifier, down); break;
-	case GLFW_KEY_ENTER:		InvokeKey(window, 0, tb::TB_KEY_ENTER, modifier, down); break;
-	case GLFW_KEY_ESCAPE:		InvokeKey(window, 0, tb::TB_KEY_ESC, modifier, down); break;
+	case GLFW_KEY_F1:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F1, modifier, down); break;
+	case GLFW_KEY_F2:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F2, modifier, down); break;
+	case GLFW_KEY_F3:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F3, modifier, down); break;
+	case GLFW_KEY_F4:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F4, modifier, down); break;
+	case GLFW_KEY_F5:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F5, modifier, down); break;
+	case GLFW_KEY_F6:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F6, modifier, down); break;
+	case GLFW_KEY_F7:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F7, modifier, down); break;
+	case GLFW_KEY_F8:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F8, modifier, down); break;
+	case GLFW_KEY_F9:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F9, modifier, down); break;
+	case GLFW_KEY_F10:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F10, modifier, down); break;
+	case GLFW_KEY_F11:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F11, modifier, down); break;
+	case GLFW_KEY_F12:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_F12, modifier, down); break;
+	case GLFW_KEY_LEFT:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_LEFT, modifier, down); break;
+	case GLFW_KEY_UP:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_UP, modifier, down); break;
+	case GLFW_KEY_RIGHT:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_RIGHT, modifier, down); break;
+	case GLFW_KEY_DOWN:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_DOWN, modifier, down); break;
+	case GLFW_KEY_PAGE_UP:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_PAGE_UP, modifier, down); break;
+	case GLFW_KEY_PAGE_DOWN:	        InvokeKey( callback_widget, window, 0, tb::TB_KEY_PAGE_DOWN, modifier, down); break;
+	case GLFW_KEY_HOME:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_HOME, modifier, down); break;
+	case GLFW_KEY_END:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_END, modifier, down); break;
+	case GLFW_KEY_INSERT:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_INSERT, modifier, down); break;
+	case GLFW_KEY_TAB:			InvokeKey( callback_widget, window, 0, tb::TB_KEY_TAB, modifier, down); break;
+	case GLFW_KEY_DELETE:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_DELETE, modifier, down); break;
+	case GLFW_KEY_BACKSPACE:	        InvokeKey( callback_widget, window, 0, tb::TB_KEY_BACKSPACE, modifier, down); break;
+	case GLFW_KEY_ENTER:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_ENTER, modifier, down); break;
+	case GLFW_KEY_ESCAPE:		        InvokeKey( callback_widget, window, 0, tb::TB_KEY_ESC, modifier, down); break;
 	case GLFW_KEY_MENU:
 		if (tb::TBWidget::focused_widget && !down)
 		{
@@ -359,11 +349,12 @@ static void glfw_callback_key(GLFWwindow *window, int key, int scancode, int act
 		// glfw calls key_callback instead of char_callback
 		// when pressing a character while ctrl is also pressed.
 		if (key_ctrl && !key_alt && key >= 32 && key <= 255)
-			InvokeKey(window, key, tb::TB_KEY_UNDEFINED, modifier, down);
+			InvokeKey( callback_widget, window, key, tb::TB_KEY_UNDEFINED, modifier, down);
 		break;
 	}
 }
-static void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod)
+
+void GUI::glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod)
 {
 	tb::MODIFIER_KEYS modifier = GetModifierKeys(glfwmod);
 	int x = mouse_x;
@@ -390,17 +381,18 @@ static void glfw_callback_mouse_button(GLFWwindow *window, int button, int actio
 			last_y = y;
 			last_time = time;
 
-			//GetBackend(window)->GetRoot()->InvokePointerDown(x, y, counter, modifier, ShouldEmulateTouchEvent());
-			if ( call_widget ) call_widget->InvokePointerDown(x, y, counter, modifier, false );
+			if ( callback_widget )
+                            callback_widget->InvokePointerDown(x, y, counter, modifier, false );
 		}
 		else
-			//GetBackend(window)->GetRoot()->InvokePointerUp(x, y, modifier, ShouldEmulateTouchEvent());
-			if ( call_widget ) call_widget->InvokePointerUp(x, y, modifier,  false );
+			if ( callback_widget )
+                            callback_widget->InvokePointerUp(x, y, modifier,  false );
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 	{
-		//GetBackend(window)->GetRoot()->InvokePointerMove(x, y, modifier, ShouldEmulateTouchEvent());
-		if ( call_widget ) call_widget->InvokePointerMove(x, y, modifier, false );
+		if ( callback_widget )
+                    callback_widget->InvokePointerMove(x, y, modifier, false );
+
 		if (tb::TBWidget::hovered_widget)
 		{
 			tb::TBWidget::hovered_widget->ConvertFromRoot(x, y);
@@ -409,28 +401,24 @@ static void glfw_callback_mouse_button(GLFWwindow *window, int button, int actio
 		}
 	}
 }
-static void glfw_callback_cursor_pos(GLFWwindow *window, double x, double y)
+
+void GUI::glfw_callback_cursor_pos(GLFWwindow *window, double x, double y)
 {
 	mouse_x = (int)x;
 	mouse_y = (int)y;
-	//if (GetBackend(window)->GetRoot() && !(ShouldEmulateTouchEvent() && !tb::TBWidget::captured_widget))
-		//GetBackend(window)->GetRoot()->InvokePointerMove(mouse_x, mouse_y, GetModifierKeys(), ShouldEmulateTouchEvent());
-		if ( call_widget ) call_widget->InvokePointerMove(mouse_x, mouse_y, GetModifierKeys(), false );
-}
-static void glfw_callback_scroll(GLFWwindow *window, double x, double y)
-{
-	//if (GetBackend(window)->GetRoot())
-		//GetBackend(window)->GetRoot()->InvokeWheel(mouse_x, mouse_y, (int)x, -(int)y, GetModifierKeys());
-		if ( call_widget ) call_widget->InvokeWheel(mouse_x, mouse_y, (int)x, -(int)y, GetModifierKeys());
-}
-static void glfw_callback_window_size(GLFWwindow *window, int w, int h)
-{
-	//ApplicationBackendGLFW *backend = GetBackend(window);
-	//if (backend->GetRoot())
-		//backend->GetRoot()->SetRect(tb::TBRect(0, 0, w, h));
-                if ( call_widget ) call_widget->SetRect( tb::TBRect( 0, 0, w, h ) );
+	if ( callback_widget ) 
+            callback_widget->InvokePointerMove(mouse_x, mouse_y, GetModifierKeys(), false );
 }
 
-
+void GUI::glfw_callback_scroll(GLFWwindow *window, double x, double y)
+{
+    if ( callback_widget )
+        callback_widget->InvokeWheel(mouse_x, mouse_y, (int)x, -(int)y, GetModifierKeys());
 }
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+
+} // namespace BATB
 

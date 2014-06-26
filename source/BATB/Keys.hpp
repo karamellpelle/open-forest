@@ -37,10 +37,10 @@ public:
     // create Key's, and let 'this' handle memory
 
     // prims
-    KeyButton*      createKeyButton(KeyButton::Code code)            { return push_( new KeyButton( code ) ); }
-    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)  { return push_( new KeyMouseButton( code ) ); }
-    KeyMouseAxisX*  createKeyMouseAxisX()                            { return push_( new KeyMouseAxisX() ); }
-    KeyMouseAxisY*  createKeyMouseAxisY()                            { return push_( new KeyMouseAxisY() ); }
+    KeyButton*      createKeyButton(KeyButton::Code code)             { return push_( new KeyButton( code ) ); }
+    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)   { return push_( new KeyMouseButton( code ) ); }
+    KeyMouseAxisX*  createKeyMouseAxisX()                             { return push_( new KeyMouseAxisX() ); }
+    KeyMouseAxisY*  createKeyMouseAxisY()                             { return push_( new KeyMouseAxisY() ); }
     // cons
     KeyClicker*     createKeyClicker(Key* k)                          { return push_( new KeyClicker( k ) ); }
     KeyAlpha*       createKeyAlpha(Key* k)                            { return push_( new KeyAlpha( k ) ); }
@@ -73,6 +73,12 @@ public:
             (*i)->update( t );
         }
     }
+
+    static void charCalling(GLFWcharfun );
+    static void keyCalling(GLFWkeyfun );
+    static void mousebuttonCalling(GLFWmousebuttonfun );
+    static void cursorposCalling(GLFWcursorposfun );
+    static void scrollCalling(GLFWscrollfun );
 
 private:
     typedef std::vector<Key*> Container;

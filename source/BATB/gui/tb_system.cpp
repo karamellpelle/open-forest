@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/BATB_include.hpp"
+
 #include "tb/tb_core.h"
 #include "tb/renderers/tb_renderer_gl.h"
 #include "tb/tb_font_renderer.h"
@@ -23,17 +24,16 @@
 #include "tb/animation/tb_widget_animation.h"
 #include "tb/tb_system.h"
 
-// FIXME: portable TBSystem
-#include <sys/time.h>
 #include <stdio.h>
 
 
-// implementing TBSystem for TB
-// see the 'integration.txt' file in the turbobadger library folder
-namespace tb {
+
+namespace tb
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 //  TBSystem
+
 
 // this function is called by TBMessageHandler when the time for the 
 // next message to be delivered got changed. however, we do not use
@@ -77,7 +77,7 @@ int TBSystem::GetPixelsPerLine()
 	return 40 * GetDPI() / 96;
 }
 
-// we currently use this for font setup for our TB-implementation
+// we currently use this during our GUI setup for fonts
 // FIXME: make our TB implementation independent of this,
 //        so the view across different screens is mostly consistent. 
 //        we are also using MSAA typically, anyway
@@ -91,8 +91,9 @@ int TBSystem::GetDPI()
 ////////////////////////////////////////////////////////////////////////////////
 //  TBFile
 
-// FIXME: platform independent...
-//
+
+// this implementation seems to be boundn to standard C library, 
+// not Linux...
 class TBLinuxFile : public TBFile
 {
 public:
@@ -115,7 +116,7 @@ private:
 	FILE *file;
 };
 
-TBFile *TBFile::Open(const char *filename, TBFileMode mode)
+TBFile* TBFile::Open(const char *filename, TBFileMode mode)
 {
 	FILE *f = nullptr;
 	switch (mode)
@@ -159,7 +160,7 @@ bool TBClipboard::GetText(TBStr &text)
 	return text.Set(clipboard);
 }
 
-}; // namespace tb
+} // namespace tb
 
 
 
