@@ -15,47 +15,52 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Forest.hpp"
-#include "BATB/Log.hpp"
+#ifndef BATB_RUN_HPP
+#define BATB_RUN_HPP
+#include "BATB/Run/RunWorld.hpp"
+#include "BATB/Run/RunPrim.hpp"
+#include "BATB/Run/RunSettings.hpp"
+#include "BATB/Run/RunKeys.hpp"
+
 
 namespace BATB
 {
 
 
-
-void Forest::create(xml::XMLElement* elem)
+class Run
 {
-    using namespace xml;
+public:
+    Run() : prim( &prim_ ), settings( &settings_ ), keys( &keys_ )
+    {
+    }
 
-    log << "Forest::create() " << std::endl;    
+    void create(xml::XMLElement* );
+    void destroy();
 
-
-    XMLHandle xml( elem );
-    // FIXME: parse xml...
-  
-
-  
-    // create primitives
-    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
-
-    // create settings
-    //settings->create( xml.FirstChildElement( "Settings" ).ToElement() );
-
-    // create keys
-    keys->create( xml.FirstChildElement( "Keys" ).ToElement() );
+    // 
+    RunPrim* const      prim;
+    RunSettings* const  settings;
+    RunKeys* const      keys;
 
 
-}
+private:
+    RunPrim prim_;
+    RunSettings settings_;
+    RunKeys keys_;
 
 
-void Forest::destroy()
+};
+
+
+// the only Run, access
+inline Run* theRun()
 {
-    log << "Forest::destroy() " << std::endl;    
+    static Run ret;
+    return &ret;
+}
 
-    prim->destroy();
-
-    keys->destroy();
 }
 
 
-}
+#endif
+

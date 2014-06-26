@@ -15,4 +15,36 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb.hpp"
+#ifndef BATB_VALUES_VALUES_HPP
+#define BATB_VALUES_VALUES_HPP
+#include "tinyxml2.h"
+#include "BATB/BATB_include.hpp"
+
+
+// this file contains values to be used throughout the BATB-program. some are constants, but other are not. the 
+// non-constants may defined runtime from for example a (the) configuration file. should these values be
+// allowed to change after they are initialized? ideally not. but maybe from a program change from settings,
+// for example. 
+namespace BATB
+{
+
+class Values
+{
+public:
+    static void create(tinyxml2::XMLElement* );
+    static void destroy();
+};
+
+}
+
+
+namespace BATB
+{
+
+extern float_t valueProj3DNear;
+extern float_t valueProj3DFar;
+extern float_t valueProj3DFOVY;
+
+}
+
+#endif

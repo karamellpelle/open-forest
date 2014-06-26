@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEYS_HPP
-#define BATB_KEYS_HPP
+#ifndef BATB_KEYS_KEYS_HPP
+#define BATB_KEYS_KEYS_HPP
 #include "BATB/Keys/KeyButton.hpp"
 #include "BATB/Keys/KeyMouseButton.hpp"
 #include "BATB/Keys/KeyMouseAxis.hpp"

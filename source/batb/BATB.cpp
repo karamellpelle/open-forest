@@ -123,7 +123,7 @@ void end(BATB& batb)
     if ( batb.initialized_ )
     {
         // save the configuration to its XML file
-        saveXML();
+        batb.saveXML();
         
         // (the non-core part, created by iterationRunBegin, 
         // are shut down by 'iterationRunEnd')

@@ -15,38 +15,20 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_XML_XML_HPP
-#define BATB_XML_XML_HPP
+#ifndef BATB_VALUES_HPP
+#define BATB_VALUES_HPP
+#include "batb/values/Values.hpp"
+
 
 namespace batb
 {
 
-namespace xml
+
+namespace values
 {
-
-
-class XML
-{
-friend void begin(XML& );
-friend void end(XML& );
-
-public:
-    XML(BATB& b) : batb( b )
-    {
-    }
-
-    BATB& batb;
-
-};
-
-void begin(XML& );
-
-void end(XML& );
-
-
-} // namespace xml
 
 } // namespace batb
 
+} // namespace values
 
 #endif
