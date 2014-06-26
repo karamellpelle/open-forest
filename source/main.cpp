@@ -16,14 +16,14 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "include.hpp"
-#include "Env.hpp"
-#include "Game.hpp"
-#include "File.hpp"
-#include "BATB.hpp"
+#include "env.hpp"
+#include "game.hpp"
+#include "file.hpp"
+#include "batb.hpp"
 
 
-// control BATB from commandline, by modifying BATB::Config object
-int cmdline(int argc, char** argv, BATB::xml::XMLElement* xml)
+// use commandline to modify our BATB object
+void cmdline(int argc, char** argv, BATB& batb)
 {
     return 0;
 }
@@ -33,86 +33,57 @@ int cmdline(int argc, char** argv, BATB::xml::XMLElement* xml)
 int main(int argc, char** argv)
 {
     int ret = 0;
+ 
+    // our BATB object
+    batb::BATB batb( file::dynamic_data( "batb.xml" ) );
 
     try
     {
-        // BATB is partially created, only the necessary stuff
-        // for iterationRunBegin to function. this Iteration shall
-        // create the rest ("now loading" screen)
-        // FIXME: define the necessary stuff (xml, ...)
-        //
-        using namespace BATB::xml;
+        // create our environment
+        env::begin( "env.xml" );
 
-        // this is our program configuration
-        BATB::Config batb_cfg( File::dynamicData( "batb.xml" ) );
-        batb_cfg.Print(); // TMP
-        XMLHandle xml( batb_cfg.FirstChildElement("BATB") );
-       
-        // modify from command line, take actions
-        if ( int ret = cmdline( argc, argv, xml.ToElement() ) )
-        {
-            return ret;
-        }
+        // initialize the core parts of BATB.
+        // the non-core part is created by 'iterationRunBegin'
+        batb::begin( batb );
 
-        // init Env, from configuration
-        Env::begin( xml.FirstChildElement("Env").ToElement() );
+        // modify BATB from command line
+        commandline( argc, argv, batb );
 
+        batb::run::World run;
+        batb::run::IterationStack stack;
 
-        //////////////////////////////////////////////////////////
-        //      OpenGL
-
-        //////////////////////////////////////////////////////////
-        //      OpenAL
-
-
-        using namespace BATB;
-
-
-        // init BATB.
-        // this creates only the necessary part of Run, and the rest
-        // is created by 'iterationRunBegin'
-        BATB::begin( &batb_cfg );
-
-        RunWorld run;
-        Game::IterationStack<RunWorld> stack;
-
-        stack.push( theRun()->prim->iterationRunBegin,    // create game data, continue with iterationRunMain (if success)
-                    theRun()->prim->iterationRunEnd       // destroy game data
-                  );
-
-        BATB::log << "Game::IterationStack<RunWorld> starting. " << std::endl;
+        stack.next(
+            batb.run.iterationRunBegin,    // create game data and continue with iterationRunMain (if success)
+            batb.run.iterationRunEnd       // destroy game data
+        );
 
         // "main loop"
         while ( !stack.empty() )
         {
             // begin frame for iteration
-            Env::frameBegin();
+            env::frame_begin();
 
-            // make 1 iteration of RunWorld:
+            // make 1 iteration of world
             stack.iterate( run ); 
 
             // end frame for iteration (swap buffers, poll events)
-            Env::frameEnd();
+            env::frame_end();
         }
-
-        BATB::log << "Game::IterationStack<RunWorld> empty. " << std::endl;
-
+        
     }
     catch (std::exception& e)
     {
-        std::cerr << "main:    FATAL: " << e.what() << std::endl;
+        // some serious error occured above, lets handle it
+        std::cerr << THIS_FUNCTION << ": fatal error: " << e.what() << std::endl;
         ret = 1;
     }
 
-    // end BATB
-    BATB::end();
+    // shut down...
 
-    // end Env
-    Env::end();
+    batb::end( batb );
 
+    env::end();
 
-
-    // quit...
     return ret;
 }
 

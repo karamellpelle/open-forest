@@ -15,41 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_CONFIG_HPP
-#define BATB_CONFIG_HPP
-#include <string>
-#include <stdexcept>
-#include "BATB/BATB_include.hpp"
-#include "BATB/Values.hpp"
+#ifndef BATB_XML_XML_HPP
+#define BATB_XML_XML_HPP
 
+namespace batb
+{
 
-
-namespace BATB
+namespace xml
 {
 
 
-// Config is actually just a XMLElement, for now
-class Config : public xml::XMLDocument
+class XML
 {
+friend void begin(XML& );
+friend void end(XML& );
+
 public:
-    Config(const std::string& path) : path_( path )
+    XML(BATB& batb) : batb_( batb )
     {
-        using namespace xml;
-        XMLError err = LoadFile( path.c_str() );
-        switch ( err )
-        {
-        case XML_ERROR_FILE_NOT_FOUND: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_NOT_FOUND)" );
-        case XML_ERROR_FILE_COULD_NOT_BE_OPENED: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_COULD_NOT_BE_OPENED)" );  
-        case XML_ERROR_FILE_READ_ERROR: throw std::runtime_error( "could not create BATB::Config (XML_ERROR_FILE_READ_ERROR)" );
-        }
     }
 
-
 private:
-    const std::string path_;
+    BATB& batb_;
+
 };
 
-}
+void begin(XML& );
+
+void end(XML& );
+
+
+} // namespace xml
+
+} // namespace batb
 
 
 #endif

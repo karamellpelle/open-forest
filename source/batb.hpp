@@ -15,21 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Log.hpp"
+#ifndef BATB_HPP
+#define BATB_HPP
+#include "BATB/BATB.hpp"
 
 
-namespace BATB
-{
-std::ostream& log = std::cout;
 
-
-void Log::create(xml::XMLElement* block)
-{
-    // FIXME: custom ostream object
-}
-
-void Log::destroy()
-{
-}
-
-}
+#endif

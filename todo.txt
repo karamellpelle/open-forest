@@ -1,7 +1,4 @@
-* Race, Run, Forest into namespaces BATB::Race::, ...
-  => when starting up only the necessary objects should be up, 
-     the other parts should be initialized by iterationRunBegin.
-  => define the initialized/unitiliazide objects.
+* helpers into include.hpp
 * loading the rest of objects in iterationRunBegin
 * functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github
 * create templates/... for easily construction of Iteration's

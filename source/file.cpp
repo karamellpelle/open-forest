@@ -15,29 +15,62 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef FILE_HPP
-#define FILE_HPP
-#include "include.hpp"
+#include "file.hpp"
 
-namespace File
+namespace file
 {
 
 // full path to read-only application data
 // example: image, 
-std::string staticData(const std::string& path);
+std::string staticData(const std::string& path)
+{
+    // TMP:
+    return "data/static/" + path;
+}
 
 // full path to read-write application data
 // example: configuration file, 
-std::string dynamicData(const std::string& path);
+std::string dynamicData(const std::string& path)
+{
+    // TMP:
+    return "data/dynamic/" + path;
+}
 
 // full path to user files (reachable outside application)
 // example: screenshot, 
-std::string user(const std::string& path);
+std::string user(const std::string& path)
+{
+    // TMP:
+    return "data/user/" + path;
+}
 
 // full path to temporary files (files that can be removed after application)
 // example: log file, 
-std::string tmp(const std::string& path);
-
+std::string tmp(const std::string& path)
+{
+    // TMP:
+    return "data/tmp/" + path;
 }
 
-#endif
+// directory of file
+std::string directory(const std::string& path)
+{
+    std::string ret;
+
+    typedef std::string::const_iterator iter;
+    typedef std::reverse_iterator<std::string::const_iterator> riter;
+  
+    // find [b, e)
+    iter b = std::begin( path ); 
+    iter e = std::find( std::reverse_iterator<iter>( std::begin( path ) ), 
+                        std::reverse_iterator<iter>( std::end( path ) ), 
+                        "/" ).base();
+    
+    std::copy( b, e, std::back_inserter( ret ) );
+
+    return ret;
+}
+
+
+} // namespace file
+

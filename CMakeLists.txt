@@ -15,12 +15,8 @@ set( CMAKE_C_FLAGS "-Wall -Wno-switch -g -pg" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
-set( BATB_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/BATB )
-set( ENV_SOURCE_DIR           ${CMAKE_SOURCE_DIR}/source/Env )
 set( TEST_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/test )
-set( LIBS_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/libs )
 set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
-#set( MISC_SOURCE_DIRS   ${CMAKE_SOURCE_DIR}/source/test )
 
 
 ################################################################################
@@ -32,12 +28,7 @@ set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build ex
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
-
 add_subdirectory( ${GLFW_SOURCE_DIR} )
-
-# add GLFW_LIBRARIES, created by GLFW-CMakeLists.txt, to our libraries 
-set( BATB_LIBRARIES ${BATB_LIBRARIES} ${GLFW_LIBRARIES} )
-include_directories( "${GLFW_SOURCE_DIR}/include" )
 
 
 ################################################################################
@@ -48,7 +39,6 @@ include_directories( "${GLFW_SOURCE_DIR}/include" )
 #   CUSTOM_NANOVG_LIBRARIES           : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/nanovg )
 include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
-set( BATB_LIBRARIES ${BATB_LIBRARIES} ${CUSTOM_NANOVG_LIBRARIES} )
 
 ################################################################################
 # build library 'custom-turbobadger'
@@ -58,7 +48,6 @@ set( BATB_LIBRARIES ${BATB_LIBRARIES} ${CUSTOM_NANOVG_LIBRARIES} )
 #   CUSTOM_TURBOBADGER_LIBRARIES      : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/turbobadger )
 include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
-set( BATB_LIBRARIES ${BATB_LIBRARIES} ${CUSTOM_TURBOBADGER_LIBRARIES} )
 
 
 # 
@@ -83,116 +72,152 @@ option( BATB_INSTALL "Install BATB" OFF)
 
 
 ################################################################################
-# build old sources
-#
-add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
-include_directories( ${MAIN_SOURCE_DIR}/BATB/old/ )
-set( OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
+# define .cpp files
 
-set( OLD_SOURCES 
-      ${MAIN_SOURCE_DIR}/BATB/old/old.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/calcalt.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/client.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/common.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/control.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/course.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/database.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgCommon.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgCourse.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgEvent.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgHost1.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgHost2.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgJoin1.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgJoin2.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgMap.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgMenu.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgOptions.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgOrienteer.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgPlayers.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgResult.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgSelect.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgSingle.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgStack.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/dlgTerrain.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/event.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/eventproxy.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/fdManager.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/forest.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/global.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/mainWindow.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/map.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/mapproxy.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/md5.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/mesh.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/message.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/noise.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/orienteer.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/oriproxy.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/point.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/random.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/run.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/server.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/shader.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/terrain.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/terrainproxy.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/texture.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/util.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/windowMessage.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/xmlParser.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/xmountains.cpp
-      ${MAIN_SOURCE_DIR}/BATB/old/mainWindow.cpp
+
+# define file sources
+set( FILE_SOURCES
+      "${MAIN_SOURCE_DIR}/file.cpp"
 )
 
-# define sources
+# define env sources
+set( ENV_SOURCES
+      "${MAIN_SOURCE_DIR}/env.cpp"
+      #${MAIN_SOURCE_DIR}/env/Screen.cpp
+)
+
+# define batb sources
 set( BATB_SOURCES
-      ${MAIN_SOURCE_DIR}/main.cpp
 
-      ${MAIN_SOURCE_DIR}/Env.cpp
-      ${MAIN_SOURCE_DIR}/Env/Screen.cpp
-
-      ${MAIN_SOURCE_DIR}/File.cpp
-
-      ${MAIN_SOURCE_DIR}/BATB.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Values.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Log.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Keys.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/RunKeys.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/RunPrim.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunBegin.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunMain.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Run/Prim/IterationRunOld.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Forest.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Forest/ForestKeys.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Forest/ForestPrim.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp
-      ${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp
-      ${MAIN_SOURCE_DIR}/BATB/GUI.cpp
-      ${MAIN_SOURCE_DIR}/BATB/gui/tb_system.cpp
+      "${MAIN_SOURCE_DIR}/batb.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Values.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Log.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Keys.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run/RunKeys.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run/RunPrim.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunBegin.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunOld.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Forest/ForestKeys.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Forest/ForestPrim.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Keys/KeyClicker.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Keys/KeyPointer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/GUI.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
 
       # add tmp for now
-      ${MAIN_SOURCE_DIR}/BATB/tmp/demo.c
-      ${MAIN_SOURCE_DIR}/BATB/tmp/perf.c
+      "${MAIN_SOURCE_DIR}/batb/tmp/demo.c"
+      "${MAIN_SOURCE_DIR}/batb/tmp/perf.c"
+
+)
+
+################################################################################
+# define old sources
+#
+
+set( BATB_OLD_SOURCES 
+      "${MAIN_SOURCE_DIR}/batb/old/old.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/calcalt.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/client.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/common.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/control.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/course.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/database.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgCommon.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgCourse.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgEvent.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgHost1.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgHost2.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin1.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin2.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgMap.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgMenu.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgOptions.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgOrienteer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgPlayers.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgResult.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgSelect.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgSingle.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgStack.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgTerrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/event.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/eventproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/fdManager.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/global.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/map.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mapproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/md5.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mesh.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/message.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/noise.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/orienteer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/oriproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/point.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/random.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/server.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/shader.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/terrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/terrainproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/texture.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/util.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/windowMessage.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/xmlParser.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/xmountains.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
+)
 
 
-      # add old sources for now
-      ${OLD_SOURCES}
-   )
+################################################################################
+# build executable 'batb'
+################################################################################
 
-### BUILD ###
+
 if ( BATB_BUILD )
+
+    # define main
+    set( MAIN_LIBRARIES "" )
+    set( MAIN_SOURCES "${MAIN_SOURCE_DIR}/main.cpp" )
+
     # FIXME: into custom
     add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
+    list( APPEND MAIN_LIBRARIES tinyxml2 )
+    
+    # GLEW
+    list( APPEND MAIN_LIBRARIES -lGLEW )
 
+    # GLFW
+    include_directories( "${GLFW_SOURCE_DIR}/include" )
+    list( APPEND MAIN_LIBRARIES glfw ${GLFW_LIBRARIES} )
 
-    list( APPEND BATB_LIBRARIES -lGLEW )
+    # nanovg
+    list( APPEND MAIN_LIBRARIES custom-nanovg ${CUSTOM_NANOVG_LIBRARIES} )
 
     # OLD
-    list( APPEND BATB_LIBRARIES ${OLD_LIBRARIES} )
+# FIXME: ifdef
+    add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
+    include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
+    set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
+    list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
+    list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
+# FIXME: endif
+
+    # turbobadger
+    include_directories( ${MAIN_SOURCE_DIR}/batb/gui )
+    list( APPEND MAIN_LIBARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
+
+    # batb
+    list( APPEND MAIN_LIBRARIES ${BATB_LIBRARIES} )
+    list( APPEND MAIN_SOURCES ${BATB_SOURCES} )
 
 
+    ###########################################################
     # create executable target 'batb'
-    add_executable( batb ${BATB_SOURCES} )
+    add_executable( batb ${MAIN_SOURCES} ) 
 
     # define target properties
     set_target_properties( batb PROPERTIES
@@ -202,7 +227,7 @@ if ( BATB_BUILD )
                          )
    
     # libraries to target
-    target_link_libraries( batb glfw tinyxml2 custom-nanovg custom-turbobadger ${BATB_LIBRARIES} )
+    target_link_libraries( batb ${MAIN_LIBRARIES} )
 
 endif()
 

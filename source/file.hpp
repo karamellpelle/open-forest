@@ -15,40 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef HELPERS_HPP
-#define HELPERS_HPP
-#include <stdint.h>
-#include <cmath>
+#ifndef FILE_HPP
+#define FILE_HPP
 #include "include.hpp"
 
-namespace helpers
+namespace file
 {
 
 
-// 
-typedef include::float_t float_t;
+
+// full path to read-only application data
+// example: image, 
+std::string staticData(const std::string& path);
+
+// full path to read-write application data
+// example: configuration file, 
+std::string dynamicData(const std::string& path);
+
+// full path to user files (reachable outside application)
+// example: screenshot, 
+std::string user(const std::string& path);
+
+// full path to temporary files (files that can be removed after application)
+// example: log file, 
+std::string tmp(const std::string& path);
 
 
-template <typename A>
-inline A keep_inside(const A& b, const A& e, const A& x)
-{
-    if ( x <= b ) return b;
-    if ( e <= x ) return e;
-    return x;
-}
+////////////////////////////////////////////////////////////////////////////////
+// working with files
 
-// circumference of unit circle
-// pi is wrong.
-static const float_t twopi = 6.2831853071795864769252867665590057683943387987502116;
+// get directory of path
+std::string directory(const std::string& path);
 
 
-template <typename Cont> 
-void cossin(const Cont& radians, Cont& x, Cont& y)
-{
-    x = std::cos( radians );
-    y = std::sin( radians );
-}
 
-}
+} // namespace file
 
 #endif

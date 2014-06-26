@@ -17,29 +17,70 @@
 //
 #ifndef INCLUDE_HPP
 #define INCLUDE_HPP
-//#include <cstdint> // <- c++11
-#include <stdint.h>
+#include <cmath>
+#include <cstdint> 
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
+#include <iterator>
 
 
 // main include file to be included through all sources...
 
+// macro for function name, depends on compiler
+#ifdef __PRETTY_FUNCTION__
+  #define THIS_FUNCTION __PRETTY_FUNCTION__
+//#elseif
+#else
+  #define THIS_FUNCTION "(unknown name of function)"
+#endif
 
-// we need a namespace, since we get typedef-clashes from cstdint -> sys/types.h/bits/mathdefs.h
+
 namespace include
 {
 
-// requirering a word size of minimum 32 bits
-// size_t is for memory...
-// https://en.wikipedia.org/wiki/Stdint.h#stdint.h
-//typedef std::uint_fast32_t uint; // <- c++11
-typedef uint_fast32_t uint;
+// our type for the sizes of finite sets.
+// we requirere a word size of minimum 32 bits.
+// size_t is for memory, https://en.wikipedia.org/wiki/Stdint.h#stdint.h, ...
+typedef std::uint_fast32_t uint;
 
-// we need a floating type. FIXME: fastest for platform
+// our floating point type.
+// FIXME: fastest/best for platform.
 typedef double float_t;
+
+
+// circumference of unit circle
+// pi is wrong.
+constexpr float_t twopi = 6.2831853071795864769252867665590057683943387987502116;
+
+
+// interpolating from alpha
+template <typename Linear, typename Scalar>
+Linear smooth(Linear a, Linear b, Scalar alpha)
+{
+    return (1.0 - alpha) * a + alpha * b;
+}
+
+
+// keep value inside span
+template <typename A>
+inline A keep_inside(const A& b, const A& e, const A& x)
+{
+    if ( x <= b ) return b;
+    if ( e <= x ) return e;
+    return x;
+}
+
+
+// compute unit x,y values, from radian angle
+template <typename Angle, typename Real> 
+void cossin(const Angle& radians, Real& x, Real& y)
+{
+    x = std::cos( radians );
+    y = std::sin( radians );
+}
 
 }
 

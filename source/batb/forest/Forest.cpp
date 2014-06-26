@@ -15,42 +15,47 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "File.hpp"
+#include "BATB/Forest.hpp"
+#include "BATB/Log.hpp"
 
-namespace File
+namespace BATB
 {
 
-// full path to read-only application data
-// example: image, 
-std::string staticData(const std::string& path)
-{
-    // TMP:
-    return "data/static/" + path;
-}
 
-// full path to read-write application data
-// example: configuration file, 
-std::string dynamicData(const std::string& path)
-{
-    // TMP:
-    return "data/dynamic/" + path;
-}
 
-// full path to user files (reachable outside application)
-// example: screenshot, 
-std::string user(const std::string& path)
+void Forest::create(xml::XMLElement* elem)
 {
-    // TMP:
-    return "data/user/" + path;
-}
+    using namespace xml;
 
-// full path to temporary files (files that can be removed after application)
-// example: log file, 
-std::string tmp(const std::string& path)
-{
-    // TMP:
-    return "data/tmp/" + path;
-}
+    log << "Forest::create() " << std::endl;    
+
+
+    XMLHandle xml( elem );
+    // FIXME: parse xml...
+  
+
+  
+    // create primitives
+    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
+
+    // create settings
+    //settings->create( xml.FirstChildElement( "Settings" ).ToElement() );
+
+    // create keys
+    keys->create( xml.FirstChildElement( "Keys" ).ToElement() );
+
 
 }
 
+
+void Forest::destroy()
+{
+    log << "Forest::destroy() " << std::endl;    
+
+    prim->destroy();
+
+    keys->destroy();
+}
+
+
+}

@@ -32,9 +32,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // project includes
 #include "include.hpp"
-#include "Env.hpp"
+#include "env.hpp"
 #include "helpers.hpp"
-#include "File.hpp"
+#include "file.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // GLM
@@ -50,35 +50,18 @@
 #include "glm/gtc/constants.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-////////////////////////////////////////////////////////////////////////////////
-// nanovg
-#include "nanovg.h"
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
-namespace BATB
+namespace batb
 {
 
-typedef include::uint uint;
+// export whole include module
+using namespace include;
 
+// our tick type
+typedef env::tick_t tick_t;
 
-// FIXME: float or double?
-typedef include::float_t float_t;
-
-namespace xml = tinyxml2;
-
-typedef Env::tick_t tick_t;
-
-using helpers::keep_inside;
-
-using helpers::twopi;
-
-template <typename Cont>
-Cont smooth(Cont a, Cont b, Cont x)
-{
-    return (1.0 - x) * a + x * b;
-}
 
 
 }

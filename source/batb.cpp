@@ -15,26 +15,4 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_LOG_HPP
-#define BATB_LOG_HPP
-#include "BATB/Config.hpp"
-
-
-namespace BATB
-{
-
-// FIXME: implement Log as custom ostream class, adding 'BATB :    "-prefix for each BATB::log!
-extern std::ostream& log;
-
-
-class Log
-{
-public:
-    static void create(xml::XMLElement* );
-    static void destroy();
-
-};
-
-}
-
-#endif
+#include "batb.hpp"
