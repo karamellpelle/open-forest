@@ -17,6 +17,8 @@
 //
 #include "batb/gui/GUI.hpp"
 #include "batb/log.hpp"
+#include "batb/keys.hpp"
+
 
 // TB
 #include "tb/tb_core.h"
@@ -49,11 +51,11 @@ void GUI::output()
 
 void GUI::step()
 {
-    // set size of GUI, using _screen_
-    Env::screenSize( wth_, hth_ );
+    // set size of GUI, using our screen
+    env::screen_size( wth_, hth_ );
     root_.SetRect( tb::TBRect(0, 0, wth_, hth_) );
 
-    // FIXME: set variables/update our TBSystem implementation
+    // FIXME: set variables/update our TBSystem implementation here
 
     // update messages for TB, that is, send TBMessage's from
     // the global message queue to the receiving TBMessageHandler
@@ -85,19 +87,15 @@ void GUI::bindKeys()
 
 void GUI::saveXML()
 {
-    xml::Document  xml;
-    xml::Error err = xml.SaveFile( filepath_.c_str() );
-    
-    if ( err != XML_NO_ERROR )
-    {
-        const char* str1 = err.GetErrorStr1();
-        const char* str2 = err.GetErrorStr2();
-        batb.log << THIS_FUNCTION << ": save error"  
-        if ( str1 ) batb.log << ": " << str1;
-        if ( str2 ) batb.log << ", " << str2;
-        throw std::runtime_error( os.str() );
-    }
+    xml::Document doc;
 
+    // FIXME: populate
+
+    std::string errstr;
+    if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
+    {
+        batb.log << errstr << std::endl;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,16 +106,26 @@ void begin(GUI& gui)
     gui.batb.log << THIS_FUNCTION << std::endl;    
 
 
-    // FIXME: parse xml...
+    // set up this BATB object from XML
+    xml::Document xml;
+    std::string errstr;
+    if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
+    {
+        gui.batb.log << errstr << std::endl;
+        //return;
+    }
+
+    // TODO: parse xml...
+
   
     tb_renderer_ =  new tb::TBRendererGL();
 
     // init the core of TB
-    tb::tb_core_init( tb_renderer_, File::staticData( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
+    tb::tb_core_init( tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
 
     // Load the default skin, and override skin that contains the graphics specific to the demo.
-    tb::g_tb_skin->Load(  File::staticData( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
-                          File::staticData( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
+    tb::g_tb_skin->Load(  file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
+                          file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
 
     // Register font renderers.
     // for some reason, these are not part of namespace tb...
@@ -137,13 +145,13 @@ void begin(GUI& gui)
 
     // Add fonts we can use to the font manager.
 #if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
-    tb::g_font_manager->AddFontInfo( File::staticData( "batb/gui/resources/vera.ttf", "Vera").c_str() );
+    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/vera.ttf" ).c_str(),                                      "Vera");
 #endif
 #ifdef TB_FONT_RENDERER_TBBF
-    tb::g_font_manager->AddFontInfo( File::staticData( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str() , "Segoe");
-    tb::g_font_manager->AddFontInfo( File::staticData( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(), "Neon" );
-    tb::g_font_manager->AddFontInfo( File::staticData( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang" );
-    tb::g_font_manager->AddFontInfo( File::staticData( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(), "Orange" );
+    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str() ,  "Segoe");
+    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(),                                  "Neon" );
+    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(),                            "Orangutang" );
+    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(),                                "Orange" );
 #endif
 
     // Set the default font description for widgets to one of the fonts we just added
@@ -161,7 +169,7 @@ void begin(GUI& gui)
 
     // Render some glyphs in one go now since we know we are going to use them. It would work fine
     // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
-    if (font)
+    if ( font )
     {
         font->RenderGlyphs( " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
                             "â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ€â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â¦Â§Â¨Â©ÂªÂ«Â¬Â®"
@@ -191,6 +199,9 @@ void end(GUI& gui)
 
         delete tb_renderer_;
         tb_renderer_ = nullptr;
+
+        wth_ = 0;
+        hth_ = 0;
     }
     
     initialized_ = false;

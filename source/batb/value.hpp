@@ -15,29 +15,25 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Values.hpp"
+#ifndef BATB_VALUE_HPP
+#define BATB_VALUE_HPP
+#include "batb/batb_include.hpp"
 
 
-namespace BATB
+// this module contains values to be used throughout batb. 
+// some are constants, but other are not. the non-constants are typically defined runtime.
+// QUESTION: should these values be allowed to change after they are initialized? 
+//           ideally not. but maybe from a total program change from settings,
+namespace batb
 {
 
-void Values::create(xml::XMLElement* elem)
-{
-    using namespace xml;
-    XMLHandle xml( elem );
 
-}
-
-void Values::destroy()
+namespace value
 {
 
-}
 
+} // namespace value
 
-float_t valueProj3DNear = 0.1;
+} // namespace batb
 
-float_t valueProj3DFar = 512.0;
-
-float_t valueProj3DFOVY = 1.047;
-
-}
+#endif

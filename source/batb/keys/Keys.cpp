@@ -15,13 +15,14 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb/keys/Keys.hpp"
 
-#include "BATB/Keys.hpp"
 
-
-namespace BATB
+namespace batb
 {
 
+namespace keys
+{
 
 void Keys::charCalling(GLFWcharfun f)
 {
@@ -50,6 +51,25 @@ void Keys::scrollCalling(GLFWscrollfun f)
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+//  
+void begin(Keys& keys)
+{
 
+    keys.initialized_ = true;
 }
+
+void end(Keys& keys)
+{
+    if ( keys.initialized_ )
+    {
+
+    }
+
+    keys.initialized_ = false;
+}
+
+} // namespace keys
+
+} // namespace batb
 

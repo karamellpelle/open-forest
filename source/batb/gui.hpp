@@ -17,76 +17,22 @@
 //
 #ifndef BATB_GUI_HPP
 #define BATB_GUI_HPP
-#include "BATB/Config.hpp"
-#include "BATB/Keys.hpp"
-#include "tb/tb_renderer.h"
+#include "batb/gui/GUI.hpp"
 
-// export TB-stuff 
+// export TB-stuff here
 #include "tb/tb_window.h"
 
 
-namespace BATB
+namespace batb
 {
 
-
-
-// class for GUI-part of BATB
-class GUI
+namespace gui
 {
-public:
-    GUI() { }
 
-    void create(xml::XMLElement* );
-    void destroy();
-
-    // output GUI to env::Screen
-    void output();
-
-    // step GUI
-    void step();
-
-    // bind keys to this GUI object
-    void bindKeys();
-
-    // root TB widget
-    tb::TBWidget& root() { return root_; }
-
-    //
-private:
-    // screen properties
-    uint wth_ = 0;
-    uint hth_ = 0;
-
-    // TB
-    tb::TBRenderer* tb_renderer_ = nullptr;
-    tb::TBWidget root_;
-    
-    // callbacks
-    static tb::TBWidget* callback_widget;
-
-    static void glfw_callback_char(GLFWwindow *window, unsigned int character);
-    static void glfw_callback_key(GLFWwindow *window, int key, int scancode, int action, int glfwmod);
-    static void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int glfwmod);
-    static void glfw_callback_cursor_pos(GLFWwindow *window, double x, double y);
-    static void glfw_callback_scroll(GLFWwindow *window, double x, double y);
-    static void glfw_callback_window_size(GLFWwindow *window, int w, int h);
+} // namespace gui
 
 
-};
-
-
-
-// the only GUI, access
-inline GUI* theGUI()
-{
-    static GUI ret_;
-    return &ret_;
-}
-
-
-
-
-}
+} // namespace batb
 
 #endif
 

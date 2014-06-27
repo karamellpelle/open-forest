@@ -1,3 +1,4 @@
+* compile_sh, make clean
 * helpers into include.hpp
 * loading the rest of objects in iterationRunBegin
 * functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github

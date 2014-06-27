@@ -17,14 +17,18 @@
 //
 #ifndef BATB_RACE_HPP
 #define BATB_RACE_HPP
-#include "BATB/Race/RaceWorld.hpp"
-#include "BATB/Race/Prim/Iteration.hpp"
+//#include "batb/Race.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
-}
+namespace race
+{
+
+} // namespace batb
+
+} // namespace race
 
 
 #endif

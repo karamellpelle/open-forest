@@ -26,12 +26,17 @@ namespace log
 
 void begin(Log& log)
 {
-    
+
+    initialized_ = true;
 }
 
 void end(Log& log)
 {
-    
+    if ( initialized_ )
+    {
+
+    }
+    initialized_ = false;
 }
 
 

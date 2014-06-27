@@ -37,11 +37,29 @@ public:
 
     BATB& batb;
 
+private:
+    bool initialized_ = false;
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  
 void begin(XML& );
 
 void end(XML& );
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  helpers
+
+// loading document, with error handling
+XMLError load_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
+
+// saving document, with error handling
+XMLError save_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
+
 
 
 } // namespace xml

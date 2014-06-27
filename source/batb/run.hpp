@@ -17,49 +17,18 @@
 //
 #ifndef BATB_RUN_HPP
 #define BATB_RUN_HPP
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/RunPrim.hpp"
-#include "BATB/Run/RunSettings.hpp"
-#include "BATB/Run/RunKeys.hpp"
+//#include "batb/run/Run.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
-
-class Run
+namespace run
 {
-public:
-    Run() : prim( &prim_ ), settings( &settings_ ), keys( &keys_ )
-    {
-    }
 
-    void create(xml::XMLElement* );
-    void destroy();
+} // namespace run
 
-    // 
-    RunPrim* const      prim;
-    RunSettings* const  settings;
-    RunKeys* const      keys;
-
-
-private:
-    RunPrim prim_;
-    RunSettings settings_;
-    RunKeys keys_;
-
-
-};
-
-
-// the only Run, access
-inline Run* theRun()
-{
-    static Run ret;
-    return &ret;
-}
-
-}
+} // namespace batb
 
 
 #endif

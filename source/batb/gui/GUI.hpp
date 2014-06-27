@@ -18,7 +18,6 @@
 #ifndef BATB_GUI_GUI_HPP
 #define BATB_GUI_GUI_HPP
 #include "batb/batb_include.hpp"
-#include "batb/keys.hpp"
 
 // TB
 #include "tb/tb_renderer.h"
@@ -51,7 +50,7 @@ public:
     }
     void saveXML();
 
-    // output GUI to env::Screen
+    // output GUI to env::screen
     void output();
 
     // step GUI
@@ -63,10 +62,15 @@ public:
     // root TB widget
     tb::TBWidget& root() { return root_; }
 
+
     BATB& batb;
 
 private:
+    bool initialized_ = false;
+
     std::string filepath_;
+
+
     uint wth_ = 0;
     uint hth_ = 0;
 
@@ -87,6 +91,8 @@ private:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//
 
 void begin(GUI& );
 

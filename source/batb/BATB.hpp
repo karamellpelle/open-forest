@@ -50,9 +50,9 @@ public:
 
     // non-core part of BATB.
     // these are parts of BATB initialized later, by 'iterationRunBegin'.
-    forest::Forest forest;
-    race::Race race;
-    run::Run run;
+    //forest::Forest forest;
+    //race::Race race;
+    //run::Run run;
 
     // save this BATB object to its XML file
     void saveXML();

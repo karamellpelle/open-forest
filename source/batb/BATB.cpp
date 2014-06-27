@@ -22,17 +22,20 @@ namespace batb
 
 
 
-BATB::BATB(const std::string& path) : log( *this ), values( *this ), xml( *this ), keys( *this ),
-                                      gui( *this ), forest( *this ), race( *this ), run( *this );
+BATB::BATB(const std::string& path) : log( *this ), value( *this ),  xml( *this ), keys( *this ),
+                                      gui( *this ), //forest( *this ), race( *this ), run( *this );
 {
 
     filepath_ = path;
 
-    values.filepath(    file::directory( path ) + "/values/Values.xml" );
+    // core:
+    value.filepath(     file::directory( path ) + "/value/Value.xml" );
     gui.filepath(       file::directory( path ) + "/gui/GUI.xml" );
-    forest.filepath(    file::directory( path ) + "/forest/Forest.xml" );
-    race.filepath(      file::directory( path ) + "/race/Race.xml" );
-    run.filepath(       file::directory( path ) + "/run/Run.xml" );
+
+    // non-core:
+    //forest.filepath(    file::directory( path ) + "/forest/Forest.xml" );
+    //race.filepath(      file::directory( path ) + "/race/Race.xml" );
+    //run.filepath(       file::directory( path ) + "/run/Run.xml" );
     //.filepath(          file::directory( path ) + ".xml" );
     
     
@@ -46,52 +49,23 @@ void begin(BATB& batb)
     // logging
     log::begin( batb.log );
 
-    // general values to use 
-    values::begin( batb.values );
-
     // xml facility
     xml::begin( batb.xml );
 
+    // general values to use 
+    value::begin( batb.value );
+
 
     // set up this BATB object from XML
-    xml::Document  xml;
-    xml::Error err = xml.LoadFile( batb.filepath_.c_str() );
-    if ( err == xml::XML_ERROR_FILE_NOT_FOUND )
+    xml::Document xml;
+    std::string errstr;
+    if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
-        std::ostringstream os;
-        os << THIS_FUNCTION << ": file not found (XML_ERROR_FILE_NOT_FOUND)";
-        throw std::runtime_error( os.str() );
-    }
-    if ( err == xml::XML_ERROR_FILE_COULD_NOT_BE_OPENED )
-    {
-        std::ostringstream os;
-        os << THIS_FUNCTION << ": file could not be opened (XML_ERROR_FILE_COULD_NOT_BE_OPENED)";
-        throw std::runtime_error( os.str() );
-    }
-    if ( err == xml::XML_ERROR_FILE_READ_ERROR )
-    {
-        std::ostringstream os;
-        os << THIS_FUNCTION << ": file could not be read  (XML_ERROR_FILE_READ_ERROR)";
-        throw std::runtime_error( os.str() );
-    }
-    if ( err == xml::XML_ERROR_EMPTY_DOCUMENT )
-    {
-        std::ostringstream os;
-        os << THIS_FUNCTION << "file is empty (XML_ERROR_EMPTY_DOCUMENT)";
-        throw std::runtime_error( os.str() );
-    }
-    if ( err != xml::XML_NO_ERROR )
-    {
-        const char* str1 = err.GetErrorStr1();
-        const char* str2 = err.GetErrorStr2();
-        std::ostringstream os;
-        os << THIS_FUNCTION << ": file parsing error";
-        if ( str1 ) os << ": " << str1;
-        if ( str2 ) os << ", " << str2;
-        throw std::runtime_error( os.str() );
+        throw std::runtime_error( errstr );
     }
 
-    // TODO...
+    // now parse document
+    // ...
     
 
 
@@ -148,17 +122,14 @@ void end(BATB& batb)
 
 void BATB::saveXML()
 {
-    xml::Document  xml;
-    xml::Error err = xml.SaveFile( filepath_.c_str() );
-    
-    if ( err != XML_NO_ERROR )
+    xml::Document doc;
+
+    // FIXME: populate
+
+    std::string errstr;
+    if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
     {
-        const char* str1 = err.GetErrorStr1();
-        const char* str2 = err.GetErrorStr2();
-        batb.log << THIS_FUNCTION << ": save error"  
-        if ( str1 ) batb.log << ": " << str1;
-        if ( str2 ) batb.log << ", " << str2;
-        throw std::runtime_error( os.str() );
+        batb.log << errstr << std::endl;
     }
 }
 

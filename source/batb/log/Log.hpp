@@ -23,6 +23,8 @@
 namespace batb
 {
 
+class BATB;
+
 namespace log
 {
 
@@ -32,8 +34,23 @@ friend void begin(Log& log);
 friend void end(Log& log);
 
 public:
+    Log(BATB& b) : batb( b )
+    {
+    }
 
-    
+    // TODO: tag messages
+    //std::ostream& info();
+    //std::ostream& error();
+    //
+
+    BATB& batb;
+
+    // TMP:
+    std::ostream& operator(std::ostream&)() { return std::cout; }
+
+private:
+    bool initialized_ = false;
+
 };
 
 

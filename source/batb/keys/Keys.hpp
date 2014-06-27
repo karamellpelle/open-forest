@@ -17,84 +17,54 @@
 //
 #ifndef BATB_KEYS_KEYS_HPP
 #define BATB_KEYS_KEYS_HPP
-#include "BATB/Keys/KeyButton.hpp"
-#include "BATB/Keys/KeyMouseButton.hpp"
-#include "BATB/Keys/KeyMouseAxis.hpp"
-#include "BATB/Keys/KeyClicker.hpp"
-#include "BATB/Keys/KeyAlpha.hpp"
-#include "BATB/Keys/KeyPointer.hpp"
+#include "batb/batb_include.hpp"
 
-
-namespace BATB
+namespace batb
 {
 
+class BATB;
 
-// Key's to be used to modify a world.
-// typically ForestWorld, since RunWorld is typically controlled by GUI
+
+namespace keys
+{
+
 class Keys
 {
+friend void begin(Keys& keys);
+friend void end(Keys& keys);
+
 public:
-    // create Key's, and let 'this' handle memory
-
-    // prims
-    KeyButton*      createKeyButton(KeyButton::Code code)             { return push_( new KeyButton( code ) ); }
-    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)   { return push_( new KeyMouseButton( code ) ); }
-    KeyMouseAxisX*  createKeyMouseAxisX()                             { return push_( new KeyMouseAxisX() ); }
-    KeyMouseAxisY*  createKeyMouseAxisY()                             { return push_( new KeyMouseAxisY() ); }
-    // cons
-    KeyClicker*     createKeyClicker(Key* k)                          { return push_( new KeyClicker( k ) ); }
-    KeyAlpha*       createKeyAlpha(Key* k)                            { return push_( new KeyAlpha( k ) ); }
-    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push_( new KeyPointer( x, y, l, r ) ); }
-
-    // invalidate and delete all keys
-    void clear()
+    Keys(BATB& b) : batb( b )
     {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            delete *i;
-        }
-        keys_.clear();
     }
 
-    // clear all keys:
-    void keys_clear()
-    {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            (*i)->clear();
-        }
-    }
 
-    // update all keys:
-    void keys_update(tick_t t)
-    {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            (*i)->update( t );
-        }
-    }
+    BATB& batb;
 
-    static void charCalling(GLFWcharfun );
-    static void keyCalling(GLFWkeyfun );
-    static void mousebuttonCalling(GLFWmousebuttonfun );
-    static void cursorposCalling(GLFWcursorposfun );
-    static void scrollCalling(GLFWscrollfun );
+    // let this object call back 
+    void charCalling(GLFWcharfun );
+    void keyCalling(GLFWkeyfun );
+    void mousebuttonCalling(GLFWmousebuttonfun );
+    void cursorposCalling(GLFWcursorposfun );
+    void scrollCalling(GLFWscrollfun );
 
 private:
-    typedef std::vector<Key*> Container;
-    Container keys_;
-
-    template <typename KeyPtr>
-    KeyPtr push_(KeyPtr k)
-    {
-        keys_.push_back( k );
-        return k;
-    }
+    bool initialized_ = false;
 
 };
 
 
-}
+////////////////////////////////////////////////////////////////////////////////
+//  
+
+void begin(Keys& keys);
+
+void end(Keys& keys);
+
+
+} // namespace keys
+
+} // namespace batb
 
 
 #endif
