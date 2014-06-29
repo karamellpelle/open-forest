@@ -44,7 +44,17 @@ std::string tmp(const std::string& path);
 ////////////////////////////////////////////////////////////////////////////////
 // working with files
 
-// get directory of path
+// get containing directory of path
+// this is typically used for files, not directories
+// if path is a directory, then the path should typically
+// not have a trailing slash, otherwise the path will be 
+// regarded as a path to a file with empty filename. for
+// example:
+//    /a/b/c    => /a/b         
+//    /a/b/c/   => /a/b/c     (empty file in the c directory)
+//
+// INVARIANT: paths to directories shall not have a trailing 
+//            slash.
 std::string directory(const std::string& path);
 
 

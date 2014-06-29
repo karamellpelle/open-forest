@@ -15,52 +15,75 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "Env.hpp"
+#include "env.hpp"
 
-namespace Env
+namespace env
 {
 
-static xml::XMLElement* theXMLElement_;
+static xml::XMLDocument xml_doc;
 
 
 
 static void glfw_error_callback(int error, const char* str)
 {
-    std::cerr << "Env : ERROR could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
+    std::cerr << "env : ERROR: could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
 }
 
 
-// XMLElement must be valid through Env whole lifetime
-void begin(xml::XMLElement* elem)
+void begin(const std::string& filepath)
 {
+    using namespace xml;
 
-    // set the XMLElement for Env
-    theXMLElement_ = elem;
+    // load our global 'doc' variable
+    XMLError err = doc.LoadFile( filepath );
+    if ( err == XML_ERROR_FILE_NOT_FOUND )
+    {
+        std::ostringstream os;
+        os << "env : ERROR: file not found (XML_ERROR_FILE_NOT_FOUND)";
+        throw std::runtime_error( os.str() );
+    }
+    if ( err == XML_ERROR_FILE_COULD_NOT_BE_OPENED )
+    {
+        std::ostringstream os;
+        os << "env : ERROR: file could not be opened (XML_ERROR_FILE_COULD_NOT_BE_OPENED)";
+        throw std::runtime_error( os.str() );
+    }
+    if ( err == XML_ERROR_FILE_READ_ERROR )
+    {
+        std::ostringstream os;
+        os << "env : ERROR: file could not be read  (XML_ERROR_FILE_READ_ERROR)";
+        throw std::runtime_error( os.str() );
+    }
+    if ( err == XML_ERROR_EMPTY_DOCUMENT )
+    {
+        std::ostringstream os;
+        os << "env : ERROR: file is empty (XML_ERROR_EMPTY_DOCUMENT)";
+        throw std::runtime_error( os.str() );
+    }
+    if ( err != XML_NO_ERROR )
+    {
+        const char* str1 = doc.GetErrorStr1();
+        const char* str2 = doc.GetErrorStr2();
+        std::ostringstream os;
+        os << "env : ERROR: file parsing error";
+        if ( str1 ) os << ": " << str1;
+        if ( str2 ) os << ", " << str2;
 
-    xml::XMLHandle xml( elem );
-
+        throw std::runtime_error( os.str() );
+    }
 
     // cfg GLFW
     glfwSetErrorCallback( glfw_error_callback );
     if ( !glfwInit() )
     {
-        throw std::runtime_error( "Env: could not init GLFW" );
+        throw std::runtime_error( "env : ERROR: could not init GLFW" );
     }
 
-    try
-    {
-        // create Screen
-        screenBegin( xml.FirstChildElement( "Screen" ).ToElement() );
+    // create Screen
+    screen_begin_();
 
-        // create Sound
-        // ...
-    }
-    catch (std::exception& e)
-    {
-        std::ostringstream os;
-        os << "Env : could not init: " << e.what(); 
-        throw std::runtime_error( os.str() );
-    }
+    // create Sound
+    // ...
 }
 
 void end()
@@ -68,21 +91,10 @@ void end()
 
     // soundEnd();
     //
-    screenEnd();
+    screen_end_();
 
     // end GLFW
     glfwTerminate();
 }
 
-// print Env info
-void info(std::ostream& os)
-{
-    screenInfo( os );
-}
-
-xml::XMLElement* xmlElement()
-{
-    return theXMLElement_;
-}
-
-}
+} // namespace env

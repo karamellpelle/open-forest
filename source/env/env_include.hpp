@@ -15,21 +15,32 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ENV_TICK_HPP
-#define ENV_TICK_HPP
-#include "Env/Env_include.hpp"
+#ifndef ENV_INCLUDE_HPP
+#define ENV_INCLUDE_HPP
+#include "tinyxml2.h"
+#include "include.hpp"
 
-namespace Env
+#include <GL/glew.h>    // must be done before GLFW!!
+#include <GLFW/glfw3.h> // FIXME: build option?
+
+
+namespace env
 {
 
+
+typedef include::uint uint;
+
+
+// float or double?
+typedef include::float_t float_t;
+
+namespace xml = tinyxml2;
+
+// the type for our ticks
 typedef double tick_t;
 
-inline tick_t tick()
-{
-    return glfwGetTime();
-}
-
 
 }
+
 
 #endif

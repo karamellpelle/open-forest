@@ -15,26 +15,4 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ENV_HPP
-#define ENV_HPP
-#include "env/screen.hpp"
-#include "env/sound.hpp"
-#include "env/tick.hpp"
-
-
-// this env-module has a global interface, we do not work with
-// a Env object...
-namespace env
-{
-
-
-void begin(const std::string& );
-
-void end();
-
-
-
-
-}
-
-#endif
+#include "env/env_include.hpp"

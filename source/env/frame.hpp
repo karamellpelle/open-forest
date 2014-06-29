@@ -15,25 +15,27 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ENV_HPP
-#define ENV_HPP
-#include "env/screen.hpp"
-#include "env/sound.hpp"
-#include "env/tick.hpp"
+#ifndef ENV_FRAME_HPP
+#define ENV_FRAME_HPP
+#include "env/env_include.hpp"
 
 
-// this env-module has a global interface, we do not work with
-// a Env object...
 namespace env
 {
 
+void frame_begin_();
+void frame_end_();
 
-void begin(const std::string& );
+////////////////////////////////////////////////////////////////////////////////
+// user functions
+//
+void frame_begin();
 
-void end();
+void frame_end();
 
+uint frame_count();
 
-
+float_t frame_fps();
 
 }
 

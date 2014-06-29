@@ -55,20 +55,16 @@ std::string tmp(const std::string& path)
 // directory of file
 std::string directory(const std::string& path)
 {
-    std::string ret;
+    uint n = path.size();
+    for (uint i = 0; i != path.size(); ++i)
+    {
+        if ( path[i] == '/' )
+        {
+            n = i;
+        }
+    }
 
-    typedef std::string::const_iterator iter;
-    typedef std::reverse_iterator<std::string::const_iterator> riter;
-  
-    // find [b, e)
-    iter b = std::begin( path ); 
-    iter e = std::find( std::reverse_iterator<iter>( std::begin( path ) ), 
-                        std::reverse_iterator<iter>( std::end( path ) ), 
-                        "/" ).base();
-    
-    std::copy( b, e, std::back_inserter( ret ) );
-
-    return ret;
+    return path.substr( 0, n );
 }
 
 

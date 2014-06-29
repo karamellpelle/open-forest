@@ -15,21 +15,25 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "Env/Screen.hpp"
+#include "env/screen.hpp"
 
 
-namespace Env
+namespace env
 {
 
 
-GLFWwindow* theWindow_ = 0;
+GLFWwindow* screen_window_ = nullptr;
+
+extern xml::XMLDocument doc_;
 
 
-void screenBegin(xml::XMLElement* elem)
+void screen_begin_()
 {
+    // TODO: print GL info if verbose setting in XML
+
     using namespace xml;
 
-    XMLHandle xml( elem );
+    XMLHandle xml( doc_ );
 
     // set hints to window
     // http://www.glfw.org/docs/latest/window.html#window_hints
@@ -87,14 +91,14 @@ void screenBegin(xml::XMLElement* elem)
     // set MSAA samples
     glfwWindowHint( GLFW_SAMPLES, samples ); 
 
-    theWindow_ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
+    screen_window__ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
 
     // set GL context as 'theWindow_'
-    glfwMakeContextCurrent( theWindow_ );
+    glfwMakeContextCurrent( screen_window_ );
 
-    if ( !theWindow_ )
+    if ( !screen_window_ )
     {
-        throw std::runtime_error( "could not create window" );
+        throw std::runtime_error( "env : ERROR: could not create window" );
     }
 
 
@@ -103,21 +107,16 @@ void screenBegin(xml::XMLElement* elem)
     if ( err != GLEW_OK )
     {
         std::ostringstream os;
-        os << "Env: ERROR could not init GLEW, " << glewGetErrorString( err );
+        os << "env : ERROR: could not init GLEW, " << glewGetErrorString( err );
         throw std::runtime_error( os.str() );
     }
 }
 
 
-void screenEnd()
+void screen_end_()
 {
-    glfwDestroyWindow( theWindow_ ); 
+    glfwDestroyWindow( screen_window_ ); 
 }
 
-
-void screenInfo(std::ostream& os)
-{
-    // TODO: print GLFW window info
-}
 
 }
