@@ -10,11 +10,12 @@ set(BATB_VERSION_MAJOR 1)
 
 # set compiler flags
 # FIXME: into build option
-set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -std=c++11 -g -pg" )
-set( CMAKE_C_FLAGS "-Wall -Wno-switch -g -pg" )
+set( CMAKE_CXX_FLAGS      "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -std=c++11 -g -pg" )
+set( CMAKE_C_FLAGS        "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -g -pg" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
+set( LIBS_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/libs )
 set( TEST_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/test )
 set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
 
@@ -83,29 +84,36 @@ set( FILE_SOURCES
 # define env sources
 set( ENV_SOURCES
       "${MAIN_SOURCE_DIR}/env.cpp"
-      #${MAIN_SOURCE_DIR}/env/Screen.cpp
+      "${MAIN_SOURCE_DIR}/env/screen.cpp"
+      "${MAIN_SOURCE_DIR}/env/frame.cpp"
 )
 
 # define batb sources
 set( BATB_SOURCES
+     
+      
+      "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
 
-      "${MAIN_SOURCE_DIR}/batb.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Values.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Log.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Keys.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run/RunKeys.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run/RunPrim.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunBegin.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunMain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Run/Prim/IterationRunOld.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Forest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Forest/ForestKeys.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Forest/ForestPrim.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Keys/KeyClicker.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Keys/KeyPointer.cpp"
-      "${MAIN_SOURCE_DIR}/batb/GUI.cpp"
+      # BATB core:
+      "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"
+      "${MAIN_SOURCE_DIR}/batb/xml/XML.cpp"
+      "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/Keys/KeyClicker.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/Keys/KeyPointer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/GUI.cpp"
       "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
+
+      # BATB non-core:
+      #"${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/run/Run/RunKeys.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/run/Run/RunPrim.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunBegin.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunMain.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunOld.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/forest/ForestKeys.cpp"
+      #"${MAIN_SOURCE_DIR}/batb/forest/ForestPrim.cpp"
 
       # add tmp for now
       "${MAIN_SOURCE_DIR}/batb/tmp/demo.c"
@@ -199,20 +207,20 @@ if ( BATB_BUILD )
 
     # OLD
 # FIXME: ifdef
-    add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
-    include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
-    set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
-    list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
-    list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
+    #add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
+    #include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
+    #set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
+    #list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
+    #list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
 # FIXME: endif
 
     # turbobadger
     include_directories( ${MAIN_SOURCE_DIR}/batb/gui )
-    list( APPEND MAIN_LIBARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
+    list( APPEND MAIN_LIBRARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
 
     # batb
     list( APPEND MAIN_LIBRARIES ${BATB_LIBRARIES} )
-    list( APPEND MAIN_SOURCES ${BATB_SOURCES} )
+    list( APPEND MAIN_SOURCES ${BATB_SOURCES} ${FILE_SOURCES} ${ENV_SOURCES})
 
 
     ###########################################################

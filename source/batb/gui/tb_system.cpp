@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/BATB_include.hpp"
+#include "batb/batb_include.hpp"
 
 #include "tb/tb_core.h"
 #include "tb/renderers/tb_renderer_gl.h"
@@ -53,7 +53,7 @@ double TBSystem::GetTimeMS()
 	gettimeofday( &now, NULL );
 	return now.tv_usec/1000 + now.tv_sec*1000;
 */
-    return Env::tick() * 1000;   
+    return env::tick() * 1000;   
 }
 
 

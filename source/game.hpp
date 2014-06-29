@@ -17,14 +17,14 @@
 //
 #ifndef GAME_HPP
 #define GAME_HPP
-#include "Game/GameInclude.hpp"
-#include "Game/Iteration.hpp"
-#include "Game/IterationStack.hpp"
-#include "Game/Iteration/IterationFunction.hpp"
-#include "Game/Iteration/IterationDefault.hpp"
-#include "Game/Iteration/IterationBeginner.hpp"
-#include "Game/Iteration/NoIteration.hpp"
-#include "Game/Output/NoOutput.hpp"
+#include "game/game_include.hpp"
+#include "game/Iteration.hpp"
+#include "game/IterationStack.hpp"
+#include "game/Iteration/IterationFunction.hpp"
+#include "game/Iteration/IterationDefault.hpp"
+#include "game/Iteration/IterationBegin.hpp"
+#include "game/Iteration/NoIteration.hpp"
+#include "game/Output/NoOutput.hpp"
 
 
 

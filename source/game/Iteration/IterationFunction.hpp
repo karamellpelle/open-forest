@@ -15,11 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_FUNCTION_HPP
-#define ITERATION_FUNCTION_HPP
-#include "../Iteration.hpp"
+#ifndef GAME_ITERATION_FUNCTION_HPP
+#define GAME_ITERATION_FUNCTION_HPP
+#include "game/Iteration.hpp"
 
-namespace Game
+namespace game
 {
 
 
@@ -50,6 +50,14 @@ private:
     FunctionT function_;
 
 };
+
+/*
+template <typename A>
+IterationFunction<A> function_iteration(IterationFunction<A>::FunctionT f)
+{
+    return 
+}
+*/
 
 
 }

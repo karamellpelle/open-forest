@@ -16,6 +16,8 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/value/Value.hpp"
+#include "batb/xml.hpp"
+#include "batb/BATB.hpp"
 
 
 namespace batb
@@ -33,12 +35,14 @@ void Value::saveXML()
     xml::Document doc;
 
     // FIXME: populate
-
+    // ignore for now...
+/*
     std::string errstr;
     if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
     {
         batb.log << errstr << std::endl;
     }
+*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +51,9 @@ void Value::saveXML()
 void begin(Value& value)
 {
     // set up this BATB object from XML
-    xml::Document xml;
+    xml::Document doc;
     std::string errstr;
-    if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
+    if ( auto err = xml::load_document( doc, value.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
         value.batb.log << errstr << std::endl;
     }
@@ -73,7 +77,7 @@ void end(Value& value)
 
         
     }
-    initialized_ = false;
+    value.initialized_ = false;
 }
 
 

@@ -44,9 +44,9 @@ public:
     }
 
     // XML file
-    void filepath(const std::string& ) const
+    void filepath(const std::string& path)
     {
-        return filepath_;
+        filepath_ = path;
     }
     void saveXML();
 

@@ -26,28 +26,28 @@ namespace keys
 
 void Keys::charCalling(GLFWcharfun f)
 {
-    glfwSetCharCallback( Env::screenWindow(), f );
+    glfwSetCharCallback( env::screen_window(), f );
 }
 
 void Keys::keyCalling(GLFWkeyfun f)
 {
-    glfwSetKeyCallback( Env::screenWindow(), f );
+    glfwSetKeyCallback( env::screen_window(), f );
 }
 
 void Keys::mousebuttonCalling(GLFWmousebuttonfun f)
 {
-    glfwSetMouseButtonCallback( Env::screenWindow(), f );
+    glfwSetMouseButtonCallback( env::screen_window(), f );
 }
 
 void Keys::cursorposCalling(GLFWcursorposfun f)
 {
-    glfwSetCursorPosCallback( Env::screenWindow(), f );
+    glfwSetCursorPosCallback( env::screen_window(), f );
 
 }
 
 void Keys::scrollCalling(GLFWscrollfun f)
 {
-    glfwSetScrollCallback( Env::screenWindow(), f );
+    glfwSetScrollCallback( env::screen_window(), f );
 }
 
 

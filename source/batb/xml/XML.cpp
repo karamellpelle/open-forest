@@ -27,30 +27,30 @@ namespace xml
 void begin(XML& xml)
 {
 
-    initialized_ = true;
+    xml.initialized_ = true;
 }
 
 void end(XML& xml)
 {
-    if ( initialized_ )
+    if ( xml.initialized_ )
     {
 
     }
-    initialized_ = false;
+    xml.initialized_ = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
-XMLError load_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& errstr)
+tinyxml2::XMLError load_document(tinyxml2::XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& errstr)
 {
     using namespace tinyxml2;
 
-    XMLError err = doc.LoadFile( filepath );
+    XMLError err = doc.LoadFile( filepath.c_str() );
     if ( err == XML_ERROR_FILE_NOT_FOUND )
     {
         std::ostringstream os;
-        os << tag << ": file not found (XML_ERROR_FILE_NOT_FOUND)";
+        os << tag << ": file not found, " + filepath + ". (XML_ERROR_FILE_NOT_FOUND)";
         errstr = os.str();
 
         return err;
@@ -58,7 +58,7 @@ XMLError load_document(XMLDocument& doc, const std::string& filepath, const std:
     if ( err == XML_ERROR_FILE_COULD_NOT_BE_OPENED )
     {
         std::ostringstream os;
-        os << tag << ": file could not be opened (XML_ERROR_FILE_COULD_NOT_BE_OPENED)";
+        os << tag << ": file could not be opened. (XML_ERROR_FILE_COULD_NOT_BE_OPENED)";
         errstr = os.str();
 
         return err;
@@ -66,7 +66,7 @@ XMLError load_document(XMLDocument& doc, const std::string& filepath, const std:
     if ( err == XML_ERROR_FILE_READ_ERROR )
     {
         std::ostringstream os;
-        os << tag << ": file could not be read  (XML_ERROR_FILE_READ_ERROR)";
+        os << tag << ": file could not be read.  (XML_ERROR_FILE_READ_ERROR)";
         errstr = os.str();
 
         return err;
@@ -74,7 +74,7 @@ XMLError load_document(XMLDocument& doc, const std::string& filepath, const std:
     if ( err == XML_ERROR_EMPTY_DOCUMENT )
     {
         std::ostringstream os;
-        os << tag << "file is empty (XML_ERROR_EMPTY_DOCUMENT)";
+        os << tag << ": file is empty. (XML_ERROR_EMPTY_DOCUMENT)";
         errstr = os.str();
 
         return err;
@@ -96,21 +96,21 @@ XMLError load_document(XMLDocument& doc, const std::string& filepath, const std:
 }
 
 
-XMLError save_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err)
+tinyxml2::XMLError save_document(tinyxml2::XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& errstr)
 {
     using namespace tinyxml2;
-    XMLError err = doc.SaveFile( filepath );
+    XMLError err = doc.SaveFile( filepath.c_str() );
     
     if ( err != XML_NO_ERROR )
     {
         const char* str1 = doc.GetErrorStr1();
         const char* str2 = doc.GetErrorStr2();
         std::ostringstream os;
-        os << THIS_FUNCTION << ": save error"  
+        os << THIS_FUNCTION << ": save error"; 
         if ( str1 ) os << ": " << str1;
         if ( str2 ) os << ", " << str2;
        
-        err = os.str();
+        errstr = os.str();
 
     }
     return err;

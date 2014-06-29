@@ -23,9 +23,9 @@
 
 
 // use commandline to modify our BATB object
-void cmdline(int argc, char** argv, BATB& batb)
+void commandline(int argc, char** argv, batb::BATB& batb)
 {
-    return 0;
+
 }
 
 
@@ -35,12 +35,12 @@ int main(int argc, char** argv)
     int ret = 0;
  
     // our BATB object
-    batb::BATB batb( file::dynamic_data( "batb.xml" ) );
+    batb::BATB batb( file::dynamic_data( "batb/BATB.xml" ) );
 
     try
     {
         // create our environment
-        env::begin( "env.xml" );
+        env::begin( file::dynamic_data( "env.xml" ) );
 
         // initialize the core parts of BATB.
         // the non-core part is created by 'iterationRunBegin'
@@ -49,32 +49,32 @@ int main(int argc, char** argv)
         // modify BATB from command line
         commandline( argc, argv, batb );
 
-        batb::run::World run;
-        batb::run::IterationStack stack;
+        //batb::run::World run;
+        //batb::run::IterationStack stack;
 
-        stack.next(
-            batb.run.iterationRunBegin,    // create game data and continue with iterationRunMain (if success)
-            batb.run.iterationRunEnd       // destroy game data
-        );
+        //stack.next(
+        //    batb.run.iterationRunBegin,    // create game data and continue with iterationRunMain (if success)
+        //    batb.run.iterationRunEnd       // destroy game data
+        //);
 
-        // "main loop"
-        while ( !stack.empty() )
-        {
-            // begin frame for iteration
-            env::frame_begin();
+        //// "main loop"
+        //while ( !stack.empty() )
+        //{
+        //    // begin frame for iteration
+        //    env::frame_begin();
 
-            // make 1 iteration of world
-            stack.iterate( run ); 
+        //    // make 1 iteration of world
+        //    stack.iterate( run ); 
 
-            // end frame for iteration (swap buffers, poll events)
-            env::frame_end();
-        }
+        //    // end frame for iteration (swap buffers, poll events)
+        //    env::frame_end();
+        //}
         
     }
     catch (std::exception& e)
     {
         // some serious error occured above, lets handle it
-        std::cerr << THIS_FUNCTION << ": fatal error: " << e.what() << std::endl;
+        std::cerr << THIS_FUNCTION << ": fatal error: \n" << e.what() << std::endl;
         ret = 1;
     }
 

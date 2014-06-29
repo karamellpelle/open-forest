@@ -15,15 +15,14 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_STACK_HPP
-#define ITERATION_STACK_HPP
+#ifndef GAME_ITERATION_STACK_HPP
+#define GAME_ITERATION_STACK_HPP
 #include <stack>
 #include <vector>
-#include "GameInclude.hpp"
-#include "Iteration.hpp"
+#include "game/Iteration.hpp"
 
 
-namespace Game
+namespace game
 {
 
 
@@ -37,15 +36,16 @@ public:
         clear();
     }
 
-    void push() { }
-    void push(Iteration<A>* n0) { push_( n0 ); } 
-    void push(Iteration<A>* n0, Iteration<A>* n1) { push_( n1 ); push_( n0 ); }
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2) { push_( n2 ); push_( n1 ); push_( n0 );}
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3) { push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4) { push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5) { push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6) { push_( n6 ); push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
-    void push(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6, Iteration<A>* n7) { push_( n7 ); push_( n6 ); push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
+    void next() { }
+    void next(Iteration<A>* n0) { next_( n0 ); } 
+    void next(Iteration<A>* n0, Iteration<A>* n1) { next_( n1 ); next_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2) { next_( n2 ); next_( n1 ); next_( n0 );}
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3) { next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4) { next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5) { next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6) { next_( n6 ); next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6, Iteration<A>* n7) { next_( n7 ); next_( n6 ); next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
+    void finish() { next(); }
 
     
     bool empty() const { return stack_.empty(); }
@@ -59,6 +59,7 @@ public:
             // make 1 iteration on 'a'
             iteration->iterate( *this, a );
 
+            // autorelease 'iteration', if no more references to it
             Ref::release( iteration );
 
         }
@@ -74,10 +75,13 @@ public:
 
 
 private:
+    // add iteration to this stack, 
     void push_(Iteration<A>* iteration)
     {
-        Ref::hold( iteration );
         stack_.push( iteration );
+
+        // hold increase number of references to 'iteration'
+        Ref::hold( iteration );
     }
 
     std::stack< Iteration<A>*, std::vector< Iteration<A>* > > stack_;

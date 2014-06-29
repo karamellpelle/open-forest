@@ -26,11 +26,11 @@ namespace file
 
 // full path to read-only application data
 // example: image, 
-std::string staticData(const std::string& path);
+std::string static_data(const std::string& path);
 
 // full path to read-write application data
 // example: configuration file, 
-std::string dynamicData(const std::string& path);
+std::string dynamic_data(const std::string& path);
 
 // full path to user files (reachable outside application)
 // example: screenshot, 

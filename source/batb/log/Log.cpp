@@ -24,19 +24,36 @@ namespace batb
 namespace log
 {
 
+////////////////////////////////////////////////////////////////////////////////
+//  
+
+std::streamsize LogStreamBuf::xsputn(const char* s, std::streamsize n)
+{
+    // TMP:
+    return std::cout.rdbuf()->sputn( s, n );
+}
+
+int LogStreamBuf::overflow (int c)
+{
+    // TMP:
+    return std::cout.rdbuf()->sputc( c );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  
 void begin(Log& log)
 {
 
-    initialized_ = true;
+    log.initialized_ = true;
 }
 
 void end(Log& log)
 {
-    if ( initialized_ )
+    if ( log.initialized_ )
     {
 
     }
-    initialized_ = false;
+    log.initialized_ = false;
 }
 
 

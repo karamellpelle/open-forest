@@ -19,7 +19,7 @@
 #define GAME_OUTPUT_HPP
 #include "Ref.hpp"
 
-namespace Game
+namespace game
 {
 
 

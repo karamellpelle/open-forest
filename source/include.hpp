@@ -30,12 +30,8 @@
 // main include file to be included through all sources...
 
 // macro for function name, depends on compiler
-#ifdef __PRETTY_FUNCTION__
-  #define THIS_FUNCTION __PRETTY_FUNCTION__
-//#elseif
-#else
-  #define THIS_FUNCTION "(unknown name of function)"
-#endif
+// FIXME: ifdef...
+#define THIS_FUNCTION __PRETTY_FUNCTION__
 
 
 namespace include

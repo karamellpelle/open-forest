@@ -17,7 +17,7 @@
 //
 #ifndef BATB_XML_HPP
 #define BATB_XML_HPP
-#include "batb/batb_include.hpp"
+#include "batb/xml/XML.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // nanovg
@@ -53,3 +53,5 @@ using namespace tinyxml2;
 } // namespace xml
 
 } // namespace batb
+
+#endif

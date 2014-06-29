@@ -15,9 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb.hpp"
 #include "batb/gui/GUI.hpp"
 #include "batb/log.hpp"
 #include "batb/keys.hpp"
+#include "batb/xml.hpp"
 
 
 // TB
@@ -29,6 +31,12 @@
 #include "tb/tb_system.h"
 
 
+
+// these are part of TB but not namespace tb, 
+// for some odd reason...
+void register_tbbf_font_renderer();
+void register_stb_font_renderer();
+void register_freetype_font_renderer(); 
 
 
 namespace batb
@@ -76,19 +84,19 @@ void GUI::bindKeys()
     // binding keys to this GUI object's root widget
     callback_widget = &root_;
     
-    Keys::cursorposCalling(   glfw_callback_cursor_pos );
-    Keys::mousebuttonCalling( glfw_callback_mouse_button );
-    Keys::scrollCalling(      glfw_callback_scroll );
-    Keys::keyCalling(         glfw_callback_key );
-    Keys::charCalling(        glfw_callback_char );
+    batb.keys.cursorposCalling(   glfw_callback_cursor_pos );
+    batb.keys.mousebuttonCalling( glfw_callback_mouse_button );
+    batb.keys.scrollCalling(      glfw_callback_scroll );
+    batb.keys.keyCalling(         glfw_callback_key );
+    batb.keys.charCalling(        glfw_callback_char );
 
 }
 
 
 void GUI::saveXML()
 {
-    xml::Document doc;
 
+    xml::Document doc;
     // FIXME: populate
 
     std::string errstr;
@@ -107,9 +115,9 @@ void begin(GUI& gui)
 
 
     // set up this BATB object from XML
-    xml::Document xml;
+    xml::Document doc;
     std::string errstr;
-    if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
+    if ( auto err = xml::load_document( doc, gui.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
         gui.batb.log << errstr << std::endl;
         //return;
@@ -118,10 +126,10 @@ void begin(GUI& gui)
     // TODO: parse xml...
 
   
-    tb_renderer_ =  new tb::TBRendererGL();
+    gui.tb_renderer_ =  new tb::TBRendererGL();
 
     // init the core of TB
-    tb::tb_core_init( tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
+    tb::tb_core_init( gui.tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
 
     // Load the default skin, and override skin that contains the graphics specific to the demo.
     tb::g_tb_skin->Load(  file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
@@ -129,10 +137,7 @@ void begin(GUI& gui)
 
     // Register font renderers.
     // for some reason, these are not part of namespace tb...
-    void ::register_tbbf_font_renderer();
-    void ::register_stb_font_renderer();
-    void ::register_freetype_font_renderer(); 
-
+    // declared in top of this file.
 #ifdef TB_FONT_RENDERER_TBBF
     register_tbbf_font_renderer();
 #endif
@@ -183,7 +188,7 @@ void begin(GUI& gui)
 
     tb::TBWidgetsAnimationManager::Init();
 
-    initialized_ = true;
+    gui.initialized_ = true;
 }
 
 
@@ -191,20 +196,20 @@ void end(GUI& gui)
 {
     gui.batb.log << THIS_FUNCTION << std::endl;    
 
-    if ( initialized_ )
+    if ( gui.initialized_ )
     {
         tb::TBWidgetsAnimationManager::Shutdown();
 
         tb::tb_core_shutdown();
 
-        delete tb_renderer_;
-        tb_renderer_ = nullptr;
+        delete gui.tb_renderer_;
+        gui.tb_renderer_ = nullptr;
 
-        wth_ = 0;
-        hth_ = 0;
+        gui.wth_ = 0;
+        gui.hth_ = 0;
     }
     
-    initialized_ = false;
+    gui.initialized_ = false;
 
 }
 
@@ -400,7 +405,7 @@ void GUI::glfw_callback_mouse_button(GLFWwindow *window, int button, int action,
 
 			//double time = tb::TBSystem::GetTimeMS();
                         static tick_t last_time = 0;
-                        tick_t time = Env::tick();
+                        tick_t time = env::tick();
 
 			if (time < last_time + 600 && last_x == x && last_y == y)
 				counter++;

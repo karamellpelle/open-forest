@@ -15,25 +15,18 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef GAME_INCLUDE_HPP
-#define GAME_INCLUDE_HPP
-#include "include.hpp"
+#include "batb/keys/KeySet.hpp"
 
-
-// 
-//#define GAME_DEBUG_REF_OUTPUT
-
-#ifdef GAME_DEBUG_REF_OUTPUT
-#include <iostream> // tmp
-#endif
-
-
-namespace Game
+namespace batb
 {
 
-typedef include::uint uint;
+namespace keys
+{
 
 
-}
+Key* createKey(/*const std::string& filepath*/ /*const XML& xml*/);
 
-#endif
+
+} // namespace keys
+
+} // namespace batb

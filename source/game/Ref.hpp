@@ -15,24 +15,24 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef REF_HPP
-#define REF_HPP
-#include "GameInclude.hpp"
+#ifndef GAME_REF_HPP
+#define GAME_REF_HPP
+#include "game/game_include.hpp"
 
 
 
-namespace Game
+namespace game
 {
 
 
 // USAGE
-// subclassing Ref for an deriving object O:
+// subclassing Ref for an deriving class C:
 //
-//  A:  if O should have the ability to be container-released,
-//      implement the free-mem capability in 'void Ref::destroy()'
-//  B:  else, do not implement 'void Ref::destroy()'
+//  (a) if objects of C should have the ability to be auto released,
+//      implement the free-mem functionality in 'void C::destroy()'
+//  (b) else, do not implement 'void C::destroy()'
 // 
-//  for case B, if O is unintentionally is container-released, 
+//  for case (b), if C is unintentionally is auto released, 
 //  then this releasment will not free memory too early
 //  (better with memory leak than memory corruption)
 
@@ -86,16 +86,9 @@ public:
     }
 
     // implement memory release here (used by auto-release)
+    // this has an empty implementation.
     virtual void destroy() { };
 
-    // destroy object (static interface)
-    /*
-    static void destroy(Ref* ref)
-    {
-        ref->destroy();
-    }
-    */
-    
 protected:
     Ref() : count_( 0 ), release_( false ) { }
     // FIXME: prevent public operator delete?
@@ -106,11 +99,11 @@ protected:
     }
 
 private:
-    Ref(const Ref& );             // only working with pointers to Ref 
-    Ref& operator=(const Ref& );  // only working with pointers to Ref
+    Ref(const Ref& ) = delete;              // we are only working with pointers to Ref 
+    Ref& operator=(const Ref& ) = delete;   // we are only working with pointers to Ref
 
-    uint count_;                  // number of Game-references
-    bool release_;                // release on down to 0?
+    uint count_;                            // number of (game::) references to this object
+    bool release_;                          // should 'destroy' be called when no more references?
 
 };
 

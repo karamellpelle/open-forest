@@ -15,15 +15,16 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB.hpp"
+#include "batb/BATB.hpp"
 
 namespace batb
 {
 
 
 
-BATB::BATB(const std::string& path) : log( *this ), value( *this ),  xml( *this ), keys( *this ),
-                                      gui( *this ), //forest( *this ), race( *this ), run( *this );
+BATB::BATB(const std::string& path) : log( *this ), xml( *this), value( *this ),  
+                                      keys( *this ), gui( *this )
+                                      //forest( *this ), race( *this ), run( *this );
 {
 
     filepath_ = path;
@@ -57,7 +58,7 @@ void begin(BATB& batb)
 
 
     // set up this BATB object from XML
-    xml::Document xml;
+    xml::Document doc;
     std::string errstr;
     if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
@@ -109,7 +110,7 @@ void end(BATB& batb)
 
         xml::end( batb.xml );
 
-        values::end( batb.values );
+        value::end( batb.value );
         
         log::end( batb.log );
     }
@@ -125,12 +126,14 @@ void BATB::saveXML()
     xml::Document doc;
 
     // FIXME: populate
-
+// ignore for now...
+/*
     std::string errstr;
     if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
     {
-        batb.log << errstr << std::endl;
+        log << errstr << std::endl;
     }
+*/
 }
 
 static void gl_info(std::ostream& os)

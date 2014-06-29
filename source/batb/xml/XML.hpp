@@ -17,9 +17,13 @@
 //
 #ifndef BATB_XML_XML_HPP
 #define BATB_XML_XML_HPP
+#include "batb/batb_include.hpp"
+
 
 namespace batb
 {
+
+class BATB;
 
 namespace xml
 {
@@ -55,10 +59,10 @@ void end(XML& );
 //  helpers
 
 // loading document, with error handling
-XMLError load_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
+tinyxml2::XMLError load_document(tinyxml2::XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
 
 // saving document, with error handling
-XMLError save_document(XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
+tinyxml2::XMLError save_document(tinyxml2::XMLDocument& doc, const std::string& filepath, const std::string& tag, std::string& err);
 
 
 

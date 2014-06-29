@@ -22,6 +22,8 @@
 // stdlib
 #include <stdint.h>
 #include <iostream>
+#include <ostream>
+#include <sstream>
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -33,7 +35,6 @@
 // project includes
 #include "include.hpp"
 #include "env.hpp"
-#include "helpers.hpp"
 #include "file.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,10 @@ namespace batb
 
 // export whole include module
 using namespace include;
+
+// nameclash (????)
+typedef include::uint       uint;
+typedef include::float_t    float_t;
 
 // our tick type
 typedef env::tick_t tick_t;

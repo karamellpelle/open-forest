@@ -19,13 +19,13 @@
 #define BATB_BATB_HPP
 #include "batb/batb_include.hpp"
 #include "batb/log.hpp"
-#include "batb/values.hpp"
+#include "batb/value.hpp"
 #include "batb/xml.hpp"
 #include "batb/keys.hpp"
 #include "batb/gui.hpp"
-#include "batb/forest.hpp"
-#include "batb/race.hpp"
-#include "batb/run.hpp"
+//#include "batb/forest.hpp"
+//#include "batb/race.hpp"
+//#include "batb/run.hpp"
 
 
 namespace batb
@@ -45,6 +45,7 @@ public:
     // we need a minimum part for 'iterationRunBegin' to work.
     log::Log log;
     xml::XML xml;
+    value::Value value;
     keys::Keys keys;
     gui::GUI gui;
 

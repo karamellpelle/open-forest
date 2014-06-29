@@ -91,7 +91,7 @@ void screen_begin_()
     // set MSAA samples
     glfwWindowHint( GLFW_SAMPLES, samples ); 
 
-    screen_window__ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
+    screen_window_ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
 
     // set GL context as 'theWindow_'
     glfwMakeContextCurrent( screen_window_ );

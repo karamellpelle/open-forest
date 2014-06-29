@@ -58,14 +58,14 @@ inline GLuint screen_fbo(GLuint fbo)
 inline void screen_fbo0()
 {
     extern GLuint fbo_0_;
-    screenFBOSet( fbo_0_ );
+    screen_fbo( fbo_0_ );
 }
 
 // set FBO1 as framebuffer for window, a auxilliary framebuffer (offscreen)
 inline void screen_fbo1()
 {
     extern GLuint fbo_1_;
-    screenFBOSet( fbo_1_ );
+    screen_fbo( fbo_1_ );
 }
 
 // screen_fboN()

@@ -17,7 +17,7 @@
 //
 #ifndef BATB_HPP
 #define BATB_HPP
-#include "BATB/BATB.hpp"
+#include "batb/BATB.hpp"
 
 
 

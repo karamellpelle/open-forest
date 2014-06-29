@@ -15,27 +15,26 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_HPP
-#define ITERATION_HPP
-#include "GameInclude.hpp"
+#ifndef GAME_ITERATION_HPP
+#define GAME_ITERATION_HPP
+#include "game/game_include.hpp"
 #include "Ref.hpp"
 
 
 
-namespace Game
+namespace game
 {
 
 template <typename A>
 class IterationStack;
 
 
-//template <Env=void, A>
 template <typename A>
 class Iteration : public Ref
 {
 friend class IterationStack<A>;
+
 public:
-    //Iteration(Env* env) : env_( env ) { }
     virtual ~Iteration() { }                  // FIXME: proctected, for named destructors?
 
 
@@ -51,9 +50,7 @@ public:
     // define this in subclass:
     virtual void iterate(IterationStack<A>& stack, A& a) = 0;
 
-    //Env* env() { return env_; }
 private:
-    //Env* env_;
 
 };
 

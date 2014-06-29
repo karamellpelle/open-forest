@@ -17,10 +17,10 @@
 //
 #ifndef GAME_NO_OUTPUT_HPP
 #define GAME_NO_OUTPUT_HPP
-#include "../Output.hpp"
+#include "game/Output.hpp"
 
 
-namespace Game
+namespace game
 {
 
 

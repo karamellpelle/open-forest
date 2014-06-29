@@ -20,7 +20,7 @@
 namespace env
 {
 
-static xml::XMLDocument xml_doc;
+xml::XMLDocument doc_;
 
 
 
@@ -34,12 +34,12 @@ void begin(const std::string& filepath)
 {
     using namespace xml;
 
-    // load our global 'doc' variable
-    XMLError err = doc.LoadFile( filepath );
+    // load our global 'doc_' variable
+    XMLError err = doc_.LoadFile( filepath.c_str() );
     if ( err == XML_ERROR_FILE_NOT_FOUND )
     {
         std::ostringstream os;
-        os << "env : ERROR: file not found (XML_ERROR_FILE_NOT_FOUND)";
+        os << "env : ERROR: file not found, " << filepath << " (XML_ERROR_FILE_NOT_FOUND)";
         throw std::runtime_error( os.str() );
     }
     if ( err == XML_ERROR_FILE_COULD_NOT_BE_OPENED )
@@ -62,8 +62,8 @@ void begin(const std::string& filepath)
     }
     if ( err != XML_NO_ERROR )
     {
-        const char* str1 = doc.GetErrorStr1();
-        const char* str2 = doc.GetErrorStr2();
+        const char* str1 = doc_.GetErrorStr1();
+        const char* str2 = doc_.GetErrorStr2();
         std::ostringstream os;
         os << "env : ERROR: file parsing error";
         if ( str1 ) os << ": " << str1;

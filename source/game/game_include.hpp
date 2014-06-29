@@ -15,10 +15,9 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef GAME_INCLUDE_HPP
-#define GAME_INCLUDE_HPP
+#ifndef GAME_GAME_INCLUDE_HPP
+#define GAME_GAME_INCLUDE_HPP
 #include "include.hpp"
-
 
 // 
 //#define GAME_DEBUG_REF_OUTPUT
@@ -28,10 +27,10 @@
 #endif
 
 
-namespace Game
+namespace game
 {
 
-typedef ::uint uint;
+typedef include::uint uint;
 
 
 }

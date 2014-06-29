@@ -17,7 +17,7 @@
 //
 #ifndef BATB_VALUE_HPP
 #define BATB_VALUE_HPP
-#include "batb/batb_include.hpp"
+#include "batb/value/Value.hpp"
 
 
 // this module contains values to be used throughout batb. 

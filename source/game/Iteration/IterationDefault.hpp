@@ -15,14 +15,14 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_DEFAULT_HPP
-#define ITERATION_DEFAULT_HPP
-#include "../Iteration.hpp"
-#include "../Output.hpp"
-#include "../Step.hpp"
+#ifndef GAME_ITERATION_DEFAULT_HPP
+#define GAME_ITERATION_DEFAULT_HPP
+#include "game/Iteration.hpp"
+#include "game/Output.hpp"
+#include "game/Step.hpp"
 
 
-namespace Game
+namespace game
 {
 
 

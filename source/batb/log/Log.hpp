@@ -28,13 +28,24 @@ class BATB;
 namespace log
 {
 
-class Log /* extends ostream */
+// defining custom std::ostream's:
+// http://www.angelikalanger.com/Articles/C++Report/IOStreamsDerivation/IOStreamsDerivation.html
+
+// our stream buffer
+class LogStreamBuf : public std::streambuf
+{
+public: 
+    virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
+    virtual int overflow (int c) override;
+};
+
+class Log : public std::ostream
 {
 friend void begin(Log& log);
 friend void end(Log& log);
 
 public:
-    Log(BATB& b) : batb( b )
+    Log(BATB& b) : std::ostream( &streambuf_ ), batb( b )
     {
     }
 
@@ -46,12 +57,14 @@ public:
     BATB& batb;
 
     // TMP:
-    std::ostream& operator(std::ostream&)() { return std::cout; }
+    std::ostream& operator<<(std::ostream&) { return std::cout; }
 
 private:
     bool initialized_ = false;
 
+    class LogStreamBuf streambuf_;
 };
+
 
 
 void begin(Log& log);

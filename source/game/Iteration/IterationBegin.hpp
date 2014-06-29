@@ -15,11 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef GAME_ITERATION_BEGINNER_HPP
-#define GAME_ITERATION_BEGINNER_HPP
-#include "Game/Iteration.hpp"
+#ifndef GAME_ITERATION_BEGIN_HPP
+#define GAME_ITERATION_BEGIN_HPP
+#include "game/Iteration.hpp"
 
-namespace Game
+namespace game
 {
 
 
@@ -27,27 +27,46 @@ namespace Game
 // encapsulating an existing iteration X, so that the world is modified
 // before the actual iteration X. 
 // implement world_begin.
-template <typename A>
-class IterationBeginner : public Iteration<A>
+template <typename A, typename Iter>
+class IterationBegin : public Iteration<A>
 {
+
+template <Iter, A> friend
+IterationBegin<Iter, A> begin_iteration(Iter* );
+
 public:
-    IterationBeginner(Iteration<A>* next) : next_(next) { }
 
     void iterate(IterationStack<A>& stack, A& a)
     {
-        world_begin( a );
+        // start to iterate
+        next_->iterateBegin( a );
+
+        // iterate
         next_->iterate( stack, a );
     }
 
-protected:
-    virtual void world_begin(A& a) = 0;
-    Iteration<A>* next()
-    {
-        return next_;
-    }
+private:
+    IterationBegin(Iter* next) : next_(next) { }
 
-    Iteration<A>* next_;
+    // 
+    Iter* next_;
 };
+
+
+
+// FIXME: implement a specialized version of this for Iteration's
+//        not having a 'iterateBegin' member
+template <typename A, typename Iter>
+IterationBegin<A, Iter> begin_iteration(Iter* iter)
+{
+    IterationBegin<A, Iter> ret = new IterationBegin<A, Iter>( iter );
+
+    // IterationBegin are auto released
+    Ref::hold( ret );
+
+    return ret;
+}
+
 
 
 }

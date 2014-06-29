@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEYS_KEYS_HPP
-#define BATB_KEYS_KEYS_HPP
+#ifndef BATB_KEYS_KEYSET_HPP
+#define BATB_KEYS_KEYSET_HPP
 #include "batb/batb_include.hpp"
 #include "batb/keys/KeyButton.hpp"
 #include "batb/keys/KeyMouseButton.hpp"
@@ -32,12 +32,16 @@ namespace batb
 namespace keys
 {
 
-// Key's to be used to modify a world.
-// typically ForestWorld, since RunWorld is typically controlled by GUI
-class Keys
+// create and hold Key's.
+// 
+// should typically be subclassed to a class holding all
+// the specific Key's. and also implement a function 
+// void loadXML(const std::string& filepath)
+// to populate itself.
+class KeySet
 {
 public:
-    // create Key's, and let 'this' handle memory
+    // create Key's, and let 'this' hold them (memory handling):
 
     // prims
     KeyButton*      createKeyButton(KeyButton::Code code)             { return push_( new KeyButton( code ) ); }
@@ -49,7 +53,14 @@ public:
     KeyAlpha*       createKeyAlpha(Key* k)                            { return push_( new KeyAlpha( k ) ); }
     KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push_( new KeyPointer( x, y, l, r ) ); }
 
+    // create Key from XML file
+    Key* createKey(/*const std::string&*/ /*XML def*/ );
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //
     // invalidate and delete all keys
+    // NOTE: this is different from clearing a Key!!
     void clear()
     {
         for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
@@ -60,7 +71,7 @@ public:
     }
 
     // clear all keys:
-    void keys_clear()
+    void keysClear()
     {
         for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
         {
@@ -68,20 +79,15 @@ public:
         }
     }
 
-    // update all keys:
-    void keys_update(tick_t t)
+    // update all keys, at each frame:
+    void keysUpdate(tick_t t)
     {
         for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
         {
             (*i)->update( t );
         }
     }
-
-    static void charCalling(GLFWcharfun );
-    static void keyCalling(GLFWkeyfun );
-    static void mousebuttonCalling(GLFWmousebuttonfun );
-    static void cursorposCalling(GLFWcursorposfun );
-    static void scrollCalling(GLFWscrollfun );
+   
 
 private:
     typedef std::vector<Key*> Container;
@@ -99,21 +105,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 //  
-
-void begin(Keys& keys)
-{
-
-}
-
-void end(Keys& keys)
-{
-    if ( keys.initialized_ )
-    {
-
-    }
-
-    keys.initialized_ = false;
-}
 
 } // namespace keys
 

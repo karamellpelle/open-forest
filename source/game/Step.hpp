@@ -15,13 +15,13 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef ITERATION_STEP_HPP
-#define ITERATION_STEP_HPP
-#include "Ref.hpp"
-#include "Iteration.hpp"
+#ifndef GAME_STEP_HPP
+#define GAME_STEP_HPP
+#include "game/Ref.hpp"
+#include "game/Iteration.hpp"
 
 
-namespace Game
+namespace game
 {
 
 

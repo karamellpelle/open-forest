@@ -17,10 +17,10 @@
 //
 #ifndef GAME_NO_ITERATION_HPP
 #define GAME_NO_ITERATION_HPP
-#include "Game/Iteration.hpp"
+#include "game/Iteration.hpp"
 
 
-namespace Game
+namespace game
 {
 
 
