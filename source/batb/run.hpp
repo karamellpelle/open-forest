@@ -17,7 +17,7 @@
 //
 #ifndef BATB_RUN_HPP
 #define BATB_RUN_HPP
-//#include "batb/run/Run.hpp"
+#include "batb/run/Run.hpp"
 
 
 namespace batb
@@ -25,6 +25,9 @@ namespace batb
 
 namespace run
 {
+
+using IterationStack = game::IterationStack<World>;
+
 
 } // namespace run
 

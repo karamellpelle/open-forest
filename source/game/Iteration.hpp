@@ -18,43 +18,64 @@
 #ifndef GAME_ITERATION_HPP
 #define GAME_ITERATION_HPP
 #include "game/game_include.hpp"
-#include "Ref.hpp"
 
 
 
 namespace game
 {
 
+
+// IterationStack owns Iterations, hence have the possibility to
+// release memory when no more references to an Iteration
 template <typename A>
 class IterationStack;
 
 
+
+
+
+// the Iteration base class
 template <typename A>
-class Iteration : public Ref
+class Iteration 
 {
 friend class IterationStack<A>;
 
 public:
-    virtual ~Iteration() { }                  // FIXME: proctected, for named destructors?
+    // our delete type
+    //using Deleter = [](Iteration<A>*)->void;
+    typedef void (*Deleter)(Iteration<A>*);
 
-
-    // I prefer named constructors and destructors for Iteration, 
-    // so for subclass IterationX, I create static functions:
-    //
-    // static IterationX<A>*  create(Y y)             { ... }
-    // static void            destroy(Iteration<A>* ) { ... }
-    // 
-    // , and let the constructor be private
-
+    virtual ~Iteration() { }
 
     // define this in subclass:
     virtual void iterate(IterationStack<A>& stack, A& a) = 0;
 
+protected:
+    Iteration() : Iteration( nullptr )    { }
+    Iteration(Deleter d) : deleter_( d )  { }
+
+
 private:
+    // autorelease
+    // FIXME: implement copy/assigment/move
+    uint count_         = 0;              
+    Deleter deleter_    = nullptr;
 
 };
 
+
+////////////////////////////////////////////////////////////////////////////////
+//  deleters
+//
+
+template <typename A>
+void delete_new(Iteration<A>* iter)
+{
+    delete iter;
 }
+
+
+} // namespace game
 
 #endif
 

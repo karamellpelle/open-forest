@@ -15,43 +15,73 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Run.hpp"
-#include "BATB/Log.hpp"
+#include "batb.hpp"
 
 
-namespace BATB
+
+namespace batb
 {
 
 
 
-
-void Run::create(xml::XMLElement* elem)
+namespace run
 {
-    using namespace xml;
 
-    log << "Run::create() " << std::endl;    
 
-    XMLHandle xml( elem );
-     
+////////////////////////////////////////////////////////////////////////////////
+//  Run
 
-  
-    // create primitives
-    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
+void Run::saveXML()
+{
 
-    // create settings
-    //settings-> = 
-    keys->create( xml.FirstChildElement("Keys").ToElement() );
+    xml::Document doc;
+    // FIXME: populate
+
+    //std::string errstr;
+    //if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
+    //{
+    //    batb.log << errstr << std::endl;
+    //}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 
+void begin(Run& run)
+{
+
+    run.batb.log << THIS_FUNCTION << std::endl;    
+
+
+    // set up this BATB object from XML
+    xml::Document doc;
+    std::string errstr;
+    if ( auto err = xml::load_document( doc, run.filepath_.c_str(), THIS_FUNCTION, errstr ) )
+    {
+        run.batb.log << errstr << std::endl;
+        //return;
+    }
+
+    // TODO: parse xml...
+
+    run.initialized_ = true;
+}
+
+
+void end(Run& run)
+{
+    run.batb.log << THIS_FUNCTION << std::endl;    
+
+    if ( run.initialized_ )
+    {
+
+    }
     
-}
-
-
-void Run::destroy()
-{
-    log << "RunData::destroy() " << std::endl;    
-
-    keys->destroy();
-
+    run.initialized_ = false;
 
 }
 
-}
+
+} // namespace run
+
+} // namespace batb

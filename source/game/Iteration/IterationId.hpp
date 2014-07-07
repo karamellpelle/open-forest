@@ -15,31 +15,44 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef GAME_OUTPUT_HPP
-#define GAME_OUTPUT_HPP
-#include "Ref.hpp"
+#ifndef GAME_ITERATION_ITERATION_ID_HPP
+#define GAME_ITERATION_ITERATION_ID_HPP
+#include "game/Iteration.hpp"
+
 
 namespace game
 {
 
 
+// "identity iteration"
 template <typename A>
-class Output : public Ref
+class IterationId : public Iteration<A>
 {
-friend class Iteration<A>;
+template <typename B>   // shadows A???
+friend IterationId<B>* iteration_id();
+
 public:
-    virtual ~Output() { }   // FIXME: protected??
+    using Iteration<A>::Iteration;
 
-    // we prefer named constructors and destructors, so for 
-    // subclass ObjectX, make static functions:
-    //
-    // static OutputX* create(Y y)          { ... }
-    // static void     destroy(Output<A>* ) { ... }
+    //IterationId() : Iteration<A>() { }
 
-    virtual void outputWorld(A& a) = 0;
+    // empty work
+    void iterate(IterationStack<A>& stack, A& a) { } 
 
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+
+// deleter for Iteration's created by 'new'
+template <typename A>
+IterationId<A>* iteration_id()
+{
+    return new IterationId<A>( delete_new<A> );
+}
 
 }
 

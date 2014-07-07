@@ -49,27 +49,32 @@ int main(int argc, char** argv)
         // modify BATB from command line
         commandline( argc, argv, batb );
 
-        //batb::run::World run;
-        //batb::run::IterationStack stack;
-
-        //stack.next(
+        // main is iterating batb::run::World
+        batb::run::World run;
+        batb::run::IterationStack stack;
+// tmp
+batb::run::begin( batb.run );
+        stack.next(
+            game::iteration_id<batb::run::World>()
         //    batb.run.iterationRunBegin,    // create game data and continue with iterationRunMain (if success)
         //    batb.run.iterationRunEnd       // destroy game data
-        //);
+        );
 
-        //// "main loop"
-        //while ( !stack.empty() )
-        //{
-        //    // begin frame for iteration
-        //    env::frame_begin();
+        // "main loop"
+        while ( !stack.empty() )
+        {
+            // begin frame for iteration
+            env::frame_begin();
 
-        //    // make 1 iteration of world
-        //    stack.iterate( run ); 
+            // make 1 iteration of world
+            stack.iterate( run ); 
 
-        //    // end frame for iteration (swap buffers, poll events)
-        //    env::frame_end();
-        //}
-        
+            // end frame for iteration (swap buffers, poll events)
+            env::frame_end();
+        }
+// tmp:
+batb::run::end( batb.run );
+
     }
     catch (std::exception& e)
     {
@@ -80,9 +85,10 @@ int main(int argc, char** argv)
 
     // shut down...
 
+    env::end();
+
     batb::end( batb );
 
-    env::end();
 
     return ret;
 }

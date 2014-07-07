@@ -31,24 +31,23 @@ class IterationStack
 {
 public:
     IterationStack() { }
-    ~IterationStack()
-    {
-        clear();
-    }
+    ~IterationStack() { clear(); }
 
-    void next() { }
-    void next(Iteration<A>* n0) { next_( n0 ); } 
-    void next(Iteration<A>* n0, Iteration<A>* n1) { next_( n1 ); next_( n0 ); }
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2) { next_( n2 ); next_( n1 ); next_( n0 );}
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3) { next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4) { next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5) { next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6) { next_( n6 ); next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
-    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6, Iteration<A>* n7) { next_( n7 ); next_( n6 ); next_( n5 ); next_( n4 ); next_( n3 ); next_( n2 ); next_( n1 ); next_( n0 ); }
     void finish() { next(); }
+    void next() { }
+    void next(Iteration<A>* n0) { push_( n0 ); } 
+    void next(Iteration<A>* n0, Iteration<A>* n1) { push_( n1 ); push_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2) { push_( n2 ); push_( n1 ); push_( n0 );}
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3) { push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4) { push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5) { push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6) { push_( n6 ); push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
+    void next(Iteration<A>* n0, Iteration<A>* n1, Iteration<A>* n2, Iteration<A>* n3, Iteration<A>* n4, Iteration<A>* n5, Iteration<A>* n6, Iteration<A>* n7) { push_( n7 ); push_( n6 ); push_( n5 ); push_( n4 ); push_( n3 ); push_( n2 ); push_( n1 ); push_( n0 ); }
 
     
     bool empty() const { return stack_.empty(); }
+
+    // make 1 iteration of 'a', if stack not empty
     void iterate(A& a)
     {
         if ( !stack_.empty() )
@@ -59,16 +58,17 @@ public:
             // make 1 iteration on 'a'
             iteration->iterate( *this, a );
 
-            // autorelease 'iteration', if no more references to it
-            Ref::release( iteration );
+            // is this the last reference to this iteration?
+            release( iteration );
 
         }
     }
+
     void clear()
     {
         while ( !stack_.empty() )
         {
-            Iteration<A>::release( stack_.top() );
+            release( stack_.top() );
             stack_.pop();
         }
     }
@@ -80,10 +80,32 @@ private:
     {
         stack_.push( iteration );
 
-        // hold increase number of references to 'iteration'
-        Ref::hold( iteration );
+        hold( iteration );
     }
 
+    void release(Iteration<A>* iteration)
+    {
+        uint& count = iteration->count_;
+        if ( count != 0 )
+        {
+            if ( --count == 0 )
+            {
+                if ( iteration->deleter_ )
+                {
+                    // call deleter
+                    iteration->deleter_( iteration );
+                }
+            }
+        }
+    }
+
+    void hold(Iteration<A>* iteration)
+    {
+        uint& count = iteration->count_;
+        ++count; 
+    }
+
+    // our stack
     std::stack< Iteration<A>*, std::vector< Iteration<A>* > > stack_;
 
     

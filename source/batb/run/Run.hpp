@@ -15,52 +15,61 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_HPP
-#define BATB_RUN_HPP
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Run/RunPrim.hpp"
-#include "BATB/Run/RunSettings.hpp"
-#include "BATB/Run/RunKeys.hpp"
+#ifndef BATB_RUN_RUN_HPP
+#define BATB_RUN_RUN_HPP
+#include "batb/run/World.hpp"
+//#include "batb/run/KeySet.hpp"
 
 
-namespace BATB
+namespace batb
 {
+
+
+class BATB;
+
+
+namespace run
+{
+
+
 
 
 class Run
 {
+friend void begin(Run& );
+friend void end(Run& );
+
 public:
-    Run() : prim( &prim_ ), settings( &settings_ ), keys( &keys_ )
+    Run(BATB& b) : batb( b )
     {
     }
 
-    void create(xml::XMLElement* );
-    void destroy();
+    // XML file
+    void filepath(const std::string& path)
+    {
+        filepath_ = path;
+    }
+    void saveXML();
 
-    // 
-    RunPrim* const      prim;
-    RunSettings* const  settings;
-    RunKeys* const      keys;
 
+
+    BATB& batb;
+    //KeySet keyset;
 
 private:
-    RunPrim prim_;
-    RunSettings settings_;
-    RunKeys keys_;
+    bool initialized_ = false;
+    std::string filepath_;
 
 
 };
 
 
-// the only Run, access
-inline Run* theRun()
-{
-    static Run ret;
-    return &ret;
-}
+void begin(Run& );
+void end(Run& );
 
-}
+} // namespace run
 
+} // namespace batb
 
 #endif
 

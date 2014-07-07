@@ -20,6 +20,7 @@
 #include "env/screen.hpp"
 #include "env/sound.hpp"
 #include "env/tick.hpp"
+#include "env/frame.hpp"
 
 
 // this env-module has a global interface, we do not work with

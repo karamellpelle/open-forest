@@ -1,1 +1,0 @@
-g++ -g -pg -I .. test_Game.cpp -o ../../build/test_Game

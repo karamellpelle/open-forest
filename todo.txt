@@ -1,8 +1,7 @@
+* implement Log: current indentation, error/warning tags, etc
 * compile_sh, make clean
-* helpers into include.hpp
 * loading the rest of objects in iterationRunBegin
 * functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github
-* create templates/... for easily construction of Iteration's
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
@@ -15,11 +14,6 @@
     http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
 * define invariants (OpenGL, ...)
 * Define gameobjects more preciseand start to implement them
-* find out how to model Competition, relative to Forest. different Competition types:
-  Single/Relay/Special Trainings/...
 * find a suitable UDP-library (http://www.codeofhonor.com/blog/choosing-a-game-network-lib)
-* GLEW as git library (libs/)
-* Ogre3D add. check out terrain functionality
-* add libvpx movie
-* create Font?
+* GLEW as git submodule 
 * get more developers involved!

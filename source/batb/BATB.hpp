@@ -25,7 +25,7 @@
 #include "batb/gui.hpp"
 //#include "batb/forest.hpp"
 //#include "batb/race.hpp"
-//#include "batb/run.hpp"
+#include "batb/run.hpp"
 
 
 namespace batb
@@ -53,7 +53,7 @@ public:
     // these are parts of BATB initialized later, by 'iterationRunBegin'.
     //forest::Forest forest;
     //race::Race race;
-    //run::Run run;
+    run::Run run;
 
     // save this BATB object to its XML file
     void saveXML();

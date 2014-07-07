@@ -99,11 +99,11 @@ void GUI::saveXML()
     xml::Document doc;
     // FIXME: populate
 
-    std::string errstr;
-    if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
-    {
-        batb.log << errstr << std::endl;
-    }
+    //std::string errstr;
+    //if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
+    //{
+    //    batb.log << errstr << std::endl;
+    //}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

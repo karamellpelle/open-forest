@@ -23,8 +23,9 @@ namespace batb
 
 
 BATB::BATB(const std::string& path) : log( *this ), xml( *this), value( *this ),  
-                                      keys( *this ), gui( *this )
+                                      keys( *this ), gui( *this ),
                                       //forest( *this ), race( *this ), run( *this );
+                                      run( *this )
 {
 
     filepath_ = path;
@@ -36,7 +37,7 @@ BATB::BATB(const std::string& path) : log( *this ), xml( *this), value( *this ),
     // non-core:
     //forest.filepath(    file::directory( path ) + "/forest/Forest.xml" );
     //race.filepath(      file::directory( path ) + "/race/Race.xml" );
-    //run.filepath(       file::directory( path ) + "/run/Run.xml" );
+    run.filepath(       file::directory( path ) + "/run/Run.xml" );
     //.filepath(          file::directory( path ) + ".xml" );
     
     

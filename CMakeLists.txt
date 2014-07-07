@@ -10,8 +10,8 @@ set(BATB_VERSION_MAJOR 1)
 
 # set compiler flags
 # FIXME: into build option
-set( CMAKE_CXX_FLAGS      "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -std=c++11 -g -pg" )
-set( CMAKE_C_FLAGS        "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -g -pg" )
+set( CMAKE_CXX_FLAGS      "-std=c++11 -g -pg -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+set( CMAKE_C_FLAGS        "-g -pg -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
@@ -105,15 +105,8 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
 
       # BATB non-core:
-      #"${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/run/Run/RunKeys.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/run/Run/RunPrim.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunBegin.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunMain.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/run/Run/Prim/IterationRunOld.cpp"
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/forest/ForestKeys.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/forest/ForestPrim.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
 
       # add tmp for now
       "${MAIN_SOURCE_DIR}/batb/tmp/demo.c"
