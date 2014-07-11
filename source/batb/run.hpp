@@ -26,7 +26,6 @@ namespace batb
 namespace run
 {
 
-using IterationStack = game::IterationStack<World>;
 
 
 } // namespace run

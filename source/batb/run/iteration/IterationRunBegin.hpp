@@ -15,12 +15,9 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_RUN_HPP
-#define BATB_RUN_RUN_HPP
-#include "batb/run/World.hpp"
-#include "batb/run/iteration/IterationRunBegin.hpp"
-#include "batb/run/iteration/IterationRunEnd.hpp"
-//#include "batb/run/KeySet.hpp"
+#ifndef BATB_RUN_ITERATION_ITERATION_RUN_BEGIN_HPP
+#define BATB_RUN_ITERATION_ITERATION_RUN_BEGIN_HPP
+#include "batb/run/iteration/IterationRun.hpp"
 
 
 namespace batb
@@ -29,56 +26,55 @@ namespace batb
 
 class BATB;
 
-
 namespace run
 {
 
 
 
 
-class Run
+// IterationRunBegin:
+//    loads the non-core part of BATB (and afterwards run::World??), 
+//    showing the load progress interactively. finishes when load error
+//    or load complete. continues with IterationRunMain if success loading...
+class IterationRunBegin : public Iteration
 {
-friend void begin(Run& );
-friend void end(Run& );
+friend void begin(IterationRunBegin& );
+friend void end(IterationRunBegin& );
 
 public:
-    Run(BATB& b);
+    // construct from the containing Run object
+    IterationRunBegin(BATB& );
 
-    // XML file
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void saveXML();
+    // iterate
+    void iterate(IterationStack& stack, World& world) override;
 
+    // setup before iteration
+    void iterate_begin(World& );
 
+    ////////////////////////////////////////
 
+    // 
     BATB& batb;
-    //KeySet keyset;
-
-    // Iteration's
-    IterationRunBegin     iterationRunBegin;
-    IterationRunEnd       iterationRunEnd;
-    //IterationRunIntro     iterationRunIntro;
-    //IterationRunMain      iterationRunMain;
-    //IterationRunOutro     iterationRunOutro;
-    //IterationRunOld       iterationRunOld; 
 
 
 private:
-    bool initialized_ = false;
-    std::string filepath_;
+    void begin_non_core();
 
-
+    uint iteration_count_ = 0;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//  
 
-void begin(Run& );
-void end(Run& );
+void begin(IterationRunBegin& );
+
+
+void end(IterationRunBegin& );
+
+
 
 } // namespace run
 
 } // namespace batb
 
 #endif
-

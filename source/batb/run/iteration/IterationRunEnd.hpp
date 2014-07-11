@@ -15,44 +15,59 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef RUN_PRIM_HPP
-#define RUN_PRIM_HPP
-#include "BATB/Run/Prim/Scene.hpp"
-#include "BATB/Run/Prim/IterationRunBegin.hpp"
-#include "BATB/Run/Prim/IterationRunEnd.hpp"
-#include "BATB/Run/Prim/IterationRunIntro.hpp"
-#include "BATB/Run/Prim/IterationRunMain.hpp"
-#include "BATB/Run/Prim/IterationRunOutro.hpp"
-
-#include "BATB/Run/Prim/IterationRunOld.hpp"
-
-#include "Game.hpp"
+#ifndef BATB_RUN_ITERATION_ITERATION_RUN_END_HPP
+#define BATB_RUN_ITERATION_ITERATION_RUN_END_HPP
+#include "batb/run/iteration/IterationRun.hpp"
 
 
+namespace batb
+{
 
-namespace BATB
+
+class BATB;
+
+namespace run
 {
 
 
 
-class RunPrim
+
+
+class IterationRunEnd : public Iteration
 {
+friend void begin(IterationRunEnd& );
+friend void end(IterationRunEnd& );
+
 public:
-    void create(xml::XMLElement* );
-    void destroy();
-    
-    // TODO: custom types for each iteration!
-    IterationRunBegin*    iterationRunBegin;
-    IterationRunEnd*      iterationRunEnd;
-    IterationRunIntro*    iterationRunIntro;
-    IterationRunMain*     iterationRunMain;
-    IterationRunOutro*    iterationRunOutro;
+    // construct from the containing Run object
+    IterationRunEnd(BATB& );
 
-    IterationRunOld*      iterationRunOld; 
+    // iterate
+    void iterate(IterationStack& stack, World& world) override;
+
+    // setup before iteration
+    void iterate_begin(World& );
+
+    ////////////////////////////////////////
+
+    // 
+    BATB& batb;
+
 
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//  
+
+void begin(IterationRunEnd& );
 
 
-}
+void end(IterationRunEnd& );
+
+
+
+} // namespace run
+
+} // namespace batb
+
 #endif

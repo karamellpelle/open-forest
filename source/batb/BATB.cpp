@@ -88,7 +88,11 @@ void begin(BATB& batb)
     // gui
     gui::begin( batb.gui );
 
-    // (now the rest of BATB (forest, race, run, ...) are loaded by iterationRunMain)
+    // we need these two iterations up and running:
+    run::begin( batb.run.iterationRunBegin );
+    run::begin( batb.run.iterationRunEnd );
+
+    // (now the non-core part of BATB is loaded/unloaded by iterationRunBegin/iterationRunEnd)
 
     
     batb.initialized_ = true;
@@ -104,6 +108,8 @@ void end(BATB& batb)
         // (the non-core part, created by iterationRunBegin, 
         // are shut down by 'iterationRunEnd')
 
+        run::end( batb.run.iterationRunEnd );
+        run::end( batb.run.iterationRunBegin );
 
         gui::end( batb.gui );
 

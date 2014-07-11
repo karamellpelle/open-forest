@@ -15,23 +15,26 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_CONSOLE_HPP
-#define BATB_CONSOLE_HPP
-#include "BATB/Config.hpp"
+#ifndef BATB_RUN_ITERATION_ITERATION_RUN_HPP
+#define BATB_RUN_ITERATION_ITERATION_RUN_HPP
+#include "batb/batb_include.hpp"
+#include "batb/run/World.hpp"
 
-namespace BATB
+namespace batb
 {
 
-class Console
+
+namespace run
 {
-public:
 
+// the type of iterations for run::World
+using Iteration = game::Iteration<World>;
 
-private:
-
-};
+// the type of stack for run::Iteration
+using IterationStack = game::IterationStack<World>;
 
 }
 
+}
 
 #endif

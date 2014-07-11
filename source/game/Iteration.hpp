@@ -41,6 +41,9 @@ class Iteration
 friend class IterationStack<A>;
 
 public:
+    // our world type
+    typedef A World;
+
     // our delete type
     //using Deleter = [](Iteration<A>*)->void;
     typedef void (*Deleter)(Iteration<A>*);
@@ -49,6 +52,7 @@ public:
 
     // define this in subclass:
     virtual void iterate(IterationStack<A>& stack, A& a) = 0;
+
 
 protected:
     Iteration() : Iteration( nullptr )    { }

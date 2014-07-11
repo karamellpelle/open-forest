@@ -37,7 +37,7 @@ public:
     //IterationId() : Iteration<A>() { }
 
     // empty work
-    void iterate(IterationStack<A>& stack, A& a) { } 
+    void iterate(IterationStack<A>& stack, A& a) override { } 
 
 };
 

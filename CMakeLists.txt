@@ -107,6 +107,8 @@ set( BATB_SOURCES
       # BATB non-core:
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
 
       # add tmp for now
       "${MAIN_SOURCE_DIR}/batb/tmp/demo.c"

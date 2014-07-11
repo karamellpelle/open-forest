@@ -22,7 +22,7 @@
 #include "game/IterationStack.hpp"
 #include "game/Iteration/IterationId.hpp"
 //#include "game/Iteration/IterationFunction.hpp"
-//#include "game/Iteration/IterationBegin.hpp"
+#include "game/Iteration/IterationBegin.hpp"
 
 
 

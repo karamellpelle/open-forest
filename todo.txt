@@ -1,13 +1,14 @@
+* run::KeySet
+* use variadic templates for easy XML parsing.
+* base event class (Game::), implement for Run/Race/Forest/... 
+  true iff handled??
 * implement Log: current indentation, error/warning tags, etc
 * compile_sh, make clean
-* loading the rest of objects in iterationRunBegin
 * functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
 * FPS and other BATB-stats
-* base event class (Game::), implement for Run/Race/Forest/... 
-  true iff handled??
 * glext.h (part of official OpenGL Registry) as git submodule, or something
 * use C++11 coding actively. see for example:
     http://blog.smartbear.com/c-plus-plus/the-biggest-changes-in-c11-and-why-you-should-care/

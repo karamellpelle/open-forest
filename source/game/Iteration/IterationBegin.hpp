@@ -19,54 +19,56 @@
 #define GAME_ITERATION_BEGIN_HPP
 #include "game/Iteration.hpp"
 
+
+
 namespace game
 {
 
 
-
-// encapsulating an existing iteration X, so that the world is modified
-// before the actual iteration X. 
-// implement world_begin.
+// IterationBegin
+//    encapsulating an existing iteration X, so that the world is modified
+//    before the actual iteration X, at the first iteration.
+//    the encapsulated Iteration needs a public member 'iterate_begin'
+//    TODO: create special template for 'begin_iteration' for Iteration's 
+//          without 'iteratie_begin', doing nothing.
+//template <typename A, template <typename> class Iter >
 template <typename A, typename Iter>
 class IterationBegin : public Iteration<A>
 {
 
-template <Iter, A> friend
-IterationBegin<Iter, A> begin_iteration(Iter* );
+template <typename Iter_> 
+friend IterationBegin<typename Iter_::World, Iter_>* begin_iteration(Iter_& );
 
 public:
 
+    // modify world, and maybe also the encapsulated 
+    // iteration too, before iteration
     void iterate(IterationStack<A>& stack, A& a)
     {
         // start to iterate
-        next_->iterateBegin( a );
+        next_.iterate_begin( a );
 
         // iterate
-        next_->iterate( stack, a );
+        next_.iterate( stack, a );
     }
 
 private:
-    IterationBegin(Iter* next) : next_(next) { }
+    IterationBegin(Iter& next) : Iteration<A>( delete_new ), next_(next) { }
 
-    // 
-    Iter* next_;
+    // the encapsulated iteration
+    Iter& next_;
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
 
-// FIXME: implement a specialized version of this for Iteration's
-//        not having a 'iterateBegin' member
-template <typename A, typename Iter>
-IterationBegin<A, Iter> begin_iteration(Iter* iter)
+// FIXME: genarized, and specialized version below...
+template <typename Iter>
+IterationBegin<typename Iter::World, Iter>* begin_iteration(Iter& iter)
 {
-    IterationBegin<A, Iter> ret = new IterationBegin<A, Iter>( iter );
-
-    // IterationBegin are auto released
-    Ref::hold( ret );
-
-    return ret;
+    return new IterationBegin<typename Iter::World, Iter>( iter );
 }
-
 
 
 }

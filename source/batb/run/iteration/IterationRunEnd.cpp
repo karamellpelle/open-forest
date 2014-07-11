@@ -15,35 +15,48 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Run/RunPrim.hpp"
+#include "batb.hpp"
 
+namespace batb
+{
 
-namespace BATB
+namespace run
 {
 
 
-void RunPrim::create(xml::XMLElement* elem)
+IterationRunEnd::IterationRunEnd(BATB& b) : Iteration(), batb( b )
 {
-    using namespace xml;
-
-    XMLHandle xml( elem );
-    // FIXME: parse 
-
-    iterationRunBegin     = IterationRunBegin::create( xml.FirstChildElement("IterationRunBegin").ToElement() );
-    iterationRunEnd       = Game::NoIteration<RunWorld>::create();
-    iterationRunIntro     = Game::NoIteration<RunWorld>::create();
-    iterationRunMain      = IterationRunMain::create( xml.FirstChildElement("IterationRunMain").ToElement() );
-    iterationRunOutro     = Game::NoIteration<RunWorld>::create();
-
-    iterationRunOld       = IterationRunOld::create( 0 );
 
 }
 
-void RunPrim::destroy()
+
+void IterationRunEnd::iterate_begin(World& world)
 {
-    // FIXME:
-    //IterationRunBegin::destroy( prim->iterationRunBegin );
+    batb.log << THIS_FUNCTION << std::endl;
 }
 
+void IterationRunEnd::iterate(IterationStack& stack, World& world)
+{
+    batb.log << THIS_FUNCTION << std::endl;
+
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+void begin(IterationRunEnd& iter)
+{
+    iter.batb.log << THIS_FUNCTION << std::endl;
+}
+
+void end(IterationRunEnd& iter)
+{
+    iter.batb.log << THIS_FUNCTION << std::endl;
+}
+
+
+} // namespace run
+
+} // namespace batb
 

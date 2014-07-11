@@ -31,6 +31,13 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
+Run::Run(BATB& b) : batb( b ), iterationRunBegin( b ), iterationRunEnd( b )
+{
+
+}
+
+
+
 void Run::saveXML()
 {
 
