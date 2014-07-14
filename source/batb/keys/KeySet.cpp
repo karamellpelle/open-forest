@@ -24,8 +24,39 @@ namespace keys
 {
 
 
-Key* createKey(/*const std::string& filepath*/ /*const XML& xml*/);
+Key* KeySet::createKeyXML(/*const std::string& filepath*/ /*const XML& xml*/)
+{
+    // FIXME:
+    return nullptr;
+}
 
+void KeySet::clear()
+{
+    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
+    {
+        delete *i;
+    }
+    keys_.clear();
+}
+
+
+// Key::clear() for all keys:
+void KeySet::keysClear()
+{
+    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
+    {
+        (*i)->clear();
+    }
+}
+
+// update all keys, to be done at each frame:
+void KeySet::keysUpdate(tick_t t)
+{
+    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
+    {
+        (*i)->update( t );
+    }
+}
 
 } // namespace keys
 

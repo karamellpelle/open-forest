@@ -15,33 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEY_HPP
-#define BATB_KEY_HPP
-#include "BATB/Config.hpp"
+#ifndef BATB_KEYS_KEY_HPP
+#define BATB_KEYS_KEY_HPP
+#include "batb/batb_include.hpp"
 
 
-namespace BATB
+namespace batb
 {
+
+
+namespace keys
+{
+
+class KeySet;
 
 // base Key class
 // abstracting a key as a continuous valueo [0, 1]
 class Key
 {
-friend class Keys;
+friend class KeySet;
 protected:
-    Key()           { }
-    virtual ~Key()  { }
+    Key()                         { }
+    virtual ~Key()                { }
+    Key(const Key& k)             = delete;
+    Key& operator=(const Key& k)  = delete;
+    Key(Key&& k)                  = delete;
+
 public:
     virtual void clear() = 0;
     virtual void update(tick_t ) = 0;
-    virtual float_t alpha() = 0; // FIXME: const??
+    virtual float_t alpha() = 0;
 
 
 
     //////////////////////////////////////////////////////////////////
     //      helpers
     //
-
     float_t alpha(float_t b, float_t e)
     {
         float_t a  = alpha();
@@ -64,7 +73,8 @@ private:
 
 };
 
+} // namespace keys
 
-}
+} // namespace batb
 
 #endif

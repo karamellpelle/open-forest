@@ -45,16 +45,11 @@ public:
     // RunNetwork network;
     // [RunEvent] events;
 
-    // Scene this RunWorld uses
-    //Scene* scene()
-    //{
-    //    return &scene_;
-    //}
 
-private:
-    uint frames_;
-
-    //Scene scene_;
+    tick_t tick;
+    uint frame_count = 0;
+    
+    //Scene scene;
 };
 
 

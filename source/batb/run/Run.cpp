@@ -31,7 +31,7 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
-Run::Run(BATB& b) : batb( b ), iterationRunBegin( b ), iterationRunEnd( b )
+Run::Run(BATB& b) : batb( b ), keyset( b ), iterationRunBegin( b ), iterationRunEnd( b )
 {
 
 }
@@ -70,6 +70,7 @@ void begin(Run& run)
     }
 
     // TODO: parse xml...
+    run.keyset.loadXML("batb/run/KeySet.xml");
 
     run.initialized_ = true;
 }
@@ -81,7 +82,7 @@ void end(Run& run)
 
     if ( run.initialized_ )
     {
-
+        run.saveXML();
     }
     
     run.initialized_ = false;

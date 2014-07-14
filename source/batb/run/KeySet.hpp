@@ -15,37 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_KEYS_HPP
-#define BATB_RUN_KEYS_HPP
-#include "BATB/Keys.hpp"
+#ifndef BATB_RUN_KEYSET_HPP
+#define BATB_RUN_KEYSET_HPP
+#include "batb/batb_include.hpp"
+#include "batb/keys.hpp"
 
-namespace BATB
+namespace batb
 {
 
-class RunKeys : public Keys
+class BATB;
+
+namespace run
+{
+
+
+class KeySet : public keys::KeySet
 {
 public:
-    // crea
-    void create(xml::XMLElement* );
-    void destroy();
+    KeySet(BATB& );
 
-    // load run-keys from map defined by XML
-    void loadMap(xml::XMLElement* );
+    // define 'this' from map defined by XML
+    void loadXML(const std::string& filepath);
+    void saveXML(const std::string& filepath);
 
     /////////////////////////////////////////////////
-    // actual keys
-
-    // keys to control Run
-    KeyClicker* pause;
-    
+    // keys for Run to use
     // TMP:
-    KeyClicker* old; 
-    KeyClicker* u;
-    KeyClicker* i;
+    keys::KeyClicker* pause;
+    keys::KeyClicker* old; 
+    keys::KeyClicker* u;
+    keys::KeyClicker* i;
 
+    BATB& batb;
 };
 
-}
+} // namespace run
+
+} // namespace batb
 
 
 #endif

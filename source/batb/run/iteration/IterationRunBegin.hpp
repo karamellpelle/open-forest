@@ -36,7 +36,7 @@ namespace run
 //    loads the non-core part of BATB (and afterwards run::World??), 
 //    showing the load progress interactively. finishes when load error
 //    or load complete. continues with IterationRunMain if success loading...
-class IterationRunBegin : public Iteration
+class IterationRunBegin : public IterationRun
 {
 friend void begin(IterationRunBegin& );
 friend void end(IterationRunBegin& );
@@ -46,15 +46,12 @@ public:
     IterationRunBegin(BATB& );
 
     // iterate
-    void iterate(IterationStack& stack, World& world) override;
+    void iterate_run(IterationStack& stack, World& world) override;
 
     // setup before iteration
     void iterate_begin(World& );
 
     ////////////////////////////////////////
-
-    // 
-    BATB& batb;
 
 
 private:

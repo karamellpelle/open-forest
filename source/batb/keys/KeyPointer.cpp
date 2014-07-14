@@ -15,10 +15,13 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Keys/KeyPointer.hpp"
+#include "batb/keys/KeyPointer.hpp"
 
 
-namespace BATB
+namespace batb
+{
+
+namespace keys
 {
 
 
@@ -75,5 +78,6 @@ bool KeyPointer::drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b,  float
     return false;
 }
 
+} // namespace keys
 
-}
+} // namespace batb

@@ -15,11 +15,14 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Keys/KeyClicker.hpp"
+#include "batb/keys/KeyClicker.hpp"
 
 
-namespace BATB
+namespace batb
 {
+
+namespace keys
+{ 
 
 KeyClicker::KeyClicker(Key* k) : key_( k )
 {
@@ -97,4 +100,7 @@ void KeyClicker::update(tick_t tick)
 }
 
 
-}
+} // namespace keys
+
+
+} // namespace batb

@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_HPP
 #define BATB_KEYS_HPP
 #include "batb/keys/Keys.hpp"
+#include "batb/keys/KeySet.hpp"
 
 namespace batb
 {

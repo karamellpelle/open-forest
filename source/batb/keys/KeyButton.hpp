@@ -15,34 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEY_BUTTON_HPP
-#define BATB_KEY_BUTTON_HPP
-#include "BATB/Keys/Key.hpp"
+#ifndef BATB_KEYS_KEY_BUTTON_HPP
+#define BATB_KEYS_KEY_BUTTON_HPP
+#include "batb/keys/Key.hpp"
 
-namespace BATB
+namespace batb
 {
 
+
+namespace keys
+{
 
 class KeyButton : public Key
 {
-friend class Keys;
+friend class KeySet;
+
 public:
+    void clear() override             { }
+    void update(tick_t ) override     { }
+    float_t alpha() override          { return glfwGetKey( env::screen_window(), code_ ) ? 1.0 : 0.0; }
+
     typedef int Code;
+
+    void code(Code c)                 { code_ = c; } 
+    void loadXML(/*def*/)             { } 
+
 private:
+    KeyButton() : code_( 0 )          { } // FIXME: GLFW_???
     KeyButton(Code c) : code_( c )    { } 
-
-public:
-    void clear()                      { }
-    void update(tick_t )              { }
-    float_t alpha()                   { return glfwGetKey( Env::screenWindow(), code_ ) ? 1.0 : 0.0; }
-
-
-private:
-    const Code code_;
+    Code code_;
 
 };
 
 
-}
+} // namespace keys
 
+} // namespace batb
 #endif

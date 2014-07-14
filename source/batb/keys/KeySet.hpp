@@ -32,61 +32,48 @@ namespace batb
 namespace keys
 {
 
-// create and hold Key's.
+// create Key's
 // 
-// should typically be subclassed to a class holding all
-// the specific Key's. and also implement a function 
-// void loadXML(const std::string& filepath)
-// to populate itself.
+// should typically be subclassed into a class having members
+// of each Key necessary. this subclass should typically have
+// a method 'loadXML(const std::string& filepath)' to load
+// a definition from a XML file.
 class KeySet
 {
 public:
-    // create Key's, and let 'this' hold them (memory handling):
+    KeySet()                              { }
+    ~KeySet()                             { clear(); }
+    KeySet(const KeySet& k)               = delete;
+    KeySet& operator=(const KeySet& k)    = delete;
+    KeySet(KeySet&& k)                    = delete;
+
 
     // prims
-    KeyButton*      createKeyButton(KeyButton::Code code)             { return push_( new KeyButton( code ) ); }
-    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)   { return push_( new KeyMouseButton( code ) ); }
-    KeyMouseAxisX*  createKeyMouseAxisX()                             { return push_( new KeyMouseAxisX() ); }
-    KeyMouseAxisY*  createKeyMouseAxisY()                             { return push_( new KeyMouseAxisY() ); }
+    KeyButton*      createKeyButton(KeyButton::Code code)             { return push( new KeyButton( code ) ); }
+    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)   { return push( new KeyMouseButton( code ) ); }
+    KeyMouseAxisX*  createKeyMouseAxisX()                             { return push( new KeyMouseAxisX() ); }
+    KeyMouseAxisY*  createKeyMouseAxisY()                             { return push( new KeyMouseAxisY() ); }
     // cons
-    KeyClicker*     createKeyClicker(Key* k)                          { return push_( new KeyClicker( k ) ); }
-    KeyAlpha*       createKeyAlpha(Key* k)                            { return push_( new KeyAlpha( k ) ); }
-    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push_( new KeyPointer( x, y, l, r ) ); }
+    KeyClicker*     createKeyClicker(Key* k)                          { return push( new KeyClicker( k ) ); }
+    KeyAlpha*       createKeyAlpha(Key* k)                            { return push( new KeyAlpha( k ) ); }
+    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push( new KeyPointer( x, y, l, r ) ); }
 
-    // create Key from XML file
-    Key* createKey(/*const std::string&*/ /*XML def*/ );
+    // create Key from XML definition
+    Key* createKeyXML(/* std::string&*/ /*XML def*/ );
 
 
     ////////////////////////////////////////////////////////////////////////////////
     //
+
     // invalidate and delete all keys
-    // NOTE: this is different from clearing a Key!!
-    void clear()
-    {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            delete *i;
-        }
-        keys_.clear();
-    }
+    // NOTE: this is very different from Key::clear()!!
+    void clear();
 
-    // clear all keys:
-    void keysClear()
-    {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            (*i)->clear();
-        }
-    }
+    // Keys::clear() for all keys:
+    void keysClear();
 
-    // update all keys, at each frame:
-    void keysUpdate(tick_t t)
-    {
-        for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-        {
-            (*i)->update( t );
-        }
-    }
+    // update all keys, to be done at each frame:
+    void keysUpdate(tick_t t);
    
 
 private:
@@ -94,7 +81,7 @@ private:
     Container keys_;
 
     template <typename KeyPtr>
-    KeyPtr push_(KeyPtr k)
+    KeyPtr push(KeyPtr k)
     {
         keys_.push_back( k );
         return k;

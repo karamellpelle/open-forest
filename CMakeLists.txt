@@ -99,14 +99,17 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/xml/XML.cpp"
       "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
       "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/Keys/KeyClicker.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/Keys/KeyPointer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeyClicker.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeyPointer.cpp"
       "${MAIN_SOURCE_DIR}/batb/gui/GUI.cpp"
       "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
 
       # BATB non-core:
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
 

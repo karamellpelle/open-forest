@@ -15,70 +15,58 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEY_MOUSE_AXIS_HPP
-#define BATB_KEY_MOUSE_AXIS_HPP
-#include "BATB/Keys/Key.hpp"
+#ifndef BATB_KEYS_KEY_MOUSE_AXIS_HPP
+#define BATB_KEYS_KEY_MOUSE_AXIS_HPP
+#include "batb/keys/Key.hpp"
 
-namespace BATB
+namespace batb
+{
+
+namespace keys
 {
 
 
 class KeyMouseAxisX : public Key
 {
-friend class Keys;
-private:
-    KeyMouseAxisX()
-    {
-    }
+friend class KeySet;
 
 public:
-    void clear()                      { }
-    void update(tick_t )              { }
-    float_t alpha()
+    void clear() override             { }
+    void update(tick_t ) override     { }
+    float_t alpha() override
     {
-        int wth;
-        int hth;
-        glfwGetWindowSize( Env::screenWindow(), &wth, &hth );
-        double x;
-        double y;
-        glfwGetCursorPos( Env::screenWindow(), &x, &y );
+        int wth; int hth;
+        glfwGetWindowSize( env::screen_window(), &wth, &hth );
+        double x; double y;
+        glfwGetCursorPos( env::screen_window(), &x, &y );
 
         return x / (double)( wth );
     }
 
 
-private:
-    
 };
 
 class KeyMouseAxisY: public Key
 {
-friend class Keys;
-private:
-    KeyMouseAxisY()
-    {
-    }
+friend class KeySet;
 
 public:
-    void clear()                      { }
-    void update(tick_t )              { }
-    float_t alpha()
+    void clear() override             { }
+    void update(tick_t ) override     { }
+    float_t alpha() override
     {
-        int wth;
-        int hth;
-        glfwGetWindowSize( Env::screenWindow(), &wth, &hth );
-        double x;
-        double y;
-        glfwGetCursorPos( Env::screenWindow(), &x, &y );
+        int wth; int hth;
+        glfwGetWindowSize( env::screen_window(), &wth, &hth );
+        double x; double y;
+        glfwGetCursorPos( env::screen_window(), &x, &y );
 
         return y / (double)( hth );
     }
 
 
-private:
-    
 };
 
-}
+} // namespace keys
 
+} // namespace batb
 #endif

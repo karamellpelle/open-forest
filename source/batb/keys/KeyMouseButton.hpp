@@ -15,39 +15,46 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_KEY_MOUSE_BUTTON_HPP
-#define BATB_KEY_MOUSE_BUTTON_HPP
-#include "BATB/Keys/Key.hpp"
+#ifndef BATB_KEYS_KEY_MOUSE_BUTTON_HPP
+#define BATB_KEYS_KEY_MOUSE_BUTTON_HPP
+#include "batb/keys/Key.hpp"
 
-namespace BATB
+namespace batb
 {
 
+
+namespace keys
+{
 
 class KeyMouseButton : public Key
 {
-friend class Keys;
-public:
-    typedef int Code;
-private:
-    KeyMouseButton(Code c) : code_( c )   { } 
+friend class KeySet;
 
 public:
-    void clear()                          { }
-    void update(tick_t )                  { }
-    float_t alpha()                       { return glfwGetMouseButton( Env::screenWindow(), code_ ) ? 1.0 : 0.0; }
+    void clear() override                 { }
+    void update(tick_t ) override         { }
+    float_t alpha() override              { return glfwGetMouseButton( env::screen_window(), code_ ) ? 1.0 : 0.0; }
 
     
-    static const Code left   = GLFW_MOUSE_BUTTON_LEFT;
-    static const Code right  = GLFW_MOUSE_BUTTON_RIGHT;
+    typedef int Code;
+    static constexpr Code left   = GLFW_MOUSE_BUTTON_LEFT;
+    static constexpr Code right  = GLFW_MOUSE_BUTTON_RIGHT;
 
+    void code(Code c)                     { code_ = c; }
+    void loadXML(/*def*/)                 { } 
 
 private:
-    const Code code_;
+    KeyMouseButton() : code_( 0 )         { } // FIXME: GLFW_???
+    KeyMouseButton(Code c) : code_( c )   { } 
+
+    Code code_ = 0;
 };
 
 
 
 
-}
+} // namespace keys
+
+} // namespace batb
 
 #endif

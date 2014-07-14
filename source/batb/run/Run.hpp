@@ -17,10 +17,9 @@
 //
 #ifndef BATB_RUN_RUN_HPP
 #define BATB_RUN_RUN_HPP
-#include "batb/run/World.hpp"
 #include "batb/run/iteration/IterationRunBegin.hpp"
 #include "batb/run/iteration/IterationRunEnd.hpp"
-//#include "batb/run/KeySet.hpp"
+#include "batb/run/KeySet.hpp"
 
 
 namespace batb
@@ -54,7 +53,7 @@ public:
 
 
     BATB& batb;
-    //KeySet keyset;
+    KeySet keyset;
 
     // Iteration's
     IterationRunBegin     iterationRunBegin;

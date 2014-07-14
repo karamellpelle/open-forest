@@ -33,7 +33,7 @@ namespace run
 
 
 
-class IterationRunEnd : public Iteration
+class IterationRunEnd : public IterationRun
 {
 friend void begin(IterationRunEnd& );
 friend void end(IterationRunEnd& );
@@ -43,16 +43,12 @@ public:
     IterationRunEnd(BATB& );
 
     // iterate
-    void iterate(IterationStack& stack, World& world) override;
+    void iterate_run(IterationStack& stack, World& world) override;
 
     // setup before iteration
     void iterate_begin(World& );
 
     ////////////////////////////////////////
-
-    // 
-    BATB& batb;
-
 
 };
 

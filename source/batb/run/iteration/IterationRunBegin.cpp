@@ -24,7 +24,7 @@ namespace run
 {
 
 
-IterationRunBegin::IterationRunBegin(BATB& b) : Iteration(), batb( b )
+IterationRunBegin::IterationRunBegin(BATB& b) : IterationRun( b )
 {
 
 }
@@ -52,7 +52,7 @@ void IterationRunBegin::iterate_begin(World& world)
 }
 
 
-void IterationRunBegin::iterate(IterationStack& stack, World& world)
+void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 {
     batb.log << THIS_FUNCTION << std::endl;
 

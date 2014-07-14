@@ -15,9 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/run/KeySet.hpp"
-#include "batb.hpp"
-
+#include "batb/run/iteration/IterationRun.hpp"
 
 namespace batb
 {
@@ -26,32 +24,26 @@ namespace batb
 namespace run
 {
 
-
-KeySet::KeySet(BATB& b) : batb( b )
+IterationRun::IterationRun(BATB& b) : batb( b )
 {
 
 }
 
-void KeySet::loadXML(const std::string& )
+void IterationRun::iterate(IterationStack& stack, World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    // begin frame
+    // set Scene, ..., update keys, ...
 
+    // actual iteration work, implemented by subclass
+    iterate_run( stack, world );
+    
+    // finish up, free mem (events, ...)
 
-    // FIXME: parse keys from definition in file
-    //        the function createKeyXML is handy...
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // instead, hardcode!
-
-    pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
-
-    // tmp:
-    old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
-    u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
-    i = createKeyClicker( createKeyButton( GLFW_KEY_I      ) );
+    // end frame
+    ++world.frame_count;
 }
 
-} // namespace run
+}
 
-} // namespace batb
+}
 

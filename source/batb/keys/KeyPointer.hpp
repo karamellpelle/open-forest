@@ -17,26 +17,25 @@
 //
 #ifndef BATB_KEYS_POINTER_HPP
 #define BATB_KEYS_POINTER_HPP
-#include "BATB/Keys/Key.hpp"
-#include "BATB/Keys/KeyClicker.hpp"
+#include "batb/keys/Key.hpp"
+#include "batb/keys/KeyClicker.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
+namespace keys
+{
 
-// create a Pointer-key (Mouse-similar)
+// create a Pointer-key (i.e. mouse)
 // FIXME: this is more a container then a Key
 class KeyPointer : public Key
 {
-friend class Keys;
-private:
-    KeyPointer(Key* x, Key* y, Key* l, Key* r) : axis_x_( x ), axis_y_( y ), clicker_left_( l ), clicker_right_( r )
-    {
-    }
+friend class KeySet;
+friend class KeyClicker;
 
 public:
-    void clear()
+    void clear() override
     {
         axis_x_->clear();
         axis_y_->clear();
@@ -44,10 +43,10 @@ public:
         clicker_right_.clear();
 
     }
-    void update(tick_t );
-    float_t alpha()
+    void update(tick_t ) override;
+    float_t alpha() override
     {
-        // FIXME: implement something
+        // FIXME: implement something linear based on a mouse
         return 0.5;
     }
 
@@ -148,6 +147,7 @@ public:
     KeyClicker* right()     { return &clicker_right_; }
 
 private:
+    KeyPointer(Key* x, Key* y, Key* l, Key* r) : axis_x_( x ), axis_y_( y ), clicker_left_( l ), clicker_right_( r )    { }
     bool drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool left_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
@@ -200,7 +200,8 @@ private:
 };
 
 
+} // namespace keys
 
-}
+} // namespace batb
 
 #endif
