@@ -1,4 +1,4 @@
-OpenForest
+Open Forest
 --------------------
 
 This is a fork of an orienteering game I found on GitHub, https://github.com/jarvinet/orienteering-game.
@@ -7,48 +7,61 @@ The intention is to build up a foundation for an open source orienteering game. 
 orienteering is small, there are multiple commercial orienteering games available (Catching Features, 
 Suunnistussimulaattori, Oriantica), and all these costs money. I don't see the point of having so many
 commercial games, for something that probably not will generate enough money for an high-end product.
-Also, a lot of orienteers are good programmingers/developers. We'll se how this goes...
+Also, a lot of orienteers are good programmers/developers. We'll se how this goes...
 
 This project is currently under construction, there needs more work (from me) before I expect others
 to join. I try to work on this project when I have time...
 
-Design
+
+Programming
 --------------------
 
 We shall aim at using modern programming and libraries . This means OpenGL 3.3+ (shaders, buffers, 
 vertex arrays, etc.), C++11, etc.
 
-Currently, these libraries are intented to be used
+Currently, these libraries are intented to be used. Please fill in (better) alternatives...
 
-    OpenGL            : GLFW, GLEW
-    sound             :                                               (OpenAL?)
+    graphics          : OpenGL, GLFW, GLEW
+    sound             : 
+                        (OpenAL ?)
     input             : GLFW
-    GUI               : https://github.com/fruxo/turbobadger          (CEGUI? JUCE? https://github.com/betajaen/gorilla?)
-    config            : https://github.com/leethomason/tinyxml2
-    UDP network       :                                               (boost ASIO?, https://github.com/joyent/libuv/?)
-    screen rendering  : OGRE                                          (OpenSceneGraph? OpenSG? Horde3D? SpeedTree :))
-    font rendering    :  
+    GUI               : https://github.com/fruxo/turbobadger          
+                        (CEGUI ?)
+                        (JUCE ?)
+                        (https://github.com/betajaen/gorilla ?)
+    config            : XML, https://github.com/leethomason/tinyxml2
+    UDP network       :                                               
+                        (boost ASIO ?)
+                        (https://github.com/joyent/libuv/ ?)
+    3D rendering      : OGRE                                          
+                        (OpenSceneGraph ?)
+                        (OpenSG ?)
+                        (Horde3D ?)
+                        (SpeedTree :))
     2D rendering      : https://github.com/memononen/nanovg
-    collision         : (do we need this?)                            (Bullet3D?)
+    font rendering    : (using turbobadger/nanovg) 
+    collision         : (do we need this?)
+                        (Bullet3D ?)
     linear            : GLM
-    3D animation      :                                               (Ogre3D?)
-    video             : libvpx                                        (libTheora?)
-    C++               :                                               (boost.filesystem?
-                                                                       boost.hash?
-                                                                       boost.integer?
-                                                                       boost.geometry?
-                                                                       boost.predef?
-                                                                       boost.random?
-                                                                       boost.string_algo?
-                                                                       boost.system_library?
-                                                                       boost.program_options?
-                                                                       boost.asio?
-                                                                       boost.math?)
+    3D animation      : 
+                        (OGRE ?)
+    video             : OGRE
+                        (libTheora?)
+    c++               :                                               
+                        (boost.filesystem ?)
+                        (boost.hash ?)
+                        (boost.integer ?)
+                        (boost.geometry?)
+                        (boost.predef ?)
+                        (boost.random ?)
+                        (boost.string_algo ?)
+                        (boost.system_library ?)
+                        (boost.program_options ?)
+                        (boost.asio ?)
+                        (boost.math ?)
 
 
-, and currently, GLFW, GLEW, tinyxml2, nanovg, GLM, are up and running. 
-
-FIXME: what about OpenGL 3.3+ and libraries? turbobadger and nanovg has backends that can be implemented, at least...
+Currently, GLFW, tinyxml2, nanovg, GLM, turbobadger, are up and running. 
 
 
 Building
@@ -65,17 +78,14 @@ to get these projects too. Building can then be done with
 , creating a program `build/batb` 
 
 
-Currently, the forked project ("old-BATB") is runnable, and this is told to need
 
-* libplib-dev
-* freeglut3
-* mesa-common-dev
-* libglew-dev
-
+old-BATB
+---------------------
+the old game "Beat About The Bush" is still runnable in this fork.
 
 
 Contact
 ----------------
-
 <carljsv@student.matnat.uio.no>
+
 <karamellpelle@hotmail.com>
