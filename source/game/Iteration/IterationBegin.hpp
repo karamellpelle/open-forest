@@ -25,25 +25,22 @@ namespace game
 {
 
 
-// IterationBegin
+// IterationBegin:
 //    encapsulating an existing iteration X, so that the world is modified
 //    before the actual iteration X, at the first iteration.
 //    the encapsulated Iteration needs a public member 'iterate_begin'
-//    TODO: create special template for 'begin_iteration' for Iteration's 
-//          without 'iteratie_begin', doing nothing.
-//template <typename A, template <typename> class Iter >
-template <typename A, typename Iter>
-class IterationBegin : public Iteration<A>
+template <typename Iter>
+class IterationBegin : public Iteration<typename Iter::World>
 {
 
 template <typename Iter_> 
-friend IterationBegin<typename Iter_::World, Iter_>* begin_iteration(Iter_& );
+friend Iteration<typename Iter_::World>* begin_iteration(Iter_& );
 
 public:
 
     // modify world, and maybe also the encapsulated 
     // iteration too, before iteration
-    void iterate(IterationStack<A>& stack, A& a)
+    void iterate(IterationStack<typename Iter::World>& stack, typename Iter::World& a)
     {
         // start to iterate
         next_.iterate_begin( a );
@@ -53,7 +50,7 @@ public:
     }
 
 private:
-    IterationBegin(Iter& next) : Iteration<A>( delete_new ), next_(next) { }
+    IterationBegin(Iter& next) : Iteration<typename Iter::World>( delete_new ), next_(next) { }
 
     // the encapsulated iteration
     Iter& next_;
@@ -63,13 +60,24 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-// FIXME: genarized, and specialized version below...
+// if Iter has a 'void Iter::iterate_begin(Iter::World& )' method, use this:
 template <typename Iter>
-IterationBegin<typename Iter::World, Iter>* begin_iteration(Iter& iter)
+Iteration<typename Iter::World>* begin_iteration(Iter& iter)
 {
-    return new IterationBegin<typename Iter::World, Iter>( iter );
+    return new IterationBegin<Iter>( iter );
 }
 
+
+// this is _very_ ugly:
+// http://stackoverflow.com/questions/257288/is-it-possible-to-write-a-c-template-to-check-for-a-functions-existence
+/*
+// otherwise, just return adress of argument
+template <typename Iter>
+Iteration<typename Iter::World>* begin_iteration(Iter& iter)
+{
+    return &iter;
+}
+*/
 
 }
 

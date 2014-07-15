@@ -1,5 +1,5 @@
-* run::KeySet
 * use variadic templates for easy XML parsing.
+* custom CMakeBuild of tinyxml2
 * base event class (Game::), implement for Run/Race/Forest/... 
   true iff handled??
 * implement Log: current indentation, error/warning tags, etc

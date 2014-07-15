@@ -30,6 +30,7 @@ Currently, these libraries are intented to be used. Please fill in (better) alte
                         (JUCE ?)
                         (https://github.com/betajaen/gorilla ?)
     config            : XML, https://github.com/leethomason/tinyxml2
+                        (I don't like XML. YAML looks better)
     UDP network       :                                               
                         (boost ASIO ?)
                         (https://github.com/joyent/libuv/ ?)
