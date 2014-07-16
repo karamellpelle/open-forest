@@ -18,6 +18,7 @@
 #ifndef BATB_XML_HPP
 #define BATB_XML_HPP
 #include "batb/xml/XML.hpp"
+#include "batb/xml/helpers.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // nanovg

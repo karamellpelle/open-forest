@@ -40,50 +40,41 @@ void testXML()
         return;
     }
 
-    // TODO: these expansions does not work. instead return an object with 
-    //       variadic template operator()!
     std::string str;
     batb::uint n {};
     bool b {};
-    std::cout << "A: " << std::endl;
-    if ( xml::read( xml, "boat", "apple", str ) )
-    {
-        std::cout << "str == " << str << std::endl;
-    }
-    else std::cout << "false." << std::endl;
-    std::cout << std::endl;
-    std::cout << "B: " << std::endl;
-    if ( xml::read( xml, "boat", "apple", str, n ) )
-    {
-        std::cout << "str == " << str << ", n == " << n << std::endl;
-    }
-    else std::cout << "false." << std::endl;
-    std::cout << std::endl;
-    std::string boat = "boat";
-    std::cout << "C: " << std::endl;
-    if ( xml::read( xml, boat, "apple", str, n ) )
-    {
-        std::cout << "str == " << str << ", n == " << n << std::endl;
-    }
-    else std::cout << "false." << std::endl;
-    std::cout << std::endl;
-    std::string apple = "apple";
-    std::cout << "D: " << std::endl;
-    if ( xml::read( xml, "boat", apple, str, n ) )
-    {
-        std::cout << "str ==" << str << ", n == " << n << std::endl;
-    }
-    else std::cout << "false." << std::endl;
-    std::cout << std::endl;
-    std::cout << "E: " << std::endl;
+
+    std::cout << "A: ";
     if ( xml::read( xml, "boat", "apple" ) )
     {
-        std::cout << "true." << std::endl;
+        std::cout << "true.";
     }
     else std::cout << "false." << std::endl;
     std::cout << std::endl;
 
-    
+    std::cout << "B: ";
+    if ( xml::read( xml, "boat", "apple" )( str, n ) )
+    {
+        std::cout << "true, str == " << str << ", n == " << n << "." << std::endl;
+    }
+    else std::cout << "false." << std::endl;
+    std::cout << std::endl;
+
+    batb::uint pos[3] { };
+    std::cout << "C: ";
+    if ( xml::read( xml, "car", "position" )( std::begin( pos ), std::end( pos ) ) )
+    {
+        std::cout << "true"; 
+        std::cout << ", pos[0] == " << pos[0];
+        std::cout << ", pos[1] == " << pos[1];
+        std::cout << ", pos[2] == " << pos[2];
+        std::cout << std::endl;
+    }
+    else std::cout << "false." << std::endl;
+    std::cout << std::endl;
+    //uint point[3];
+    //std::array<3> arr;
+    //xml::read( xml, "character", "position" )( std::begin( point ), std::end( point ) );
 }
 
 int main(int argc, char** argv)

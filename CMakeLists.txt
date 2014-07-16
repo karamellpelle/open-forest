@@ -97,6 +97,7 @@ set( BATB_SOURCES
       # BATB core:
       "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"
       "${MAIN_SOURCE_DIR}/batb/xml/XML.cpp"
+      "${MAIN_SOURCE_DIR}/batb/xml/helpers.cpp"
       "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
       "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
       "${MAIN_SOURCE_DIR}/batb/keys/KeySet.cpp"
