@@ -18,8 +18,8 @@
 #ifndef BATB_RUN_WORLD_HPP
 #define BATB_RUN_WORLD_HPP
 #include "batb/batb_include.hpp"
+#include "batb/Scene.hpp"
 //#include "BATB/Run/RunEvent.hpp"
-//#include "BATB/Run/Scene.hpp"
 //#include "BATB/Run/Player.hpp"
 //#include "BATB/Forest.hpp"
 //#include "BATB/Race.hpp"
@@ -35,9 +35,10 @@ namespace run
 class World
 {
 public:
-    World() //: race( *this ), frames_( 0 ) // worlds shall not be singletons!
-    {
-    }
+    World();
+
+    // rendering target:
+    Scene scene;
 
     //RaceWorld race;
     //IterationStackRaceWorld race_stack;
@@ -45,11 +46,12 @@ public:
     // RunNetwork network;
     // [RunEvent] events;
 
-
+    // tick of world
     tick_t tick;
-    uint frame_count = 0;
+
+    // number of frames iterated (by IterationRun...)
+    uint frames_count = 0;
     
-    //Scene scene;
 };
 
 

@@ -17,6 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/gui/GUI.hpp"
+#include "batb/gui/tb_system.hpp"
 #include "batb/log.hpp"
 #include "batb/keys.hpp"
 #include "batb/xml.hpp"
@@ -32,12 +33,6 @@
 
 
 
-// these are part of TB but not namespace tb, 
-// for some odd reason...
-void register_tbbf_font_renderer();
-void register_stb_font_renderer();
-void register_freetype_font_renderer(); 
-
 
 namespace batb
 {
@@ -47,23 +42,29 @@ namespace gui
 {
 
 
-void GUI::output()
+void GUI::output(const Scene& scene)
 {
+    // TODO: bind FBO, set viewport, ..., from 'scene'
+
+    wth_ = scene.wth; hth_ = scene.hth;
     tb::g_renderer->BeginPaint( wth_, hth_ );
 
     // paint our GUI tree
-    root_.InvokePaint( tb::TBWidget::PaintProps() );
+    root.InvokePaint( tb::TBWidget::PaintProps() );
 
     tb::g_renderer->EndPaint();
 }
 
-void GUI::step()
+void GUI::step(tick_t tick)
 {
+
+
     // set size of GUI, using our screen
     env::screen_size( wth_, hth_ );
-    root_.SetRect( tb::TBRect(0, 0, wth_, hth_) );
+    root.SetRect( tb::TBRect(0, 0, wth_, hth_) );
 
-    // FIXME: set variables/update our TBSystem implementation here
+    // set time for our TBSystem
+    tbsystem_ms( tick * 1000.0 );
 
     // update messages for TB, that is, send TBMessage's from
     // the global message queue to the receiving TBMessageHandler
@@ -74,21 +75,21 @@ void GUI::step()
     tb::TBAnimationManager::Update();
 
     // TB stuff
-    root_.InvokeProcessStates();
-    root_.InvokeProcess();
+    root.InvokeProcessStates();
+    root.InvokeProcess();
     
 }
 
-void GUI::bindKeys()
+void GUI::bind(keys::Keys& keys)
 {
     // binding keys to this GUI object's root widget
-    callback_widget = &root_;
+    callback_widget = &root;
     
-    batb.keys.cursorposCalling(   glfw_callback_cursor_pos );
-    batb.keys.mousebuttonCalling( glfw_callback_mouse_button );
-    batb.keys.scrollCalling(      glfw_callback_scroll );
-    batb.keys.keyCalling(         glfw_callback_key );
-    batb.keys.charCalling(        glfw_callback_char );
+    keys.cursorposCalling(   glfw_callback_cursor_pos );
+    keys.mousebuttonCalling( glfw_callback_mouse_button );
+    keys.scrollCalling(      glfw_callback_scroll );
+    keys.keyCalling(         glfw_callback_key );
+    keys.charCalling(        glfw_callback_char );
 
 }
 
@@ -120,7 +121,7 @@ void begin(GUI& gui)
     if ( auto err = xml::load_document( doc, gui.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
         gui.batb.log << errstr << std::endl;
-        //return;
+        throw std::runtime_error( THIS_FUNCTION );
     }
 
     // TODO: parse xml...
@@ -184,7 +185,7 @@ void begin(GUI& gui)
     }
 
     // Give the root widget a background skin
-    //root_.SetSkinBg(TBIDC("background"));
+    //root.SetSkinBg(TBIDC("background"));
 
     tb::TBWidgetsAnimationManager::Init();
 

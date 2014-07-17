@@ -15,20 +15,28 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PRIM_ITERATION_HPP
-#define BATB_RUN_PRIM_ITERATION_HPP
-#include "Game.hpp"
-#include "BATB/Config.hpp"
-#include "BATB/Run/RunWorld.hpp"
-#include "BATB/Log.hpp"
+#ifndef NANOVG_HPP
+#define NANOVG_HPP
+#include "env.hpp"
+#include "nanovg.h"
+
+// FIXME: since we want OpenGL 3.3+! (NANOVG_GL3_IMPLEMENTATION did not work on my (old linux) computer :( )
+//#define NANOVG_GL3_IMPLEMENTATION 
+#define NANOVG_GL2_IMPLEMENTATION
 
 
-namespace BATB
+extern "C"
 {
 
-typedef Game::Iteration<RunWorld> IterationRunWorld;
-typedef Game::IterationStack<RunWorld> IterationStackRunWorld;
-typedef Game::IterationBeginner<RunWorld> IterationBeginnerRun;
+#ifdef NANOVG_GL2_IMPLEMENTATION
+        struct NVGcontext* nvgCreateGL2(int atlasw, int atlash, int edgeaa);
+#endif
+#ifdef NANOVG_GL3_IMPLEMENTATION
+        struct NVGcontext* nvgCreateGL3(int atlasw, int atlash, int edgeaa);
+#endif
+
 }
 
+
 #endif
+

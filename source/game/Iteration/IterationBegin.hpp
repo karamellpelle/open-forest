@@ -67,6 +67,14 @@ Iteration<typename Iter::World>* begin_iteration(Iter& iter)
     return new IterationBegin<Iter>( iter );
 }
 
+/*
+// if Iter has a 'void Iter::iterate_begin(Iter::World& )' method, use this:
+template <typename Iter>
+Iteration<typename Iter::World>* begin_iteration(Iter* iter)
+{
+    return new IterationBegin<Iter>( &iter );
+}
+*/
 
 // this is _very_ ugly:
 // http://stackoverflow.com/questions/257288/is-it-possible-to-write-a-c-template-to-check-for-a-functions-existence

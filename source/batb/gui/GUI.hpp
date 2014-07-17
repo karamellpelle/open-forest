@@ -28,6 +28,8 @@ namespace batb
 {
 
 class BATB;
+class Scene;
+namespace keys { class Keys; }
 
 namespace gui
 {
@@ -51,17 +53,16 @@ public:
     void saveXML();
 
     // output GUI to env::screen
-    void output();
+    void output(const Scene& );
 
     // step GUI
-    void step();
+    void step(tick_t );
 
     // bind keys to this GUI object
-    void bindKeys();
+    void bind(keys::Keys& );
 
     // root TB widget
-    tb::TBWidget& root() { return root_; }
-
+    tb::TBWidget root;
 
     BATB& batb;
 
@@ -70,13 +71,12 @@ private:
 
     std::string filepath_;
 
-
+    
     uint wth_ = 0;
     uint hth_ = 0;
 
     // TB
     tb::TBRenderer* tb_renderer_ = nullptr;
-    tb::TBWidget root_;
     
     // callbacks
     static tb::TBWidget* callback_widget;

@@ -15,51 +15,33 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/keys/KeySet.hpp"
+#ifndef BATB_GUI_TB_SYSTEM_HPP
+#define BATB_GUI_TB_SYSTEM_HPP
+#include "batb/batb_include.hpp"
+
 
 namespace batb
 {
 
-namespace keys
+namespace gui
 {
 
 
-Key* KeySet::createKeyXML(/*const std::string& filepath*/ /*const XML& xml*/)
-{
-    // FIXME:
-    return nullptr;
-}
+// set time for TBSystem:
+void tbsystem_ms(double t);
 
-void KeySet::clear()
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        delete *i;
-    }
-    keys_.clear();
-}
+// TODO: set DPI, ..., for our TBSystem implementation
 
 
-// FIXME: rename Key::clear()
-// Key::clear() for all keys:
-void KeySet::reset()
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        (*i)->clear();
-    }
-}
-
-// FIXME: rename Key::update()
-// update all keys, to be done at each frame:
-void KeySet::step(tick_t t)
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        (*i)->update( t );
-    }
-}
-
-} // namespace keys
+} // namespace gui
 
 } // namespace batb
+
+
+// these are part of TB but not namespace tb, 
+// for some odd reason...
+void register_tbbf_font_renderer();
+void register_stb_font_renderer();
+void register_freetype_font_renderer(); 
+
+#endif

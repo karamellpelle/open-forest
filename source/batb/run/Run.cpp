@@ -31,7 +31,10 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
-Run::Run(BATB& b) : batb( b ), keyset( b ), iterationRunBegin( b ), iterationRunEnd( b )
+Run::Run(BATB& b) : batb( b ), keyset( b ), 
+                    iterationRunBegin( b ), 
+                    iterationRunEnd( b ),
+                    iterationRunMain( b )
 {
 
 }
@@ -66,7 +69,7 @@ void begin(Run& run)
     if ( auto err = xml::load_document( doc, run.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
         run.batb.log << errstr << std::endl;
-        //return;
+        throw std::runtime_error( THIS_FUNCTION );
     }
 
     // TODO: parse xml...

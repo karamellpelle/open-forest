@@ -15,31 +15,36 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PRIM_SCENE_HPP
-#define BATB_RUN_PRIM_SCENE_HPP
-#include "BATB/Run/Scene.hpp"
+#ifndef BATB_SCENE_HPP
+#define BATB_SCENE_HPP
+#include "batb/Shape.hpp"
 
-namespace BATB
+namespace batb
 {
 
-// start scene for new frame
-inline void scene_begin(Scene* scene)
+
+
+// defining a rendering target for OpenGL
+class Scene
 {
-    // handle size of screen changed
-    uint wth, hth;
-    Env::screenSize( wth, hth );
+public:
+    Scene()             { }
 
-    // set size of Scene
-    scene->size( wth, hth );
+    GLuint fbo          = 0;
 
-    glViewport( 0, 0, wth, hth );
+    uint wth            = 0;
+    uint hth            = 0;
+    Shape shape;
 
-    // bind FBO to work on, i.e. screen
-    //glBindFramebuffer( gl_FRAMEBUFFER, scene->fbo() );
+    glm::mat4 proj2D;
+    glm::mat4 proj3D;
 
-    // clear screen
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-}
+};
+
+
+
+
+
 
 
 }

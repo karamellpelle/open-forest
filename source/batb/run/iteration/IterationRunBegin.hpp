@@ -55,7 +55,7 @@ public:
 
 
 private:
-    void begin_non_core();
+    bool begin_non_core();
 
     uint iteration_count_ = 0;
 };

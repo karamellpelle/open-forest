@@ -15,7 +15,9 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb.hpp"
 #include "batb/run/iteration/IterationRun.hpp"
+#include "batb/run/World.hpp"
 
 namespace batb
 {
@@ -31,19 +33,74 @@ IterationRun::IterationRun(BATB& b) : batb( b )
 
 void IterationRun::iterate(IterationStack& stack, World& world)
 {
-    // begin frame
-    // set Scene, ..., update keys, ...
+    ////////////////////////////////////////    
+    // begin new frame
+    ////////////////////////////////////////
 
-    // actual iteration work, implemented by subclass
+
+    // setup scene for this frame
+    begin( world.scene );
+
+
+    ////////////////////////////////////////
+    // actual iteration, implemented by subclass
+    ////////////////////////////////////////
     iterate_run( stack, world );
-    
-    // finish up, free mem (events, ...)
+ 
 
-    // end frame
-    ++world.frame_count;
+    // set current tick for world.
+    world.tick = env::tick();
+
+    // draw GUI on top of current Scene, update
+    batb.gui.output( world.scene );
+    batb.gui.step( world.tick );
+
+    // update keys
+    batb.run.keyset.step( world.tick );
+
+
+    // TODO: finish up, free mem (events, ...)
+
+
+    // count number of IterationRun-iterations
+    ++world.frames_count;
 }
 
+
+// set up our Scene object for a new frame.
+// currently, our Scene is just the default FBO,
+// the FBO for our env::screen.
+void IterationRun::begin(Scene& scene)
+{
+    // set fragment size of scene. FBO is env::screen
+    env::screen_size( scene.wth, scene.hth );
+
+    // set shape
+    scene.shape.size( scene.wth, scene.hth );
+
+    // set 2D-projection: normalized size, x (left -> right), y (up -> down)
+    scene.proj2D = glm::ortho( 0.0, scene.shape.wth, scene.shape.hth, 0.0 );
+
+    // set 3D-projection: x ( ), y ( ), z ( ) . FIXME.
+    scene.proj3D = glm::perspective( value::proj3DFOVY, scene.shape.wth / scene.shape.hth, value::proj3DNear, value::proj3DFar );
+
+
+    ////////////////////////////////////////    
+    // OpenGL
+    ////////////////////////////////////////
+
+    // define fragment region
+    glViewport( 0, 0, scene.wth, scene.hth );
+
+    // bind FBO 
+    //glBindFramebuffer( gl_FRAMEBUFFER, scene.fbo );
+
+    // clear screen
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 }
 
-}
+
+} // namespace run
+
+} // namespace batb
 

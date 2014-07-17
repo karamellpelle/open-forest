@@ -15,17 +15,12 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-
-#ifndef BATB_ITERATION_RUN_INTRO_HPP
-#define BATB_ITERATION_RUN_INTRO_HPP
-#include "BATB/Run/Prim/Iteration.hpp"
+#include "nanovg.hpp"
 
 
-namespace BATB
-{
+// this must only be included in 1 source file:
+#include "nanovg_gl.h"
 
-typedef IterationRunWorld IterationRunIntro;
 
-}
 
-#endif
+

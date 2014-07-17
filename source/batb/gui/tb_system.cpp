@@ -27,6 +27,31 @@
 #include <stdio.h>
 
 
+// interface for batb::gui to 
+namespace batb
+{
+
+namespace gui
+{
+
+static double tbsystem_time = 0.0;
+
+
+
+// set time for TBSystem:
+void tbsystem_ms(double t)
+{
+    tbsystem_time = t * 1000;   
+
+}
+
+// TODO: inteface for DPI, ...
+
+
+} // namespace gui
+
+} // namespace batb
+
 
 namespace tb
 {
@@ -53,7 +78,7 @@ double TBSystem::GetTimeMS()
 	gettimeofday( &now, NULL );
 	return now.tv_usec/1000 + now.tv_sec*1000;
 */
-    return env::tick() * 1000;   
+    return batb::gui::tbsystem_time;
 }
 
 

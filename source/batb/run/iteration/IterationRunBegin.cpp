@@ -66,8 +66,14 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
     else
     {
         // load & block
-        begin_non_core();
-        //stack.next( game::begin_iteration( batb.run.iterationRunMain );
+        if ( begin_non_core() )
+        {
+            stack.next( game::begin_iteration( batb.run.iterationRunMain ) );
+        }
+        else
+        {
+            stack.finish(); 
+        }
     }
 
     ++iteration_count_;
@@ -75,25 +81,30 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 
 
 // load the non core part
-void IterationRunBegin::begin_non_core()
+bool IterationRunBegin::begin_non_core()
 {
     batb.log << "loading non-core part of BATB... ";
 
-/*
-    // load forest
-    forest::begin( batb.forest );
+    try
+    {
+        // load forest
+        //forest::begin( batb.forest );
 
-    // load race
-    race::begin( batb.race );
+        // load race
+        //race::begin( batb.race );
 
-    // load the rest of run
-    run::begin( batb.run.iterationRunMain );
-
-    // (also load run::World at end??)
-*/
+        // load the rest of run
+        run::begin( batb.run );
+    }
+    catch (std::exception& e)
+    {
+        batb.log << "failure: " << e.what() << std::endl; 
+        return false;
+    }
 
     // loading complete.
-    batb.log << "OK." << std::endl;
+    batb.log << "OK" << std::endl;
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

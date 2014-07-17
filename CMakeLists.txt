@@ -58,7 +58,7 @@ include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
 include_directories( "${MAIN_SOURCE_DIR}" )
 include_directories( "${LIBS_SOURCE_DIR}/tinyxml2" )
 include_directories( "${LIBS_SOURCE_DIR}/glm" )
-include_directories( "${BATB_SOURCE_DIR}/tmp" )
+include_directories( "${BATB_SOURCE_DIR}/tmp/nanovg" )
 
 # set CMake working directory
 set( CMAKE_CURRENT_BINARY_DIR ${CMAKE_SOURCE_DIR}/build )
@@ -113,10 +113,13 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
 
       # add tmp for now
-      "${MAIN_SOURCE_DIR}/batb/tmp/demo.c"
-      "${MAIN_SOURCE_DIR}/batb/tmp/perf.c"
+      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
+      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
+      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
 
 )
 
@@ -203,6 +206,7 @@ if ( BATB_BUILD )
 
     # nanovg
     list( APPEND MAIN_LIBRARIES custom-nanovg ${CUSTOM_NANOVG_LIBRARIES} )
+    list( APPEND MAIN_SOURCES "${MAIN_SOURCE_DIR}/nanovg.cpp" )
 
     # OLD
 # FIXME: ifdef

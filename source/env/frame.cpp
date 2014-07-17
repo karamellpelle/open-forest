@@ -20,6 +20,7 @@
 namespace env
 {
 
+extern GLFWwindow* screen_window_;
 static uint count_ = 0;
 static float_t fps_ = 0.0;
 static float_t fps_delta_ = 1.0;
@@ -41,6 +42,9 @@ void frame_begin()
 
 void frame_end()
 {
+    glfwSwapBuffers( screen_window_ );
+    glfwPollEvents();
+
     ++count_;
 
     static double tick_prev = 0.0;

@@ -19,6 +19,7 @@
 #define BATB_RUN_RUN_HPP
 #include "batb/run/iteration/IterationRunBegin.hpp"
 #include "batb/run/iteration/IterationRunEnd.hpp"
+#include "batb/run/iteration/IterationRunMain.hpp"
 #include "batb/run/KeySet.hpp"
 
 
@@ -59,7 +60,7 @@ public:
     IterationRunBegin     iterationRunBegin;
     IterationRunEnd       iterationRunEnd;
     //IterationRunIntro     iterationRunIntro;
-    //IterationRunMain      iterationRunMain;
+    IterationRunMain      iterationRunMain;
     //IterationRunOutro     iterationRunOutro;
     //IterationRunOld       iterationRunOld; 
 

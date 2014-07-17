@@ -15,16 +15,24 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb/run/World.hpp"
 
-#ifndef BATB_ITERATION_RUN_OUTRO_HPP
-#define BATB_ITERATION_RUN_OUTRO_HPP
-#include "BATB/Run/Prim/Iteration.hpp"
 
-namespace BATB
+namespace batb
 {
 
-typedef IterationRunWorld IterationRunOutro;
+
+namespace run
+{
+
+
+World::World()
+{
 
 }
 
-#endif
+
+} // namespace run
+
+} // namespace batb
+

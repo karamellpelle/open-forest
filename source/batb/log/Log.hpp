@@ -57,12 +57,16 @@ public:
     BATB& batb;
 
     // TMP:
-    std::ostream& operator<<(std::ostream&) { return std::cout; }
+    //std::ostream& operator<<(std::ostream&) { return std::cout; }
 
 private:
     bool initialized_ = false;
 
     class LogStreamBuf streambuf_;
+
+    // TODO:
+    //std::ostream* os_; // from definition.
+    //uint line_indentation_ = 0;
 };
 
 

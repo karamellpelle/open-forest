@@ -17,22 +17,18 @@
 //
 #ifndef BATB_SHAPE_HPP
 #define BATB_SHAPE_HPP
-#include "BATB/BATB_include.hpp"
+#include "batb/batb_include.hpp"
 
-namespace BATB
+namespace batb
 {
 
+
 // normalized size
-// FIXME: force normalization?
 class Shape
 {
 public:
-    Shape() : wth( 0 ), hth( 0 )
-    {
-    }
-    Shape(float_t w, float_t h) : wth( w ), hth( h )
-    {
-    }
+    Shape() : Shape( 0.0, 0.0 )                       { }
+    Shape(float_t w, float_t h) : wth( w ), hth( h )  { }
 
     float_t wth;
     float_t hth;
@@ -40,7 +36,7 @@ public:
     // set shape from size
     void size(uint w, uint h)
     {
-        uint n = std::max( w, h );
+        float_t n = (float_t)( std::max( w, h ) );
         wth = (float_t)( w ) / n;
         hth = (float_t)( h ) / n;
     }

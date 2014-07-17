@@ -15,51 +15,60 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_ITERATION_ITERATION_RUN_HPP
-#define BATB_RUN_ITERATION_ITERATION_RUN_HPP
-#include "batb/batb_include.hpp"
-#include "batb/run/World.hpp"
+#ifndef BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
+#define BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
+#include "batb/run/iteration/IterationRun.hpp"
+
 
 namespace batb
 {
 
 
 class BATB;
-class Scene;
-
-
 
 namespace run
 {
 
-// the type of stack for run::Iteration
-using IterationStack = game::IterationStack<World>;
 
 
-// the type of iterations for run::World
-//using Iteration = game::Iteration<World>;
-class IterationRun : public game::Iteration<World>
+
+// IterationRunMain:
+//    application is loaded, up and running. present the main screen,
+//    after IterationRunIntro (?). here the user starts to use our 
+//    application, this is the "main menu".
+//
+class IterationRunMain : public IterationRun
 {
+friend void begin(IterationRunMain& );
+friend void end(IterationRunMain& );
+
 public:
-    IterationRun(BATB& b);
+    // construct from the containing BATB
+    IterationRunMain(BATB& );
 
-    // this handles each frame, delegating work to subclass 
-    // implementation of 'iterate_run'
-    virtual void iterate(IterationStack& , World& ) final;
+    // iterate
+    void iterate_run(IterationStack& stack, World& world) override;
 
-protected:
-    
-    BATB& batb;
+    // setup before iteration
+    void iterate_begin(World& );
 
-    // subclasses implements this:
-    virtual void iterate_run(IterationStack& , World& ) = 0;
+    ////////////////////////////////////////
 
-private:
-    void begin(Scene& );
+
 };
 
-}
+////////////////////////////////////////////////////////////////////////////////
+//  
 
-}
+void begin(IterationRunMain& );
+
+
+void end(IterationRunMain& );
+
+
+
+} // namespace run
+
+} // namespace batb
 
 #endif

@@ -70,10 +70,12 @@ public:
     void clear();
 
     // Keys::clear() for all keys:
-    void keysClear();
+    // FIXME: rename Key::clear() -> Key::reset()
+    void reset();
 
-    // update all keys, to be done at each frame:
-    void keysUpdate(tick_t t);
+    // update all keys, to be done at end of each frame:
+    // FIXME: rename Key::update(tick_t) -> Key::update(tick_t)
+    void step(tick_t t);
    
 
 private:

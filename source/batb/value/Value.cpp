@@ -56,13 +56,15 @@ void begin(Value& value)
     if ( auto err = xml::load_document( doc, value.filepath_.c_str(), THIS_FUNCTION, errstr ) )
     {
         value.batb.log << errstr << std::endl;
+        throw std::runtime_error( THIS_FUNCTION );
     }
 
+    // default values:
     proj3DNear =        0.1;
     proj3DFar =         512.0;
     proj3DFOVY =        1.047;
 
-    // FIXME: override values if XML definition
+    // FIXME: now override values from XML, if defined
     
     value.initialized_ = true;
 }
@@ -84,7 +86,9 @@ void end(Value& value)
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-
+////////////////////////////////////////////////////////////////////////////////
+//  rendering
+//
 float_t proj3DNear;
 
 float_t proj3DFar;
