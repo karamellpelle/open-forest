@@ -75,6 +75,12 @@ void begin(Run& run)
     // TODO: parse xml...
     run.keyset.loadXML("batb/run/KeySet.xml");
 
+    // note: iterations are set up by iterationRunBegin, instead of here,
+    //       despite this Run object holds the iterations. is this wanted
+    //       behaviour? IterationRunBegin/IterationRunEnd are never set up
+    //       by this function. and it is nice to let iterationRunBegin load
+    //       all parts of BATB in a sequence, in order to make interactive
+    //       loading.
     run.initialized_ = true;
 }
 

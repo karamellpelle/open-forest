@@ -232,7 +232,7 @@ if ( BATB_BUILD )
 
     # define target properties
     set_target_properties( batb PROPERTIES
-                           OUTPUT_NAME "batb"
+                           OUTPUT_NAME "open-forest"
                            #CLEAN_DIRECT_OUTPUT 1
                            #VERSION ${})
                          )

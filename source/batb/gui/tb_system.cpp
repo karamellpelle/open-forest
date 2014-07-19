@@ -41,7 +41,7 @@ static double tbsystem_time = 0.0;
 // set time for TBSystem:
 void tbsystem_ms(double t)
 {
-    tbsystem_time = t * 1000;   
+    tbsystem_time = t;   
 
 }
 

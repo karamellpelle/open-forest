@@ -94,6 +94,13 @@ bool IterationRunBegin::begin_non_core()
         //race::begin( batb.race );
 
         // load the rest of run
+        // FIXME: init iterations here or by begin(Run& )?
+        //        the two iterations iterationRunBegin/
+        //        iterationRunEnd are not set up by begin(Run& ).
+        //        also, if we want interactive loading, it is nice
+        //        to do all loading of the parts of BATB in a sequence 
+        //        here...
+        run::begin( batb.run.iterationRunMain );
         run::begin( batb.run );
     }
     catch (std::exception& e)

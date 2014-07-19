@@ -33,7 +33,7 @@ void screen_begin_()
 
     using namespace xml;
 
-    XMLHandle xml( doc_ );
+    XMLHandle xml = XMLHandle( doc_ ).FirstChildElement( "env" ).FirstChildElement( "screen" );
 
     // set hints to window
     // http://www.glfw.org/docs/latest/window.html#window_hints
@@ -65,7 +65,7 @@ void screen_begin_()
         unsigned int w = wth;
         unsigned int h = hth;
         xml_size_wth->QueryUnsignedText( &w );
-        xml_size_wth->QueryUnsignedText( &h );
+        xml_size_hth->QueryUnsignedText( &h );
         wth = w;
         hth = h;
     }

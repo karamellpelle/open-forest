@@ -118,7 +118,8 @@ void begin(IterationRunMain& iter)
     // add windows (GUI is up and running)
     // FIXME: memory management is performed by TB??
     auto* window = new tb::TBWindow();
-    window->SetRect( tb::TBRect(0, 0, 128, 64 ) );
+    window->SetRect( tb::TBRect(40, 40, 256, 256 ) );
+    window->SetText( "testing turbobadger. a window." );
 
     iter.batb.gui.root.AddChild( window );
 }

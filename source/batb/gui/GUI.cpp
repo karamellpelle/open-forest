@@ -60,7 +60,6 @@ void GUI::step(tick_t tick)
 
 
     // set size of GUI, using our screen
-    env::screen_size( wth_, hth_ );
     root.SetRect( tb::TBRect(0, 0, wth_, hth_) );
 
     // set time for our TBSystem
