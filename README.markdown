@@ -22,17 +22,15 @@ vertex arrays, etc.), C++11, etc.
 Currently, these libraries are intented to be used. Please fill in (better) alternatives...
 
     graphics          : OpenGL, GLFW, GLEW
-    sound             : 
-                        (OpenAL ?)
+    sound             : (OpenAL ?)
     input             : GLFW
     GUI               : https://github.com/fruxo/turbobadger          
                         (CEGUI ?)
                         (JUCE ?)
                         (https://github.com/betajaen/gorilla ?)
     config            : XML, https://github.com/leethomason/tinyxml2
-                        (I don't like XML. YAML looks better)
-    UDP network       :                                               
-                        (boost ASIO ?)
+                        (I don't like XML. YAML looks like a better candidate)
+    UDP network       : (boost ASIO ?)
                         (https://github.com/joyent/libuv/ ?)
     3D rendering      : OGRE                                          
                         (OpenSceneGraph ?)
@@ -44,12 +42,10 @@ Currently, these libraries are intented to be used. Please fill in (better) alte
     collision         : (do we need this?)
                         (Bullet3D ?)
     linear            : GLM
-    3D animation      : 
-                        (OGRE ?)
+    3D animation      : (OGRE ?)
     video             : OGRE
                         (libTheora?)
-    c++               :                                               
-                        (boost.filesystem ?)
+    c++               : (boost.filesystem ?)
                         (boost.hash ?)
                         (boost.integer ?)
                         (boost.geometry?)

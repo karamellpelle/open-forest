@@ -15,24 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_CAMERA_HPP
-#define BATB_CAMERA_HPP
-#include "BATB/Config.hpp"
-
-
-namespace BATB
-{
-
-class Camera 
-{
-public:
-
-private:
-};
-
-
-}
-
+#ifndef BATB_OLD_HPP
+#define BATB_OLD_HPP
+#include "batb/old/old.hpp"
 
 #endif
-

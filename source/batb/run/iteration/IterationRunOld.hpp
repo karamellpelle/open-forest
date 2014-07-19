@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,54 +15,60 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_ITERATION_RUN_OLD_HPP
-#define BATB_ITERATION_RUN_OLD_HPP
-#include "BATB/Run/Prim/Iteration.hpp"
-#include "BATB/Config.hpp"
+#ifndef BATB_RUN_ITERATION_ITERATION_RUN_OLD_HPP
+#define BATB_RUN_ITERATION_ITERATION_RUN_OLD_HPP
+#include "batb/run/iteration/IterationRun.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
 
-// iterate-iteration
-class IterationRunOld1 : IterationRunWorld
+class BATB;
+
+namespace run
 {
-friend class IterationRunOld0;
+
+
+
+
+// IterationRunOld:
+//    runs the old BATB code (this project is a fork of that), fully inside
+//    the new BATB (open-forest)
+//
+class IterationRunOld : public IterationRun
+{
+friend void begin(IterationRunOld& );
+friend void end(IterationRunOld& );
 
 public:
-    void iterate(IterationStackRunWorld& stack, RunWorld& run);
+    // construct from the containing Run object
+    IterationRunOld(BATB& );
+
+    // iterate
+    void iterate_run(IterationStack& stack, World& world) override;
+
+    // setup before iteration
+    void iterate_begin(World& );
+
+    ////////////////////////////////////////
+
 
 private:
-    void create(xml::XMLElement* cfg);
-    void destroy();
 };
 
+////////////////////////////////////////////////////////////////////////////////
+//  
+
+void begin(IterationRunOld& );
 
 
-// begin-iteration 
-class IterationRunOld0 : public IterationBeginnerRun
-{
-public:
-    IterationRunOld0(IterationRunOld1* iter1) : IterationBeginnerRun( iter1 ) { }
-
-    static IterationRunOld0*    create(xml::XMLElement* );
-    static void                 destroy(IterationRunOld0* iter);
-
-
-protected:
-    void world_begin(RunWorld& );
-
-    void destroy();
-};
+void end(IterationRunOld& );
 
 
 
+} // namespace run
 
-
-// externals are only referring to the starting iteration:
-typedef IterationRunOld0 IterationRunOld;
-
-}
+} // namespace batb
 
 #endif

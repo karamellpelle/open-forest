@@ -491,7 +491,7 @@ bool XmlParser::parseRoute(TokenStream& input, Run*& run) const
 
 void XmlParser::readRoute(Run* run) const
 {
-    std::string filename( old_file("routes/") );
+    std::string filename( old::file("routes/") );
     filename += run->id() + ".xml";
     std::filebuf buffer;
     buffer.open(filename.c_str(), std::ios::in);

@@ -471,7 +471,7 @@ static void loadImage128(char* filename)
     {
 	fprintf(stderr, "Error reading a texture.\n");
 	//exit(-1);
-        BATB::exit( -1 );
+        old::exit( -1 );
     }
 
     for (y = 0; y < 128; y++)
@@ -501,7 +501,7 @@ static void loadImage128(char* filename)
     {
 	fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
 	//exit(-1);
-        BATB::exit( -1 );
+        old::exit( -1 );
     }
 }
 
@@ -515,7 +515,7 @@ static void loadImage(const char* filename)
     {
 	fprintf(stderr, "Error reading a texture.\n");
 	//exit(-1);
-        BATB::exit( -1 );
+        old::exit( -1 );
     }
 
     int nComponents = 0;
@@ -568,7 +568,7 @@ static void loadImage(const char* filename)
     {
 	fprintf(stderr, "GLULib%s\n", (char *) gluErrorString(gluerr));
 	//exit(-1);
-        BATB::exit( -1 );
+        old::exit( -1 );
     }
     free(tex);
 }

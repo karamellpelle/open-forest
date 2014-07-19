@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -100,6 +100,7 @@ bool IterationRunBegin::begin_non_core()
         //        also, if we want interactive loading, it is nice
         //        to do all loading of the parts of BATB in a sequence 
         //        here...
+        run::begin( batb.run.iterationRunOld );
         run::begin( batb.run.iterationRunMain );
         run::begin( batb.run );
     }

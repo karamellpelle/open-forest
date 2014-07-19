@@ -1,54 +1,44 @@
-#ifndef BATB_OLD_HPP
-#define BATB_OLD_HPP
-#include <iostream>
-#include <string>
-#include "BATB/BATB_include.hpp"
-#include "BATB.hpp"
+#ifndef BATB_OLD_OLD_HPP
+#define BATB_OLD_OLD_HPP
+#include "env.hpp"
+
+
+namespace old
+{
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void old_begin();
+void begin();
 
-void old_end();
+void end();
 
-////////////////////////////////////////////////////////////////////////////////
-inline std::string old_file(const char* path)
-{
-    // executable is built into "build/" folder, point to data dir
-    static std::string prefix = "data/old/";
+void exit(int err);
 
-    return prefix + path;
-}
+bool exited();
 
-inline int oldGetElapsedTime()
-{
-    // assuming not too long elaps from Env::init to old start.
-    Env::tick_t tick = Env::tick();
-    return (int)( tick * 1000.0 );
-}
 
-namespace BATB
-{
+// we need these to port old-BATB into new-BATB
+// the display functions drive the whole old-BATB...
+typedef void (*DisplayFunc)();
 
-inline void exit(int err)
-{
-    extern bool old_exit;
-    std::cout << "old exiting: " << err << std::endl;
-    old_end();
-    old_exit = true;
-}
+void set_display_func(DisplayFunc );
 
-inline bool is_exit()
-{
-    extern bool old_exit;
-    return old_exit;
-    
-}
+DisplayFunc get_display_func();
 
-}
+
+std::string file(const char* path);
+
+int getElapsedTime();
+
+
+
+
+} // namespace old
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
-// removing GLUT-binding!
+// removing the GLUT-binding of plib that old-BATB used:
 //
 #include <plib/pu.h>
 
@@ -68,8 +58,8 @@ inline void puGetWindowSizeOLD ( int *width, int *height )
 {
     //*width  = glutGet ( (GLenum) OLD_WINDOW_WIDTH  ) ;
     //*height = glutGet ( (GLenum) OLD_WINDOW_HEIGHT ) ;
-    Env::uint wth, hth;
-    Env::screenSize( wth, hth );
+    env::uint wth, hth;
+    env::screen_size( wth, hth );
 
     *width = wth;
     *height = hth;
@@ -81,7 +71,7 @@ inline void puSetWindowSizeOLD ( int width, int height )
     return;
 }
 
-inline void puInitOLD ()
+inline void puInitOLD()
 {
     puSetWindowFuncs ( puGetWindowOLD,
 		       puSetWindowOLD,
@@ -91,16 +81,6 @@ inline void puInitOLD ()
 }
 
 
-// we need these for display functions, since we are not using GLUT:
-// also, the old-BATB display functions drive the whole game, i.e. iterates it.
 
-
-
-
-// we need these to port old-BATB into new-BATB
-// the display functions drive the whole old-BATB...
-typedef void (*DisplayFunc)();
-void set_display_func(DisplayFunc );
-DisplayFunc get_display_func();
 
 #endif

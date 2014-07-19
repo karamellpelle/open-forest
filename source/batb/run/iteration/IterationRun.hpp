@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -47,10 +47,9 @@ public:
     // implementation of 'iterate_run'
     virtual void iterate(IterationStack& , World& ) final;
 
-protected:
-    
     BATB& batb;
 
+protected:
     // subclasses implements this:
     virtual void iterate_run(IterationStack& , World& ) = 0;
 

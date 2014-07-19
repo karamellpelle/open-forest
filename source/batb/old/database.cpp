@@ -1023,7 +1023,7 @@ void Database::removeRun(Run* run) throw(NotFound)
     allRuns.erase(ri, allRuns.end());
     
     // remove the route file as well
-    std::string filename( old_file("routes/").c_str() );
+    std::string filename( old::file("routes/").c_str() );
     filename += run->id() + ".xml";
     remove(filename.c_str());
 

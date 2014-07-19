@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -66,15 +66,6 @@ Iteration<typename Iter::World>* begin_iteration(Iter& iter)
 {
     return new IterationBegin<Iter>( iter );
 }
-
-/*
-// if Iter has a 'void Iter::iterate_begin(Iter::World& )' method, use this:
-template <typename Iter>
-Iteration<typename Iter::World>* begin_iteration(Iter* iter)
-{
-    return new IterationBegin<Iter>( &iter );
-}
-*/
 
 // this is _very_ ugly:
 // http://stackoverflow.com/questions/257288/is-it-possible-to-write-a-c-template-to-check-for-a-functions-existence

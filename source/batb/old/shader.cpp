@@ -114,7 +114,7 @@ static void printShaderInfoLog(GLuint shader)
         {
             printf("ERROR: Could not allocate InfoLog buffer\n");
             //exit(1);
-            BATB::exit( 1 );
+            old::exit( 1 );
         }
         glGetShaderInfoLog(shader, infologLength, &charsWritten, infoLog);
         printf("Shader InfoLog:\n%s\n\n", infoLog);
@@ -146,7 +146,7 @@ static void printProgramInfoLog(GLuint program)
         {
             printf("ERROR: Could not allocate InfoLog buffer\n");
             //exit(1);
-            BATB::exit( 1 );
+            old::exit( 1 );
         }
         glGetProgramInfoLog(program, infologLength, &charsWritten, infoLog);
         printf("Program InfoLog:\n%s\n\n", infoLog);
@@ -184,7 +184,7 @@ static int shaderSize(const char *fileName, EShaderType shaderType)
         default:
             printf("ERROR: unknown shader file type\n");
             //exit(1);
-            BATB::exit( 1 );
+            old::exit( 1 );
             break;
     }
 
@@ -236,7 +236,7 @@ static int readShader(const char *fileName, EShaderType shaderType, char *shader
         default:
             printf("ERROR: unknown shader file type\n");
             //exit(1);
-            BATB::exit( 1 );
+            old::exit( 1 );
             break;
     }
 

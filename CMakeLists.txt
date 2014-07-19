@@ -114,6 +114,7 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
 
       # add tmp for now
@@ -210,12 +211,12 @@ if ( BATB_BUILD )
 
     # OLD
 # FIXME: ifdef
-    #add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
-    #include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
-    #set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
-    #list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
-    #list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
-# FIXME: endif
+    add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
+    include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
+    set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
+    list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
+    list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
+# endif
 
     # turbobadger
     include_directories( ${MAIN_SOURCE_DIR}/batb/gui )
@@ -224,6 +225,7 @@ if ( BATB_BUILD )
     # batb
     list( APPEND MAIN_LIBRARIES ${BATB_LIBRARIES} )
     list( APPEND MAIN_SOURCES ${BATB_SOURCES} ${FILE_SOURCES} ${ENV_SOURCES})
+
 
 
     ###########################################################

@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 #include "batb/run/iteration/IterationRunBegin.hpp"
 #include "batb/run/iteration/IterationRunEnd.hpp"
 #include "batb/run/iteration/IterationRunMain.hpp"
+#include "batb/run/iteration/IterationRunOld.hpp"
 #include "batb/run/KeySet.hpp"
 
 
@@ -62,7 +63,7 @@ public:
     //IterationRunIntro     iterationRunIntro;
     IterationRunMain      iterationRunMain;
     //IterationRunOutro     iterationRunOutro;
-    //IterationRunOld       iterationRunOld; 
+    IterationRunOld       iterationRunOld; 
 
 
 private:

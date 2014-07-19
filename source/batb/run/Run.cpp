@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,8 @@ namespace run
 Run::Run(BATB& b) : batb( b ), keyset( b ), 
                     iterationRunBegin( b ), 
                     iterationRunEnd( b ),
-                    iterationRunMain( b )
+                    iterationRunMain( b ),
+                    iterationRunOld( b )
 {
 
 }

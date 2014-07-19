@@ -1,4 +1,4 @@
-//    orienteering-game: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -89,21 +89,20 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     {
         // escaping from IterationMain finishes iteration.
         batb.log << "IterationRunMain ->" << std::endl;
-        return;
+        return stack.finish();
     }
 
     // run old-BATB if old-key released
     if ( batb.run.keyset.old->released() )
     {
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
-        //stack.next( game::begin_iteration( batb.run.iterationRunOld ), 
-        //            game::begin_iteration( this ) );
-        return;
+        return stack.next(  game::begin_iteration( batb.run.iterationRunOld ), 
+                            game::begin_iteration( *this ) );
     }
 
 
     // continue with this itertion, unless stack handled
-    stack.next( this );
+    return stack.next( this );
 
 }
 

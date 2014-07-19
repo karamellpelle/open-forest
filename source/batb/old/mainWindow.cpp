@@ -136,10 +136,10 @@ static void initTextures()
     // for each tree type assign: min and max height and width,
     // occurrence frequency (probability it will be chosen)
 #if 1
-    loadTexture(treeTextures[0], old_file( "images/manty.rgb" ).c_str() );
-    loadTexture(treeTextures[1], old_file( "images/kuusi.rgb").c_str() );
-    loadTexture(treeTextures[2], old_file( "images/rauduskoivu.rgb").c_str());
-    loadTexture(treeTextures[3], old_file( "images/pihlaja.rgb").c_str());
+    loadTexture(treeTextures[0], old::file( "images/manty.rgb" ).c_str() );
+    loadTexture(treeTextures[1], old::file( "images/kuusi.rgb").c_str() );
+    loadTexture(treeTextures[2], old::file( "images/rauduskoivu.rgb").c_str());
+    loadTexture(treeTextures[3], old::file( "images/pihlaja.rgb").c_str());
 #else
     Forest forest;
     forest.addTreeType(20, 35, 10, 15, 10,
@@ -170,7 +170,7 @@ static void initTextures()
 #endif
 
     glActiveTexture(GL_TEXTURE1);
-    loadTexture(altgradTextures[0], old_file( "images/altgrad.rgb").c_str());
+    loadTexture(altgradTextures[0], old::file( "images/altgrad.rgb").c_str());
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_3D, noiseTextures[0]);
@@ -453,9 +453,9 @@ void MainWindow::specialUpFn(int key, int, int)
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::glfwCursorPos(GLFWwindow* win, double x, double y)
 {
-    bool left_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_LEFT );
-    bool right_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_RIGHT ); 
-    bool middle_press = glfwGetMouseButton( Env::screenWindow(), GLFW_MOUSE_BUTTON_MIDDLE ); 
+    bool left_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_LEFT );
+    bool right_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_RIGHT ); 
+    bool middle_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_MIDDLE ); 
 
     // motionfn
     if ( left_press || right_press || middle_press )
@@ -1289,7 +1289,7 @@ void MainWindow::init()
     // init database
     Database& db = Database::instance();
     const XmlParser& xmlParser = XmlParser::instance();
-    xmlParser.readFile( old_file("batbdb.xml").c_str(), db);
+    xmlParser.readFile( old::file("batbdb.xml").c_str(), db);
     db.ensureMinimalDB();
     db.addObserver(&mainWindow);
 
@@ -1436,7 +1436,7 @@ void MainWindow::updateDisplayFunc()
 	    //glutIdleFunc(NULL);
 
             // display func...
-            set_display_func( NULL );
+            old::set_display_func( NULL );
 	}
 	else
 	{
@@ -1444,7 +1444,7 @@ void MainWindow::updateDisplayFunc()
 	    //glutIdleFunc(displayFunc);
 
             // display func...
-            set_display_func( displayFunc );
+            old::set_display_func( displayFunc );
 	}
     }
     catch (std::out_of_range& ex)
@@ -1893,7 +1893,7 @@ void MainWindow::set_location_cb(puObject *cb)
 void MainWindow::quit_ok_cb(puObject *)
 {
     Database& db = Database::instance();
-    db.write( old_file("batbdb.xml").c_str() );
+    db.write( old::file("batbdb.xml").c_str() );
     db.discard();
 
     delete windowMessages;
@@ -1909,7 +1909,7 @@ void MainWindow::quit_ok_cb(puObject *)
 #endif
 
     //exit(0);
-    BATB::exit( 0 );
+    old::exit( 0 );
 }
 
 void MainWindow::join2_quit_cb(puObject *dlg)

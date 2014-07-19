@@ -1,110 +1,96 @@
-#include "BATB/Run.hpp"
-#include "BATB/Run/Prim/Scene.hpp"
+//    open-forest: an orientering game.
+//    Copyright (C) 2014  carljsv@student.matnat.uio.no
+//
+//    This program is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License along
+//    with this program; if not, write to the Free Software Foundation, Inc.,
+//    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
+#include "batb.hpp"
+#include "batb/old.hpp"
 
-#include "old.hpp"
+namespace batb
+{
 
-
-namespace BATB
+namespace run
 {
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-IterationRunOld0* IterationRunOld0::create(xml::XMLElement* elem)
-{
-    log << __PRETTY_FUNCTION__ << std::endl;
-    static IterationRunOld1 iter1;
-    static IterationRunOld0 iter0( &iter1 );
-
-    // FIXME: create iter0 (cannot be overloaded)
-
-    iter1.create( elem );
-
-    return &iter0;
-}
-
-
-void IterationRunOld0::destroy(IterationRunOld0* iter0)
-{
-    // destroy 'iter'
-    iter0->next()->destroy();
-    iter0->destroy();
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void IterationRunOld1::create(xml::XMLElement* elem)
-{
-    using namespace xml;
-
-    XMLHandle xml( elem );
-    // init data for this from xml config
-    
-}
-
-void IterationRunOld1::destroy()
-{
-
-}
-
-void IterationRunOld0::destroy()
+IterationRunOld::IterationRunOld(BATB& b) : IterationRun( b )
 {
 
 }
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-void IterationRunOld0::world_begin(RunWorld& run)
+void IterationRunOld::iterate_begin(World& world)
 {
-    log << "IterationRunOld0::iterate" << std::endl;
+    batb.log << THIS_FUNCTION << std::endl;
 
-    old_begin();
+    old::begin();
+
 }
 
 
-void IterationRunOld1::iterate(IterationStackRunWorld& stack, RunWorld& run)
+void IterationRunOld::iterate_run(IterationStack& stack, World& world)
 {
     // handle old-errors
-    if ( is_exit() ) return;
+    if ( old::exited() ) return;
 
-    // begin Scene for this frame
-    scene_begin( run.scene() );
       
-    
-    theRun()->keys->keys_update( Env::tick() );
-
-
     // "glut display func"
-    DisplayFunc disp = get_display_func();
-    if ( disp != 0 )
+    if ( old::DisplayFunc disp = old::get_display_func() )
     {
         disp();
     }
 
 
-    if ( theRun()->keys->old->released() )
+    if ( batb.run.keyset.old->released() )
     {
-        // => iterate escape from IterationRunOld
-        log << "IterationRunOld ->" << std::endl;
-        old_end();
+        batb.log << "IterationRunOld -> " << std::endl;
+        old::end();
 
-        stack.push();
+        return stack.finish();
     }
     else
     {
-        stack.push( this );
+        return stack.next( this );
     }
 
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+
+void begin(IterationRunOld& iter)
+{
+    iter.batb.log << THIS_FUNCTION << std::endl;
 }
+
+void end(IterationRunOld& iter)
+{
+    iter.batb.log << THIS_FUNCTION << std::endl;
+}
+
+
+} // namespace run
+
+} // namespace batb
+
+
+
+
+
+
+
+
 
