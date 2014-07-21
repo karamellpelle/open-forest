@@ -42,14 +42,10 @@ void IterationRunOld::iterate_begin(World& world)
 
 void IterationRunOld::iterate_run(IterationStack& stack, World& world)
 {
-    // handle old-errors
-    if ( old::exited() ) return;
-
-      
-    // "glut display func"
-    if ( old::DisplayFunc disp = old::get_display_func() )
+    if ( !old::exited() )
     {
-        disp();
+        // iterate 
+        old::iterate();
     }
 
 

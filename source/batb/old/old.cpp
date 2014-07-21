@@ -16,32 +16,6 @@ namespace old
 void begin()
 {
     
-    // old-BATB did not like our GL-state...
-    // still after the following GL-changes, font is not showing up
-    // for gameplay in old-BATB
-    //
-    // also, old-BATB sets state we don't like...
-    //
-    // see: nanovg_gl.h: static void glnvg__renderFlush(void* uptr, int alphaBlend)
-    glDisable( GL_BLEND );
-    glEnable( GL_DEPTH_TEST );
-    glDisable( GL_STENCIL_TEST );
-    glDisable( GL_CULL_FACE );
-    glColorMask( GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE );
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glBindVertexArray(0);
-    glUseProgram(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-#ifndef NANOVG_GLES2
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-#endif
-    glBindTexture(GL_TEXTURE_2D, 0);
 
     // old-BATB didn't like to be initialized more than once :(
     // hence, ignore re-init for specified parts, and continue with previous state
@@ -156,10 +130,6 @@ void begin()
         nightTrees = installShaders(nightTreeVS, nightTreeFS);
         setUniform1i(nightTrees, "Trees", 0); // sampler
     }
-        // force reshape
-        env::uint wth, hth;
-        env::screen_size( wth, hth );
-        MainWindow::reshapefn( wth, hth );
 
         // enter main loop
         //if (dayShader && nightShader)
@@ -187,7 +157,52 @@ void end()
     // FIXME!
 }
 
+void iterate()
+{
+    // old-BATB did not like our GL-state...
+    // still after the following GL-changes, font is not showing up
+    // for gameplay in old-BATB
+    //
+    // also, old-BATB sets state we don't like...
+    //
+    // see: nanovg_gl.h: static void glnvg__renderFlush(void* uptr, int alphaBlend)
+    glDisable( GL_BLEND );
+    glEnable( GL_DEPTH_TEST );
+    glDisable( GL_STENCIL_TEST );
+    glDisable( GL_SCISSOR_TEST );
+    glDisable( GL_CULL_FACE );
+    glColorMask( GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE );
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glBindVertexArray(0);
+    glUseProgram(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+#ifndef NANOVG_GLES2
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+#endif
+    glBindTexture(GL_TEXTURE_2D, 0);
 
+	//glDisableClientState(GL_COLOR_ARRAY);
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+
+   
+    // force reshape
+    env::uint wth, hth;
+    env::screen_size( wth, hth );
+    MainWindow::reshapefn( wth, hth );
+
+    // "glut display func"
+    if ( DisplayFunc disp = get_display_func() )
+    {
+        disp();
+    }
+}
 
 static bool old_exit = false;
 

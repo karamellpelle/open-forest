@@ -47,11 +47,17 @@ public:
     // implementation of 'iterate_run'
     virtual void iterate(IterationStack& , World& ) final;
 
+    // FIXME:
+    //virtual void iterate_begin(World& ) final;
+
     BATB& batb;
 
 protected:
     // subclasses implements this:
-    virtual void iterate_run(IterationStack& , World& ) = 0;
+    virtual void iterate_run_begin(IterationStack& , World& ) = 0;
+
+    // FIXME:
+    //virtual void begin_iterate_run(World& ) = 0;
 
 private:
     void begin(Scene& );

@@ -10,12 +10,19 @@ namespace old
 
 void begin();
 
+void iterate();
+
 void end();
+
+////////////////////////////////////////////////////////////////////////////////
+//  handle old-errors (system exit)
+//
 
 void exit(int err);
 
 bool exited();
 
+////////////////////////////////////////////////////////////////////////////////
 
 // we need these to port old-BATB into new-BATB
 // the display functions drive the whole old-BATB...
@@ -25,7 +32,8 @@ void set_display_func(DisplayFunc );
 
 DisplayFunc get_display_func();
 
-
+////////////////////////////////////////////////////////////////////////////////
+//
 std::string file(const char* path);
 
 int getElapsedTime();
