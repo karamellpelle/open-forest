@@ -37,27 +37,24 @@ using IterationStack = game::IterationStack<World>;
 
 
 // the type of iterations for run::World
-//using Iteration = game::Iteration<World>;
 class IterationRun : public game::Iteration<World>
 {
 public:
     IterationRun(BATB& b);
 
-    // this handles each frame, delegating work to subclass 
+    // this handles each frame, delegating work to the subclass 
     // implementation of 'iterate_run'
     virtual void iterate(IterationStack& , World& ) final;
 
-    // FIXME:
-    //virtual void iterate_begin(World& ) final;
+    // also, each subclass should typically create a non-virtual method:
+    // void iterate_begin(World& );
 
     BATB& batb;
 
 protected:
     // subclasses implements this:
-    virtual void iterate_run_begin(IterationStack& , World& ) = 0;
+    virtual void iterate_run(IterationStack& , World& ) = 0;
 
-    // FIXME:
-    //virtual void begin_iterate_run(World& ) = 0;
 
 private:
     void begin(Scene& );

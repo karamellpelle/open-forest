@@ -12,6 +12,7 @@
 namespace old
 {
 
+static bool do_exit = false;
 
 void begin()
 {
@@ -21,11 +22,9 @@ void begin()
     // hence, ignore re-init for specified parts, and continue with previous state
     static bool empty = true;
     
-    // also, if there where a previous error ("system exit"), just ignore all
-    if ( old::exited() )
-    {
-        return;
-    }
+    // clear exit, making possible to start over again
+    //do_exit = false;
+
         // copied from old::main:
         //MainWindow::winPosX = 100;
         //MainWindow::winPosY = 100;
@@ -67,7 +66,9 @@ void begin()
         // Initialize the "OpenGL Extension Wrangler" library
         //glewInit();
     }
+
         mainWindow.initLights();
+
     if ( empty )
     {
         mainWindow.init();
@@ -129,6 +130,14 @@ void begin()
         readShaderSource( old::file("shader/nightTree").c_str(), &nightTreeVS, &nightTreeFS);
         nightTrees = installShaders(nightTreeVS, nightTreeFS);
         setUniform1i(nightTrees, "Trees", 0); // sampler
+
+        // BUGFIX:
+        free( dayVSSource );
+        free( dayFSSource );
+        free( nightVSSource );
+        free( nightFSSource );
+        free( nightTreeVS );
+        free( nightTreeFS );
     }
 
         // enter main loop
@@ -143,6 +152,8 @@ void begin()
 
 void end()
 {
+    // FIXME: old-BATB specific shutdown
+
     // remove key callbacks
     glfwSetKeyCallback( env::screen_window(), 0  );                  //glutKeyboardFunc      (MainWindow::keyDownFn); 
     glfwSetCursorPosCallback( env::screen_window(), 0 );       //glutMouseFunc         (MainWindow::mousefn); 
@@ -150,21 +161,13 @@ void end()
     glfwSetWindowSizeCallback( env::screen_window(), 0 );     //glutReshapeFunc       (MainWindow::reshapefn);
     glfwSetWindowFocusCallback( env::screen_window(), 0 );   //glutVisibilityFunc    (MainWindow::visibility);
 
-    // reset clear color
-    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
-    // reset the OpenGL state BATB assumes
-    // FIXME!
+
+
 }
 
 void iterate()
 {
-    // old-BATB did not like our GL-state...
-    // still after the following GL-changes, font is not showing up
-    // for gameplay in old-BATB
-    //
-    // also, old-BATB sets state we don't like...
-    //
     // see: nanovg_gl.h: static void glnvg__renderFlush(void* uptr, int alphaBlend)
     glDisable( GL_BLEND );
     glEnable( GL_DEPTH_TEST );
@@ -190,8 +193,11 @@ void iterate()
 	//glDisableClientState(GL_COLOR_ARRAY);
 	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	//glDisableClientState(GL_VERTEX_ARRAY);
+        
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
 
-   
     // force reshape
     env::uint wth, hth;
     env::screen_size( wth, hth );
@@ -200,22 +206,69 @@ void iterate()
     // "glut display func"
     if ( DisplayFunc disp = get_display_func() )
     {
+        // set the clear color old-BATB has set in MainWindow::displayXXX:
+        if ( disp == MainWindow::mapDF )
+        {
+            glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
+        }
+        else if ( disp == MainWindow::terrainDF )
+        {
+            Database& db = Database::instance();
+            Event* event = db.getSelectedEvent();
+            bool night = event->night();
+            if ( night )
+            {
+                glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+            }
+            else
+            {
+                glClearColor(0.0, 0.746, 1.0, 1.0);
+            }
+        }
+        else
+        {
+            // from 'initLights'
+            GLfloat day_clear_r   = 0.541; GLfloat day_clear_g   = 0.6196; GLfloat day_clear_b = 1.0;
+            glClearColor(day_clear_r, day_clear_g, day_clear_b, 1.0);
+        }
+
+        // display a frame
         disp();
     }
+
+
+    // reset the OpenGL state to what new-BATB assumes
+    // (see MainWindow::displayMap/MainWindow::displayTerrain)
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+    glShadeModel(GL_SMOOTH);
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    //glDisable(GL_CULL_FACE);
+    //glDisable(GL_DEPTH_TEST);
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 }
 
-static bool old_exit = false;
 
 void exit(int err)
 {
     std::cout << THIS_FUNCTION << err << std::endl;
-    old::end();
-    old_exit = true;
+    //old::end(); we cant end here, it gives segfault (glfwPollEvents)
+    do_exit = true;
 }
 
-bool exited()
+bool is_exit()
 {
-    return old_exit;
+    return do_exit;
 }
 
 

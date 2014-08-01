@@ -22,6 +22,7 @@
 // TB
 #include "tb/tb_renderer.h"
 #include "tb/tb_window.h"
+#include "tb/tb_font_renderer.h"
 
 
 namespace batb

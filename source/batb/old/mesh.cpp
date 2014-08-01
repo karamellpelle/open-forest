@@ -233,6 +233,9 @@ void Facet::clearTriangles()
 Facet::~Facet()
 {
     std::for_each(trees.begin(), trees.end(), del_fun<Tree>());
+    
+    // BUGFIX: only single tree used
+    delete tree;
 }
 
 int Mesh::density = 2;
@@ -256,6 +259,18 @@ Mesh::~Mesh()
 {
     freeVertexArray();
 
+    // BUGFIX: delete trees of facet
+    //         this now done in ~Facet
+/*
+    for (int i = 0; i != facets->dim1(); ++i)
+    {
+    for (int j = 0; j != facets->dim2(); ++j)
+    {
+        Facet& f = (*facets)( i, j );
+        
+    }
+    }
+*/
     delete facets;
     delete coords;
 }
@@ -347,13 +362,17 @@ void Mesh::freeVertexArray()
 
     for (int i = 0; i < width; i++) 
     {
-	delete vertex[i];
-	delete normal[i];
-	delete texture[i];
+        // BUGFIX: delete[]
+	delete[] vertex[i];
+	delete[] normal[i];
+	delete[] texture[i];
     }
-    delete vertex;
-    delete normal;
-    delete texture;
+    // BUGFIX: delete[]
+    delete[] vertex;
+    delete[] normal;
+    delete[] texture;
+
+    // FIXME: delete trees
 }
 
 // draw the ground using vertex array

@@ -9,9 +9,9 @@ set(BATB_VERSION_MAJOR 0)
 set(BATB_VERSION_MAJOR 1)
 
 # set compiler flags
-# FIXME: into build option
-set( CMAKE_CXX_FLAGS      "-std=c++11 -g -pg -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
-set( CMAKE_C_FLAGS        "-g -pg -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" )
+# FIXME: into build options: -g -pg
+set( CMAKE_CXX_FLAGS      "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+set( CMAKE_C_FLAGS        "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" )
 
 # set folders
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
@@ -214,6 +214,11 @@ if ( BATB_BUILD )
     add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
     include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
     set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
+
+    #include_directories( "/home/karamellpelle/Tmp/plib-install/include" )
+    #set( KLIB "/home/karamellpelle/Tmp/plib-install/lib" )
+    #set( BATB_OLD_LIBRARIES "${KLIB}/libplibpuaux.a" "${KLIB}/libplibpu.a" "${KLIB}/libplibfnt.a" "${KLIB}/libplibsg.a" "${KLIB}/libplibul.a" -lGLEW -lGL -lGLU -lm -lc)
+
     list( APPEND MAIN_LIBRARIES ${BATB_OLD_LIBRARIES} )
     list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
 # endif

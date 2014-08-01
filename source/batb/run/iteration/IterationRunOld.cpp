@@ -42,24 +42,32 @@ void IterationRunOld::iterate_begin(World& world)
 
 void IterationRunOld::iterate_run(IterationStack& stack, World& world)
 {
-    if ( !old::exited() )
+    if ( old::is_exit() )
     {
-        // iterate 
-        old::iterate();
-    }
-
-
-    if ( batb.run.keyset.old->released() )
-    {
-        batb.log << "IterationRunOld -> " << std::endl;
         old::end();
-
         return stack.finish();
     }
     else
     {
-        return stack.next( this );
+        // do
+        old::iterate();
+
+        // think
+        if ( batb.run.keyset.old->released() )
+        {
+            batb.log << "IterationRunOld -> " << std::endl;
+            old::end();
+
+            return stack.finish();
+        }
+        else
+        {
+            return stack.next( this );
+        }
     }
+
+
+
 
 }
 

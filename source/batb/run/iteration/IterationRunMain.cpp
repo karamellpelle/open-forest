@@ -56,7 +56,14 @@ void IterationRunMain::iterate_begin(World& run)
     std::cout << "\n\n\n\n";
     std::cout << "press INSERT to toggle old-BATB..." << std::endl;
     std::cout << "click ESCAPE to exit from main..." << std::endl;
+    std::cout << "try the 'i' button..." << std::endl;
     std::cout << "\n\n\n\n";
+
+    // show GUI window
+    if ( widget_->GetParent() == nullptr )
+    {
+        batb.gui.root.AddChild( widget_ );
+    }
 
     // nanovg demo
     tmp::nanovg::demo_begin();
@@ -95,6 +102,12 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     // run old-BATB if old-key released
     if ( batb.run.keyset.old->released() )
     {
+        // remove window
+        if ( widget_->GetParent() != nullptr )
+        {
+            batb.gui.root.RemoveChild( widget_ );
+        }
+
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
         return stack.next(  game::begin_iteration( batb.run.iterationRunOld ), 
                             game::begin_iteration( *this ) );
@@ -114,13 +127,14 @@ void begin(IterationRunMain& iter)
 {
     iter.batb.log << THIS_FUNCTION << std::endl;
 
-    // add windows (GUI is up and running)
-    // FIXME: memory management is performed by TB??
+    // create GUI widget. GUI is up and running...
+    // NOTE: memory management is performed by TB!
     auto* window = new tb::TBWindow();
     window->SetRect( tb::TBRect(40, 40, 256, 256 ) );
     window->SetText( "testing turbobadger. a window." );
+    window->SetGravity( tb::WIDGET_GRAVITY_ALL );
+    iter.widget_ = window;
 
-    iter.batb.gui.root.AddChild( window );
 }
 
 void end(IterationRunMain& iter)

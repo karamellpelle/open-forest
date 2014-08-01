@@ -131,8 +131,8 @@ CsElement read(tinyxml2::XMLDocument& doc, const Cs&... cs)
 {
 
     // note that a XML document, i.e. a XML file, requires 
-    // one and only one parent element (???), which we work on.
-    // note that this element is ignored in our Cs-path...
+    // one and only one parent element (???).
+    // this element is not ignored in our Cs-path (???)
 
     auto* child = doc.RootElement();
     if ( child )

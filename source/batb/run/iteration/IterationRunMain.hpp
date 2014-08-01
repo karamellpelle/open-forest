@@ -54,6 +54,8 @@ public:
 
     ////////////////////////////////////////
 
+private:
+    tb::TBWidget* widget_ = nullptr;
 
 };
 

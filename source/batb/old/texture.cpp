@@ -570,7 +570,9 @@ static void loadImage(const char* filename)
 	//exit(-1);
         old::exit( -1 );
     }
-    free(tex);
+    // BUGFIX:
+    delete[] tex;
+    //free(tex);
 }
 
 void loadTexture(GLuint texture, const char* filename)

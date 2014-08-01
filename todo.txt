@@ -1,10 +1,8 @@
-* use variadic templates for easy XML parsing.
 * custom CMakeBuild of tinyxml2
 * base event class (Game::), implement for Run/Race/Forest/... 
   true iff handled??
 * implement Log: current indentation, error/warning tags, etc
-* compile_sh, make clean
-* functions for clearing nanovg GL-state (it messes up alot). see readme for nanovg project on github
+* compile_sh -> build (clean, pull-submodules) 
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger

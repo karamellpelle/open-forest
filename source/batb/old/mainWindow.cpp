@@ -320,7 +320,7 @@ void MainWindow::glfwKey(GLFWwindow* win, int key, int scan, int action, int mod
     if ( c != 0 )
     {
         std::cout << "keyDownFn: " << (int)(c) << std::endl;
-        MainWindow::keyDownFn( key, 0, 0 );
+        MainWindow::keyDownFn( c, 0, 0 );
     }
 
 }
@@ -1896,6 +1896,9 @@ void MainWindow::quit_ok_cb(puObject *)
     db.write( old::file("batbdb.xml").c_str() );
     db.discard();
 
+    // FIXME: this below caused segfault. however
+    //        no memory is released...
+/*
     delete windowMessages;
 
     DlgStack& dlgStack = DlgStack::instance();
@@ -1907,8 +1910,7 @@ void MainWindow::quit_ok_cb(puObject *)
 #ifdef WIN32
     socketCleanup();
 #endif
-
-    //exit(0);
+*/
     old::exit( 0 );
 }
 
