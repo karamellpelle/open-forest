@@ -1,8 +1,9 @@
 # for help, see
-# http://www.cmake.org/cmake/help/cmake_tutorial.html
-# http://www.cmake.org/Wiki/CMake_Useful_Variables
+#   http://www.itk.org/Wiki/CMake_FAQ#Writing_CMakeLists.txt
+#   http://www.cmake.org/cmake/help/cmake_tutorial.html
+#   http://www.cmake.org/Wiki/CMake_Useful_Variables
 cmake_minimum_required( VERSION 2.6 )
-project ( batb )
+project ( open-forest )
 
 # set version
 set(BATB_VERSION_MAJOR 0)
@@ -21,6 +22,13 @@ set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
 
 
 ################################################################################
+# find library GLEW
+find_package( GLEW )
+if ( NOT GLEW_FOUND )
+    message( FATAL_ERROR "GLEW not found (open-forest depends on this library)" )
+endif()
+
+################################################################################
 # build library 'glfw'
 #
 # there seems to be a bug, GLFW_LIBRARIES does not contain libXcursor.
@@ -33,13 +41,20 @@ add_subdirectory( ${GLFW_SOURCE_DIR} )
 
 
 ################################################################################
+# build library 'custom-tinyxml2'
+# this will create
+#   custom-tinyxml2                   : target
+#   CUSTOM_TINYXML2_INCLUDE_DIRS      : include directory for library
+#   CUSTOM_TINYXML2_LIBRARIES         : link libs for library
+add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/tinyxml2 )
+
+################################################################################
 # build library 'custom-nanovg'
 # this will create
 #   custom-nanovg                     : target
 #   CUSTOM_NANOVG_INCLUDE_DIRS        : include directory for library
 #   CUSTOM_NANOVG_LIBRARIES           : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/nanovg )
-include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
 
 ################################################################################
 # build library 'custom-turbobadger'
@@ -48,7 +63,6 @@ include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
 #   CUSTOM_TURBOBADGER_INCLUDE_DIRS   : include directories for library
 #   CUSTOM_TURBOBADGER_LIBRARIES      : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/turbobadger )
-include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
 
 
 # 
@@ -56,14 +70,11 @@ include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
 # set additional include directories
 #
 include_directories( "${MAIN_SOURCE_DIR}" )
-include_directories( "${LIBS_SOURCE_DIR}/tinyxml2" )
 include_directories( "${LIBS_SOURCE_DIR}/glm" )
 include_directories( "${BATB_SOURCE_DIR}/tmp/nanovg" )
 
 # set CMake working directory
 set( CMAKE_CURRENT_BINARY_DIR ${CMAKE_SOURCE_DIR}/build )
-# ..., but place executables in this folder instead:
-#set( EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build )
 
 
 # options and default settings
@@ -194,23 +205,36 @@ if ( BATB_BUILD )
     set( MAIN_LIBRARIES "" )
     set( MAIN_SOURCES "${MAIN_SOURCE_DIR}/main.cpp" )
 
-    # FIXME: into custom
-    add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
-    list( APPEND MAIN_LIBRARIES tinyxml2 )
     
     # GLEW
-    list( APPEND MAIN_LIBRARIES -lGLEW )
+    include_directories( APPEND MAIN_LIBRARIES ${GLEW_INCLUDE_DIRS} )
+    list( APPEND MAIN_LIBRARIES ${GLEW_LIBRARIES} )
 
     # GLFW
     include_directories( "${GLFW_SOURCE_DIR}/include" )
     list( APPEND MAIN_LIBRARIES glfw ${GLFW_LIBRARIES} )
 
+    #add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
+    #list( APPEND MAIN_LIBRARIES tinyxml2 )
+    #list( APPEND MAIN_LIBRARIES custom-tinyxml2 ${CUSTOM_TINYXML2_LIBRARIES} )
+
+    # tinyxml2
+    include_directories( ${CUSTOM_TINYXML2_INCLUDE_DIRS} )
+    list( APPEND MAIN_LIBRARIES custom-tinyxml2 ${CUSTOM_TINYXML2_LIBRARIES} )
+
     # nanovg
+    include_directories( ${CUSTOM_NANOVG_INCLUDE_DIRS} )
     list( APPEND MAIN_LIBRARIES custom-nanovg ${CUSTOM_NANOVG_LIBRARIES} )
-    list( APPEND MAIN_SOURCES "${MAIN_SOURCE_DIR}/nanovg.cpp" )
+    list( APPEND MAIN_SOURCES "${MAIN_SOURCE_DIR}/nanovg.cpp" ) # also add our implementation source file
+
+    # turbobadger
+    include_directories( ${CUSTOM_TURBOBADGER_INCLUDE_DIRS} )
+    include_directories( ${MAIN_SOURCE_DIR}/batb/gui )          # also add our tb_config.h implementation
+    list( APPEND MAIN_LIBRARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
+
 
     # OLD
-# FIXME: ifdef
+# ifdef "build old"
     add_definitions( -DPU_USE_NONE ) # remove GLUT from plib
     include_directories( "${MAIN_SOURCE_DIR}/batb/old" )
     set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc)
@@ -223,10 +247,6 @@ if ( BATB_BUILD )
     list( APPEND MAIN_SOURCES ${BATB_OLD_SOURCES} )
 # endif
 
-    # turbobadger
-    include_directories( ${MAIN_SOURCE_DIR}/batb/gui )
-    list( APPEND MAIN_LIBRARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
-
     # batb
     list( APPEND MAIN_LIBRARIES ${BATB_LIBRARIES} )
     list( APPEND MAIN_SOURCES ${BATB_SOURCES} ${FILE_SOURCES} ${ENV_SOURCES})
@@ -235,17 +255,15 @@ if ( BATB_BUILD )
 
     ###########################################################
     # create executable target 'batb'
-    add_executable( batb ${MAIN_SOURCES} ) 
+    add_executable( open-forest ${MAIN_SOURCES} ) 
 
     # define target properties
-    set_target_properties( batb PROPERTIES
+    set_target_properties( open-forest PROPERTIES
                            OUTPUT_NAME "open-forest"
-                           #CLEAN_DIRECT_OUTPUT 1
-                           #VERSION ${})
                          )
    
     # libraries to target
-    target_link_libraries( batb ${MAIN_LIBRARIES} )
+    target_link_libraries( open-forest ${MAIN_LIBRARIES} )
 
 endif()
 

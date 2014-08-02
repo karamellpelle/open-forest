@@ -1,9 +1,9 @@
-project ( custom-turbobadger C )
+project ( custom-turbobadger CXX )
 cmake_minimum_required( VERSION 2.6 )
 
 # set flags, based on turbobadger Makefile
 # we see that turbobadger wants nullptr and some other stuff
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Dnullptr=0 --std=c++0x" ) # FIXME: not just linux... but gives compile error otherwise in tb_select.cpp
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++0x -DLINUX" ) # FIXME: not just linux... but gives compile error otherwise in tb_select.cpp
 
 set( CUSTOM_TURBOBADGER_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs/turbobadger )
 list( APPEND CUSTOM_TURBOBADGER_INCLUDE_DIRS ${CUSTOM_TURBOBADGER_SOURCE_DIR}/src )
