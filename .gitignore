@@ -1,6 +1,6 @@
 .*.swp
 .DS_Store
 gmon.out
-leaks-batb.txt
+leaks-*.txt
 session.vim
 tmp
