@@ -12,7 +12,16 @@
 namespace old
 {
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
 static bool do_exit = false;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
 
 void begin()
 {
@@ -161,8 +170,10 @@ void end()
     glfwSetWindowSizeCallback( env::screen_window(), 0 );     //glutReshapeFunc       (MainWindow::reshapefn);
     glfwSetWindowFocusCallback( env::screen_window(), 0 );   //glutVisibilityFunc    (MainWindow::visibility);
 
+    // do some clean up
+    mainWindow.exit();
 
-
+    reset_gl();
 
 }
 
@@ -179,7 +190,20 @@ void iterate()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
-    glBindVertexArray(0);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+    glDisableVertexAttribArray(5);
+    glDisableVertexAttribArray(6);
+    glDisableVertexAttribArray(7);
+    glDisableVertexAttribArray(8);
+    glDisableVertexAttribArray(9);
+    glDisableVertexAttribArray(10);
+    glDisableVertexAttribArray(11);
+    glDisableVertexAttribArray(12);
+    glDisableVertexAttribArray(13);
+    glDisableVertexAttribArray(14);
+    glDisableVertexAttribArray(15);
     glUseProgram(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -189,6 +213,8 @@ void iterate()
     glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 #endif
     glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable( GL_LIGHTING );
+    glDisable( GL_COLOR_MATERIAL );
 
 	//glDisableClientState(GL_COLOR_ARRAY);
 	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -197,6 +223,7 @@ void iterate()
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
 
     // force reshape
     env::uint wth, hth;
@@ -236,7 +263,13 @@ void iterate()
         disp();
     }
 
+    // reset back to our invariant 
+    reset_gl();
+}
 
+
+void reset_gl()
+{
     // reset the OpenGL state to what new-BATB assumes
     // (see MainWindow::displayMap/MainWindow::displayTerrain)
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
@@ -257,7 +290,6 @@ void iterate()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 }
-
 
 void exit(int err)
 {

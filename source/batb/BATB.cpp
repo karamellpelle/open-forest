@@ -74,6 +74,7 @@ void begin(BATB& batb)
     //////////////////////////////////////////////////////////
     //      OpenGL
     // BATB assumes this GL state:
+    glDepthFunc( GL_LEQUAL ); 
     //set_gl_state();
 
 

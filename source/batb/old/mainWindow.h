@@ -178,6 +178,8 @@ class MainWindow
     static void enableDisplayFunc();
     static void disableDisplayFunc();
 
+    // new batb interface
+    void exit(); // release mem
  private:
     static void updateDisplayFunc();
 

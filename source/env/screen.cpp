@@ -45,7 +45,7 @@ void screen_begin_()
     //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
     //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
     //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
-    
+    glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );    
     glfwWindowHint( GLFW_DECORATED, GL_FALSE ); // window close functionality is not implemented anyway
 
     // FIXME: parse hints after above hints

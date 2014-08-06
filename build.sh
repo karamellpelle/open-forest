@@ -22,25 +22,24 @@ function do_get-submodules()
     # create git submodules (libs/)
 
     # glfw
-    git submodule init libs/glfw          #glfw
+    git submodule init libs/glfw         
     git submodule update libs/glfw
 
     # nanovg
-    #git submodule init libs/nanovg        #nanovg
-    #git submodule update libs/nanovg 
+    git submodule init libs/nanovg     
+    git submodule update libs/nanovg 
 
     # tinyxml2
-    git submodule init libs/tinyxml2      #tinyxml
+    git submodule init libs/tinyxml2   
     git submodule update libs/tinyxml2
 
     # turbobadger
     git submodule init libs/turbobadger   #turbobadger
     git submodule update libs/turbobadger
-
-    # libvpx
-    #git submodule init libs/libvpx        #libvpx
-    #git submodule update libs/libvpx
-
+    
+    # yaml-cpp
+    git submodule init libs/yaml-cpp      
+    git submodule update libs/yaml-cpp
 
     # boost
     #git submodule init libs/boost         #boost
@@ -52,11 +51,10 @@ function do_get-submodules()
 
 function do_usage()
 {
-    echo "usage:"
-    echo "       $THIS_NAME                  : same as '$THIS_NAME build'"
+    echo "usage: $THIS_NAME                  : same as '$THIS_NAME build'"
     echo "       $THIS_NAME build            : build into './build' folder, using CMake"
     echo "       $THIS_NAME clean            : clean build"
-    echo "       $THIS_NAME pull-submodules  : retrieve git-submodules (only needed for first build)"
+    echo "       $THIS_NAME init-submodules  : retrieve git-submodules (only needed for first build)"
 }
 
 
@@ -77,8 +75,8 @@ else
       "clean")  
           do_clean
           ;;
-      "pull-submodules")  
-          do_pull-submodules
+      "init-submodules")  
+          do_init-submodules
           ;;
       *)  
           do_usage

@@ -789,7 +789,7 @@ void MainWindow::displayMapDay(void)
 {
     checkSockets();
     /* Clear the screen */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // regardless off
     OrienteerProxy& orienteerProxy = OrienteerProxy::instance();
 	MapProxy& mapProxy = MapProxy::instance();
 	glLoadIdentity();
@@ -841,7 +841,7 @@ void MainWindow::displayTerrainDay(void)
 {
     checkSockets();
     /* Clear the screen */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // remove
     OrienteerProxy& orienteerProxy = OrienteerProxy::instance();
     orienteerProxy.adjustStepLength(standingStill);
     orienteerProxy.newPosition();
@@ -864,7 +864,7 @@ void MainWindow::displayTerrainNight(void)
 {
     checkSockets();
     /* Clear the screen */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // remove
     OrienteerProxy& orienteerProxy = OrienteerProxy::instance();
     orienteerProxy.adjustStepLength(standingStill);
     orienteerProxy.newPosition();
@@ -891,7 +891,7 @@ void MainWindow::callContinuation(void)
 
 void MainWindow::generateMapDisplayFn(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // remove
 
     MapProxy& mapProxy = MapProxy::instance();
     float percentComplete = mapProxy.continueRealize();
@@ -931,7 +931,7 @@ void MainWindow::generateMapDisplayFn(void)
 
 void MainWindow::generateTerrainDisplayFn(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // remove
 
     TerrainProxy& terrainProxy = TerrainProxy::instance();
     float percentComplete = terrainProxy.continueRealize();
@@ -1895,25 +1895,34 @@ void MainWindow::quit_ok_cb(puObject *)
     Database& db = Database::instance();
     db.write( old::file("batbdb.xml").c_str() );
     db.discard();
-
-    // FIXME: this below caused segfault. however
-    //        no memory is released...
-/*
-    delete windowMessages;
-
-    DlgStack& dlgStack = DlgStack::instance();
-    DlgBase* dlgConfirm = dlgStack.pop();
-    delete dlgConfirm;
-    DlgBase* dlgMenu = dlgStack.pop();
-    delete dlgMenu;
-    puDeleteObject(fps_text);
-#ifdef WIN32
-    socketCleanup();
-#endif
-*/
+    // (stuff putted into MainWindow::exit()...)
     old::exit( 0 );
 }
 
+void MainWindow::exit()
+{
+    static bool empty = true;
+    // this below caused segfault in quit_ok_cb, hence put 
+    // it here
+
+    // this function just works once...
+    if ( empty )
+    {
+        delete windowMessages;
+
+        DlgStack& dlgStack = DlgStack::instance();
+        DlgBase* dlgConfirm = dlgStack.pop();
+        delete dlgConfirm;
+        DlgBase* dlgMenu = dlgStack.pop();
+        delete dlgMenu;
+        puDeleteObject(fps_text);
+    #ifdef WIN32
+        socketCleanup();
+    #endif
+    }
+
+    empty = false;
+}
 void MainWindow::join2_quit_cb(puObject *dlg)
 {
     DlgStack& dlgStack = DlgStack::instance();

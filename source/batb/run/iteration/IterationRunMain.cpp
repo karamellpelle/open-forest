@@ -66,7 +66,7 @@ void IterationRunMain::iterate_begin(World& run)
     }
 
     // nanovg demo
-    tmp::nanovg::demo_begin();
+    //tmp::nanovg::demo_begin();
 
 
 }
@@ -83,7 +83,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     static bool premult; static bool blowup;
     if ( batb.run.keyset.u->click() ) premult = !premult;
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
-    tmp::nanovg::demo_iterate( premult, blowup );
+    //tmp::nanovg::demo_iterate( premult, blowup );
 
 
 
@@ -130,7 +130,10 @@ void begin(IterationRunMain& iter)
     // create GUI widget. GUI is up and running...
     // NOTE: memory management is performed by TB!
     auto* window = new tb::TBWindow();
-    window->SetRect( tb::TBRect(40, 40, 256, 256 ) );
+    window->SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
+    window->SetSize(256, 256 );
+    //window->Position( 40, 40 );
+
     window->SetText( "testing turbobadger. a window." );
     window->SetGravity( tb::WIDGET_GRAVITY_ALL );
     iter.widget_ = window;
