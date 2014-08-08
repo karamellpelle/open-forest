@@ -23,10 +23,15 @@ namespace env
 {
 
 
+// private:
+extern YAML::Node doc_;
+
 void screen_begin_();
 
 void screen_end_();
 
+////////////////////////////////////////////////////////////////////////////////
+// public:
 
 // the GLFW window
 inline GLFWwindow* screen_window()

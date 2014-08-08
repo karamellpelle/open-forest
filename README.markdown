@@ -64,21 +64,28 @@ Currently, GLFW, tinyxml2, nanovg, GLM, turbobadger, are up and running.
 Building
 --------------------
 
-This git project depends on submodules. Run
+The current libraries are needed:
+    - boost (I have version 1.55.0)
+    - GLEW  (I have version 1.10.0)
 
-    $ ./submodules
+In addition, this git project depends on submodules. Run
 
-to get these projects too. Building can then be done with
+    $ ./build.sh init-submodules
 
-    $ ./compile_it
+the first time to get the needed submodules. 
 
-, creating a program `build/batb` 
+Building can then be done with
+
+    $ ./build.sh
+
+, creating a program `build/open-forest`.
 
 
 
 old-BATB
 ---------------------
-the old game "Beat About The Bush" is still runnable in this fork.
+The old game "Beat About The Bush" is still runnable in this fork, and
+it needs additional libs (plib, ..., see the original repository)
 
 
 Contact

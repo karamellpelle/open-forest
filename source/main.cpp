@@ -38,8 +38,9 @@ int main(int argc, char** argv)
 
     try
     {
+        
         // create our environment
-        env::begin( file::dynamic_data( "env.xml" ) );
+        env::begin( file::dynamic_data( "env.yaml" ) );
 
         // initialize the core parts of BATB.
         // the non-core part is created by 'iterationRunBegin'

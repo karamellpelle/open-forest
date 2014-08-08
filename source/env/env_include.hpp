@@ -17,7 +17,7 @@
 //
 #ifndef ENV_INCLUDE_HPP
 #define ENV_INCLUDE_HPP
-#include "tinyxml2.h"
+#include "yaml-cpp/yaml.h"
 #include "include.hpp"
 
 #include <GL/glew.h>    // must be done before GLFW!!
@@ -34,7 +34,6 @@ typedef include::uint uint;
 // float or double?
 typedef include::float_t float_t;
 
-namespace xml = tinyxml2;
 
 // the type for our ticks
 typedef double tick_t;

@@ -24,16 +24,23 @@ namespace env
 
 GLFWwindow* screen_window_ = nullptr;
 
-extern xml::XMLDocument doc_;
 
 
 void screen_begin_()
 {
-    // TODO: print GL info if verbose setting in XML
+    // TODO: print GL info if verbose setting in config
 
-    using namespace xml;
+    GLFWmonitor* monitor = nullptr;
 
-    XMLHandle xml = XMLHandle( doc_ ).FirstChildElement( "env" ).FirstChildElement( "screen" );
+    // default settings, to be overridden by XML
+    uint wth = 640;
+    uint hth = 480;
+    bool fullscreen = false;
+    uint samples = 0;
+    std::string title = "";
+
+
+    YAML::Node yaml = doc_[ "screen" ];
 
     // set hints to window
     // http://www.glfw.org/docs/latest/window.html#window_hints
@@ -50,48 +57,37 @@ void screen_begin_()
 
     // FIXME: parse hints after above hints
 
-    // default settings, to be overridden by XML
-    uint wth = 640;
-    uint hth = 480;
-    GLFWmonitor* monitor = 0;
-    uint samples = 0;
-
 
     // size
-    XMLElement* xml_size_wth = xml.FirstChildElement("size").FirstChildElement("wth").ToElement();
-    XMLElement* xml_size_hth = xml.FirstChildElement("size").FirstChildElement("hth").ToElement();
-    if ( xml_size_wth && xml_size_hth )
     {
-        unsigned int w = wth;
-        unsigned int h = hth;
-        xml_size_wth->QueryUnsignedText( &w );
-        xml_size_hth->QueryUnsignedText( &h );
-        wth = w;
-        hth = h;
+        YAML::Node node = yaml[ "size" ];
+        wth = node[ "wth" ].as<uint>( wth );
+        hth = node[ "hth" ].as<uint>( hth );
     }
 
-    // fullscreen?
-    XMLElement* xml_fullscreen = xml.FirstChildElement("fullscreen").ToElement();
-    if ( xml_fullscreen )
+    // fullscreen
     {
-        bool fullscreen = false;
-        xml_fullscreen->QueryBoolText( &fullscreen );
-        monitor = fullscreen ? glfwGetPrimaryMonitor() : 0;
+        YAML::Node node = yaml[ "fullscreen" ];
+        monitor = node.as<bool>( fullscreen ) ? glfwGetPrimaryMonitor() : 0;
     }
 
-    XMLElement* xml_multisamples = xml.FirstChildElement("multisamples").ToElement();
-    if ( xml_multisamples )
+    // multisamples
     {
-        unsigned int n = samples;
-        xml_multisamples->QueryUnsignedText( &n );
-        samples = n;
+        YAML::Node node = yaml[ "multisamples" ];
+        samples = node.as<uint>( samples );
+
+        // set MSAA samples
+        glfwWindowHint( GLFW_SAMPLES, samples ); 
     }
 
+    // title
+    {
+        YAML::Node node = yaml[ "title" ];
+        title = node.as<std::string>( title );
+    }
 
-    // set MSAA samples
-    glfwWindowHint( GLFW_SAMPLES, samples ); 
-
-    screen_window_ = glfwCreateWindow( wth, hth, "OpenForest", monitor, 0 );
+    
+    screen_window_ = glfwCreateWindow( wth, hth, title.c_str(), monitor, 0 );
 
     // set GL context as 'theWindow_'
     glfwMakeContextCurrent( screen_window_ );
@@ -110,12 +106,15 @@ void screen_begin_()
         os << "env : ERROR: could not init GLEW, " << glewGetErrorString( err );
         throw std::runtime_error( os.str() );
     }
+
 }
 
 
 void screen_end_()
 {
     glfwDestroyWindow( screen_window_ ); 
+
+    screen_window_ = nullptr;
 }
 
 

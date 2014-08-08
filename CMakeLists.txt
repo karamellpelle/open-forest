@@ -64,8 +64,11 @@ add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/nanovg )
 #   CUSTOM_TURBOBADGER_LIBRARIES      : link libs for library
 add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/turbobadger )
 
+################################################################################
+# build library 'yaml-cpp'
+set( YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE) # disable "testing and parse tools"
+add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 
-# 
 ################################################################################
 # set additional include directories
 #
@@ -214,10 +217,6 @@ if ( BATB_BUILD )
     include_directories( "${GLFW_SOURCE_DIR}/include" )
     list( APPEND MAIN_LIBRARIES glfw ${GLFW_LIBRARIES} )
 
-    #add_library(tinyxml2 STATIC ${LIBS_SOURCE_DIR}/tinyxml2/tinyxml2.cpp)
-    #list( APPEND MAIN_LIBRARIES tinyxml2 )
-    #list( APPEND MAIN_LIBRARIES custom-tinyxml2 ${CUSTOM_TINYXML2_LIBRARIES} )
-
     # tinyxml2
     include_directories( ${CUSTOM_TINYXML2_INCLUDE_DIRS} )
     list( APPEND MAIN_LIBRARIES custom-tinyxml2 ${CUSTOM_TINYXML2_LIBRARIES} )
@@ -232,6 +231,9 @@ if ( BATB_BUILD )
     include_directories( ${MAIN_SOURCE_DIR}/batb/gui )          # also add our tb_config.h implementation
     list( APPEND MAIN_LIBRARIES custom-turbobadger ${CUSTOM_TURBOBADGER_LIBRARIES} )
 
+    # yaml-cpp
+    include_directories( ${LIBS_SOURCE_DIR}/yaml-cpp/include )
+    list( APPEND MAIN_LIBRARIES yaml-cpp )
 
     # OLD
 # ifdef "build old"
