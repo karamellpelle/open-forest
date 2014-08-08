@@ -20,7 +20,6 @@
 #include "batb/batb_include.hpp"
 #include "batb/log.hpp"
 #include "batb/value.hpp"
-#include "batb/xml.hpp"
 #include "batb/keys.hpp"
 #include "batb/gui.hpp"
 //#include "batb/forest.hpp"
@@ -44,7 +43,6 @@ public:
     // these are the parts of BATB fully initialized by 'void begin(BATB& )'.
     // we need a minimum part for 'iterationRunBegin' to work.
     log::Log log;
-    xml::XML xml;
     value::Value value;
     keys::Keys keys;
     gui::GUI gui;
@@ -55,8 +53,8 @@ public:
     //race::Race race;
     run::Run run;
 
-    // save this BATB object to its XML file
-    void saveXML();
+    // save this BATB object to its file
+    void save();
 
 private:
     bool initialized_ = false;

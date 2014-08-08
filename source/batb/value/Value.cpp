@@ -16,7 +16,6 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/value/Value.hpp"
-#include "batb/xml.hpp"
 #include "batb/BATB.hpp"
 
 
@@ -30,19 +29,10 @@ namespace value
 ////////////////////////////////////////////////////////////////////////////////
 //  Value
 
-void Value::saveXML()
+void Value::save()
 {
-    xml::Document doc;
-
     // FIXME: populate
-    // ignore for now...
-/*
-    std::string errstr;
-    if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
-    {
-        batb.log << errstr << std::endl;
-    }
-*/
+    YAML::Node yaml;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,21 +40,15 @@ void Value::saveXML()
 
 void begin(Value& value)
 {
-    // set up this BATB object from XML
-    xml::Document doc;
-    std::string errstr;
-    if ( auto err = xml::load_document( doc, value.filepath_.c_str(), THIS_FUNCTION, errstr ) )
-    {
-        value.batb.log << errstr << std::endl;
-        throw std::runtime_error( THIS_FUNCTION );
-    }
+    // set up this Value object from file
+    YAML::Node yaml = YAML::Load( value.filepath_ );
 
     // default values:
     proj3DNear =        0.1;
     proj3DFar =         512.0;
     proj3DFOVY =        1.047;
 
-    // FIXME: now override values from XML, if defined
+    // FIXME: now override values, if defined
     
     value.initialized_ = true;
 }
@@ -73,8 +57,8 @@ void end(Value& value)
 {
     if ( value.initialized_ )
     {
-        // save the configuration to its XML file
-        value.saveXML();
+        // save the configuration to its file
+        value.save();
 
 
         

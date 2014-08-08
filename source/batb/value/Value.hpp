@@ -43,7 +43,7 @@ public:
     {
         filepath_ = path;
     }
-    void saveXML();
+    void save();
 
     BATB& batb;
 

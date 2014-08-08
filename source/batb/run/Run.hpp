@@ -45,12 +45,11 @@ friend void end(Run& );
 public:
     Run(BATB& b);
 
-    // XML file
     void filepath(const std::string& path)
     {
         filepath_ = path;
     }
-    void saveXML();
+    void save();
 
 
 

@@ -42,17 +42,10 @@ Run::Run(BATB& b) : batb( b ), keyset( b ),
 
 
 
-void Run::saveXML()
+void Run::save()
 {
 
-    xml::Document doc;
-    // FIXME: populate
-
-    //std::string errstr;
-    //if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
-    //{
-    //    batb.log << errstr << std::endl;
-    //}
+    // FIXME: write to file
 }
 
 
@@ -64,17 +57,11 @@ void begin(Run& run)
     run.batb.log << THIS_FUNCTION << std::endl;    
 
 
-    // set up this BATB object from XML
-    xml::Document doc;
-    std::string errstr;
-    if ( auto err = xml::load_document( doc, run.filepath_.c_str(), THIS_FUNCTION, errstr ) )
-    {
-        run.batb.log << errstr << std::endl;
-        throw std::runtime_error( THIS_FUNCTION );
-    }
+    // set up this Run object from file
+    YAML::Node yaml = YAML::LoadFile( run.filepath_ );
 
-    // TODO: parse xml...
-    run.keyset.loadXML("batb/run/KeySet.xml");
+    // load associated keys 
+    run.keyset.load("batb/run/KeySet.yaml");
 
     // note: iterations are set up by iterationRunBegin, instead of here,
     //       despite this Run object holds the iterations. is this wanted
@@ -92,7 +79,7 @@ void end(Run& run)
 
     if ( run.initialized_ )
     {
-        run.saveXML();
+        run.save();
     }
     
     run.initialized_ = false;

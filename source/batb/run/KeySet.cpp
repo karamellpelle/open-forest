@@ -32,13 +32,13 @@ KeySet::KeySet(BATB& b) : batb( b )
 
 }
 
-void KeySet::loadXML(const std::string& )
+void KeySet::load(const std::string& )
 {
     batb.log << THIS_FUNCTION << std::endl;
 
 
     // FIXME: parse keys from definition in file
-    //        the function createKeyXML is handy...
+    //        the function createKey is handy...
 
     ////////////////////////////////////////////////////////////////////////////////
     // instead, hardcode!

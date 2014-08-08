@@ -1,4 +1,6 @@
+build/cmake
 .*.swp
+.*.swo
 .DS_Store
 gmon.out
 leaks-*.txt

@@ -1,19 +1,24 @@
 #!/bin/bash
 
 THIS_NAME=$(basename "$0")
+BINARY_NAME="open-forest"
 
 
 function do_build()
 {
     # FIXME: cd to THIS_PATH
-    cd ./build
-    cmake "$@" .. && make
+    mkdir -p build/cmake
+    cd build/cmake
+    cmake "$@" ../.. && make && cp $BINARY_NAME ..
 }
 
 function do_clean()
 {
     # FIXME: cd to THIS_PATH
-    echo "TODO: clean"
+    cd build
+    rm -rf cmake
+
+    # (ignoring build/open-forest)
 }
 
 function do_get-submodules()
@@ -79,6 +84,9 @@ else
           ;;
       "init-submodules")  
           do_init-submodules
+          ;;
+      "help")
+          do_usage
           ;;
       *)  
           do_usage

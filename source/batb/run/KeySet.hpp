@@ -34,9 +34,9 @@ class KeySet : public keys::KeySet
 public:
     KeySet(BATB& );
 
-    // define 'this' from map defined by XML
-    void loadXML(const std::string& filepath);
-    void saveXML(const std::string& filepath);
+    // define 'this' from map defined by file
+    void load(const std::string& filepath);
+    void save(const std::string& filepath);
 
     /////////////////////////////////////////////////
     // keys for Run to use

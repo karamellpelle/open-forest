@@ -22,7 +22,7 @@ namespace batb
 
 
 
-BATB::BATB(const std::string& path) : log( *this ), xml( *this), value( *this ),  
+BATB::BATB(const std::string& path) : log( *this ), value( *this ),  
                                       keys( *this ), gui( *this ),
                                       //forest( *this ), race( *this ), run( *this );
                                       run( *this )
@@ -31,14 +31,14 @@ BATB::BATB(const std::string& path) : log( *this ), xml( *this), value( *this ),
     filepath_ = path;
 
     // core:
-    value.filepath(     file::directory( path ) + "/value/Value.xml" );
-    gui.filepath(       file::directory( path ) + "/gui/GUI.xml" );
+    value.filepath(     file::directory( path ) + "/value/Value.yaml" );
+    gui.filepath(       file::directory( path ) + "/gui/GUI.yaml" );
 
     // non-core:
-    //forest.filepath(    file::directory( path ) + "/forest/Forest.xml" );
-    //race.filepath(      file::directory( path ) + "/race/Race.xml" );
-    run.filepath(       file::directory( path ) + "/run/Run.xml" );
-    //.filepath(          file::directory( path ) + ".xml" );
+    //forest.filepath(    file::directory( path ) + "/forest/Forest.yaml" );
+    //race.filepath(      file::directory( path ) + "/race/Race.yaml" );
+    run.filepath(       file::directory( path ) + "/run/Run.yaml" );
+    //.filepath(          file::directory( path ) + ".yaml" );
     
     
 }
@@ -51,21 +51,12 @@ void begin(BATB& batb)
     // logging
     log::begin( batb.log );
 
-    // xml facility
-    xml::begin( batb.xml );
-
     // general values to use 
     value::begin( batb.value );
 
 
-    // set up this BATB object from XML
-    xml::Document doc;
-    std::string errstr;
-    if ( auto err = xml::load_document( doc, batb.filepath_.c_str(), THIS_FUNCTION, errstr ) )
-    {
-        throw std::runtime_error( errstr );
-    }
-
+    // set up this BATB object from file
+    YAML::Node yaml = YAML::LoadFile( batb.filepath_ );
     // now parse document
     // ...
     
@@ -103,8 +94,8 @@ void end(BATB& batb)
 {
     if ( batb.initialized_ )
     {
-        // save the configuration to its XML file
-        batb.saveXML();
+        // save the configuration to file
+        batb.save();
         
         // (the non-core part, created by iterationRunBegin, 
         // are shut down by 'iterationRunEnd')
@@ -115,8 +106,6 @@ void end(BATB& batb)
         gui::end( batb.gui );
 
         keys::end( batb.keys );
-
-        xml::end( batb.xml );
 
         value::end( batb.value );
         
@@ -129,19 +118,9 @@ void end(BATB& batb)
 }
 
 
-void BATB::saveXML()
+void BATB::save()
 {
-    xml::Document doc;
-
-    // FIXME: populate
-// ignore for now...
-/*
-    std::string errstr;
-    if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
-    {
-        log << errstr << std::endl;
-    }
-*/
+    // FIXME: write to file
 }
 
 static void gl_info(std::ostream& os)

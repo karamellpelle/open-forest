@@ -41,7 +41,7 @@ public:
     static constexpr Code right  = GLFW_MOUSE_BUTTON_RIGHT;
 
     void code(Code c)                     { code_ = c; }
-    void loadXML(/*def*/)                 { } 
+    void load(/*def*/)                 { } 
 
 private:
     KeyMouseButton() : code_( 0 )         { } // FIXME: GLFW_???

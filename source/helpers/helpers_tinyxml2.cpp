@@ -15,13 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/xml/helpers.hpp"
+#include "helpers/helpers_tinyxml2.hpp"
 
 
-namespace batb
-{
-
-namespace xml
+namespace helpers
 {
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +99,5 @@ tinyxml2::XMLError save_document(tinyxml2::XMLDocument& doc, const std::string& 
 }
 
 
-} // namespace xml
+} // namespace helpers
 
-} // namespace batb

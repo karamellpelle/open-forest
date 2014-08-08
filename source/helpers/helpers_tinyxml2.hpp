@@ -15,18 +15,14 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_XML_HELPERS_HPP
-#define BATB_XML_HELPERS_HPP
-#include "batb/xml/XML.hpp"
+#ifndef HELPERS_TINYXML2_HPP
+#define HELPERS_TINYXML2_HPP
+#include "tinyxml2.hpp"
+#include <string>
+#include <sstream>
 
 
-namespace batb
-{
-
-class BATB;
-
-
-namespace xml
+namespace helpers
 {
 
 
@@ -335,9 +331,8 @@ bool CsElement::operator()(OutputIterator b, OutputIterator e)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-} // namespace xml
+} // namespace helpers
 
-} // namespace batb
 
 
 #endif

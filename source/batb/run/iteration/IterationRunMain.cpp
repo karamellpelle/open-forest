@@ -66,7 +66,7 @@ void IterationRunMain::iterate_begin(World& run)
     }
 
     // nanovg demo
-    //tmp::nanovg::demo_begin();
+    tmp::nanovg::demo_begin();
 
 
 }
@@ -83,7 +83,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     static bool premult; static bool blowup;
     if ( batb.run.keyset.u->click() ) premult = !premult;
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
-    //tmp::nanovg::demo_iterate( premult, blowup );
+    tmp::nanovg::demo_iterate( premult, blowup );
 
 
 

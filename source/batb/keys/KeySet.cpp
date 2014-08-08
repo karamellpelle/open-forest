@@ -24,7 +24,8 @@ namespace keys
 {
 
 
-Key* KeySet::createKeyXML(/*const std::string& filepath*/ /*const XML& xml*/)
+// create from definition in file
+Key* KeySet::createKey(/*std::string filepath*/)
 {
     // FIXME:
     return nullptr;

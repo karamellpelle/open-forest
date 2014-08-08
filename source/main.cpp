@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     int ret = 0;
  
     // our BATB object
-    batb::BATB batb( file::dynamic_data( "batb/BATB.xml" ) );
+    batb::BATB batb( file::dynamic_data( "batb/BATB.yaml" ) );
 
     try
     {

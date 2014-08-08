@@ -38,7 +38,7 @@ public:
     typedef int Code;
 
     void code(Code c)                 { code_ = c; } 
-    void loadXML(/*def*/)             { } 
+    void load(/*def*/)             { } 
 
 private:
     KeyButton() : code_( 0 )          { } // FIXME: GLFW_???

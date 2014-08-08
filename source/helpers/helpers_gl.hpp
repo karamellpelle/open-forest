@@ -18,10 +18,9 @@
 #ifndef HELPERS_GL_HPP
 #define HELPERS_GL_HPP
 #include "include.hpp"
-//#include "gl.h"
-// assuming GL is included before...
 
-namespace GL
+
+namespace gl
 {
 
 inline void error(std::ostream& os)

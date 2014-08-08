@@ -20,7 +20,6 @@
 #include "batb/gui/tb_system.hpp"
 #include "batb/log.hpp"
 #include "batb/keys.hpp"
-#include "batb/xml.hpp"
 
 
 // TB
@@ -93,17 +92,11 @@ void GUI::bind(keys::Keys& keys)
 }
 
 
-void GUI::saveXML()
+void GUI::save()
 {
-
-    xml::Document doc;
     // FIXME: populate
+    //YAML::Node node;
 
-    //std::string errstr;
-    //if ( auto err = xml::save_document( doc, filepath_, THIS_FUNCTION, errstr ) )
-    //{
-    //    batb.log << errstr << std::endl;
-    //}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,16 +107,9 @@ void begin(GUI& gui)
     gui.batb.log << THIS_FUNCTION << std::endl;    
 
 
-    // set up this BATB object from XML
-    xml::Document doc;
-    std::string errstr;
-    if ( auto err = xml::load_document( doc, gui.filepath_.c_str(), THIS_FUNCTION, errstr ) )
-    {
-        gui.batb.log << errstr << std::endl;
-        throw std::runtime_error( THIS_FUNCTION );
-    }
-
-    // TODO: parse xml...
+    // set up this GUI object from YAML
+    YAML::Node yaml = YAML::LoadFile( gui.filepath_ );
+    // TODO: parse file
 
   
     gui.tb_renderer_ =  new tb::TBRendererGL();

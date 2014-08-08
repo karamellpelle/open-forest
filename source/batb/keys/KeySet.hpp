@@ -36,8 +36,8 @@ namespace keys
 // 
 // should typically be subclassed into a class having members
 // of each Key necessary. this subclass should typically have
-// a method 'loadXML(const std::string& filepath)' to load
-// a definition from a XML file.
+// a method 'load(const std::string& filepath)' to load
+// a definition from a config (YAML) file.
 class KeySet
 {
 public:
@@ -58,8 +58,8 @@ public:
     KeyAlpha*       createKeyAlpha(Key* k)                            { return push( new KeyAlpha( k ) ); }
     KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push( new KeyPointer( x, y, l, r ) ); }
 
-    // create Key from XML definition
-    Key* createKeyXML(/* std::string&*/ /*XML def*/ );
+    // create Key from definition
+    Key* createKey(/* std::string&*/ /*XML def*/ );
 
 
     ////////////////////////////////////////////////////////////////////////////////

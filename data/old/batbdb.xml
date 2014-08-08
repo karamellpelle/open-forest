@@ -274,6 +274,22 @@
       <times>
       </times>
     </run>
+    <run>
+      <id>3b9671a421f8ba9bd025801fcfc343cb</id>
+      <name>test</name>
+      <eventId>5797d53e8285b68f26c8d6ed94cfe2b6</eventId>
+      <orienteerId>4fffdac4078539063ec241f599415cbb</orienteerId>
+      <startTime>1407531236</startTime>
+      <stopTime>1407531251</stopTime>
+      <status>2</status>
+      <times>
+        <splitTime>
+          <time>0.0000000</time>
+          <courseLength>0.0000000</courseLength>
+          <routeLength>0.0000000</routeLength>
+        </splitTime>
+      </times>
+    </run>
   </runs>
   <servers>
   </servers>

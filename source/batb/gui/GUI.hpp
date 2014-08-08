@@ -46,12 +46,12 @@ public:
     {
     }
 
-    // XML file
+    // config file
     void filepath(const std::string& path)
     {
         filepath_ = path;
     }
-    void saveXML();
+    void save();
 
     // output GUI to env::screen
     void output(const Scene& );
