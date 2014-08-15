@@ -15,76 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_RUN_HPP
-#define BATB_RUN_RUN_HPP
-#include "batb/run/iteration/IterationRunBegin.hpp"
-#include "batb/run/iteration/IterationRunEnd.hpp"
-#include "batb/run/iteration/IterationRunMain.hpp"
-#include "batb/run/iteration/IterationRunOld.hpp"
-#include "batb/run/gui/GUIMain.hpp"
-#include "batb/run/KeySet.hpp"
-
-
-
+#ifndef BATB_RUN_GUI_MAIN_HPP
+#define BATB_RUN_GUI_MAIN_HPP
+#include "batb/batb_include.hpp"
+#include "batb/gui.hpp"
 
 namespace batb
 {
 
-
-class BATB;
-
-
 namespace run
 {
 
-
-
-
-class Run
+// "main control"
+class GUIMain : public tb::TBWindow, 
+                public tb::TBMessageHandler
 {
-friend void begin(Run& );
-friend void end(Run& );
-
 public:
-    Run(BATB& b);
+    GUIMain(BATB& );
 
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-
+    virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
+    virtual void OnMessageReceived(tb::TBMessage *msg) override;      // TBMessageHandler
 
 
     BATB& batb;
-    KeySet keyset;
-
-    // Iteration's
-    IterationRunBegin     iterationRunBegin;
-    IterationRunEnd       iterationRunEnd;
-    //IterationRunIntro     iterationRunIntro;
-    IterationRunMain      iterationRunMain;
-    //IterationRunOutro     iterationRunOutro;
-    IterationRunOld       iterationRunOld; 
-
-
-    // GUI's
-    GUIMain* guiMain = nullptr;
 
 private:
-    bool initialized_ = false;
-    std::string filepath_;
-
-
+    //tb::TBWidget* widget_a_;
 };
 
-
-void begin(Run& );
-void end(Run& );
 
 } // namespace run
 
 } // namespace batb
 
+
 #endif
+
 

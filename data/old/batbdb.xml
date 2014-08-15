@@ -283,11 +283,6 @@
       <stopTime>1407531251</stopTime>
       <status>2</status>
       <times>
-        <splitTime>
-          <time>0.0000000</time>
-          <courseLength>0.0000000</courseLength>
-          <routeLength>0.0000000</routeLength>
-        </splitTime>
       </times>
     </run>
   </runs>

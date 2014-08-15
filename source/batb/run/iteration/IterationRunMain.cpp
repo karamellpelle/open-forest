@@ -60,9 +60,11 @@ void IterationRunMain::iterate_begin(World& run)
     std::cout << "\n\n\n\n";
 
     // show GUI window
-    if ( widget_->GetParent() == nullptr )
+    //if ( widget_->GetParent() == nullptr )
+    if ( batb.run.guiMain->GetParent() == nullptr )
     {
-        batb.gui.root.AddChild( widget_ );
+        //batb.gui.root.AddChild( widget_ );
+        batb.gui.root.AddChild( batb.run.guiMain );
     }
 
     // nanovg demo
@@ -103,9 +105,11 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     if ( batb.run.keyset.old->released() )
     {
         // remove window
-        if ( widget_->GetParent() != nullptr )
+        //if ( widget_->GetParent() != nullptr )
+        if ( batb.run.guiMain->GetParent() != nullptr )
         {
-            batb.gui.root.RemoveChild( widget_ );
+            //batb.gui.root.RemoveChild( widget_ );
+            batb.gui.root.RemoveChild( batb.run.guiMain );
         }
 
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
@@ -131,7 +135,7 @@ void begin(IterationRunMain& iter)
     // NOTE: memory management is performed by TB!
     auto* window = new tb::TBWindow();
     window->SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
-    window->SetSize(256, 256 );
+    window->SetSize(250, 630 );
     //window->Position( 40, 40 );
 
     window->SetText( "testing turbobadger. a window." );

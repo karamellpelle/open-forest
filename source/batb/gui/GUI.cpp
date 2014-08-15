@@ -65,7 +65,7 @@ void GUI::step(tick_t tick)
     tbsystem_ms( tick * 1000.0 );
 
     // update messages for TB, that is, send TBMessage's from
-    // the global message queue to the receiving TBMessageHandler
+    // the global message queue to the registered TBMessageHandler
     // for each message
     tb::TBMessageHandler::ProcessMessages(); 
 

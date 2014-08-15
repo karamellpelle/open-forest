@@ -19,6 +19,7 @@
 
 
 
+
 namespace batb
 {
 
@@ -69,6 +70,10 @@ void begin(Run& run)
     //       by this function. and it is nice to let iterationRunBegin load
     //       all parts of BATB in a sequence, in order to make interactive
     //       loading.
+
+    // set up GUI's
+    run.guiMain = new GUIMain( run.batb );
+
     run.initialized_ = true;
 }
 
@@ -79,6 +84,8 @@ void end(Run& run)
 
     if ( run.initialized_ )
     {
+        run.guiMain = nullptr; // GUI memory handled by TB
+
         run.save();
     }
     

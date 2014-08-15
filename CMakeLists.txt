@@ -120,6 +120,7 @@ set( BATB_SOURCES
 
       # BATB non-core:
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
@@ -127,7 +128,7 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
 
       # add tmp for now
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"

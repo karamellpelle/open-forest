@@ -23,7 +23,10 @@
 #include "tb/tb_renderer.h"
 #include "tb/tb_window.h"
 #include "tb/tb_font_renderer.h"
-
+#include "tb/tb_widgets.h"
+#include "tb/tb_widgets_reader.h"
+#include "tb/tb_widgets_common.h"
+#include "tb/tb_node_tree.h"
 
 namespace batb
 {
