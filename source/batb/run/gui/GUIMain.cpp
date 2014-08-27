@@ -52,8 +52,8 @@ GUIMain::GUIMain(BATB& b) : batb( b )
         // ...
 
         SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
-        SetSize(256, 256 );
-        SetPosition( TBPoint( 10, 50 ) );
+        SetSize( 360, 360  );
+        SetPosition( TBPoint( 30, 30 ) );
         SetText( "GUIMain" );
 	SetOpacity(0.50f);
         //SetGravity( tb::WIDGET_GRAVITY_ALL );

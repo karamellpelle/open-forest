@@ -38,6 +38,9 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     ////////////////////////////////////////
 
 
+    // set current world the Run-object is working on
+    batb.run.world = &world;
+
     // setup scene for this frame
     begin( world.scene );
 
@@ -49,6 +52,7 @@ void IterationRun::iterate(IterationStack& stack, World& world)
  
 
     // set current tick for world.
+    // FIXME: not here, done by wrapped iteration
     world.tick = env::tick();
 
     // draw GUI on top of current Scene, update

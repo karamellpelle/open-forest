@@ -71,6 +71,10 @@ public:
     // GUI's
     GUIMain* guiMain = nullptr;
 
+    // the world 'this' is currently working on:
+    // (used by GUI, ...)
+    World* world = nullptr;
+
 private:
     bool initialized_ = false;
     std::string filepath_;

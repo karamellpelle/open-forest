@@ -1,5 +1,30 @@
+
 TBLayout
+	# downwards
 	axis y
-	TBButton: text: old, id: run-old
-	TBButton: text: nanovg, id: run-nanovg
-	TBButton: text: exit, id: exit
+
+	# set font for this and children
+	font: name: Neon
+	
+	# let this layout have this gravity
+	gravity all
+
+	# size of children in opposite axis (ie. x)
+	# (size depends on children (gravity) or itself (available))
+	size available
+
+	# distribute the space for children either by available space, 
+	# or by each child's gravity
+	# (distribution depends on children (gravity) or itself (available))
+	distribution available
+
+	# pull the layout in this direction
+	distribution-position top
+
+	##################################################
+	# children
+
+	TBButton: id: run-old, text: old-BATB, skin: "TBButton.flat"
+	TBButton: id: run-nanovg, text: nanovg, skin: "TBButton.flat"
+	TBButton: id: exit, text: Exit, skin: "TBButton.flat"
+
