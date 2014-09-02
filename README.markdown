@@ -28,8 +28,7 @@ Currently, these libraries are intented to be used. Please fill in (better) alte
                         (CEGUI ?)
                         (JUCE ?)
                         (https://github.com/betajaen/gorilla ?)
-    config            : XML, https://github.com/leethomason/tinyxml2
-                        (I don't like XML. YAML looks like a better candidate)
+    config            : YAML
     UDP network       : (boost ASIO ?)
                         (https://github.com/joyent/libuv/ ?)
     3D rendering      : OGRE                                          
@@ -39,6 +38,8 @@ Currently, these libraries are intented to be used. Please fill in (better) alte
                         (SpeedTree :))
     2D rendering      : https://github.com/memononen/nanovg
     font rendering    : (using turbobadger/nanovg) 
+    packaging         : (http://gamedev.stackexchange.com/questions/37648/how-can-you-put-all-images-from-a-game-to-1-file)
+                        (http://en.wikipedia.org/wiki/List_of_archive_formats)
     collision         : (do we need this?)
                         (Bullet3D ?)
     linear            : GLM
@@ -65,6 +66,7 @@ Building
 --------------------
 
 The current libraries are needed:
+
     - boost (I have version 1.55.0)
     - GLEW  (I have version 1.10.0)
 
@@ -78,7 +80,7 @@ Building can then be done with
 
     $ ./build.sh
 
-, creating a program `build/open-forest`.
+which creates a program `build/open-forest`.
 
 
 

@@ -15,65 +15,57 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_BATB_HPP
-#define BATB_BATB_HPP
-#include "batb/batb_include.hpp"
-#include "batb/log.hpp"
-#include "batb/value.hpp"
-#include "batb/keys.hpp"
-#include "batb/gui.hpp"
-#include "batb/ogre.hpp"
-//#include "batb/forest.hpp"
-//#include "batb/race.hpp"
-#include "batb/run.hpp"
+#ifndef BATB_OGRE_OGRE_HPP
+#define BATB_OGRE_OGRE_HPP
+
+
 
 
 namespace batb
 {
 
 
-class BATB
+class BATB;
+
+
+namespace ogre
 {
-friend void begin(BATB& batb);
-friend void end(BATB& batb);
+
+
+
+
+class OGRE
+{
+friend void begin(OGRE& );
+friend void end(OGRE& );
 
 public:
-    BATB(const std::string& );
+    OGRE(BATB& b);
 
-    // core part of BATB.
-    // these are the parts of BATB fully initialized by 'void begin(BATB& )'.
-    // we need a minimum part for 'iterationRunBegin' to work.
-    log::Log log;
-    value::Value value;
-    keys::Keys keys;
-    gui::GUI gui;
-
-    // non-core part of BATB.
-    // these are parts of BATB initialized later, by 'iterationRunBegin'.
-    ogre::OGRE ogre;
-    //forest::Forest forest;
-    //race::Race race;
-    run::Run run;
-
-    // save this BATB object to its file
+    void filepath(const std::string& path)
+    {
+        filepath_ = path;
+    }
     void save();
+
+
+
+    BATB& batb;
 
 private:
     bool initialized_ = false;
-
     std::string filepath_;
+
 
 };
 
 
-// start BATB-object
-void begin(BATB& batb);
+void begin(OGRE& );
+void end(OGRE& );
 
-
-// end BATB-object
-void end(BATB& batb);
-
+} // namespace ogre
 
 } // namespace batb
 
 #endif
+

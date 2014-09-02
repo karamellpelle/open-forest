@@ -2,6 +2,17 @@
 #   http://www.itk.org/Wiki/CMake_FAQ#Writing_CMakeLists.txt
 #   http://www.cmake.org/cmake/help/cmake_tutorial.html
 #   http://www.cmake.org/Wiki/CMake_Useful_Variables
+#   http://binglongx.wordpress.com/tag/cmake_build_type/
+#   'cmake -LAH' in CMakeLists.txt directory to see varible values
+#   http://www.cmake.org/pipermail/cmake/2005-September/007204.html
+#   
+#
+#   CMake variabel types: normal and cache. see: 
+#   http://www.cmake.org/cmake/help/v2.8.9/cmake.html#command%3aset
+#   cache variables are variables persisting each cmake invocation. they
+#   are defined for each cmake invocation (i.e. build folder for the main project)
+#   these cache variables values can (later) be defined by hand in CMakeCache.txt
+#                   
 cmake_minimum_required( VERSION 2.6 )
 project ( open-forest )
 
@@ -10,14 +21,20 @@ set(BATB_VERSION_MAJOR 0)
 set(BATB_VERSION_MAJOR 1)
 
 # set compiler flags
-# FIXME: into build options: -g -pg
+# FIXME: these flags are only used when the cache variable CMAKE_BUILD_TYPE:STRING=None
+#        (or undefined)
+#        instead define our different flags in CMAKE_CXX_FLAGS_*/CMAKE_C_FLAGS_* 
+#        (where * is one of DEBUG, RELEASE, RELWITHDEBINFO, MINSIZEREL)
+#        below, we set CMAKE_BUILD_TYPE:STRING=None, to prevent Ogre setting this
+#        to RelWithDebInfo!
+#        later, we may actually rely on the default OGRE setting "RelWithDebInfo", since
+#        OGRE may be too slow (release build of OGRE can increase performance a lot, according to doc).
 set( CMAKE_CXX_FLAGS      "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
 set( CMAKE_C_FLAGS        "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" )
 
-# set folders
+# set folders 
 set( MAIN_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source )
 set( LIBS_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/libs )
-set( TEST_SOURCE_DIR          ${CMAKE_SOURCE_DIR}/source/test )
 set( CUSTOM_CMAKELISTS_DIR    ${CMAKE_SOURCE_DIR}/cmake/libs )
 
 
@@ -36,6 +53,7 @@ endif()
 set( GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)   # we do not want to build examples
 set( GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
 set( GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
+set( GLFW_INSTALL OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
 set( GLFW_SOURCE_DIR ${LIBS_SOURCE_DIR}/glfw )
 add_subdirectory( ${GLFW_SOURCE_DIR} )
 
@@ -68,6 +86,44 @@ add_subdirectory( ${CUSTOM_CMAKELISTS_DIR}/turbobadger )
 # build library 'yaml-cpp'
 set( YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE) # disable "testing and parse tools"
 add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
+
+################################################################################
+# build OGRE
+# see http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Building+Ogre+With+CMake
+# also, 'cmake -LAH' lists CMake-values in directory
+#
+# other settings too look at later:
+#   * DDS/ETC codec?
+#   * CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT?
+#   * CONFIG_ENABLE_PVRTC?
+#
+#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                # prevent "RelWithDebInfo" pollution of open-forest. FIXME: later use setting.
+#set( OGRE_BUILD_COMPONENT_OVERLAY ON CACHE BOOL "" FORCE)           # overlay component
+#set( OGRE_BUILD_COMPONENT_PAGING ON CACHE BOOL "" FORCE)            # paging component
+#set( OGRE_BUILD_COMPONENT_PROPERTY ON CACHE BOOL "" FORCE)          # property component
+#set( OGRE_BUILD_COMPONENT_RTSSHADERSYSTEM ON CACHE BOOL "" FORCE)   # rtsshader component
+#set( OGRE_BUILD_COMPONENT_TERRAIN ON CACHE BOOL "" FORCE)           # terrain component
+#set( OGRE_BUILD_COMPONENT_VOLUME ON CACHE BOOL "" FORCE)            # volume component
+#set( OGRE_BUILD_COMPONENT_BSP ON CACHE BOOL "" FORCE)               # bsp component
+#set( OGRE_BUILD_PLUGIN_CG ON CACHE BOOL "" FORCE)                   # Cg plugin
+#set( OGRE_BUILD_PLUGIN_OCTREE ON CACHE BOOL "" FORCE)               # octree plugin
+#set( OGRE_BUILD_PLUGIN_PCZ ON CACHE BOOL "" FORCE)                  # PCZ plugin
+#set( OGRE_BUILD_PLUGIN_PFX ON CACHE BOOL "" FORCE)                  # PFX plugin
+#set( OGRE_BUILD_RENDERSYSTEM_GL ON CACHE BOOL "" FORCE)             # GL-rendering
+#set( OGRE_BUILD_RENDERSYSTEM_GL3Plus ON CACHE BOOL "" FORCE)        # GL3+-rendering
+##set( OGRE_BUILD_RENDERSYSTEM_GLES2 ON CACHE BOOL "" FORCE)          # GLES2-rendering. FIXME.
+##set( OGRE_CONFIG_THREADS 2            ON CACHE BOOL "" FORCE)       # thread setting 2, default. see doc...
+##set( OGRE_FULL_RPATH                  ON CACHE BOOL "" FORCE)       # compile RPATH. FIXME.
+#set( OGRE_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)                    # build OGRE samples
+#set( OGRE_BUILD_TOOLS ON CACHE BOOL "" FORCE)                       # build OGRE tools
+##set( OGRE_CONFIG_DOUBLE ON CACHE BOOL "" FORCE)                     # use 'double' as fp type
+#set( OGRE_INSTALL_DOCS OFF OFF CACHE BOOL "" FORCE)                 # install documentation
+#set( OGRE_INSTALL_SAMPLES OFF OFF CACHE BOOL "" FORCE)              # install samples
+#set( OGRE_INSTALL_TOOLS OFF CACHE BOOL "" FORCE)                    # install tools
+#set( OGRE_STATIC ON CACHE BOOL "" FORCE)                            # build OGRE as a static lib. FIXME.
+
+#add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
+
 
 ################################################################################
 # set additional include directories
@@ -119,6 +175,7 @@ set( BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
 
       # BATB non-core:
+      "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
@@ -203,7 +260,7 @@ set( BATB_OLD_SOURCES
 
 if ( BATB_BUILD )
 
-    # define main
+    # define MAIN
     set( MAIN_LIBRARIES "" )
     set( MAIN_SOURCES "${MAIN_SOURCE_DIR}/main.cpp" )
 
@@ -255,7 +312,7 @@ if ( BATB_BUILD )
 
 
     ###########################################################
-    # create executable target 'batb'
+    # create executable target 'open-forest'
     add_executable( open-forest ${MAIN_SOURCES} ) 
 
     # define target properties

@@ -74,7 +74,7 @@ public:
     void reset();
 
     // update all keys, to be done at end of each frame:
-    // FIXME: rename Key::update(tick_t) -> Key::update(tick_t)
+    // FIXME: rename Key::update(tick_t) -> Key::step(tick_t)
     void step(tick_t t);
    
 

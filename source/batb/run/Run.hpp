@@ -72,7 +72,7 @@ public:
     GUIMain* guiMain = nullptr;
 
     // the world 'this' is currently working on:
-    // (used by GUI, ...)
+    // (working target for GUI, ...)
     World* world = nullptr;
 
 private:

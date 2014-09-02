@@ -17,65 +17,64 @@
 //
 #include "batb.hpp"
 
+
+
+
 namespace batb
 {
 
-namespace run
+
+
+namespace ogre
 {
 
-
-IterationRunEnd::IterationRunEnd(BATB& b) : IterationRun( b )
-{
-
-}
-
-
-void IterationRunEnd::iterate_begin(World& world)
-{
-    batb.log << THIS_FUNCTION << std::endl;
-
-    // unload the non-core part created by IterationRunBegin.
-    end_non_core();
-}
-
-void IterationRunEnd::iterate_run(IterationStack& stack, World& world)
-{
-    batb.log << THIS_FUNCTION << std::endl;
-
-}
-
-void IterationRunEnd::end_non_core()
-{
-
-
-    // unload the non-core part of run
-    run::end( batb.run );
-
-    // unload race
-    //race::begin( batb.race );
-
-    // unload forest
-    //forest::begin( batb.forest );
-
-    // unload OGRE
-    ogre::end( batb.ogre );
-}
 
 ////////////////////////////////////////////////////////////////////////////////
-//
+//  OGRE
 
-void begin(IterationRunEnd& iter)
+OGRE::OGRE(BATB& b) : batb( b )
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
-}
 
-void end(IterationRunEnd& iter)
-{
-    iter.batb.log << THIS_FUNCTION << std::endl;
 }
 
 
-} // namespace run
+
+void OGRE::save()
+{
+
+    // FIXME: write to file
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 
+void begin(OGRE& ogre)
+{
+
+    ogre.batb.log << THIS_FUNCTION << std::endl;    
+
+
+    // set up this OGRE object from file
+    YAML::Node yaml = YAML::LoadFile( ogre.filepath_ );
+
+    ogre.initialized_ = true;
+}
+
+
+void end(OGRE& ogre)
+{
+    ogre.batb.log << THIS_FUNCTION << std::endl;    
+
+    if ( ogre.initialized_ )
+    {
+        ogre.save();
+    }
+    
+    ogre.initialized_ = false;
+
+}
+
+
+} // namespace ogre
 
 } // namespace batb
-

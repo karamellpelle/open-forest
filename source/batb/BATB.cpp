@@ -24,6 +24,7 @@ namespace batb
 
 BATB::BATB(const std::string& path) : log( *this ), value( *this ),  
                                       keys( *this ), gui( *this ),
+                                      ogre( *this ),
                                       //forest( *this ), race( *this ), run( *this );
                                       run( *this )
 {
@@ -35,6 +36,7 @@ BATB::BATB(const std::string& path) : log( *this ), value( *this ),
     gui.filepath(       file::directory( path ) + "/gui/GUI.yaml" );
 
     // non-core:
+    ogre.filepath(      file::directory( path ) + "/ogre/OGRE.yaml" );
     //forest.filepath(    file::directory( path ) + "/forest/Forest.yaml" );
     //race.filepath(      file::directory( path ) + "/race/Race.yaml" );
     run.filepath(       file::directory( path ) + "/run/Run.yaml" );
@@ -44,7 +46,7 @@ BATB::BATB(const std::string& path) : log( *this ), value( *this ),
 }
 
 
-// initialize BATB-object
+// initialize BATB and its core parts
 void begin(BATB& batb)
 {
 
@@ -80,16 +82,18 @@ void begin(BATB& batb)
     // gui
     gui::begin( batb.gui );
 
-    // we need these two iterations up and running:
+    // we need these two core iterations up and running:
     run::begin( batb.run.iterationRunBegin );
     run::begin( batb.run.iterationRunEnd );
 
-    // (now the non-core part of BATB is loaded/unloaded by iterationRunBegin/iterationRunEnd)
+    // (now the non-core part of BATB is loaded by iterationRunBegin)
 
     
     batb.initialized_ = true;
 }
 
+
+// end BATB and its core parts
 void end(BATB& batb)
 {
     if ( batb.initialized_ )
@@ -97,8 +101,8 @@ void end(BATB& batb)
         // save the configuration to file
         batb.save();
         
-        // (the non-core part, created by iterationRunBegin, 
-        // are shut down by 'iterationRunEnd')
+        // (the non-core parts, created by iterationRunBegin, 
+        // are unloaded by 'iterationRunEnd')
 
         run::end( batb.run.iterationRunEnd );
         run::end( batb.run.iterationRunBegin );

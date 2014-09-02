@@ -15,45 +15,17 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/run/KeySet.hpp"
-#include "batb.hpp"
-
+#ifndef BATB_OGRE_HPP
+#define BATB_OGRE_HPP
+#include "batb/ogre/OGRE.hpp"
 
 namespace batb
 {
 
-
-namespace run
-{
-
-
-KeySet::KeySet(BATB& b) : batb( b )
+namespace ogre
 {
 
 }
-
-void KeySet::load(const std::string& path)
-{
-    batb.log << THIS_FUNCTION << std::endl;
-
-    // clear current content
-    clear();
-
-    // FIXME: parse keys from definition in file
-    //        the function createKey is handy...
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // instead, hardcode!
-
-    pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
-
-    // tmp:
-    old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
-    u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
-    i = createKeyClicker( createKeyButton( GLFW_KEY_I      ) );
-}
-
-} // namespace run
 
 } // namespace batb
-
+#endif

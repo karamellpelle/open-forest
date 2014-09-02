@@ -52,6 +52,7 @@ void Run::save()
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
+// begin the non-core part of Run
 void begin(Run& run)
 {
 
@@ -64,12 +65,9 @@ void begin(Run& run)
     // load associated keys 
     run.keyset.load("batb/run/KeySet.yaml");
 
-    // note: iterations are set up by iterationRunBegin, instead of here,
-    //       despite this Run object holds the iterations. is this wanted
-    //       behaviour? IterationRunBegin/IterationRunEnd are never set up
-    //       by this function. and it is nice to let iterationRunBegin load
-    //       all parts of BATB in a sequence, in order to make interactive
-    //       loading.
+    // begin non-core iterations:
+    run::begin( run.iterationRunOld );
+    run::begin( run.iterationRunMain );
 
     // set up GUI's
     run.guiMain = new GUIMain( run.batb );
@@ -77,7 +75,7 @@ void begin(Run& run)
     run.initialized_ = true;
 }
 
-
+// end the non-core part of Run
 void end(Run& run)
 {
     run.batb.log << THIS_FUNCTION << std::endl;    
@@ -85,6 +83,13 @@ void end(Run& run)
     if ( run.initialized_ )
     {
         run.guiMain = nullptr; // GUI memory handled by TB
+
+        // end non-core iterations:
+        run::end( run.iterationRunMain );
+        run::end( run.iterationRunOld );
+
+        // clear keys
+        run.keyset.clear();
 
         run.save();
     }

@@ -68,10 +68,14 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
         // load & block
         if ( begin_non_core() )
         {
+            // we now succeded to load all parts of BATB (core and non-core),
+            // so start the actual game in iterationRunMain
             stack.next( game::begin_iteration( batb.run.iterationRunMain ) );
         }
         else
         {
+            // we was not able to load the non core part of BATB, hence exit game.
+            batb.log << "begin_non_core() failed! exiting..." << std::endl;
             stack.finish(); 
         }
     }
@@ -80,28 +84,23 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 }
 
 
-// load the non core part
+// load the non-core part
 bool IterationRunBegin::begin_non_core()
 {
-    batb.log << "loading non-core part of BATB... ";
+    batb.log << "loading non-core part of BATB... " << std::endl;
 
     try
     {
+        // load OGRE
+        ogre::begin( batb.ogre );
+
         // load forest
         //forest::begin( batb.forest );
 
         // load race
         //race::begin( batb.race );
 
-        // load the rest of run
-        // FIXME: init iterations here or by begin(Run& )?
-        //        the two iterations iterationRunBegin/
-        //        iterationRunEnd are not set up by begin(Run& ).
-        //        also, if we want interactive loading, it is nice
-        //        to do all loading of the parts of BATB in a sequence 
-        //        here...
-        run::begin( batb.run.iterationRunOld );
-        run::begin( batb.run.iterationRunMain );
+        // load the non-core part of run
         run::begin( batb.run );
     }
     catch (std::exception& e)
@@ -111,7 +110,7 @@ bool IterationRunBegin::begin_non_core()
     }
 
     // loading complete.
-    batb.log << "OK" << std::endl;
+    batb.log << "...OK loading non-core part of BATB" << std::endl;
     return true;
 }
 
