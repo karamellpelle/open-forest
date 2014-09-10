@@ -9,7 +9,7 @@ function do_build()
     # FIXME: cd to THIS_PATH
     mkdir -p build/cmake
     cd build/cmake
-    cmake "$@" ../.. && make && cp $BINARY_NAME ..
+    cmake -DCMAKE_BUILD_TYPE=None "$@" ../.. && make && cp $BINARY_NAME ..
 }
 
 function do_clean()

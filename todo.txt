@@ -1,3 +1,4 @@
+* prevent OGRE log stdout output
 * void xxx::begin(XXX& ) -> uint xxx::begin(XXX& ), returning 0 on complete or number of calls left? (interactive loading)
 * continous save to file (YAML, save())
 * custom CMakeBuild of tinyxml2

@@ -67,8 +67,8 @@ Building
 
 The current libraries are needed:
 
-    - boost (I have version 1.55.0)
-    - GLEW  (I have version 1.10.0)
+- boost (I have version 1.55.0)
+- GLEW  (I have version 1.10.0)
 
 In addition, this git project depends on submodules. Run
 

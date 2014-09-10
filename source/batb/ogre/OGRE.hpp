@@ -17,8 +17,17 @@
 //
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
+#include "batb/batb_include.hpp"
 
 
+// forward declare Ogre classes
+namespace Ogre
+{
+    class Root;
+    class RenderWindow;
+    class RenderTarget;
+
+}
 
 
 namespace batb
@@ -56,7 +65,9 @@ private:
     bool initialized_ = false;
     std::string filepath_;
 
-
+    Ogre::Root* root_ = nullptr;
+    Ogre::RenderWindow* renderwindow_ = nullptr; 
+    Ogre::RenderTarget* rendertarget_ = nullptr;
 };
 
 

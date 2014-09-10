@@ -23,6 +23,11 @@
 #include <GL/glew.h>    // must be done before GLFW!!
 #include <GLFW/glfw3.h> // FIXME: build option?
 
+// expose native GL
+// FIXME: set this based on Platform and context type!!
+#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_GLX // or EGL??
+#include <GLFW/glfw3native.h>
 
 namespace env
 {

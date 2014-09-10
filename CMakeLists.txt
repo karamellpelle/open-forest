@@ -13,6 +13,9 @@
 #   are defined for each cmake invocation (i.e. build folder for the main project)
 #   these cache variables values can (later) be defined by hand in CMakeCache.txt
 #                   
+#   FIXME:
+#   * include_directories -> target_include_directories
+#   * CMAKE_BUILD_TYPE and compiler flags (there is a new command, compiler_add_flags or something)
 cmake_minimum_required( VERSION 2.6 )
 project ( open-forest )
 
@@ -29,6 +32,7 @@ set(BATB_VERSION_MAJOR 1)
 #        to RelWithDebInfo!
 #        later, we may actually rely on the default OGRE setting "RelWithDebInfo", since
 #        OGRE may be too slow (release build of OGRE can increase performance a lot, according to doc).
+# TODO:  use 'add_compile_options', available in CMake 2.8.12 (www.stackoverflow.com/questions/15100351)
 set( CMAKE_CXX_FLAGS      "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
 set( CMAKE_C_FLAGS        "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" )
 
@@ -97,32 +101,43 @@ add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 #   * CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT?
 #   * CONFIG_ENABLE_PVRTC?
 #
-#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                # prevent "RelWithDebInfo" pollution of open-forest. FIXME: later use setting.
-#set( OGRE_BUILD_COMPONENT_OVERLAY ON CACHE BOOL "" FORCE)           # overlay component
-#set( OGRE_BUILD_COMPONENT_PAGING ON CACHE BOOL "" FORCE)            # paging component
-#set( OGRE_BUILD_COMPONENT_PROPERTY ON CACHE BOOL "" FORCE)          # property component
-#set( OGRE_BUILD_COMPONENT_RTSSHADERSYSTEM ON CACHE BOOL "" FORCE)   # rtsshader component
-#set( OGRE_BUILD_COMPONENT_TERRAIN ON CACHE BOOL "" FORCE)           # terrain component
-#set( OGRE_BUILD_COMPONENT_VOLUME ON CACHE BOOL "" FORCE)            # volume component
-#set( OGRE_BUILD_COMPONENT_BSP ON CACHE BOOL "" FORCE)               # bsp component
-#set( OGRE_BUILD_PLUGIN_CG ON CACHE BOOL "" FORCE)                   # Cg plugin
-#set( OGRE_BUILD_PLUGIN_OCTREE ON CACHE BOOL "" FORCE)               # octree plugin
-#set( OGRE_BUILD_PLUGIN_PCZ ON CACHE BOOL "" FORCE)                  # PCZ plugin
-#set( OGRE_BUILD_PLUGIN_PFX ON CACHE BOOL "" FORCE)                  # PFX plugin
-#set( OGRE_BUILD_RENDERSYSTEM_GL ON CACHE BOOL "" FORCE)             # GL-rendering
-#set( OGRE_BUILD_RENDERSYSTEM_GL3Plus ON CACHE BOOL "" FORCE)        # GL3+-rendering
-##set( OGRE_BUILD_RENDERSYSTEM_GLES2 ON CACHE BOOL "" FORCE)          # GLES2-rendering. FIXME.
-##set( OGRE_CONFIG_THREADS 2            ON CACHE BOOL "" FORCE)       # thread setting 2, default. see doc...
-##set( OGRE_FULL_RPATH                  ON CACHE BOOL "" FORCE)       # compile RPATH. FIXME.
-#set( OGRE_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)                    # build OGRE samples
-#set( OGRE_BUILD_TOOLS ON CACHE BOOL "" FORCE)                       # build OGRE tools
-##set( OGRE_CONFIG_DOUBLE ON CACHE BOOL "" FORCE)                     # use 'double' as fp type
-#set( OGRE_INSTALL_DOCS OFF OFF CACHE BOOL "" FORCE)                 # install documentation
-#set( OGRE_INSTALL_SAMPLES OFF OFF CACHE BOOL "" FORCE)              # install samples
-#set( OGRE_INSTALL_TOOLS OFF CACHE BOOL "" FORCE)                    # install tools
-#set( OGRE_STATIC ON CACHE BOOL "" FORCE)                            # build OGRE as a static lib. FIXME.
+# NOTE: if CMAKE_BUILD_TYPE not set, the Ogre subdirectory will set this to RelWithDebInfo.
+#       actual code:
+#       if (CMAKE_BUILD_TYPE STREQUAL "")
+#         # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This screws up
+#         # differentiation between debug and release builds.
+#         set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+#       endif ()
+#
+#       below we forced this value to be be None, but now we should define this value when building (cmake -DCMAKE_BUILD_TYPE)
+#       this is done by 'build.sh'!
 
-#add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
+#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                # prevent "RelWithDebInfo" pollution of main project, open-forest.
+set( OGRE_BUILD_COMPONENT_OVERLAY ON CACHE BOOL "" FORCE)           # overlay component
+set( OGRE_BUILD_COMPONENT_PAGING ON CACHE BOOL "" FORCE)            # paging component
+set( OGRE_BUILD_COMPONENT_PROPERTY ON CACHE BOOL "" FORCE)          # property component
+set( OGRE_BUILD_COMPONENT_RTSSHADERSYSTEM ON CACHE BOOL "" FORCE)   # rtsshader component
+set( OGRE_BUILD_COMPONENT_TERRAIN ON CACHE BOOL "" FORCE)           # terrain component
+set( OGRE_BUILD_COMPONENT_VOLUME ON CACHE BOOL "" FORCE)            # volume component
+set( OGRE_BUILD_COMPONENT_BSP ON CACHE BOOL "" FORCE)               # bsp component
+set( OGRE_BUILD_PLUGIN_CG ON CACHE BOOL "" FORCE)                   # Cg plugin
+set( OGRE_BUILD_PLUGIN_OCTREE ON CACHE BOOL "" FORCE)               # octree plugin
+set( OGRE_BUILD_PLUGIN_PCZ ON CACHE BOOL "" FORCE)                  # PCZ plugin
+set( OGRE_BUILD_PLUGIN_PFX ON CACHE BOOL "" FORCE)                  # PFX plugin
+set( OGRE_BUILD_RENDERSYSTEM_GL ON CACHE BOOL "" FORCE)             # GL-rendering
+set( OGRE_BUILD_RENDERSYSTEM_GL3Plus ON CACHE BOOL "" FORCE)        # GL3+-rendering
+#set( OGRE_BUILD_RENDERSYSTEM_GLES2 ON CACHE BOOL "" FORCE)          # GLES2-rendering.
+#set( OGRE_CONFIG_THREADS 2            ON CACHE BOOL "" FORCE)       # thread setting 2, default. see doc...
+#set( OGRE_FULL_RPATH                  ON CACHE BOOL "" FORCE)       # compile RPATH. FIXME.
+set( OGRE_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)                    # build OGRE samples
+set( OGRE_BUILD_TOOLS ON CACHE BOOL "" FORCE)                       # build OGRE tools
+#set( OGRE_CONFIG_DOUBLE ON CACHE BOOL "" FORCE)                     # use 'double' as fp type
+set( OGRE_INSTALL_DOCS OFF OFF CACHE BOOL "" FORCE)                 # install documentation
+set( OGRE_INSTALL_SAMPLES OFF OFF CACHE BOOL "" FORCE)              # install samples
+set( OGRE_INSTALL_TOOLS OFF CACHE BOOL "" FORCE)                    # install tools
+set( OGRE_STATIC OFF CACHE BOOL "" FORCE)                           # build OGRE as a static lib.
+
+add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
 
 
 ################################################################################
@@ -290,6 +305,11 @@ if ( BATB_BUILD )
     # yaml-cpp
     include_directories( ${LIBS_SOURCE_DIR}/yaml-cpp/include )
     list( APPEND MAIN_LIBRARIES yaml-cpp )
+
+    # Ogre
+    include_directories( "${LIBS_SOURCE_DIR}/ogre/include" )
+    include_directories( "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    list( APPEND MAIN_LIBRARIES OgreMain )
 
     # OLD
 # ifdef "build old"

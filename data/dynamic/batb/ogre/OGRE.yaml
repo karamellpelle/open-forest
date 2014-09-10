@@ -1,0 +1,25 @@
+---
+
+# plugins for OGRE to load
+plugins:
+  - RenderSystem_GL
+  - RenderSystem_GL3Plus
+  - Plugin_ParticleFX
+  - Plugin_BSPSceneManager
+  - Plugin_CgProgramManager
+  - Plugin_PCZSceneManager
+  - Plugin_OctreeZone
+  - Plugin_OctreeSceneManager
+
+# resources to be loaded always
+resources:
+  essential:
+    - { type: Zip,        path: batb/tmp/path}
+    - { type: FileSystem, path: batb/tmp/path}
+  popular:
+    - { type: Zip,        path: batb/tmp/path}
+    - { type: FileSystem, path: batb/tmp/path}
+  general:
+    - { type: Zip,        path: batb/tmp/path}
+    - { type: FileSystem, path: batb/tmp/path}
+  # ... 
