@@ -25,7 +25,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <iterator>
-
+#include "definitions.hpp"
 
 // main include file to be included through all sources...
 
@@ -39,7 +39,7 @@ namespace include
 
 // our type for the sizes of finite sets.
 // we requirere a word size of minimum 32 bits.
-// size_t is for memory, https://en.wikipedia.org/wiki/Stdint.h#stdint.h, ...
+// size_t is for memory, https://en.wikipedia.org/wiki/Stdint.h#stdint.h
 typedef std::uint_fast32_t uint;
 
 // our floating point type.

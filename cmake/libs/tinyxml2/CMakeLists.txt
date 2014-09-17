@@ -1,30 +1,18 @@
-project ( custom-tinyxml2 CXX )
-cmake_minimum_required( VERSION 2.6 )
+cmake_minimum_required( VERSION 3.0 )
+
+project ( my-tinyxml2 CXX )
 
 
-set( CUSTOM_TINYXML2_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs/tinyxml2 )
-set( CUSTOM_TINYXML2_INCLUDE_DIRS ${CUSTOM_TINYXML2_SOURCE_DIR} )
-#FIXME: set <project-name>_SOURCE_DIR <project-name>_BIN_DIR from these??
-#       (http://www.cmake.org/cmake/help/v2.8.12/cmake.html#command:project)
+set( MY-TINYXML2_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs/tinyxml2 )
+set( MY-TINYXML2_INCLUDE_DIRS ${MY-TINYXML2_SOURCE_DIR} )
 
-#message( "CUSTOM_TINYXML2_SOURCE_DIR ${CUSTOM_TINYXML2_SOURCE_DIR}" )
-#message( "CUSTOM_TINYXML2_INCLUDE_DIRS ${CUSTOM_TINYXML2_INCLUDE_DIRS}" )
+set(  MY-TINYXML2_SOURCES 
+      "${MY-TINYXML2_SOURCE_DIR}/tinyxml2.cpp"
+   ) 
 
+# create static library 'my-tinyxml2'
+add_library(my-tinyxml2 STATIC ${MY-TINYXML2_SOURCES} )
 
-set(  CUSTOM_TINYXML2_SOURCES 
-      "${CUSTOM_TINYXML2_SOURCE_DIR}/tinyxml2.cpp"
-) 
-
-# DEBUG/NDEBUG
-#add_definitions( -DNDEBUG ) 
-include_directories( ${CUSTOM_TINYXML2_INCLUDE_DIRS} )
-
-# create static library 'tinyxml2-custom'
-add_library(custom-tinyxml2 STATIC ${CUSTOM_TINYXML2_SOURCES})
+target_include_directories( my-tinyxml2 PUBLIC ${MY-TINYXML2_INCLUDE_DIRS} )
 
 
-#--------------------------------------------------------------------
-# Export CUSTOM_TINYXML2_XXX
-#--------------------------------------------------------------------
-set(CUSTOM_TINYXML2_INCLUDE_DIRS ${CUSTOM_TINYXML2_INCLUDE_DIRS} PARENT_SCOPE)
-set(CUSTOM_TINYXML2_LIBRARIES    ""                            PARENT_SCOPE)
