@@ -22,7 +22,7 @@
 #define BATB_BUILD_OLD
 
 // version
-#define BATB_VERSION_STRING "0.0"
+#define BATB_VERSION_STRING 
 
 #endif
 

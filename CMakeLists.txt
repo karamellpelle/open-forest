@@ -25,7 +25,7 @@ set( PROJECT_VERSION_MINOR 0 )  # can be set auto by 'project'
 set( PROJECT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}" )
 
 # set compiler flags
-add_compile_options( "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+add_compile_options( -std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend )
 
 # FIXME: add_compile_options only for the C compiler
 #
@@ -64,10 +64,10 @@ endif()
 ################################################################################
 # build library 'glfw'
 #
-set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE)   # we do not want to build examples
-set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )      # we do not want to build documentation
-set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )     # we do not want to build tests 
-set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )         # we do not want to build tests 
+set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE)    # we do not want to build examples
+set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )   # we do not want to build documentation
+set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
+set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
 add_subdirectory( ${LIBS_SOURCE_DIR}/glfw )
 
 
@@ -81,7 +81,6 @@ add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/nanovg" )
 
 ################################################################################
 # build library 'my-turbobadger'. this exports the necessary include directories
-#   my-turbobadger                : target
 add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/turbobadger" )
 
 ################################################################################
@@ -142,6 +141,7 @@ add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
 add_library(  lib-file STATIC 
               "${MAIN_SOURCE_DIR}/file.cpp"
            )
+target_include_directories( lib-file PUBLIC "${MAIN_SOURCE_DIR}" )
 
 ################################################################################
 # lib-env
@@ -150,11 +150,15 @@ add_library(  lib-env STATIC
               "${MAIN_SOURCE_DIR}/env/screen.cpp"
               "${MAIN_SOURCE_DIR}/env/frame.cpp"
            )
+target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
+target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
 
+
+################################################################################
 # define batb sources
 set(  BATB_SOURCES
       # main
-      "${MAIN_SOURCE_DIR}/batb/main.cpp"
+      "${MAIN_SOURCE_DIR}/main.cpp"
       # BATB  
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
       # BATB core:
@@ -296,25 +300,17 @@ if ( BATB_BUILD )
     # lib-env
     list( APPEND BATB_LIBRARIES lib-env )
 
-    # lib-game
-    list( APPEND BATB_LIBRARIES lib-game )
-
-    # OLD
+    # old-BATB
     if( BATB_BUILD_OLD )
+        list( APPEND BATB_SOURCES ${BATB_OLD_SOURCES} )
+        list( APPEND BATB_LIBRARIES "-lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc" ) # FIXME: find package plib
+
         target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
         target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
-        set( BATB_OLD_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc) # FIXME: find_package
-
-        #include_directories( "/home/karamellpelle/Tmp/plib-install/include" )
-        #set( KLIB "/home/karamellpelle/Tmp/plib-install/lib" )
-        #set( BATB_OLD_LIBRARIES "${KLIB}/libplibpuaux.a" "${KLIB}/libplibpu.a" "${KLIB}/libplibfnt.a" "${KLIB}/libplibsg.a" "${KLIB}/libplibul.a" -lGLEW -lGL -lGLU -lm -lc)
-
-        list( APPEND BATB_SOURCES ${BATB_OLD_SOURCES} )
-        list( APPEND BATB_LIBRARIES ${BATB_OLD_LIBRARIES} )
     endif( BATB_BUILD_OLD )
 
 
-    # write CMake configurations into code
+    # write our CMake variables into code
     configure_file( "${MAIN_SOURCE_DIR}/definitions.hpp.in" "${MAIN_SOURCE_DIR}/definitions.hpp" )
 
 
