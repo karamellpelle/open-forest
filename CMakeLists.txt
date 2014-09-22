@@ -80,7 +80,7 @@ endif()
 set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE )   # we do not want to build examples
 set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )   # we do not want to build documentation
 set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
-set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
+set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to install GLFW
 add_subdirectory( ${LIBS_SOURCE_DIR}/glfw )
 
 
@@ -159,6 +159,7 @@ add_library(  lib-env STATIC
            )
 target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
 target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
+target_link_libraries( lib-env yaml-cpp )
 
 
 ################################################################################
@@ -187,6 +188,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
+      # library implementations:
+      "${MAIN_SOURCE_DIR}/nanovg.cpp"             
       # tmp:
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
@@ -259,7 +262,12 @@ set(  BATB_SOURCES_OLD
 if ( BATB_BUILD )
 
 
-    
+    # old-BATB
+    if( BATB_BUILD_OLD )
+        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+    endif( BATB_BUILD_OLD )
+
+
     # create executable target 'open-forest'
     add_executable( open-forest ${BATB_SOURCES} ) 
 
@@ -283,7 +291,6 @@ if ( BATB_BUILD )
 
     # my-nanovg
     list( APPEND BATB_LIBRARIES my-nanovg )
-    list( APPEND BATB_SOURCES "${MAIN_SOURCE_DIR}/nanovg.cpp" ) # also add our implementation source file
 
     # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
@@ -305,9 +312,7 @@ if ( BATB_BUILD )
 
     # old-BATB
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
-        list( APPEND BATB_LIBRARIES "-lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc" ) # FIXME: find package plib
-
+        list( APPEND BATB_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc ) # FIXME: find package plib
         target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
         target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
     endif( BATB_BUILD_OLD )
