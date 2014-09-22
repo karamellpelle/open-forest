@@ -1,34 +1,47 @@
 # for help, see
 #   http://www.cmake.org/cmake/help/v3.0
-#   http://www.itk.org/Wiki/CMake_FAQ#Writing_CMakeLists.txt
-#   http://www.cmake.org/cmake/help/cmake_tutorial.html
-#   http://www.cmake.org/Wiki/CMake_Useful_Variables
-#   http://binglongx.wordpress.com/tag/cmake_build_type/
-#   'cmake -LAH' in CMakeLists.txt to see varible values
+#   www.cmake.org/cmake/help/v3.0/manual/cmake-buildsystem.7.html
+#   http://www.cmake.org/cmake/help/v3.0/manual/cmake-properties.7.html
 #   http://www.cmake.org/pipermail/cmake/2005-September/007204.html
+#
+#   use 'cmake -LAH' for a CMake project to see values of variables
+#   including CMake code: http://www.cmake.org/cmake/help/v3.0/command/include.html
 #   
 #
-# CMake variabel types: normal and cache. see: 
-# http://www.cmake.org/cmake/help/v2.8.9/cmake.html#command%3aset
-# cache variables are variables persisting each cmake invocation. they
-# are defined for each cmake invocation (i.e. build folder for the main project)
-# these cache variables values can (later) be defined by hand in CMakeCache.txt
+# CMake variabel types: normal and cache.
+# normal variables are created when running a CMakeLists.txt
+# cache variables are defined for a CMake project. typically a project option.
+# cache variables can be defined by hand in CMakeCache.txt,
+# or easily edited with 'cmake-gui'.
 #
 cmake_minimum_required( VERSION 3.0 )
 
 # open-forest
-project ( open-forest )
+project( open-forest )
 
-# define versions
-set( PROJECT_VERSION_MAJOR 0 )  # can be set auto by 'project'
-set( PROJECT_VERSION_MINOR 0 )  # can be set auto by 'project'
-set( PROJECT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}" )
+# set version
+set( BATB_VERSION_MAJOR  0 )
+set( BATB_VERSION_MINOR  0 )
+set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
 
+
+################################################################################
 # set compiler flags
-add_compile_options( -std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend )
-
-# FIXME: add_compile_options only for the C compiler
 #
+# FIXME: differentiate add_compile_options between each language
+# see:   
+#        http://stackoverflow.com/questions/25525047/cmake-generator-expression-differentiate-c-c-code
+#        http://stackoverflow.com/questions/23995019/what-is-the-modern-method-for-setting-general-compile-flags-in-cmake
+#     
+# temporary fix: look at linker language for each target
+add_compile_options( -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
+# C++ specific compiler options
+add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-std=c++11>" ) 
+add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-non-template-friend>" )
+# C specific compiler options
+#add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,C>:>" )
+
+# for older CMake (2.x):
 # CMAKE_*_FLAGS are only used when the cache variable CMAKE_BUILD_TYPE:STRING 
 # is None (or undefined). otherwise the flags CMAKE_*_FLAGS_[DEBUG/RELEASE/RELWITHDEBINFO/MINSIZEREL]
 # are used.
@@ -37,7 +50,7 @@ add_compile_options( -std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-u
 # because we got too much compiler warnings without, since Ogre sets the build type to RelWithDebInfo.
 # later, we may actually rely on the default OGRE setting "RelWithDebInfo", since
 # OGRE may be too slow (release build of OGRE can increase performance a lot, according to doc).
-set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
+#set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 
 
 ################################################################################
@@ -64,7 +77,7 @@ endif()
 ################################################################################
 # build library 'glfw'
 #
-set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE)    # we do not want to build examples
+set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE )   # we do not want to build examples
 set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )   # we do not want to build documentation
 set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
 set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
@@ -85,21 +98,16 @@ add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/turbobadger" )
 
 ################################################################################
 # build library 'yaml-cpp'.
-set( YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE) # disable "testing and parse tools"
+set( YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE )   # disable "testing and parse tools"
 add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 
 ################################################################################
 # build Ogre
 # see http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Building+Ogre+With+CMake
-# also, 'cmake -LAH' can be used to lists CMake-values in the Ogre source directory
-#
-# other settings too look at later:
-#   * DDS/ETC codec?
-#   * CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT?
-#   * CONFIG_ENABLE_PVRTC?
+# also, 'cmake -LAH' can be used to lists CMake-values for the Ogre CMake project
 #
 # NOTE: if CMAKE_BUILD_TYPE not set, the Ogre subdirectory will set this to RelWithDebInfo.
-#       however, see the following snippet of the Ogre-CMakeLists.txt:
+#       see the following snippet of the Ogre CMakeLists.txt:
 #
 #         if (CMAKE_BUILD_TYPE STREQUAL "")
 #           # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This screws up
@@ -107,7 +115,7 @@ add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 #           set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 #         endif ()
 #
-#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                    # prevent "RelWithDebInfo" pollution of main project, open-forest.
+#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                    # prevent "RelWithDebInfo" 
 set( OGRE_BUILD_COMPONENT_OVERLAY             ON CACHE BOOL "" FORCE)   # overlay component
 set( OGRE_BUILD_COMPONENT_PAGING              ON CACHE BOOL "" FORCE)   # paging component
 set( OGRE_BUILD_COMPONENT_PROPERTY            ON CACHE BOOL "" FORCE)   # property component
@@ -131,7 +139,6 @@ set( OGRE_INSTALL_DOCS                        OFF CACHE BOOL "" FORCE)  # instal
 set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # install samples
 set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
 set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
-
 add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
 
 
@@ -157,9 +164,7 @@ target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include"
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
-      # main
       "${MAIN_SOURCE_DIR}/main.cpp"
-      # BATB  
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
       # BATB core:
       "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"
@@ -182,17 +187,17 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
-      # tmp (demo):
+      # tmp:
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
-)
+   )
 
 ################################################################################
 # define old sources
 #
 
-set(  BATB_OLD_SOURCES 
+set(  BATB_SOURCES_OLD 
       "${MAIN_SOURCE_DIR}/batb/old/old.cpp"
       "${MAIN_SOURCE_DIR}/batb/old/calcalt.cpp"
       "${MAIN_SOURCE_DIR}/batb/old/client.cpp"
@@ -244,13 +249,12 @@ set(  BATB_OLD_SOURCES
       "${MAIN_SOURCE_DIR}/batb/old/xmlParser.cpp"
       "${MAIN_SOURCE_DIR}/batb/old/xmountains.cpp"
       "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
-)
+   )
 
 
 ################################################################################
 # build executable 'open-forest'
 ################################################################################
-
 
 if ( BATB_BUILD )
 
@@ -281,9 +285,8 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES my-nanovg )
     list( APPEND BATB_SOURCES "${MAIN_SOURCE_DIR}/nanovg.cpp" ) # also add our implementation source file
 
-    # turbobadger
+    # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
-    target_include_directories( open-forest PRIVATE ${MAIN_SOURCE_DIR}/batb/gui )          # also add our tb_config.h implementation
 
     # yaml-cpp
     list( APPEND BATB_LIBRARIES yaml-cpp )
@@ -302,7 +305,7 @@ if ( BATB_BUILD )
 
     # old-BATB
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_SOURCES ${BATB_OLD_SOURCES} )
+        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
         list( APPEND BATB_LIBRARIES "-lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc" ) # FIXME: find package plib
 
         target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
@@ -314,14 +317,16 @@ if ( BATB_BUILD )
     configure_file( "${MAIN_SOURCE_DIR}/definitions.hpp.in" "${MAIN_SOURCE_DIR}/definitions.hpp" )
 
 
-    # link libraries to target
+    # link libraries to our executable target
     target_link_libraries( open-forest ${BATB_LIBRARIES} )
 
 endif()
 
 
+################################################################################
+# Install open-forest
+################################################################################
 
-### INSTALL ###
 if ( BATB_INSTALL )
     message( "install not implemented..." )
     # ...

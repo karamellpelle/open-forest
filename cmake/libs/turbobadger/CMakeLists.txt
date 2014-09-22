@@ -3,8 +3,10 @@ cmake_minimum_required( VERSION 3.0 )
 project ( my-turbobadger CXX )
 
 # set flags, based on turbobadger Makefile
-# we see that turbobadger wants nullptr and some other stuff
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++0x -DLINUX" ) # FIXME: not just linux... but gives compile error otherwise in tb_select.cpp
+# we see that the Makefile wants nullptr and some other stuff
+
+# TODO: not just linux... but gives compile error otherwise in tb_select.cpp
+add_compile_options( -DLINUX )
 
 set( MY-TURBOBADGER_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs/turbobadger )
 list( APPEND MY-TURBOBADGER_INCLUDE_DIRS ${MY-TURBOBADGER_SOURCE_DIR}/src )
@@ -78,13 +80,18 @@ set(  MY-TURBOBADGER_SOURCES
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/addons/tbimage/tb_image_widget.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/renderers/tb_renderer_batcher.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/renderers/tb_renderer_gl.cpp" 
-
+      
 ) 
 
 
 # create static library 'turbobadger-my'
 add_library( my-turbobadger STATIC ${MY-TURBOBADGER_SOURCES} )
 
+# add our own tb_config.h:
+# FIXME: verify that this is seached before the tb-folder
+target_include_directories( my-turbobadger PRIVATE ${MAIN_SOURCE_DIR}/batb/gui ) 
+
 target_include_directories( my-turbobadger PRIVATE ${MAIN_SOURCE_DIR} )
 target_include_directories( my-turbobadger PUBLIC ${MY-TURBOBADGER_INCLUDE_DIRS} )  
+
 
