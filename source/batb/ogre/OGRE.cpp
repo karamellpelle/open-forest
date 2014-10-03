@@ -179,6 +179,7 @@ void begin(OGRE& ogre)
     params["currentGLContext"] = "true";                        
 #ifdef GLFW_EXPOSE_NATIVE_GLX
     // let Ogre use our GLContext:
+    // FIXME: deprecated, accordingn to log output
     GLXContext context = glfwGetGLXContext( env::screen_window() );
     unsigned long value = (unsigned long)( context );
     params["externalGLContext"] = value;

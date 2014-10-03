@@ -41,15 +41,11 @@ add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-
 # C specific compiler options
 #add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,C>:>" )
 
-# for older CMake (2.x):
-# CMAKE_*_FLAGS are only used when the cache variable CMAKE_BUILD_TYPE:STRING 
-# is None (or undefined). otherwise the flags CMAKE_*_FLAGS_[DEBUG/RELEASE/RELWITHDEBINFO/MINSIZEREL]
-# are used.
-#
 # currently, we invoke (typically, by 'build.sh') cmake with -DCMAKE_BUILD_TYPE=None
 # because we got too much compiler warnings without, since Ogre sets the build type to RelWithDebInfo.
 # later, we may actually rely on the default OGRE setting "RelWithDebInfo", since
 # OGRE may be too slow (release build of OGRE can increase performance a lot, according to doc).
+#set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
 #set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 
 
@@ -194,6 +190,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/tmp/ogre.cpp"
    )
 
 ################################################################################

@@ -33,8 +33,17 @@ namespace Ogre
 namespace batb
 {
 
-
 class BATB;
+
+// tmp:
+namespace tmp
+{
+namespace ogre
+{
+void demo_begin(BATB& );
+void demo_iterate(BATB& );
+}
+}
 
 
 namespace ogre
@@ -47,6 +56,10 @@ class OGRE
 {
 friend void begin(OGRE& );
 friend void end(OGRE& );
+
+// TMP:
+friend void tmp::ogre::demo_begin(BATB& );
+friend void tmp::ogre::demo_iterate(BATB& );
 
 public:
     OGRE(BATB& b);

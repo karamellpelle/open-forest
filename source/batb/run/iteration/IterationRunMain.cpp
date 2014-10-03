@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/gui.hpp"
 #include "batb/tmp/nanovg.hpp"
+#include "batb/tmp/ogre.hpp"
 
 
 namespace batb
@@ -70,7 +71,8 @@ void IterationRunMain::iterate_begin(World& run)
     // nanovg demo
     tmp::nanovg::demo_begin();
 
-
+    // Ogre demo
+    tmp::ogre::demo_begin( batb );
 }
 
 
@@ -87,6 +89,8 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
     tmp::nanovg::demo_iterate( premult, blowup );
 
+    // Ogre demo:
+    tmp::ogre::demo_iterate( batb );
 
 
     ////////////////////////////////////////////////////////////////////////////////
