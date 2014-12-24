@@ -15,54 +15,32 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_OGRE_OGRE_HPP
-#define BATB_OGRE_OGRE_HPP
-#include "batb/batb_include.hpp"
+#ifndef BATB_XXX_XXX_HPP
+#define BATB_XXX_XXX_HPP
 
 
-// forward declare Ogre classes
-namespace Ogre
-{
-    class Root;
-    class RenderWindow;
-    class RenderTarget;
-
-}
 
 
 namespace batb
 {
 
+
 class BATB;
 
-// tmp:
-namespace tmp
-{
-namespace ogre
-{
-void demo_begin(BATB& );
-void demo_iterate(BATB& );
-}
-}
 
-
-namespace ogre
+namespace xxx
 {
 
 
 
 
-class OGRE
+class Xxx
 {
-friend void begin(OGRE& );
-friend void end(OGRE& );
-
-// TMP:
-friend void tmp::ogre::demo_begin(BATB& );
-friend void tmp::ogre::demo_iterate(BATB& );
+friend void begin(Xxx& );
+friend void end(Xxx& );
 
 public:
-    OGRE(BATB& b);
+    Xxx(BATB& b);
 
     void filepath(const std::string& path)
     {
@@ -78,15 +56,14 @@ private:
     bool initialized_ = false;
     std::string filepath_;
 
-    Ogre::Root* root_ = nullptr;
-    Ogre::RenderWindow* renderwindow_ = nullptr; // this is a Ogre::RenderTarget too.
+
 };
 
 
-void begin(OGRE& );
-void end(OGRE& );
+void begin(Xxx& );
+void end(Xxx& );
 
-} // namespace ogre
+} // namespace xxx
 
 } // namespace batb
 

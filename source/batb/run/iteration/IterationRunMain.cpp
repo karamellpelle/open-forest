@@ -68,11 +68,13 @@ void IterationRunMain::iterate_begin(World& run)
         batb.gui.root.AddChild( batb.run.guiMain );
     }
 
+    // Ogre demo
+    tmp::ogre::demo_begin( batb );
+
+    glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     // nanovg demo
     tmp::nanovg::demo_begin();
 
-    // Ogre demo
-    tmp::ogre::demo_begin( batb );
 }
 
 
@@ -84,13 +86,14 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
 
 
     // nanovg demo:
-    static bool premult; static bool blowup;
-    if ( batb.run.keyset.u->click() ) premult = !premult;
+    static bool premult = false; static bool blowup = false;
+    //if ( batb.run.keyset.u->click() ) premult = !premult;
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
     tmp::nanovg::demo_iterate( premult, blowup );
 
     // Ogre demo:
-    tmp::ogre::demo_iterate( batb );
+    if ( batb.run.keyset.u->click() ) premult = !premult;
+    if ( premult ) tmp::ogre::demo_iterate( batb );
 
 
     ////////////////////////////////////////////////////////////////////////////////

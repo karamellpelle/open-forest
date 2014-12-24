@@ -5,4 +5,4 @@ build/cmake
 gmon.out
 leaks-*.txt
 session.vim
-tmp
+./tmp

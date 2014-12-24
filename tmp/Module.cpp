@@ -15,80 +15,66 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_OGRE_OGRE_HPP
-#define BATB_OGRE_OGRE_HPP
-#include "batb/batb_include.hpp"
+#include "batb.hpp"
 
 
-// forward declare Ogre classes
-namespace Ogre
-{
-    class Root;
-    class RenderWindow;
-    class RenderTarget;
-
-}
 
 
 namespace batb
 {
 
-class BATB;
 
-// tmp:
-namespace tmp
+
+namespace xxx
 {
-namespace ogre
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  Xxx
+
+Xxx::Xxx(BATB& b) : batb( b ), 
 {
-void demo_begin(BATB& );
-void demo_iterate(BATB& );
+
 }
+
+
+
+void Xxx::save()
+{
+
+    // FIXME: write to file
 }
 
 
-namespace ogre
+////////////////////////////////////////////////////////////////////////////////
+// 
+void begin(Xxx& xxx)
 {
 
+    xxx.batb.log << THIS_FUNCTION << std::endl;    
 
 
+    // set up this Xxx object from file
+    YAML::Node yaml = YAML::LoadFile( xxx.filepath_ );
 
-class OGRE
+    xxx.initialized_ = true;
+}
+
+
+void end(Xxx& xxx)
 {
-friend void begin(OGRE& );
-friend void end(OGRE& );
+    xxx.batb.log << THIS_FUNCTION << std::endl;    
 
-// TMP:
-friend void tmp::ogre::demo_begin(BATB& );
-friend void tmp::ogre::demo_iterate(BATB& );
-
-public:
-    OGRE(BATB& b);
-
-    void filepath(const std::string& path)
+    if ( xxx.initialized_ )
     {
-        filepath_ = path;
+        xxx.save();
     }
-    void save();
+    
+    xxx.initialized_ = false;
+
+}
 
 
-
-    BATB& batb;
-
-private:
-    bool initialized_ = false;
-    std::string filepath_;
-
-    Ogre::Root* root_ = nullptr;
-    Ogre::RenderWindow* renderwindow_ = nullptr; // this is a Ogre::RenderTarget too.
-};
-
-
-void begin(OGRE& );
-void end(OGRE& );
-
-} // namespace ogre
+} // namespace xxx
 
 } // namespace batb
-
-#endif
-

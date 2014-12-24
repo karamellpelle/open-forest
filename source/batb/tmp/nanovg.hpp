@@ -15,80 +15,33 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_OGRE_OGRE_HPP
-#define BATB_OGRE_OGRE_HPP
+#ifndef BATB_TMP_NANOVG_HPP
+#define BATB_TMP_NANOVG_HPP
 #include "batb/batb_include.hpp"
-
-
-// forward declare Ogre classes
-namespace Ogre
-{
-    class Root;
-    class RenderWindow;
-    class RenderTarget;
-
-}
-
 
 namespace batb
 {
 
-class BATB;
-
-// tmp:
 namespace tmp
 {
-namespace ogre
-{
-void demo_begin(BATB& );
-void demo_iterate(BATB& );
-}
-}
 
-
-namespace ogre
+namespace nanovg
 {
 
 
+void demo_begin();
 
-
-class OGRE
-{
-friend void begin(OGRE& );
-friend void end(OGRE& );
-
-// TMP:
-friend void tmp::ogre::demo_begin(BATB& );
-friend void tmp::ogre::demo_iterate(BATB& );
-
-public:
-    OGRE(BATB& b);
-
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
+void demo_iterate(bool premult, bool blowup);
 
 
 
-    BATB& batb;
+} // namespace nanovg
 
-private:
-    bool initialized_ = false;
-    std::string filepath_;
-
-    Ogre::Root* root_ = nullptr;
-    Ogre::RenderWindow* renderwindow_ = nullptr; // this is a Ogre::RenderTarget too.
-};
-
-
-void begin(OGRE& );
-void end(OGRE& );
-
-} // namespace ogre
+} // namespace tmp
 
 } // namespace batb
 
+
 #endif
+
 

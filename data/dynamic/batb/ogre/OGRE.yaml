@@ -15,8 +15,8 @@ plugins:
 resources:
   # Resources required by the sample browser and most samples.
   Essential:
-    - { type: Zip,        path: ogre/Samples/Media/packs/SdkTrays.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/profiler.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/SdkTrays.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/profiler.zip }
     - { type: FileSystem,         path: ogre/Samples/Media/thumbnails }
 
   # Common sample resources needed by many of the samples.
@@ -37,15 +37,15 @@ resources:
     - { type: FileSystem,         path: ogre/Samples/Media/materials/scripts/SSAO }
     - { type: FileSystem,         path: ogre/Samples/Media/materials/textures/SSAO }
     - { type: FileSystem,         path: ogre/Samples/Media/volumeTerrain }
-    - { type: Zip,        path: ogre/Samples/Media/packs/cubemap.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/cubemapsJS.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/dragon.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/fresneldemo.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/ogretestmap.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/ogredance.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/Sinbad.zip }
-    - { type: Zip,        path: ogre/Samples/Media/packs/skybox.zip }
-    - { type: Zip,        path: ogre/Samples/Media/volumeTerrain/volumeTerrainBig.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/cubemap.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/cubemapsJS.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/dragon.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/fresneldemo.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/ogretestmap.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/ogredance.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/Sinbad.zip }
+    - { type: Zip,                path: ogre/Samples/Media/packs/skybox.zip }
+    - { type: Zip,                path: ogre/Samples/Media/volumeTerrain/volumeTerrainBig.zip }
 
   General:
     - { type: FileSystem,         path: ogre/Samples/Media }

@@ -184,7 +184,7 @@ void begin(OGRE& ogre)
     unsigned long value = (unsigned long)( context );
     params["externalGLContext"] = value;
 #endif
-    ogre.renderwindow_ = ogre.root_->createRenderWindow( "__assert_no_window_name__", 0, 0, false, &params );
+    ogre.renderwindow_ = ogre.root_->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
     ogre.renderwindow_->setVisible(true);
 
 
