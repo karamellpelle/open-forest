@@ -16,6 +16,8 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "OgreLogManager.h"
+#include "OgreLog.h"
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
 
@@ -53,23 +55,22 @@ void OGRE::save()
 void begin(OGRE& ogre)
 {
 
-    ogre.batb.log << THIS_FUNCTION << std::endl;    
+    BATB_LOG_FUNC( ogre.batb );
 
     // set up this OGRE object from file
     YAML::Node yaml = YAML::LoadFile( ogre.filepath_ );
 
-    // using Ogre:
-    //  - plugins has to be registered (RenderSystem's, ...)
-    //  - resources has to be defined
-
     ////////////////////////////////////////////////////////////////////////////////
-    // TODO: OgreLogManager: http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Ogre+Framework&structure=Tutorials
+    // setup Ogre
+    //
 
+    // control the log output from Ogre by creating the LogManager ourselves,
+    // before creating Ogre::Root
+    ogre.logmanager = OGRE_NEW Ogre::LogManager();
+    ogre.logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
 
-    ////////////////////////////////////////////////////////////////////////////////
     // create Ogre root object
-
-    ogre.root_ = new Ogre::Root( "", "", file::tmp( "batb-ogre.log" ) ); // no files for plugin, config - we set these programatically!
+    ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log - set manually
     
     // add plugins (rendersystem, scene managers, ...)
     if ( YAML::Node plugins = yaml[ "plugins" ] )
@@ -81,7 +82,7 @@ void begin(OGRE& ogre)
             
             try
             {
-                ogre.root_->loadPlugin( plugin );
+                ogre.root->loadPlugin( plugin );
                 ogre.batb.log << "OK.";
             }
             catch (Ogre::Exception& e)
@@ -126,7 +127,7 @@ void begin(OGRE& ogre)
                     // add resource item
                     try
                     {
-                        resgrpmgr->addResourceLocation( file::static_data( path ), type, name );
+                        resgrpmgr->addResourceLocation( /*"/home/karamellpelle/source/open-forest/" +*/ file::static_data( path ), type, name );
                     }
                     catch (Ogre::Exception& e)
                     {
@@ -148,44 +149,43 @@ void begin(OGRE& ogre)
     ////////////////////////////////////////////////////////////////////////////////
     // set rendersystem for Ogre
 
-    Ogre::RenderSystem* renderer = nullptr;
-
-    // we pick the 0th of available, which should be correct!
-    Ogre::RenderSystemList renderers = ogre.root_->getAvailableRenderers();
-    renderer = renderers.empty() ? nullptr : renderers[0];
-    // FIXME: use getRenderSystemByName( "OpenGL ..." );!
+    // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
+    std::string rendersystem_name = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+    Ogre::RenderSystem* renderer = ogre.root->getRenderSystemByName( rendersystem_name );
 
     // define our render system for Ogre
     if ( renderer )
     {
-        ogre.root_->setRenderSystem( renderer );
+        ogre.root->setRenderSystem( renderer );
     }
     else
     {
-        throw std::runtime_error( "OGRE: no renderers available." );
+        throw std::runtime_error( "OGRE: no RenderSystem with name " + rendersystem_name );
     }
 
     // now initialize Ogre::Root, using our defined RenderSystem
     // (this method returns nullptr, since our argument is 'false')
-    ogre.root_->initialise( false ); 
+    ogre.root->initialise( false ); 
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    // create an Ogre window, from our GLFW window:
-
+    // create an Ogre window, our using our existing GLFW window
+    // NOTE: this GLFW window seems to be controllable from Ogre
+    // too, but we should rely on GLFW, not Ogre
+    //
+    // see implementation og Ogre::GLXWindow
+    //  - currentGLContext 
+    //  - FSAA
+    //  
     Ogre::NameValuePairList params;
 
     // let the renderwindow use our GLContext:
     params["currentGLContext"] = "true";                        
-#ifdef GLFW_EXPOSE_NATIVE_GLX
-    // let Ogre use our GLContext:
-    // FIXME: deprecated, accordingn to log output
-    GLXContext context = glfwGetGLXContext( env::screen_window() );
-    unsigned long value = (unsigned long)( context );
-    params["externalGLContext"] = value;
-#endif
-    ogre.renderwindow_ = ogre.root_->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
-    ogre.renderwindow_->setVisible(true);
+    params["externalGLControl"] = "true";
+
+    // NOTE: fullscreen parameter seems to be used, see Ogre::GLXWindow
+    ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
+    ogre.renderwindow->setVisible(true);
 
 
     ogre.initialized_ = true;
@@ -204,8 +204,10 @@ void end(OGRE& ogre)
         ogre.save();
 
         // FIXME: does this free all resources (unloadPlugin, ...)?
-        delete ogre.root_;
-        ogre.root_ = nullptr;
+        OGRE_DELETE ogre.root;
+        OGRE_DELETE ogre.logmanager;
+
+        ogre.root = nullptr;
     }
     
     ogre.initialized_ = false;
@@ -216,3 +218,7 @@ void end(OGRE& ogre)
 } // namespace ogre
 
 } // namespace batb
+//    open-forest: an orientering game.
+//    Copyright (C) 2014  carljsv@student.matnat.uio.no
+//
+//    This program is free software; you can redistribute it and/or modify

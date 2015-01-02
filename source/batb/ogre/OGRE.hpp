@@ -23,10 +23,11 @@
 // forward declare Ogre classes
 namespace Ogre
 {
+    class LogManager;
+    class Log;
     class Root;
     class RenderWindow;
     class RenderTarget;
-
 }
 
 
@@ -35,15 +36,6 @@ namespace batb
 
 class BATB;
 
-// tmp:
-namespace tmp
-{
-namespace ogre
-{
-void demo_begin(BATB& );
-void demo_iterate(BATB& );
-}
-}
 
 
 namespace ogre
@@ -56,10 +48,6 @@ class OGRE
 {
 friend void begin(OGRE& );
 friend void end(OGRE& );
-
-// TMP:
-friend void tmp::ogre::demo_begin(BATB& );
-friend void tmp::ogre::demo_iterate(BATB& );
 
 public:
     OGRE(BATB& b);
@@ -74,12 +62,15 @@ public:
 
     BATB& batb;
 
+
+    Ogre::LogManager* logmanager = nullptr;
+    Ogre::Root* root = nullptr;
+    Ogre::RenderWindow* renderwindow = nullptr; // this is a Ogre::RenderTarget
+
 private:
     bool initialized_ = false;
     std::string filepath_;
 
-    Ogre::Root* root_ = nullptr;
-    Ogre::RenderWindow* renderwindow_ = nullptr; // this is a Ogre::RenderTarget too.
 };
 
 

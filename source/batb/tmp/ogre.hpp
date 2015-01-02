@@ -22,6 +22,8 @@
 namespace batb
 {
 
+class BATB;
+
 namespace tmp
 {
 
@@ -29,9 +31,9 @@ namespace ogre
 {
 
 
-void demo_begin();
+void demo_begin(BATB& );
 
-void demo_iterate();
+void demo_iterate(BATB& );
 
 
 

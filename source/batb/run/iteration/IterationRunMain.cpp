@@ -46,7 +46,7 @@ IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b )
 
 void IterationRunMain::iterate_begin(World& run)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     // we want clean state for our Key's, no garbage:
     batb.run.keyset.reset();
@@ -69,9 +69,8 @@ void IterationRunMain::iterate_begin(World& run)
     }
 
     // Ogre demo
-    tmp::ogre::demo_begin( batb );
+    //tmp::ogre::demo_begin( batb );
 
-    glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     // nanovg demo
     tmp::nanovg::demo_begin();
 
@@ -85,17 +84,23 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     //
 
 
-    // nanovg demo:
+
     static bool premult = false; static bool blowup = false;
-    //if ( batb.run.keyset.u->click() ) premult = !premult;
+
+    if ( batb.run.keyset.u->click() ) premult = !premult;
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
-    tmp::nanovg::demo_iterate( premult, blowup );
 
     // Ogre demo:
-    if ( batb.run.keyset.u->click() ) premult = !premult;
-    if ( premult ) tmp::ogre::demo_iterate( batb );
+    if ( premult )
+    {
+        //tmp::ogre::demo_iterate( batb );
+    }
 
-
+    // nanovg demo:
+    if ( blowup )
+    {
+        tmp::nanovg::demo_iterate( premult, blowup );
+    }
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 

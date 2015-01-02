@@ -1,11 +1,11 @@
-* prevent OGRE log stdout output
+* prevent GLX segfaullt on shutdown
+  cause: GLXContext::endCurrent sets glx context to None, called from GLRenderSystem::_unregisterContext on deletion of GLXContext,
+         on shutdwn of the GL plugin
 * void xxx::begin(XXX& ) -> uint xxx::begin(XXX& ), returning 0 on complete or number of calls left? (interactive loading)
 * continous save to file (YAML, save())
-* custom CMakeBuild of tinyxml2
 * base event class (Game::), implement for Run/Race/Forest/... 
   true iff handled??
 * implement Log: current indentation, error/warning tags, etc
-* compile_sh -> build (clean, pull-submodules) 
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger

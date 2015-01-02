@@ -49,7 +49,7 @@ int main(int argc, char** argv)
         // modify BATB from command line
         commandline( argc, argv, batb );
 
-        // main is iterating batb::run::World
+        // 'main' is iterating batb::run::World
         batb::run::World run;
         batb::run::IterationStack stack;
 
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     catch (std::exception& e)
     {
         // some serious error occured above, lets handle it
-        std::cerr << THIS_FUNCTION << ": fatal error: \n" << e.what() << std::endl;
+        std::cerr << "main: fatal error: \n" << e.what() << "\n" << std::endl;
         ret = 1;
     }
 

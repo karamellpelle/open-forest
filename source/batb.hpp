@@ -19,6 +19,11 @@
 #define BATB_HPP
 #include "batb/BATB.hpp"
 
+namespace batb
+{
 
+#define BATB_LOG_FUNC(batb) (batb.log) << THIS_FUNCTION << std::endl;
+
+}
 
 #endif

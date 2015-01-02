@@ -1,6 +1,10 @@
 ---
 
-# plugins for OGRE to load
+# define our Ogre rendersystem
+rendersystem: "OpenGL Rendering Subsystem" 
+
+
+# plugins for Ogre to load
 plugins:
   - RenderSystem_GL
   - RenderSystem_GL3Plus
@@ -53,3 +57,5 @@ resources:
   # Materials for visual tests
   Tests:
     - { type: FileSystem,         path: ogre/Tests/Media }
+
+

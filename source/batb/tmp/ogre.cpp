@@ -29,6 +29,8 @@
 #include "OgreRenderWindow.h"
 #include "OgreWindowEventUtilities.h"
 
+#include "batb/tmp/ql.hpp"
+
 namespace batb
 {
 
@@ -38,6 +40,7 @@ namespace tmp
 
 namespace ogre
 {
+
 
 
 static bool tmp_empty = true;
@@ -51,16 +54,16 @@ void demo_begin(BATB& batb)
     if ( tmp_empty )
     {
         // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-        scenemgr = batb.ogre.root_->createSceneManager( "DefaultSceneManager" );
+        scenemgr = batb.ogre.root->createSceneManager( "DefaultSceneManager" );
         
         camera = scenemgr->createCamera( "PlayerCam" );
         camera->setPosition( Ogre::Vector3( 0, 0, 80 ) );
         camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
         camera->setNearClipDistance( 5 );
 
-        viewport = batb.ogre.renderwindow_->addViewport( camera );
-        viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
-
+        viewport = batb.ogre.renderwindow->addViewport( camera );
+        //viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
+        viewport->setClearEveryFrame( false, 0 );
         // FIXME: into demo_iterate
         camera->setAspectRatio( Ogre::Real( viewport->getActualWidth()
                                 / Ogre::Real( viewport->getActualHeight() )) );
@@ -73,18 +76,28 @@ void demo_begin(BATB& batb)
 
         Ogre::Light* l = scenemgr->createLight( "MainLight" );
         l->setPosition( 20, 80, 50 );
+
+        //Ogre::ql_init(scenemgr, camera, batb.ogre.renderwindow, false);
     }
     tmp_empty = false;
 }
 
 void demo_iterate(BATB& batb)
 {
-    // RenderTarget::update, Root::renderOneFrame
+    // FIXME: push Ogre GL state invariant
 
     Ogre::WindowEventUtilities::messagePump();
 
-    // TODO: Root::renderOneFrame or RenderWindow::renderXXX
-    batb.ogre.root_->renderOneFrame();
+    batb.ogre.root->renderOneFrame();
+    //scenemgr->_renderScene( camera, viewport, false );
+
+    // FIXME: pop Ogre GL state invariant
+
+    // FIXME: this must work:
+    //Ogre::ql_PreRender();
+    //Ogre::ql_Render();
+    //Ogre::ql_PostRender();
+    //
 }
 
 
