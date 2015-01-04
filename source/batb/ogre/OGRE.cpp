@@ -20,6 +20,7 @@
 #include "OgreLog.h"
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
+#include "OgreResourceGroupManager.h"
 
 
 
@@ -69,25 +70,27 @@ void begin(OGRE& ogre)
     ogre.logmanager = OGRE_NEW Ogre::LogManager();
     ogre.logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
 
+    ////////////////////////////////////////////////////////////////////////////////
     // create Ogre root object
-    ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log - set manually
-    
+    ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
+   
+    ////////////////////////////////////////////////////////////////////////////////
     // add plugins (rendersystem, scene managers, ...)
+    ogre.batb.log << "OGRE: loading plugins:" << std::endl;
     if ( YAML::Node plugins = yaml[ "plugins" ] )
     {
         for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
         {
             std::string plugin = i->as<std::string>();
-            ogre.batb.log << "OGRE: loading plugin '" << plugin << "'... ";
+            ogre.batb.log << "  " << plugin;
             
             try
             {
                 ogre.root->loadPlugin( plugin );
-                ogre.batb.log << "OK.";
             }
             catch (Ogre::Exception& e)
             {
-                ogre.batb.log << "error: " << e.what();
+                ogre.batb.log << " (" << e.what() << " )";
             }
 
             ogre.batb.log << std::endl;
@@ -98,10 +101,50 @@ void begin(OGRE& ogre)
         throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // set rendersystem for Ogre
+
+    // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
+    std::string rendersystem_name = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+    Ogre::RenderSystem* renderer = ogre.root->getRenderSystemByName( rendersystem_name );
+
+    // set our Ogre render system
+    if ( renderer )
+    {
+        ogre.root->setRenderSystem( renderer );
+    }
+    else
+    {
+        throw std::runtime_error( "OGRE: no RenderSystem with name " + rendersystem_name );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////    
+    // initialize Root, using our defined RenderSystem
+    // (this method returns nullptr, since our argument is 'false')
+    ogre.root->initialise( false ); 
+
+
 
     ////////////////////////////////////////////////////////////////////////////////
+    // create an Ogre window, using our existing GLFW window.
+    //
+    // see implementation of Ogre::GLXWindow for settings:
+    //  - currentGLContext 
+    //  - FSAA
+    //  - ... 
+    Ogre::NameValuePairList params;
+    params["currentGLContext"] = "true";  // let RenderWindow use our GL context
+    params["externalGLControl"] = "true"; // no automatic swapping
+    ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
+    ogre.renderwindow->setVisible(true);
+
+
+
+    // TODO: 
+    //  - remove frm here, into other, for example tmp::ogre::demo_begin
+    //  - find out how to use ResourceGroupManager::initialiseAllResourceGroups()
+    ////////////////////////////////////////////////////////////////////////////////
     // define our resources
-    Ogre::ResourceGroupManager* resgrpmgr = Ogre::ResourceGroupManager::getSingletonPtr();
     if ( YAML::Node resources = yaml[ "resources" ] )
     {
         // iterate over group names
@@ -116,28 +159,33 @@ void begin(OGRE& ogre)
             // iterate over defined content for that group
             for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
             {
+                ogre.batb.log << "  ";
+
                 YAML::Node resource = *j;
                 if ( resource[ "type" ] && resource[ "path" ] )
                 {
                     std::string type = resource[ "type" ].as<std::string>();
                     std::string path = resource[ "path" ].as<std::string>();
                     
-                    ogre.batb.log << "        " << path << "\n";
+                    ogre.batb.log << path;
 
                     // add resource item
                     try
                     {
-                        resgrpmgr->addResourceLocation( /*"/home/karamellpelle/source/open-forest/" +*/ file::static_data( path ), type, name );
+                        ogre.root->addResourceLocation(  file::static_data( path ), type, name );
                     }
                     catch (Ogre::Exception& e)
                     {
-                        ogre.batb.log << "        (" << e.what() << ")\n";
+                        ogre.batb.log << " (" << e.what() << ")";
                     }
+
                 }
                 else
                 {
-                    ogre.batb.log << "        (invalid item definition)\n";
+                    ogre.batb.log << "(invalid item definition)";
                 }
+
+                ogre.batb.log << "\n";
             }
         }
     }
@@ -145,49 +193,12 @@ void begin(OGRE& ogre)
     {
         throw std::runtime_error( "OGRE: no 'resources' defined in config" );
     }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // set rendersystem for Ogre
-
-    // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
-    std::string rendersystem_name = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
-    Ogre::RenderSystem* renderer = ogre.root->getRenderSystemByName( rendersystem_name );
-
-    // define our render system for Ogre
-    if ( renderer )
-    {
-        ogre.root->setRenderSystem( renderer );
-    }
-    else
-    {
-        throw std::runtime_error( "OGRE: no RenderSystem with name " + rendersystem_name );
-    }
-
-    // now initialize Ogre::Root, using our defined RenderSystem
-    // (this method returns nullptr, since our argument is 'false')
-    ogre.root->initialise( false ); 
+    // TODO: find correct usage for this:
+    //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    // create an Ogre window, our using our existing GLFW window
-    // NOTE: this GLFW window seems to be controllable from Ogre
-    // too, but we should rely on GLFW, not Ogre
-    //
-    // see implementation og Ogre::GLXWindow
-    //  - currentGLContext 
-    //  - FSAA
-    //  
-    Ogre::NameValuePairList params;
-
-    // let the renderwindow use our GLContext:
-    params["currentGLContext"] = "true";                        
-    params["externalGLControl"] = "true";
-
-    // NOTE: fullscreen parameter seems to be used, see Ogre::GLXWindow
-    ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
-    ogre.renderwindow->setVisible(true);
-
-
+    
     ogre.initialized_ = true;
 
 
@@ -218,7 +229,3 @@ void end(OGRE& ogre)
 } // namespace ogre
 
 } // namespace batb
-//    open-forest: an orientering game.
-//    Copyright (C) 2014  carljsv@student.matnat.uio.no
-//
-//    This program is free software; you can redistribute it and/or modify

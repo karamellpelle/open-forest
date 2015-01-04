@@ -56,7 +56,7 @@ void Run::save()
 void begin(Run& run)
 {
 
-    run.batb.log << THIS_FUNCTION << std::endl;    
+    BATB_LOG_FUNC( run.batb );
 
 
     // set up this Run object from file
@@ -78,7 +78,7 @@ void begin(Run& run)
 // end the non-core part of Run
 void end(Run& run)
 {
-    run.batb.log << THIS_FUNCTION << std::endl;    
+    BATB_LOG_FUNC( run.batb );
 
     if ( run.initialized_ )
     {

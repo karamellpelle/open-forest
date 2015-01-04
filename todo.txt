@@ -1,3 +1,7 @@
+* ogre material for ogrehead.mesh
+  cause: not found in MaterialManager from SubEntity::setMaterial
+         gdb seems to show no values in the MaterialManager
+         see file ExampleAplication.h
 * prevent GLX segfaullt on shutdown
   cause: GLXContext::endCurrent sets glx context to None, called from GLRenderSystem::_unregisterContext on deletion of GLXContext,
          on shutdwn of the GL plugin

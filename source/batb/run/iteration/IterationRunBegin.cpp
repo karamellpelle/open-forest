@@ -32,7 +32,7 @@ IterationRunBegin::IterationRunBegin(BATB& b) : IterationRun( b )
 
 void IterationRunBegin::iterate_begin(World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     // NOTE:
     // this function should ideally load the non-core part of BATB in a seperate thread,
@@ -54,7 +54,7 @@ void IterationRunBegin::iterate_begin(World& world)
 
 void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     if ( iteration_count_ == 0 )
     {
@@ -119,12 +119,12 @@ bool IterationRunBegin::begin_non_core()
 
 void begin(IterationRunBegin& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 void end(IterationRunBegin& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 

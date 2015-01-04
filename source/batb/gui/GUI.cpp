@@ -104,7 +104,7 @@ void GUI::save()
 
 void begin(GUI& gui)
 {
-    gui.batb.log << THIS_FUNCTION << std::endl;    
+    BATB_LOG_FUNC( gui.batb );
 
 
     // set up this GUI object from YAML
@@ -180,7 +180,7 @@ void begin(GUI& gui)
 
 void end(GUI& gui)
 {
-    gui.batb.log << THIS_FUNCTION << std::endl;    
+    BATB_LOG_FUNC( gui.batb );
 
     if ( gui.initialized_ )
     {

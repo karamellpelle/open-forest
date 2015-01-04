@@ -33,7 +33,7 @@ IterationRunOld::IterationRunOld(BATB& b) : IterationRun( b )
 
 void IterationRunOld::iterate_begin(World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     old::begin();
 
@@ -77,12 +77,13 @@ void IterationRunOld::iterate_run(IterationStack& stack, World& world)
 
 void begin(IterationRunOld& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 void end(IterationRunOld& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    
+    BATB_LOG_FUNC( iter.batb );
 }
 
 

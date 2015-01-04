@@ -34,7 +34,7 @@ KeySet::KeySet(BATB& b) : batb( b )
 
 void KeySet::load(const std::string& path)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     // clear current content
     clear();

@@ -32,7 +32,7 @@ IterationRunEnd::IterationRunEnd(BATB& b) : IterationRun( b )
 
 void IterationRunEnd::iterate_begin(World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
     // unload the non-core part created by IterationRunBegin.
     end_non_core();
@@ -40,7 +40,7 @@ void IterationRunEnd::iterate_begin(World& world)
 
 void IterationRunEnd::iterate_run(IterationStack& stack, World& world)
 {
-    batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( batb );
 
 }
 
@@ -66,12 +66,12 @@ void IterationRunEnd::end_non_core()
 
 void begin(IterationRunEnd& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 void end(IterationRunEnd& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 

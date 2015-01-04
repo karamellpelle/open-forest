@@ -57,7 +57,7 @@ void IterationRunMain::iterate_begin(World& run)
     std::cout << "\n\n\n\n";
     std::cout << "press INSERT to toggle old-BATB..." << std::endl;
     std::cout << "click ESCAPE to exit from main..." << std::endl;
-    std::cout << "try the 'i' button..." << std::endl;
+    std::cout << "try the 'u' button..." << std::endl;
     std::cout << "\n\n\n\n";
 
     // show GUI window
@@ -69,7 +69,7 @@ void IterationRunMain::iterate_begin(World& run)
     }
 
     // Ogre demo
-    //tmp::ogre::demo_begin( batb );
+    tmp::ogre::demo_begin( batb );
 
     // nanovg demo
     tmp::nanovg::demo_begin();
@@ -93,13 +93,13 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     // Ogre demo:
     if ( premult )
     {
-        //tmp::ogre::demo_iterate( batb );
+        tmp::ogre::demo_iterate( batb );
     }
 
     // nanovg demo:
     if ( blowup )
     {
-        tmp::nanovg::demo_iterate( premult, blowup );
+        //tmp::nanovg::demo_iterate( premult, blowup );
     }
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
@@ -141,7 +141,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
 //
 void begin(IterationRunMain& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 
     // create GUI widget. GUI is up and running...
     // NOTE: memory management is performed by TB!
@@ -158,7 +158,7 @@ void begin(IterationRunMain& iter)
 
 void end(IterationRunMain& iter)
 {
-    iter.batb.log << THIS_FUNCTION << std::endl;
+    BATB_LOG_FUNC( iter.batb );
 }
 
 

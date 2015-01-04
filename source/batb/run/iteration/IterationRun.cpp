@@ -56,8 +56,10 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     world.tick = env::tick();
 
     // draw GUI on top of current Scene, update
-    batb.gui.output( world.scene );
-    batb.gui.step( world.tick );
+    // FIXME: uncomment when Ogre has its own 
+    //        context
+    //batb.gui.output( world.scene );
+    //batb.gui.step( world.tick );
 
     // update keys
     batb.run.keyset.step( world.tick );
