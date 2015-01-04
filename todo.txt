@@ -1,17 +1,14 @@
-* ogre material for ogrehead.mesh
-  cause: not found in MaterialManager from SubEntity::setMaterial
-         gdb seems to show no values in the MaterialManager
-         see file ExampleAplication.h
 * prevent GLX segfaullt on shutdown
   cause: GLXContext::endCurrent sets glx context to None, called from GLRenderSystem::_unregisterContext on deletion of GLXContext,
          on shutdwn of the GL plugin
-* void xxx::begin(XXX& ) -> uint xxx::begin(XXX& ), returning 0 on complete or number of calls left? (interactive loading)
+  fix?: use different Ogre::GLContexts, one for BATB and one for Ogre.
+        then we also fix the GL interference with Turbobagder
+* CMakeLists.txt with different compile options for CXX and C !!
 * continous save to file (YAML, save())
 * base event class (Game::), implement for Run/Race/Forest/... 
   true iff handled??
 * implement Log: current indentation, error/warning tags, etc
 * implement batb/gui/tb_system.cpp, in a platform independent way.
-* invariant: shutting down module (end) indepodent. shutting down stuff shall set pointers to nullptr.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
 * FPS and other BATB-stats
 * glext.h (part of official OpenGL Registry) as git submodule, or something

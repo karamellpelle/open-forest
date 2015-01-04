@@ -54,11 +54,6 @@ void IterationRunMain::iterate_begin(World& run)
     // let GUI grab the Keys callbacks
     batb.gui.bind( batb.keys );
 
-    std::cout << "\n\n\n\n";
-    std::cout << "press INSERT to toggle old-BATB..." << std::endl;
-    std::cout << "click ESCAPE to exit from main..." << std::endl;
-    std::cout << "try the 'u' button..." << std::endl;
-    std::cout << "\n\n\n\n";
 
     // show GUI window
     //if ( widget_->GetParent() == nullptr )
@@ -74,6 +69,11 @@ void IterationRunMain::iterate_begin(World& run)
     // nanovg demo
     tmp::nanovg::demo_begin();
 
+    std::cout << std::endl;
+    std::cout << "press INSERT to toggle old-BATB..." << std::endl;
+    std::cout << "click ESCAPE to exit from main..." << std::endl;
+    std::cout << "toggle Ogre demo with the 'u' button..." << std::endl;
+    std::cout << "(Turbobadger output temporary ignored)" << std::endl;
 }
 
 
@@ -91,7 +91,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     if ( batb.run.keyset.i->click() ) blowup = !blowup;
 
     // Ogre demo:
-    if ( premult )
+    if ( !premult )
     {
         tmp::ogre::demo_iterate( batb );
     }

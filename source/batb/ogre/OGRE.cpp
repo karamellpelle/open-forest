@@ -140,62 +140,6 @@ void begin(OGRE& ogre)
 
 
 
-    // TODO: 
-    //  - remove frm here, into other, for example tmp::ogre::demo_begin
-    //  - find out how to use ResourceGroupManager::initialiseAllResourceGroups()
-    ////////////////////////////////////////////////////////////////////////////////
-    // define our resources
-    if ( YAML::Node resources = yaml[ "resources" ] )
-    {
-        // iterate over group names
-        for (auto i = std::begin( resources ); i != std::end( resources ); ++i )
-        {
-            // NOTE: resources is a map, not a list. and 'i' is a key. 
-            //       this is yaml stuff (scalar, list, map)
-            YAML::Node group = i->first;
-            std::string name = group.as<std::string>();
-            
-            ogre.batb.log << "OGRE: adding items to resource group '" << name << "':\n";
-            // iterate over defined content for that group
-            for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
-            {
-                ogre.batb.log << "  ";
-
-                YAML::Node resource = *j;
-                if ( resource[ "type" ] && resource[ "path" ] )
-                {
-                    std::string type = resource[ "type" ].as<std::string>();
-                    std::string path = resource[ "path" ].as<std::string>();
-                    
-                    ogre.batb.log << path;
-
-                    // add resource item
-                    try
-                    {
-                        ogre.root->addResourceLocation(  file::static_data( path ), type, name );
-                    }
-                    catch (Ogre::Exception& e)
-                    {
-                        ogre.batb.log << " (" << e.what() << ")";
-                    }
-
-                }
-                else
-                {
-                    ogre.batb.log << "(invalid item definition)";
-                }
-
-                ogre.batb.log << "\n";
-            }
-        }
-    }
-    else
-    {
-        throw std::runtime_error( "OGRE: no 'resources' defined in config" );
-    }
-    // TODO: find correct usage for this:
-    //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
 
     ////////////////////////////////////////////////////////////////////////////////
     

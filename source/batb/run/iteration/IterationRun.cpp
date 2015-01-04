@@ -55,9 +55,8 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     // FIXME: not here, done by wrapped iteration
     world.tick = env::tick();
 
+    // FIXME: uncomment when Ogre has its own context
     // draw GUI on top of current Scene, update
-    // FIXME: uncomment when Ogre has its own 
-    //        context
     //batb.gui.output( world.scene );
     //batb.gui.step( world.tick );
 
