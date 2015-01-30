@@ -44,6 +44,7 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     // setup scene for this frame
     begin( world.scene );
 
+    batb.ogre.output( world.scene );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -103,6 +104,7 @@ void IterationRun::begin(Scene& scene)
     // clear screen
     glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+
 }
 
 

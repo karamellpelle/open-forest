@@ -16,11 +16,16 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/Scene.hpp"
 #include "OgreLogManager.h"
 #include "OgreLog.h"
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
 #include "OgreResourceGroupManager.h"
+#include "OgreSceneManager.h"
+#include "OgreWindowEventUtilities.h"
+
+
 
 namespace batb
 {
@@ -47,6 +52,27 @@ void OGRE::save()
     // FIXME: write to file
 }
 
+
+void OGRE::output(const Scene& scene)
+{
+    if ( initialized_ )
+    {
+        // tell Ogre the size of our window
+        renderwindow->resize( scene.wth, scene.hth );
+
+        // FIXME: push Ogre GL state invariant
+        Ogre::WindowEventUtilities::messagePump();
+
+        batb.ogre.root->renderOneFrame();
+        //scenemgr->_renderScene( camera, viewport, false );
+
+        // FIXME: pop Ogre GL state invariant
+            // TODO:
+            // rendersystem.switchContext( 0 );
+
+    }
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
@@ -135,6 +161,8 @@ void begin(OGRE& ogre)
     ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
     ogre.renderwindow->setVisible(true);
 
+        // TODO:
+        // rendersystem.switchContext( 0 );
 
 
 

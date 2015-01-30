@@ -116,6 +116,7 @@ void demo_begin(BATB& batb)
         camera->setPosition( Ogre::Vector3( 0, 0, 128 ) );
         camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
         camera->setNearClipDistance( 5 );
+        camera->setAutoAspectRatio( true ); // FIXME: set aspect ratio for each frame!
 
         viewport = batb.ogre.renderwindow->addViewport( camera );
         //viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
@@ -140,15 +141,6 @@ void demo_begin(BATB& batb)
 
 void demo_iterate(BATB& batb)
 {
-    // FIXME: push Ogre GL state invariant
-
-    Ogre::WindowEventUtilities::messagePump();
-
-    batb.ogre.root->renderOneFrame();
-    //scenemgr->_renderScene( camera, viewport, false );
-
-    // FIXME: pop Ogre GL state invariant
-
     // FIXME: this must work:
     //Ogre::ql_PreRender();
     //Ogre::ql_Render();

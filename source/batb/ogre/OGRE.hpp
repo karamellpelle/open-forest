@@ -35,7 +35,7 @@ namespace batb
 {
 
 class BATB;
-
+class Scene;
 
 
 namespace ogre
@@ -57,8 +57,9 @@ public:
         filepath_ = path;
     }
     void save();
-
-
+  
+    // render to Scene
+    void output(const Scene& );
 
     BATB& batb;
 
