@@ -1,3 +1,6 @@
+* define build platform, env_include.hpp
+* set screen size for Ogre
+* env-object, with ref inside BATB
 * prevent GLX segfaullt on shutdown
   cause: GLXContext::endCurrent sets glx context to None, called from GLRenderSystem::_unregisterContext on deletion of GLXContext,
          on shutdwn of the GL plugin

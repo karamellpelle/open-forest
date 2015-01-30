@@ -22,9 +22,6 @@
 #include "OgreRenderWindow.h"
 #include "OgreResourceGroupManager.h"
 
-
-
-
 namespace batb
 {
 
@@ -158,13 +155,22 @@ void end(OGRE& ogre)
     {
         ogre.save();
 
-        // FIXME: does this free all resources (unloadPlugin, ...)?
         OGRE_DELETE ogre.root;
         OGRE_DELETE ogre.logmanager;
 
         ogre.root = nullptr;
+
+        // since Ogre steal our GLXContext we have to rebind it after 
+        // Ogre shutdown
+        // TODO: other platforms...
+#ifdef GLFW_EXPOSE_NATIVE_GLX
+        ::Display* display = glfwGetX11Display();
+        ::Window drawable = glfwGetX11Window( env::screen_window() );
+        ::GLXContext context = glfwGetGLXContext( env::screen_window() );
+        glXMakeCurrent( display, drawable, context );
+#endif
     }
-    
+   
     ogre.initialized_ = false;
 
 }

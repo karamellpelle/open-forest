@@ -40,6 +40,8 @@ friend void end(BATB& batb);
 public:
     BATB(const std::string& );
 
+    //env::Env* env;
+
     // core part of BATB.
     // these are the parts of BATB fully initialized by 'void begin(BATB& )'.
     // we need a minimum part for 'iterationRunBegin' to work.
