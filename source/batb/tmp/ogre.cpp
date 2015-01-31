@@ -116,14 +116,14 @@ void demo_begin(BATB& batb)
         camera->setPosition( Ogre::Vector3( 0, 0, 128 ) );
         camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
         camera->setNearClipDistance( 5 );
-        camera->setAutoAspectRatio( true ); // FIXME: set aspect ratio for each frame!
-
+        camera->setAutoAspectRatio( true );
+        //camera->setAspectRatio( Ogre::Real( viewport->getActualWidth()
+        //                        / Ogre::Real( viewport->getActualHeight() )) );
+      
+        // NOTE: viewports and camera are not part of OGRE but instead here
         viewport = batb.ogre.renderwindow->addViewport( camera );
-        //viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
         viewport->setClearEveryFrame( false, 0 );
-        // FIXME: into demo_iterate??
-        camera->setAspectRatio( Ogre::Real( viewport->getActualWidth()
-                                / Ogre::Real( viewport->getActualHeight() )) );
+        //viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
 
         Ogre::Entity* head = scenemgr->createEntity( "Head", "ogrehead.mesh" );
         Ogre::SceneNode* node = scenemgr->getRootSceneNode()->createChildSceneNode();

@@ -60,16 +60,15 @@ void OGRE::output(const Scene& scene)
         // tell Ogre the size of our window
         renderwindow->resize( scene.wth, scene.hth );
 
-        // FIXME: push Ogre GL state invariant
         Ogre::WindowEventUtilities::messagePump();
 
-        batb.ogre.root->renderOneFrame();
+        root->renderOneFrame();
         //scenemgr->_renderScene( camera, viewport, false );
 
-        // FIXME: pop Ogre GL state invariant
-            // TODO:
-            // rendersystem.switchContext( 0 );
-
+        // TODO
+        // set back our context
+        //rendersystem->_switchContext( &batbcontext_ );
+        
     }
 
 }
@@ -147,6 +146,9 @@ void begin(OGRE& ogre)
     ogre.root->initialise( false ); 
 
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // 
+    begin( batbcontext_ );
 
     ////////////////////////////////////////////////////////////////////////////////
     // create an Ogre window, using our existing GLFW window.
@@ -161,8 +163,9 @@ void begin(OGRE& ogre)
     ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
     ogre.renderwindow->setVisible(true);
 
-        // TODO:
-        // rendersystem.switchContext( 0 );
+    // TODO
+    // set back our context
+    //rendersystem->_switchContext( &batbcontext_ );
 
 
 
@@ -190,13 +193,10 @@ void end(OGRE& ogre)
 
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
-        // TODO: other platforms...
-#ifdef GLFW_EXPOSE_NATIVE_GLX
-        ::Display* display = glfwGetX11Display();
-        ::Window drawable = glfwGetX11Window( env::screen_window() );
-        ::GLXContext context = glfwGetGLXContext( env::screen_window() );
-        glXMakeCurrent( display, drawable, context );
-#endif
+        ogre.batbcontext_.setCurrent();
+    
+        end( batbcontext_ );
+
     }
    
     ogre.initialized_ = false;

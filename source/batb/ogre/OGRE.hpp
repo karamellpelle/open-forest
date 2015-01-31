@@ -18,6 +18,7 @@
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ogre/BATBContext.hpp"
 
 
 // forward declare Ogre classes
@@ -68,10 +69,14 @@ public:
     Ogre::Root* root = nullptr;
     Ogre::RenderWindow* renderwindow = nullptr; // this is a Ogre::RenderTarget
 
+    // NOTE: Viewport's and Camera'a shall not be parts of OGRE,
+    //       these are instead rendering settings into OGRE
+
 private:
     bool initialized_ = false;
     std::string filepath_;
-
+    
+    BATBContext batbcontext_;
 };
 
 
