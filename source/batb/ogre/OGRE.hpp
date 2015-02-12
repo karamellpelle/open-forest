@@ -18,7 +18,7 @@
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
 #include "batb/batb_include.hpp"
-#include "batb/ogre/BATBContext.hpp"
+#include "batb/ogre/GLContextGLFW.hpp"
 
 
 // forward declare Ogre classes
@@ -76,7 +76,12 @@ private:
     bool initialized_ = false;
     std::string filepath_;
     
-    BATBContext batbcontext_;
+    // Name of current rendersystem
+    std::string rendersystem_name_ = "OpenGL Rendering Subsystem";
+
+    // FIXME: differate between GL an GL3Plus
+    GLContextGLFW glcontextglfw_;
+    void set_glfwcontext_();
 };
 
 

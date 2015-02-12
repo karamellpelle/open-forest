@@ -60,14 +60,14 @@ void OGRE::output(const Scene& scene)
         // tell Ogre the size of our window
         renderwindow->resize( scene.wth, scene.hth );
 
-        Ogre::WindowEventUtilities::messagePump();
+        Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW!
 
         root->renderOneFrame();
         //scenemgr->_renderScene( camera, viewport, false );
 
         // TODO
         // set back our context
-        //rendersystem->_switchContext( &batbcontext_ );
+        //rendersystem->_switchContext( &glcontextglfw_ );
         
     }
 
@@ -127,8 +127,8 @@ void begin(OGRE& ogre)
     // set rendersystem for Ogre
 
     // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
-    std::string rendersystem_name = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
-    Ogre::RenderSystem* renderer = ogre.root->getRenderSystemByName( rendersystem_name );
+    ogre.rendersystem_name_ = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+    Ogre::RenderSystem* renderer = ogre.root->getRenderSystemByName( ogre.rendersystem_name_ );
 
     // set our Ogre render system
     if ( renderer )
@@ -137,7 +137,7 @@ void begin(OGRE& ogre)
     }
     else
     {
-        throw std::runtime_error( "OGRE: no RenderSystem with name " + rendersystem_name );
+        throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre.rendersystem_name_ );
     }
 
     ////////////////////////////////////////////////////////////////////////////////    
@@ -148,7 +148,7 @@ void begin(OGRE& ogre)
 
     ////////////////////////////////////////////////////////////////////////////////
     // 
-    begin( batbcontext_ );
+    begin( ogre.glcontextglfw_ );
 
     ////////////////////////////////////////////////////////////////////////////////
     // create an Ogre window, using our existing GLFW window.
@@ -165,7 +165,7 @@ void begin(OGRE& ogre)
 
     // TODO
     // set back our context
-    //rendersystem->_switchContext( &batbcontext_ );
+    //rendersystem->_switchContext( &glcontextglfw_ );
 
 
 
@@ -193,9 +193,9 @@ void end(OGRE& ogre)
 
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
-        ogre.batbcontext_.setCurrent();
+        ogre.glcontextglfw_.setCurrent();
     
-        end( batbcontext_ );
+        end( ogre.glcontextglfw_ );
 
     }
    
@@ -203,6 +203,10 @@ void end(OGRE& ogre)
 
 }
 
+void OGRE::set_glfwcontext_()
+{
+
+}
 
 } // namespace ogre
 

@@ -93,7 +93,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     // Ogre demo:
     if ( !premult )
     {
-        tmp::ogre::demo_iterate( batb );
+        tmp::ogre::demo_iterate( batb, run );
     }
 
     // nanovg demo:

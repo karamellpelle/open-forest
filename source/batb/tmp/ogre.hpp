@@ -24,6 +24,12 @@ namespace batb
 
 class BATB;
 
+namespace run
+{
+class World;
+}
+
+
 namespace tmp
 {
 
@@ -33,7 +39,7 @@ namespace ogre
 
 void demo_begin(BATB& );
 
-void demo_iterate(BATB& );
+void demo_iterate(BATB& , run::World& );
 
 
 

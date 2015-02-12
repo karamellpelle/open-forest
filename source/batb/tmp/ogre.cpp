@@ -18,6 +18,8 @@
 #include "batb/tmp/ogre.hpp"
 #include "batb.hpp"
 #include "batb/ogre.hpp"
+#include "batb/run/World.hpp"
+
 
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
@@ -112,19 +114,17 @@ void demo_begin(BATB& batb)
         // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
         scenemgr = batb.ogre.root->createSceneManager( "DefaultSceneManager" );
         
+        // create a view into scene, a Camera!
         camera = scenemgr->createCamera( "PlayerCam" );
-        camera->setPosition( Ogre::Vector3( 0, 0, 128 ) );
-        camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
         camera->setNearClipDistance( 5 );
-        camera->setAutoAspectRatio( true );
-        //camera->setAspectRatio( Ogre::Real( viewport->getActualWidth()
-        //                        / Ogre::Real( viewport->getActualHeight() )) );
       
-        // NOTE: viewports and camera are not part of OGRE but instead here
+        // create Viewport, the 2D target of Camera
         viewport = batb.ogre.renderwindow->addViewport( camera );
-        viewport->setClearEveryFrame( false, 0 );
-        //viewport->setBackgroundColour( Ogre::ColourValue(0, 0, 0) );
+        viewport->setClearEveryFrame( false, 0 ); // TODO: remove 0??
 
+       
+        ////////////////////////////////////////////////////////////////////////////////
+        // create scene objects
         Ogre::Entity* head = scenemgr->createEntity( "Head", "ogrehead.mesh" );
         Ogre::SceneNode* node = scenemgr->getRootSceneNode()->createChildSceneNode();
         node->attachObject( head );
@@ -134,13 +134,21 @@ void demo_begin(BATB& batb)
         Ogre::Light* l = scenemgr->createLight( "MainLight" );
         l->setPosition( 20, 80, 50 );
 
+        // position Camera
+        camera->setPosition( Ogre::Vector3( 0, 0, 128 ) );
+        camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
+
         //Ogre::ql_init(scenemgr, camera, batb.ogre.renderwindow, false);
     }
     tmp_empty = false;
 }
 
-void demo_iterate(BATB& batb)
+void demo_iterate(BATB& batb, run::World& world)
 {
+    float_t aspect = world.scene.shape.wth / world.scene.shape.hth;
+
+    camera->setAspectRatio( aspect );
+
     // FIXME: this must work:
     //Ogre::ql_PreRender();
     //Ogre::ql_Render();

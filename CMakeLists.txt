@@ -174,6 +174,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/gui/tb_system.cpp"
       # BATB non-core:
       "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
+      "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
@@ -300,6 +301,14 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES OgreMain )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    if ( OGRE_BUILD_RENDERSYSTEM_GL )
+        list( APPEND BATB_LIBRARIES RenderSystem_GL )
+        target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" )
+    endif()
+    if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
+        #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
+        target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL3Plus/include" )
+    endif()
 
     # lib-file
     list( APPEND BATB_LIBRARIES lib-file )

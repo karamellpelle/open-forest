@@ -15,9 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_OGRE_BATBCONTEXT_HPP
-#define BATB_OGRE_BATBCONTEXT_HPP
+#ifndef BATB_OGRE_GLCONTEXTGLFW_HPP
+#define BATB_OGRE_GLCONTEXTGLFW_HPP
 #include "batb/batb_include.hpp"
+//#include "RenderSystems/GL/include/OgreGLContext.h"
+#include "OgreGLContext.h"
 
 namespace batb
 {
@@ -33,15 +35,15 @@ namespace ogre
 //    void GLRenderSystem::_switchContext(GLContext *context)
 //    void GLStateCacheManager::switchContext(intptr_t id)
 //
-class BATBContext : public Ogre::GLContext
+class GLContextGLFW : public Ogre::GLContext
 {
-friend void begin(BATBContext& );
-friend void end(BATBContext& );
+friend void begin(GLContextGLFW& );
+friend void end(GLContextGLFW& );
 
 public:
     void setCurrent() override;
     void endCurrent() override;
-    void Ogre::GLContext* clone() override;
+    Ogre::GLContext* clone() const override;
 
 private:
      
@@ -51,8 +53,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 // 
 
-void begin(BATBContext& );
-void end(BATBContext& );
+void begin(GLContextGLFW& );
+void end(GLContextGLFW& );
 
 } // namespace ogre
 

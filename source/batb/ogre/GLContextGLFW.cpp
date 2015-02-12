@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/ogre/BATBContext.hpp"
+#include "batb/ogre/GLContextGLFW.hpp"
 
 namespace batb
 {
@@ -24,7 +24,7 @@ namespace ogre
 {
 
 
-void BATBContext::setCurrent()
+void GLContextGLFW::setCurrent()
 {
     //
     // TODO: other platforms...
@@ -37,19 +37,19 @@ void BATBContext::setCurrent()
     
 }
 
-void BATBContext::endCurrent()
+void GLContextGLFW::endCurrent()
 {
     // do nothing
 }
 
-void Ogre::GLContext* clone()
+Ogre::GLContext* GLContextGLFW::clone() const
 {
     return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-void begin(BATBContext& context)
+void begin(GLContextGLFW& context)
 {
     // see the line with _oneTimeContextInitialization();
     // inside void GLRenderSystem::_switchContext(GLContext *context)
@@ -57,7 +57,7 @@ void begin(BATBContext& context)
 }
 
 
-void end(BATBContext& )
+void end(GLContextGLFW& )
 {
 
 }
