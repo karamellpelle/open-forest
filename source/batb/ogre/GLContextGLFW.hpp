@@ -18,8 +18,7 @@
 #ifndef BATB_OGRE_GLCONTEXTGLFW_HPP
 #define BATB_OGRE_GLCONTEXTGLFW_HPP
 #include "batb/batb_include.hpp"
-//#include "RenderSystems/GL/include/OgreGLContext.h"
-#include "OgreGLContext.h"
+#include "RenderSystems/GL/include/OgreGLContext.h"
 
 namespace batb
 {

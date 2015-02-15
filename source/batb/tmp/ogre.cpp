@@ -139,6 +139,9 @@ void demo_begin(BATB& batb)
         camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
 
         //Ogre::ql_init(scenemgr, camera, batb.ogre.renderwindow, false);
+
+
+        // TODO: asset no need for GLContextGLFW switch
     }
     tmp_empty = false;
 }
@@ -148,12 +151,25 @@ void demo_iterate(BATB& batb, run::World& world)
     float_t aspect = world.scene.shape.wth / world.scene.shape.hth;
 
     camera->setAspectRatio( aspect );
+    // TODO: camera->setProjection( world.scene.proj3D );
+
+    tick_t tick = world.tick;
+    float_t x,z;
+    cossin( 0.5 * tick, x, z );
+    float_t y = sin( tick * 3 );
+
+    camera->setPosition( Ogre::Vector3( 128.0 * x, 64.0 * y, 128.0 * z ) );
+    camera->lookAt( Ogre::Vector3( 0, 0, 0 ) );
+
 
     // FIXME: this must work:
     //Ogre::ql_PreRender();
     //Ogre::ql_Render();
     //Ogre::ql_PostRender();
     //
+
+
+    // TODO: asset no need for GLContextGLFW switch
 }
 
 

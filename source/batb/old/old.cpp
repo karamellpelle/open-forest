@@ -1,4 +1,5 @@
 #include "batb/old/old.hpp"
+#include "debug.hpp"
 
 #include <plib/pu.h>
 #include "mainWindow.h"
@@ -293,7 +294,7 @@ void reset_gl()
 
 void exit(int err)
 {
-    std::cout << THIS_FUNCTION << err << std::endl;
+    std::cout << DEBUG_FUNCTION_NAME << err << std::endl;
     //old::end(); we cant end here, it gives segfault (glfwPollEvents)
     do_exit = true;
 }

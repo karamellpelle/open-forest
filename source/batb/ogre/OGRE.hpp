@@ -67,6 +67,7 @@ public:
 
     Ogre::LogManager* logmanager = nullptr;
     Ogre::Root* root = nullptr;
+    Ogre::RenderSystem* rendersystem = nullptr;
     Ogre::RenderWindow* renderwindow = nullptr; // this is a Ogre::RenderTarget
 
     // NOTE: Viewport's and Camera'a shall not be parts of OGRE,

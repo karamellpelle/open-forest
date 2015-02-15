@@ -779,17 +779,17 @@ int loadDemoData(struct NVGcontext* vg, struct DemoData* data)
 		}
 	}
 
-	data->fontIcons = nvgCreateFont(vg, "icons", "data/tmp/nanovg/entypo.ttf");
+	data->fontIcons = nvgCreateFont(vg, "icons", "data/static/tmp/nanovg/entypo.ttf");
 	if (data->fontIcons == -1) {
 		printf("Could not add font icons.\n");
 		return -1;
 	}
-	data->fontNormal = nvgCreateFont(vg, "sans", "data/tmp/nanovg/Roboto-Regular.ttf");
+	data->fontNormal = nvgCreateFont(vg, "sans", "data/static/tmp/nanovg/Roboto-Regular.ttf");
 	if (data->fontNormal == -1) {
 		printf("Could not add font italic.\n");
 		return -1;
 	}
-	data->fontBold = nvgCreateFont(vg, "sans-bold", "data/tmp/nanovg/Roboto-Bold.ttf");
+	data->fontBold = nvgCreateFont(vg, "sans-bold", "data/static/tmp/nanovg/Roboto-Bold.ttf");
 	if (data->fontBold == -1) {
 		printf("Could not add font bold.\n");
 		return -1;

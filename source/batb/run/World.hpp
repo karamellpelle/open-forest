@@ -49,6 +49,10 @@ public:
     // tick of world
     tick_t tick;
 
+    // tmp
+    bool toggle_a = true;
+    bool toggle_b = true;
+
     // number of frames iterated (by IterationRun...)
     uint frames_count = 0;
     

@@ -301,13 +301,13 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES OgreMain )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
+    # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
     if ( OGRE_BUILD_RENDERSYSTEM_GL )
         list( APPEND BATB_LIBRARIES RenderSystem_GL )
-        target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" )
     endif()
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
         #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
-        target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL3Plus/include" )
     endif()
 
     # lib-file

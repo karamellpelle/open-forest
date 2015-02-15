@@ -70,10 +70,12 @@ void IterationRunMain::iterate_begin(World& run)
     tmp::nanovg::demo_begin();
 
     std::cout << std::endl;
-    std::cout << "press INSERT to toggle old-BATB..." << std::endl;
-    std::cout << "click ESCAPE to exit from main..." << std::endl;
-    std::cout << "toggle Ogre demo with the 'u' button..." << std::endl;
-    std::cout << "(Turbobadger output temporary ignored)" << std::endl;
+    std::cout << "click ESC to exit from main..." << std::endl;
+    std::cout << "toggle Ogre demo with the U button..." << std::endl;
+    std::cout << "toggle nanovg demo with the I button..." << std::endl;
+    std::cout << "(press INSERT to toggle old-BATB. this messes up our GL state)" << std::endl;
+    std::cout << "(Turbobadger output temporary removed. this messes up our GL state))" << std::endl;
+    std::cout << std::endl;
 }
 
 
@@ -82,29 +84,30 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
     //
+debug::gl_push_group(DEBUG_FUNCTION_NAME);
 
 
-
-    static bool premult = false; static bool blowup = false;
-
-    if ( batb.run.keyset.u->click() ) premult = !premult;
-    if ( batb.run.keyset.i->click() ) blowup = !blowup;
+    if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
+    if ( batb.run.keyset.i->click() ) run.toggle_b = !run.toggle_b;
 
     // Ogre demo:
-    if ( !premult )
+    if ( run.toggle_a )
     {
+debug::gl("ogre::demo_iterate");
         tmp::ogre::demo_iterate( batb, run );
     }
 
     // nanovg demo:
-    if ( blowup )
+    if ( run.toggle_b )
     {
-        //tmp::nanovg::demo_iterate( premult, blowup );
+debug::gl("nanovg::demo_iterate");
+        tmp::nanovg::demo_iterate( false, false );
     }
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
 
+debug::gl_pop_group();
 
     if ( batb.run.keyset.pause->click() )
     {
@@ -128,6 +131,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
         return stack.next(  game::begin_iteration( batb.run.iterationRunOld ), 
                             game::begin_iteration( *this ) );
     }
+
 
 
     // continue with this itertion, unless stack handled

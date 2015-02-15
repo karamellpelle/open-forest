@@ -36,19 +36,27 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     ////////////////////////////////////////    
     // begin new frame
     ////////////////////////////////////////
-
+debug::gl_push_group(DEBUG_FUNCTION_NAME);
 
     // set current world the Run-object is working on
     batb.run.world = &world;
 
     // setup scene for this frame
+debug::gl("begin(world.scene)");
+if ( world.toggle_a )
+glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
+else
+glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
     begin( world.scene );
 
-    batb.ogre.output( world.scene );
+    // draw OGRE 
+debug::gl("batb.ogre.output()");
+    if (world.toggle_a) batb.ogre.output( world.scene );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
+debug::gl("iterate_run()");
     iterate_run( stack, world );
  
 
@@ -58,8 +66,10 @@ void IterationRun::iterate(IterationStack& stack, World& world)
 
     // FIXME: uncomment when Ogre has its own context
     // draw GUI on top of current Scene, update
-    //batb.gui.output( world.scene );
-    //batb.gui.step( world.tick );
+//debug::gl("batb.gui.output()");
+//    batb.gui.output( world.scene );
+//debug::gl("batb.gui.step()");
+//    batb.gui.step( world.tick );
 
     // update keys
     batb.run.keyset.step( world.tick );
@@ -70,6 +80,8 @@ void IterationRun::iterate(IterationStack& stack, World& world)
 
     // count number of IterationRun-iterations
     ++world.frames_count;
+
+debug::gl_pop_group();
 }
 
 
@@ -102,7 +114,6 @@ void IterationRun::begin(Scene& scene)
     //glBindFramebuffer( gl_FRAMEBUFFER, scene.fbo );
 
     // clear screen
-    glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 }

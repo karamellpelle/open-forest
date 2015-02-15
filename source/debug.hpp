@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,15 +15,21 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_HPP
-#define BATB_HPP
-#include "batb/BATB.hpp"
+#ifndef BATB_DEBUG_HPP
+#define BATB_DEBUG_HPP
+#include "env.hpp"
+#include "batb/batb_include.hpp"
 
-namespace batb
+// macro for function name, depends on compiler
+// FIXME: ifdef...
+#define DEBUG_FUNCTION_NAME __PRETTY_FUNCTION__
+
+namespace debug
 {
 
-#define BATB_LOG_FUNC(batb) (batb.log) << DEBUG_FUNCTION_NAME << std::endl;
 
-}
+} // namespace debug
+
 
 #endif
+

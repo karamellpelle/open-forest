@@ -88,7 +88,7 @@ tinyxml2::XMLError save_document(tinyxml2::XMLDocument& doc, const std::string& 
         const char* str1 = doc.GetErrorStr1();
         const char* str2 = doc.GetErrorStr2();
         std::ostringstream os;
-        os << THIS_FUNCTION << ": XML save error"; 
+        os << tag << ": XML save error"; 
         if ( str1 ) os << ": " << str1;
         if ( str2 ) os << ", " << str2;
        

@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,15 +15,47 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_HPP
-#define BATB_HPP
-#include "batb/BATB.hpp"
+#ifndef BATB_DEBUG_GL_HPP
+#define BATB_DEBUG_GL_HPP
+#include <GL/glew.h>
 
-namespace batb
+namespace debug
 {
 
-#define BATB_LOG_FUNC(batb) (batb.log) << DEBUG_FUNCTION_NAME << std::endl;
+////////////////////////////////////////////////////////////////////////////////
+// these are handy together with https://github.com/apitrace/apitrace
+//
+
+
+inline void gl_push_group(const std::string& name)
+{
+    if (GLEW_KHR_debug)
+    {
+        glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, name.c_str() );
+    }
+}
+
+inline void gl_pop_group()
+{
+
+    if (GLEW_KHR_debug)
+    {
+        glPopDebugGroup();
+    }
+}
+
+inline void gl(const std::string& msg)
+{
+    if (GLEW_KHR_debug)
+    {
+        glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER,
+                         0, GL_DEBUG_SEVERITY_NOTIFICATION, -1, msg.c_str() );
+    }
 
 }
 
+} // namespace debug
+
+
 #endif
+

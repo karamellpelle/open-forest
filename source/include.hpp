@@ -29,9 +29,6 @@
 
 // main include file to be included through all sources...
 
-// macro for function name, depends on compiler
-// FIXME: ifdef...
-#define THIS_FUNCTION __PRETTY_FUNCTION__
 
 
 namespace include
