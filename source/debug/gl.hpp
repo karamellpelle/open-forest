@@ -22,9 +22,13 @@
 namespace debug
 {
 
+namespace gl
+{
+
 ////////////////////////////////////////////////////////////////////////////////
 // these are handy together with https://github.com/apitrace/apitrace
 //
+
 
 
 inline void gl_push_group(const std::string& name)
@@ -44,7 +48,7 @@ inline void gl_pop_group()
     }
 }
 
-inline void gl(const std::string& msg)
+inline void msg(const std::string& msg)
 {
     if (GLEW_KHR_debug)
     {
@@ -53,6 +57,17 @@ inline void gl(const std::string& msg)
     }
 
 }
+
+
+class DebugGroup
+{
+public:
+    DebugGroup(const std::string& name) { gl_push_group( name ); }
+    ~DebugGroup() { gl_pop_group(); }
+};
+
+
+} // namespace gl
 
 } // namespace debug
 

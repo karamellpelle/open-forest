@@ -36,13 +36,13 @@ void IterationRun::iterate(IterationStack& stack, World& world)
     ////////////////////////////////////////    
     // begin new frame
     ////////////////////////////////////////
-debug::gl_push_group(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     // set current world the Run-object is working on
     batb.run.world = &world;
 
     // setup scene for this frame
-debug::gl("begin(world.scene)");
+debug::gl::msg("begin(world.scene)");
 if ( world.toggle_a )
 glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
 else
@@ -50,13 +50,13 @@ glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
     begin( world.scene );
 
     // draw OGRE 
-debug::gl("batb.ogre.output()");
+debug::gl::msg("batb.ogre.output()");
     if (world.toggle_a) batb.ogre.output( world.scene );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
-debug::gl("iterate_run()");
+debug::gl::msg("iterate_run()");
     iterate_run( stack, world );
  
 
@@ -81,7 +81,6 @@ debug::gl("iterate_run()");
     // count number of IterationRun-iterations
     ++world.frames_count;
 
-debug::gl_pop_group();
 }
 
 

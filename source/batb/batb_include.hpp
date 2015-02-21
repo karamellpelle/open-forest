@@ -18,7 +18,6 @@
 #ifndef BATB_INCLUDE_HPP
 #define BATB_INCLUDE_HPP
 
-#include "/usr/include/GL/glew.h"
 ////////////////////////////////////////////////////////////////////////////////
 // stdlib
 #include <stdint.h>

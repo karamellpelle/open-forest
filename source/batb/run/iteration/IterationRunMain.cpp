@@ -84,7 +84,7 @@ void IterationRunMain::iterate_run(IterationStack& stack, World& run)
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
     //
-debug::gl_push_group(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
@@ -93,21 +93,20 @@ debug::gl_push_group(DEBUG_FUNCTION_NAME);
     // Ogre demo:
     if ( run.toggle_a )
     {
-debug::gl("ogre::demo_iterate");
+debug::gl::msg("ogre::demo_iterate");
         tmp::ogre::demo_iterate( batb, run );
     }
 
     // nanovg demo:
     if ( run.toggle_b )
     {
-debug::gl("nanovg::demo_iterate");
+debug::gl::msg("nanovg::demo_iterate");
         tmp::nanovg::demo_iterate( false, false );
     }
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
 
-debug::gl_pop_group();
 
     if ( batb.run.keyset.pause->click() )
     {

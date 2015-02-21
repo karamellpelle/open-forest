@@ -55,7 +55,7 @@ void OGRE::save()
 
 void OGRE::output(const Scene& scene)
 {
-debug::gl_push_group( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     if ( initialized_ )
     {
@@ -64,17 +64,16 @@ debug::gl_push_group( DEBUG_FUNCTION_NAME );
 
         Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW!
         
-debug::gl( "root->renderOneFrame();" );
+debug::gl::msg( "root->renderOneFrame();" );
         root->renderOneFrame();
         //scenemgr->_renderScene( camera, viewport, false );
 
         // set back our context
-debug::gl( "set_glfwcontext_();" );
+debug::gl::msg( "set_glfwcontext_();" );
         set_glfwcontext_();
 
         
     }
-debug::gl_pop_group();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +83,7 @@ void begin(OGRE& ogre)
 
     BATB_LOG_FUNC( ogre.batb );
 
-debug::gl_push_group( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // set up this OGRE object from file
     YAML::Node yaml = YAML::LoadFile( ogre.filepath_ );
@@ -95,13 +94,13 @@ debug::gl_push_group( DEBUG_FUNCTION_NAME );
 
     // control the log output from Ogre by creating the LogManager ourselves,
     // before creating Ogre::Root
-debug::gl( "OGRE_NEW LogManager" );
+debug::gl::msg( "OGRE_NEW LogManager" );
     ogre.logmanager = OGRE_NEW Ogre::LogManager();
     ogre.logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
 
     ////////////////////////////////////////////////////////////////////////////////
     // create Ogre root object
-debug::gl( "OGRE_NEW Root" );
+debug::gl::msg( "OGRE_NEW Root" );
     ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
    
     ////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +116,7 @@ debug::gl( "OGRE_NEW Root" );
             try
             {
                 
-debug::gl( "ogre.root->loadPlugin" );
+debug::gl::msg( "ogre.root->loadPlugin" );
                 ogre.root->loadPlugin( plugin );
             }
             catch (Ogre::Exception& e)
@@ -137,14 +136,14 @@ debug::gl( "ogre.root->loadPlugin" );
     // set rendersystem for Ogre
 
     // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
-debug::gl( "ogre.root->getRenderSystemByName" );
+debug::gl::msg( "ogre.root->getRenderSystemByName" );
     ogre.rendersystem_name_ = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
     ogre.rendersystem = ogre.root->getRenderSystemByName( ogre.rendersystem_name_ );
 
     // set our Ogre render system
     if ( ogre.rendersystem )
     {
-debug::gl( "ogre.root->setRenderSystem" );
+debug::gl::msg( "ogre.root->setRenderSystem" );
         ogre.root->setRenderSystem( ogre.rendersystem );
     }
     else
@@ -155,13 +154,13 @@ debug::gl( "ogre.root->setRenderSystem" );
     ////////////////////////////////////////////////////////////////////////////////    
     // initialize Root, using our defined RenderSystem
     // (this method returns nullptr, since our argument is 'false')
-debug::gl( "ogre.root->initialise" );
+debug::gl::msg( "ogre.root->initialise" );
     ogre.root->initialise( false ); 
 
 
     ////////////////////////////////////////////////////////////////////////////////
     // 
-debug::gl( "begin( ogre.glcontextglfw_ )" );
+debug::gl::msg( "begin( ogre.glcontextglfw_ )" );
     begin( ogre.glcontextglfw_ );
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +170,7 @@ debug::gl( "begin( ogre.glcontextglfw_ )" );
     //  - currentGLContext 
     //  - FSAA
     //  - ... 
-debug::gl( "ogre.root->createRenderWindow()" );
+debug::gl::msg( "ogre.root->createRenderWindow()" );
     Ogre::NameValuePairList params;
     params["currentGLContext"] = "true";  // let RenderWindow use our GL context
     params["externalGLControl"] = "true"; // no automatic swapping
@@ -179,7 +178,7 @@ debug::gl( "ogre.root->createRenderWindow()" );
     ogre.renderwindow->setVisible(true);
 
     // set back our context
-debug::gl( "ogre.set_glfwcontext_()" );
+debug::gl::msg( "ogre.set_glfwcontext_()" );
     ogre.set_glfwcontext_();
 
 
@@ -191,38 +190,36 @@ debug::gl( "ogre.set_glfwcontext_()" );
 
 
     
-debug::gl_pop_group();
 }
 
 
 void end(OGRE& ogre)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     BATB_LOG_FUNC( ogre.batb );
-debug::gl_push_group( DEBUG_FUNCTION_NAME );
 
     if ( ogre.initialized_ )
     {
         ogre.save();
 
         
-debug::gl( "OGRE_DELETE Root" );
+debug::gl::msg( "OGRE_DELETE Root" );
         OGRE_DELETE ogre.root;
-debug::gl( "OGRE_DELETE LogManager" );
+debug::gl::msg( "OGRE_DELETE LogManager" );
         OGRE_DELETE ogre.logmanager;
 
         ogre.root = nullptr;
 
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
-debug::gl( " ogre.glcontextglfw_.setCurrent()" );
+debug::gl::msg( " ogre.glcontextglfw_.setCurrent()" );
         ogre.glcontextglfw_.setCurrent();
     
-debug::gl( "end( ogre.glcontextglfw_ )" );
+debug::gl::msg( "end( ogre.glcontextglfw_ )" );
         end( ogre.glcontextglfw_ );
 
     }
    
-debug::gl_pop_group();
     ogre.initialized_ = false;
 
 }
