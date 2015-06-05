@@ -52,6 +52,9 @@ public:
     // tmp
     bool toggle_a = true;
     bool toggle_b = true;
+    bool toggle_ogre = false;
+    bool toggle_nanovg = false;
+    bool toggle_tb = false;
 
     // number of frames iterated (by IterationRun...)
     uint frames_count = 0;

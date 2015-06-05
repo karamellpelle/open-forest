@@ -98,12 +98,10 @@ void demo_iterate(bool premult, bool blowup)
 
     nvgEndFrame(vg);
 
-   
-    // FIXME:
+
     // set back GL after nanovg
-    // see old.cpp and README.md for nanovg
-    glEnable( GL_DEPTH_TEST );
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // this seems to be the problem if no other output that nanovg...
+    gl::reset_nanovg();
+
 }
 
 

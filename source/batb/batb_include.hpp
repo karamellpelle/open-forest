@@ -68,6 +68,10 @@
 #include "debug.hpp"
 #include "debug/gl.hpp"
 
+// handling GL in our game
+#include "batb/gl.hpp"
+
+
 ////////////////////////////////////////////////////////////////////////////////
 namespace batb
 {

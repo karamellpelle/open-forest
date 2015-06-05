@@ -51,7 +51,7 @@ glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
 
     // draw OGRE 
 debug::gl::msg("batb.ogre.output()");
-    if (world.toggle_a) batb.ogre.output( world.scene );
+    if (world.toggle_ogre) batb.ogre.output( world.scene );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -66,11 +66,13 @@ debug::gl::msg("iterate_run()");
 
     // FIXME: uncomment when Ogre has its own context
     // draw GUI on top of current Scene, update
-//debug::gl("batb.gui.output()");
-//    batb.gui.output( world.scene );
-//debug::gl("batb.gui.step()");
-//    batb.gui.step( world.tick );
-
+    if ( world.toggle_tb )
+    {
+debug::gl::msg("batb.gui.output()");
+        batb.gui.output( world.scene );
+debug::gl::msg("batb.gui.step()");
+        batb.gui.step( world.tick );
+    }
     // update keys
     batb.run.keyset.step( world.tick );
 

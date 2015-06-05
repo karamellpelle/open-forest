@@ -67,8 +67,7 @@ void begin(BATB& batb)
     //////////////////////////////////////////////////////////
     //      OpenGL
     // BATB assumes this GL state:
-    glDepthFunc( GL_LEQUAL ); 
-    //set_gl_state();
+    gl::reset();
 
 
     //////////////////////////////////////////////////////////
@@ -127,58 +126,5 @@ void BATB::save()
     // FIXME: write to file
 }
 
-static void gl_info(std::ostream& os)
-{
-    const GLubyte* vendor = glGetString(GL_VENDOR);
-    const GLubyte* renderer = glGetString(GL_RENDERER);
-    const GLubyte* version = glGetString(GL_VERSION);
-    //const GLubyte* extensions = glGetString(GL_EXTENSIONS);
-    //const GLubyte* GLUversion = gluGetString(GLU_VERSION);
-    
-    os << "OpenGL: " << "\n";
-    os << "  vendor:             " << vendor << "\n";
-    os << "  renderer:           " << renderer << "\n";
-    os << "  GL version:         " << version << "\n";
-#ifdef GL_SHADING_LANGUAGE_VERSION
-    const GLubyte* sl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-    if (sl_version != 0) {
-    os << "  GLSL version:       " << sl_version << "\n";
-    }
-#endif
-#ifdef GL_MAX_TEXTURE_UNITS
-    GLint maxTextureUnits[1];
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, maxTextureUnits);
-    os << "  max texture units:  " << maxTextureUnits[0] << "\n";
-#endif
-    //os << "Extensions: " << extensions << "\n";
-    //os << "GLU Version: " << GLUversion << std::endl;
-    os << std::flush;
-}
-
-
-void set_gl_state()
-{
-    //  set up our GL-invariants:
-    glEnable( GL_MULTISAMPLE );
-    glClearColor( 0, 0, 0, 0 );
-    glDisable( GL_STENCIL_TEST ); // ??
-    glClearStencil( 0 );          // ??
-    std::printf("glEnable: %p\n", glEnable);
-    std::printf("glBlendFuncSeparate: %p\n", glBlendFuncSeparate);
-    // INVARIANT:
-    // if a fragment shader outputs value intended to be color, then this color should be normalized.
-    // that is, the RGB coordinates should be multiplied by A. this means that if a color (r,g,b) has
-    // opacity a, then the RGBA color should be normalized into (a * r, a * g, a * b, a).
-    // "premultiplied alpha"
-    glEnable( GL_BLEND );
-    glBlendEquationSeparate( GL_FUNC_ADD, 
-                             GL_FUNC_ADD );
-    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-    
-    glDepthMask( GL_TRUE );
-    glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
-    glEnable( GL_DEPTH_TEST );
-}
 
 }

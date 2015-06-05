@@ -71,10 +71,11 @@ void IterationRunMain::iterate_begin(World& run)
 
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
-    std::cout << "toggle Ogre demo with the U button..." << std::endl;
-    std::cout << "toggle nanovg demo with the I button..." << std::endl;
-    std::cout << "(press INSERT to toggle old-BATB. this messes up our GL state)" << std::endl;
-    std::cout << "(Turbobadger output temporary removed. this messes up our GL state))" << std::endl;
+    std::cout << "toggle Ogre demo with the O button..." << std::endl;
+    std::cout << "toggle nanovg demo with the N button..." << std::endl;
+    std::cout << "toggle turbobadger demo with the T button..." << std::endl;
+    std::cout << "toggle old-BATB with the INSERT button..." << std::endl; 
+    std::cout << "(the above demos do not work well together yet)" << std::endl; 
     std::cout << std::endl;
 }
 
@@ -89,20 +90,24 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
     if ( batb.run.keyset.i->click() ) run.toggle_b = !run.toggle_b;
+    if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
+    if ( batb.run.keyset.nanovg->click() ) run.toggle_nanovg = !run.toggle_nanovg;
+    if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
 
     // Ogre demo:
-    if ( run.toggle_a )
+    if ( run.toggle_ogre )
     {
 debug::gl::msg("ogre::demo_iterate");
         tmp::ogre::demo_iterate( batb, run );
     }
 
     // nanovg demo:
-    if ( run.toggle_b )
+    if ( run.toggle_nanovg )
     {
 debug::gl::msg("nanovg::demo_iterate");
         tmp::nanovg::demo_iterate( false, false );
     }
+
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 

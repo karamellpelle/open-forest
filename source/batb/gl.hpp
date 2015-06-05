@@ -15,61 +15,38 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEBUG_GL_HPP
-#define BATB_DEBUG_GL_HPP
-#include <GL/glew.h>
+#ifndef BATB_GL_HPP
+#define BATB_GL_HPP
+#include "batb/batb_include.hpp"
 
-namespace debug
+namespace batb
 {
 
 namespace gl
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-// these are handy together with https://github.com/apitrace/apitrace
-// when we use GLEW (it has the GL_KHR_debug extension)
+// GL state
 
+// set initial state
+void reset();
 
+// reset GL state after Ogre
+void reset_Ogre();
 
-inline void gl_push_group(const std::string& name)
-{
-    if (GLEW_KHR_debug)
-    {
-        glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, name.c_str() );
-    }
-}
+// reset GL state after turbobadger
+void reset_turbobadger();
 
-inline void gl_pop_group()
-{
+// reset GL state after nanovg
+void reset_nanovg();
 
-    if (GLEW_KHR_debug)
-    {
-        glPopDebugGroup();
-    }
-}
-
-inline void msg(const std::string& msg)
-{
-    if (GLEW_KHR_debug)
-    {
-        glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER,
-                         0, GL_DEBUG_SEVERITY_NOTIFICATION, -1, msg.c_str() );
-    }
-
-}
-
-
-class DebugGroup
-{
-public:
-    DebugGroup(const std::string& name) { gl_push_group( name ); }
-    ~DebugGroup() { gl_pop_group(); }
-};
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// 
 
 } // namespace gl
 
-} // namespace debug
+} // namespace batb
 
 
 #endif

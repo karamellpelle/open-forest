@@ -45,6 +45,9 @@ public:
     keys::KeyClicker* old; 
     keys::KeyClicker* u;
     keys::KeyClicker* i;
+    keys::KeyClicker* ogre;
+    keys::KeyClicker* nanovg;
+    keys::KeyClicker* tb;
 
     BATB& batb;
 };

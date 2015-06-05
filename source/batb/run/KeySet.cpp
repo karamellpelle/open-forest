@@ -51,6 +51,9 @@ void KeySet::load(const std::string& path)
     old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
     u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
     i = createKeyClicker( createKeyButton( GLFW_KEY_I      ) );
+    ogre = createKeyClicker( createKeyButton( GLFW_KEY_O      ) );
+    nanovg = createKeyClicker( createKeyButton( GLFW_KEY_N      ) );
+    tb = createKeyClicker( createKeyButton( GLFW_KEY_T      ) );
 }
 
 } // namespace run

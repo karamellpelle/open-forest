@@ -52,6 +52,10 @@ void GUI::output(const Scene& scene)
     root.InvokePaint( tb::TBWidget::PaintProps() );
 
     tb::g_renderer->EndPaint();
+
+    // reset gl-state after turbobadger, for  this frame
+    gl::reset_turbobadger();
+
 }
 
 void GUI::step(tick_t tick)

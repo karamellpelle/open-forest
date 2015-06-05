@@ -185,6 +185,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
+      # helpers
+      "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       # library implementations:
       "${MAIN_SOURCE_DIR}/nanovg.cpp"             
       # tmp:

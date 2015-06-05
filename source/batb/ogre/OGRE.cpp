@@ -72,6 +72,8 @@ debug::gl::msg( "root->renderOneFrame();" );
 debug::gl::msg( "set_glfwcontext_();" );
         set_glfwcontext_();
 
+        // reset gl-state after Ogre, for this framd
+        gl::reset_Ogre();
         
     }
 }
