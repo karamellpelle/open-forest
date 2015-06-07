@@ -53,6 +53,8 @@ static Ogre::Viewport* viewport = nullptr;
 
 void demo_begin(BATB& batb)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     if ( tmp_empty )
     {
         YAML::Node yaml = YAML::LoadFile( file::static_data( "tmp/ogre.yaml" ) );
@@ -148,6 +150,8 @@ void demo_begin(BATB& batb)
 
 void demo_iterate(BATB& batb, run::World& world)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     float_t aspect = world.scene.shape.wth / world.scene.shape.hth;
 
     camera->setAspectRatio( aspect );

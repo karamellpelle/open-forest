@@ -43,7 +43,18 @@ namespace gui
 
 void GUI::output(const Scene& scene)
 {
-    // TODO: bind FBO, set viewport, ..., from 'scene'
+debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+
+    // reset gl-state after turbobadger, for  this frame
+    gl::begin_turbobadger();
+
+    // TODO: bind FBO, ..., from 'scene'
+    //       see: tb_renderer_gl.cpp, TBRendererGL::BeginPaint
+
+    // we need to set modelview for TB rendering 
+    // TODO: use 'scene'
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity(); 
 
     wth_ = scene.wth; hth_ = scene.hth;
     tb::g_renderer->BeginPaint( wth_, hth_ );
@@ -54,12 +65,13 @@ void GUI::output(const Scene& scene)
     tb::g_renderer->EndPaint();
 
     // reset gl-state after turbobadger, for  this frame
-    gl::reset_turbobadger();
+    gl::end_turbobadger();
 
 }
 
 void GUI::step(tick_t tick)
 {
+debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     // set size of GUI, using our screen
@@ -110,6 +122,8 @@ void begin(GUI& gui)
 {
     BATB_LOG_FUNC( gui.batb );
 
+
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // set up this GUI object from YAML
     YAML::Node yaml = YAML::LoadFile( gui.filepath_ );

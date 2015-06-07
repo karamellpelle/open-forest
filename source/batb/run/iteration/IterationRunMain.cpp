@@ -48,6 +48,8 @@ void IterationRunMain::iterate_begin(World& run)
 {
     BATB_LOG_FUNC( batb );
 
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     // we want clean state for our Key's, no garbage:
     batb.run.keyset.reset();
 
@@ -89,7 +91,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
-    if ( batb.run.keyset.i->click() ) run.toggle_b = !run.toggle_b;
+    if ( batb.run.keyset.i->click() ) {run.toggle_b = !run.toggle_b; std::cout << "FPS: " << env::frame_fps() << std::endl; }
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
     if ( batb.run.keyset.nanovg->click() ) run.toggle_nanovg = !run.toggle_nanovg;
     if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
@@ -97,16 +99,16 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // Ogre demo:
     if ( run.toggle_ogre )
     {
-debug::gl::msg("ogre::demo_iterate");
         tmp::ogre::demo_iterate( batb, run );
     }
 
     // nanovg demo:
+    gl::begin_nanovg(); // FIXME: into function
     if ( run.toggle_nanovg )
     {
-debug::gl::msg("nanovg::demo_iterate");
         tmp::nanovg::demo_iterate( false, false );
     }
+    gl::end_nanovg();
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP

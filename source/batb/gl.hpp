@@ -29,16 +29,19 @@ namespace gl
 // GL state
 
 // set initial state
-void reset();
+void init_state();
 
-// reset GL state after Ogre
-void reset_Ogre();
+//  GL state for Ogre
+void begin_ogre();
+void end_ogre();
 
-// reset GL state after turbobadger
-void reset_turbobadger();
+// GL state for turbobadger
+void begin_turbobadger();
+void end_turbobadger();
 
-// reset GL state after nanovg
-void reset_nanovg();
+// GL state for nanovg
+void begin_nanovg();
+void end_nanovg();
 
 ////////////////////////////////////////////////////////////////////////////////
 //

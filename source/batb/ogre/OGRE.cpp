@@ -57,8 +57,12 @@ void OGRE::output(const Scene& scene)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
+
     if ( initialized_ )
     {
+        // setup ogre
+        gl::begin_ogre();
+
         // tell Ogre the size of our window
         renderwindow->resize( scene.wth, scene.hth );
 
@@ -73,7 +77,7 @@ debug::gl::msg( "set_glfwcontext_();" );
         set_glfwcontext_();
 
         // reset gl-state after Ogre, for this framd
-        gl::reset_Ogre();
+        gl::end_ogre();
         
     }
 }
@@ -117,8 +121,8 @@ debug::gl::msg( "OGRE_NEW Root" );
             
             try
             {
-                
-debug::gl::msg( "ogre.root->loadPlugin" );
+std::ostringstream os; os << "ogre.root->loadPlugin( " << plugin << ")";                
+debug::gl::msg( os.str() );
                 ogre.root->loadPlugin( plugin );
             }
             catch (Ogre::Exception& e)

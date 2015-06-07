@@ -38,6 +38,8 @@ static bool tmp_empty = true;
 
 void demo_begin()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     if ( tmp_empty )
     {
 #ifdef NANOVG_GL2_IMPLEMENTATION
@@ -59,8 +61,11 @@ void demo_begin()
     tmp_empty = false;
 }
 
+
 void demo_iterate(bool premult, bool blowup)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
 /*
     // set for next iteration...
     if (premult)
@@ -98,9 +103,6 @@ void demo_iterate(bool premult, bool blowup)
 
     nvgEndFrame(vg);
 
-
-    // set back GL after nanovg
-    gl::reset_nanovg();
 
 }
 

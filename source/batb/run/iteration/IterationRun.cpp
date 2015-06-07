@@ -42,7 +42,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     batb.run.world = &world;
 
     // setup scene for this frame
-debug::gl::msg("begin(world.scene)");
 if ( world.toggle_a )
 glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
 else
@@ -50,8 +49,13 @@ glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
     begin( world.scene );
 
     // draw OGRE 
-debug::gl::msg("batb.ogre.output()");
+    // FIXME: out of the general IterationRun and into specific 
+    //        IterationRunXXX? Is there only 1 Ogre, or can we
+    //        use more than one Ogre::SceneManager's?
+    //        
+    gl::begin_ogre();
     if (world.toggle_ogre) batb.ogre.output( world.scene );
+    gl::end_ogre();
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -66,13 +70,14 @@ debug::gl::msg("iterate_run()");
 
     // FIXME: uncomment when Ogre has its own context
     // draw GUI on top of current Scene, update
+    gl::begin_turbobadger(); // tmp
     if ( world.toggle_tb )
     {
-debug::gl::msg("batb.gui.output()");
         batb.gui.output( world.scene );
-debug::gl::msg("batb.gui.step()");
         batb.gui.step( world.tick );
     }
+    gl::end_turbobadger(); // tmp
+
     // update keys
     batb.run.keyset.step( world.tick );
 
@@ -91,6 +96,8 @@ debug::gl::msg("batb.gui.step()");
 // the FBO for our env::screen.
 void IterationRun::begin(Scene& scene)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     // set fragment size of scene. FBO is env::screen
     env::screen_size( scene.wth, scene.hth );
 

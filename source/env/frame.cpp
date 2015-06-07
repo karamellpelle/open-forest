@@ -22,8 +22,8 @@ namespace env
 
 extern GLFWwindow* screen_window_;
 static uint count_ = 0;
-static float_t fps_ = 0.0;
-static float_t fps_delta_ = 1.0;
+static double fps_ = 0.0;
+static double fps_delta_ = 1.0;
 
 void frame_begin_()
 {
@@ -51,9 +51,10 @@ void frame_end()
     static uint count_prev = 0;
 
     double tick = glfwGetTime();
-    if ( tick_prev + fps_delta_ <= tick )
+    double delta = tick - tick_prev;
+    if ( fps_delta_ <= delta )
     {
-        fps_ = (count_ - count_prev) / fps_delta_;
+        fps_ = (count_ - count_prev) / delta;
 
         tick_prev = tick; 
         count_prev = count_;

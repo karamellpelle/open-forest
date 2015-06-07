@@ -35,9 +35,12 @@ namespace gl
 
 
 // set initial state
-void reset()
+void init_state()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     glDepthFunc( GL_LEQUAL ); 
+
 /*
     //  set up our GL-invariants:
     glEnable( GL_MULTISAMPLE );
@@ -63,26 +66,101 @@ void reset()
 */
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// working with Ogre 
+void begin_ogre()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+}
+
 // reset GL state after Ogre
-void reset_Ogre()
+void end_ogre()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
+    glDisable( GL_LIGHTING );
+    glDisableClientState( GL_NORMAL_ARRAY ); // + glNormalPointer??
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY ); // + glTexCoordPointer ??
+    glDisableClientState( GL_VERTEX_ARRAY );
+    
+    glDisable( GL_CULL_FACE );
+
+    
+    // disable ELEMENT_ARRAY_BUFFER !!
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+    //glBufferData( GL_ARRAY_BUFFER, 0 );
+    //glBufferData( GL_ARRAY_BUFFER, 0 );
+    //
+    // disable TEXTURE0
+
+    glDisable( GL_COLOR_SUM );
+    glDisable( GL_COLOR_MATERIAL );
+    glDisable( GL_TEXTURE_2D );
+
+    glDisableClientState( GL_INDEX_ARRAY );
+    glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
 }
 
-// reset GL state after turbobadger
-void reset_turbobadger()
-{
+////////////////////////////////////////////////////////////////////////////////
+// working with nanovg
+//
 
+void begin_nanovg()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+    // push matrix? no.
 }
+
 
 // reset GL state after nanovg
-void reset_nanovg()
+void end_nanovg()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
     // see old.cpp and README.md for nanovg
     glEnable( GL_DEPTH_TEST );
     glBindBuffer(GL_ARRAY_BUFFER, 0); // this seems to be the problem if no other output that nanovg...
 
+////////////////////////////////////////////////////////////////////////////////
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// working with turbobadger
+//
+
+
+void begin_turbobadger()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+}
+
+// reset GL state after turbobadger
+void end_turbobadger()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+    glDepthFunc( GL_LEQUAL );
+    glEnable( GL_LIGHTING ); // remove
+    //glEnableClientState( GL_NORMAL_ARRAY ); 
+
+    glDisable( GL_BLEND ); // ?
+    glEnable( GL_DEPTH_TEST );
+    //glBlendFunc
+    glBlendFunc( GL_ONE, GL_ZERO );
+    glDisable( GL_TEXTURE_2D );
+
+    glDisableClientState( GL_COLOR_ARRAY );
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
+    glDisableClientState( GL_VERTEX_ARRAY ); 
+
+
+}
+
+
 
 
 } //namespace gl
