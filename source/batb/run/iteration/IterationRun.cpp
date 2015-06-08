@@ -41,11 +41,13 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // set current world the Run-object is working on
     batb.run.world = &world;
 
+    // tmp:
+    if ( world.toggle_a )
+        glClearColor( 0.4, 0.1, 0.5, 1.0 );
+    else
+        glClearColor( 0.0, 0.0, 0.0, 0.0 );
+
     // setup scene for this frame
-if ( world.toggle_a )
-glClearColor( 0.1, 0.1, 0.2, 1.0 ); // TMP!
-else
-glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
     begin( world.scene );
 
     // draw OGRE 
@@ -53,9 +55,11 @@ glClearColor( 0.4, 0.1, 0.5, 1.0 ); // TMP!
     //        IterationRunXXX? Is there only 1 Ogre, or can we
     //        use more than one Ogre::SceneManager's?
     //        
-    gl::begin_ogre();
-    if (world.toggle_ogre) batb.ogre.output( world.scene );
-    gl::end_ogre();
+    // tmp:
+    if (world.toggle_ogre)
+    {
+        batb.ogre.output( world.scene );
+    }
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -68,15 +72,12 @@ debug::gl::msg("iterate_run()");
     // FIXME: not here, done by wrapped iteration
     world.tick = env::tick();
 
-    // FIXME: uncomment when Ogre has its own context
-    // draw GUI on top of current Scene, update
-    gl::begin_turbobadger(); // tmp
+    // tmp:
     if ( world.toggle_tb )
     {
         batb.gui.output( world.scene );
         batb.gui.step( world.tick );
     }
-    gl::end_turbobadger(); // tmp
 
     // update keys
     batb.run.keyset.step( world.tick );

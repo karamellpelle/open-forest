@@ -78,6 +78,9 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         return;
     }
 
+    // begin GL state for nanovg
+    gl::begin_nanovg();
+
     // compute
     static tick_t tick_prev = 0.0;
     tick_t tick = env::tick();
@@ -104,6 +107,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     nvgEndFrame(vg);
 
 
+    // end GL state for nanovg
+    gl::end_nanovg();
 }
 
 

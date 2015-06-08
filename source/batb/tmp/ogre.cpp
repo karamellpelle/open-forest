@@ -57,6 +57,9 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     if ( tmp_empty )
     {
+        // begin GL state for Ogre
+        gl::begin_ogre();
+
         YAML::Node yaml = YAML::LoadFile( file::static_data( "tmp/ogre.yaml" ) );
 
         // add resources for demo
@@ -140,10 +143,11 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         camera->setPosition( Ogre::Vector3( 0, 0, 128 ) );
         camera->lookAt( Ogre::Vector3( 0, 0, -300 ) );
 
-        //Ogre::ql_init(scenemgr, camera, batb.ogre.renderwindow, false);
-
-
         // TODO: asset no need for GLContextGLFW switch
+
+        // end GL state for Ogre
+        gl::end_ogre();
+
     }
     tmp_empty = false;
 }
@@ -151,6 +155,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 void demo_iterate(BATB& batb, run::World& world)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+    // no need for gl::ogre_begin/end since no rendering?
 
     float_t aspect = world.scene.shape.wth / world.scene.shape.hth;
 
@@ -164,13 +170,6 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     camera->setPosition( Ogre::Vector3( 128.0 * x, 64.0 * y, 128.0 * z ) );
     camera->lookAt( Ogre::Vector3( 0, 0, 0 ) );
-
-
-    // FIXME: this must work:
-    //Ogre::ql_PreRender();
-    //Ogre::ql_Render();
-    //Ogre::ql_PostRender();
-    //
 
 
     // TODO: asset no need for GLContextGLFW switch

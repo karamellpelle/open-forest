@@ -73,11 +73,10 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
-    std::cout << "toggle Ogre demo with the O button..." << std::endl;
-    std::cout << "toggle nanovg demo with the N button..." << std::endl;
-    std::cout << "toggle turbobadger demo with the T button..." << std::endl;
-    std::cout << "toggle old-BATB with the INSERT button..." << std::endl; 
-    std::cout << "(the above demos do not work well together yet)" << std::endl; 
+    std::cout << "toggle Ogre demo with the O key..." << std::endl;
+    std::cout << "toggle nanovg demo with the N key..." << std::endl;
+    std::cout << "toggle turbobadger demo with the T key..." << std::endl;
+    std::cout << "toggle old-BATB with the INSERT key..." << std::endl; 
     std::cout << std::endl;
 }
 
@@ -103,12 +102,10 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
 
     // nanovg demo:
-    gl::begin_nanovg(); // FIXME: into function
     if ( run.toggle_nanovg )
     {
         tmp::nanovg::demo_iterate( false, false );
     }
-    gl::end_nanovg();
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP

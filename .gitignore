@@ -8,3 +8,4 @@ session.vim
 ./tmp
 data/tmp/batb-ogre.log
 data/tmp/batb-ogre.log.old
+data/old/routes

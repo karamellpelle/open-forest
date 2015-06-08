@@ -1,65 +1,61 @@
 Open Forest
 --------------------
 
-This is a fork of an orienteering game I found on GitHub, https://github.com/jarvinet/orienteering-game.
+This was originally a fork of an orienteering game I found on GitHub, ["Beat About The Bush]( 
+https://github.com/jarvinet/orienteering-game), but it is now completely rewritten.
+The old game is still runnable, but it needs additional libs in order to build (plib, ...).
 
 The intention is to build up a foundation for an open source orienteering game. Despite the sport of 
 orienteering is small, there are multiple commercial orienteering games available (Catching Features, 
 Suunnistussimulaattori, Oriantica), and all these costs money. I don't see the point of having so many
 commercial games, for something that probably not will generate enough money for an high-end product.
-Also, a lot of orienteers are good programmers/developers. We'll se how this goes...
+Also, a lot of orienteers are good programmers/developers. We'll see how this goes...
 
 This project is currently under construction, there needs more work (from me) before I expect others
-to join. I try to work on this project when I have time...
+to join. I try to work on this project when I have time.
 
 
 Programming
 --------------------
 
-We shall aim at using modern programming and libraries . This means OpenGL 3.3+ (shaders, buffers, 
+We shall aim at using modern programming and libraries. This means OpenGL 3.3+ (shaders, buffers, 
 vertex arrays, etc.), C++11, etc.
 
-Currently, these libraries are intented to be used. Please fill in (better) alternatives...
+#### Libraries
 
-    graphics          : OpenGL, GLFW, GLEW
-    sound             : (OpenAL ?)
-    input             : GLFW
-    GUI               : https://github.com/fruxo/turbobadger          
-                        (CEGUI ?)
-                        (JUCE ?)
-                        (https://github.com/betajaen/gorilla ?)
-    config            : YAML
-    UDP network       : (boost ASIO ?)
-                        (https://github.com/joyent/libuv/ ?)
-    3D rendering      : OGRE                                          
-                        (OpenSceneGraph ?)
-                        (OpenSG ?)
-                        (Horde3D ?)
-                        (SpeedTree :))
-    2D rendering      : https://github.com/memononen/nanovg
-    font rendering    : (using turbobadger/nanovg) 
-    packaging         : (http://gamedev.stackexchange.com/questions/37648/how-can-you-put-all-images-from-a-game-to-1-file)
-                        (http://en.wikipedia.org/wiki/List_of_archive_formats)
-    collision         : (do we need this?)
-                        (Bullet3D ?)
-    linear            : GLM
-    3D animation      : (OGRE ?)
-    video             : OGRE
-                        (libTheora?)
-    c++               : (boost.filesystem ?)
-                        (boost.hash ?)
-                        (boost.integer ?)
-                        (boost.geometry?)
-                        (boost.predef ?)
-                        (boost.random ?)
-                        (boost.string_algo ?)
-                        (boost.system_library ?)
-                        (boost.program_options ?)
-                        (boost.asio ?)
-                        (boost.math ?)
+Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
+graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
+sound             : [**OpenAL Soft**](https://github.com/kcat/openal-soft), [MikMod ?](http://mikmod.sourceforge.net)  
+input             : [**GLFW**](http://www.glfw.org)  
+GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
+config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
+UDP network       : [libuv ?](https://github.com/joyent/libuv/ ?), 
+                    (boost ASIO ?)  
+3D rendering      : [**OGRE**](http://www.ogre3d.org)  
+2D rendering      : [nanovg](https://github.com/memononen/nanovg)  
+font rendering    : (using turbobadger or nanovg)  
+packaging         : [link 0](http://gamedev.stackexchange.com/questions/37648/how-can-you-put-all-images-from-a-game-to-1-file), 
+                    [link 1](http://en.wikipedia.org/wiki/List_of_archive_formats)  
+collision         : do we need collision?,
+                    [Bullet3D ?](https://github.com/bulletphysics/bullet3)  
+linear            : [GLM](http://glm.g-truc.net)  
+3D animation      : [**OGRE**](http://www.ogre3d.org)  
+video             : [OGRE ?](http://www.ogre3d.org), 
+                    [libTheora ?](http://www.theora.org/)  
+c++               : (boost.filesystem ?),
+                    (boost.hash ?),
+                    (boost.integer ?),
+                    (boost.geometry?),
+                    (boost.predef ?),
+                    (boost.random ?),
+                    (boost.string_algo ?),
+                    (boost.system_library ?),
+                    (boost.program_options ?),
+                    (boost.asio ?),
+                    (boost.math ?)
 
-Currently, GLFW, tinyxml2, nanovg, GLM, turbobadger, are up and running. 
+Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `YAML`, `tinyxml2`, `GLM`  are up and running. 
 
 
 Building
@@ -81,13 +77,6 @@ Building can then be done with
     $ ./build.sh
 
 which creates a program `build/open-forest`.
-
-
-
-old-BATB
----------------------
-The old game "Beat About The Bush" is still runnable in this fork, and
-it needs additional libs (plib, ..., see the original repository)
 
 
 Contact

@@ -23,36 +23,28 @@ namespace batb
 namespace gl
 {
 
+
 ////////////////////////////////////////////////////////////////////////////////
-// GL state
-//
-// current draw order: 
-//
-//    Ogre     ->      nanovg      ->        turbobadger     ->    ...
-//         reset_Ogre          reset_nanovg                reset
-//
-//
-
-
 // set initial state
+//
+// this defines our GL state invariant 
+// (or at least some of our invariant state; arrays should probably disabled after calls)
+//
+
 void init_state()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-    glDepthFunc( GL_LEQUAL ); 
 
-/*
     //  set up our GL-invariants:
     glEnable( GL_MULTISAMPLE );
     glClearColor( 0, 0, 0, 0 );
-    glDisable( GL_STENCIL_TEST ); // ??
-    glClearStencil( 0 );          // ??
-    std::printf("glEnable: %p\n", glEnable);
-    std::printf("glBlendFuncSeparate: %p\n", glBlendFuncSeparate);
+
     // INVARIANT:
-    // if a fragment shader outputs value intended to be color, then this color should be normalized.
-    // that is, the RGB coordinates should be multiplied by A. this means that if a color (r,g,b) has
-    // opacity a, then the RGBA color should be normalized into (a * r, a * g, a * b, a).
+    // if a fragment shader outputs value intended to be color, then this color 
+    // should be normalized. that is, the RGB coordinates should be multiplied 
+    // by A. this means that if a color (r,g,b) has opacity a, then the RGBA 
+    // color should be normalized into (a * r, a * g, a * b, a), i.e.
     // "premultiplied alpha"
     glEnable( GL_BLEND );
     glBlendEquationSeparate( GL_FUNC_ADD, 
@@ -63,11 +55,39 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     glDepthMask( GL_TRUE );
     glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
     glEnable( GL_DEPTH_TEST );
-*/
 }
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//  resetting our GL state between library (Ogre, nanovg, turbobadger) calls
+// 
+//  calls have been stripped down. see commit 659cfa97f4006370b6fce005badc13f23dcf5d71
+//  for the other calls we had before, if there should be some problem. that
+//  commit contains the calls that made these libraries work together for the
+//  first time.
+//
+//  for some reason, only nanovg (or nanovg + turbobadger) without Ogre decrease
+//  our framerate. if we add Ogre, then the framerate becomes normal (60 fps).
+//  I expect this happened when glEnable( GL_MULTISAMPLE ) was added, but
+//  it has not been verified.
+//
+//
+//  actually, only gl::end_XXX() should be necessary (shown as 'reset' below)
+//
+//  current draw order: 
+//
+//     Ogre     ->      nanovg      ->        turbobadger     ->    ...
+//          reset Ogre          reset nanovg                reset tb/init_state
+//
+//
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // working with Ogre 
+//
 void begin_ogre()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
@@ -80,27 +100,15 @@ void end_ogre()
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     glDisable( GL_LIGHTING );
-    glDisableClientState( GL_NORMAL_ARRAY ); // + glNormalPointer??
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY ); // + glTexCoordPointer ??
-    glDisableClientState( GL_VERTEX_ARRAY );
-    
-    glDisable( GL_CULL_FACE );
-
-    
-    // disable ELEMENT_ARRAY_BUFFER !!
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-    //glBufferData( GL_ARRAY_BUFFER, 0 );
-    //glBufferData( GL_ARRAY_BUFFER, 0 );
-    //
-    // disable TEXTURE0
+    glBindBuffer( GL_ARRAY_BUFFER, 0 );
+    //glDisableClientState( GL_NORMAL_ARRAY );
+    //glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+    //glDisableClientState( GL_VERTEX_ARRAY );
+    //glDisableClientState( GL_INDEX_ARRAY );
+    //glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
 
-    glDisable( GL_COLOR_SUM );
-    glDisable( GL_COLOR_MATERIAL );
-    glDisable( GL_TEXTURE_2D );
-
-    glDisableClientState( GL_INDEX_ARRAY );
-    glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
+    // set premult blend equation?
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +118,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 void begin_nanovg()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-    // push matrix? no.
+
 }
 
 
@@ -119,9 +127,9 @@ void end_nanovg()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-    // see old.cpp and README.md for nanovg
+    // see nanovg's README.md for altered state
     glEnable( GL_DEPTH_TEST );
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // this seems to be the problem if no other output that nanovg...
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
 ////////////////////////////////////////////////////////////////////////////////
 }
@@ -131,7 +139,6 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 // working with turbobadger
 //
 
-
 void begin_turbobadger()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
@@ -139,23 +146,25 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 }
 
 // reset GL state after turbobadger
+// see TBRendererGL::BeginPaint in tb_renderer_gl.cpp
 void end_turbobadger()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-    glDepthFunc( GL_LEQUAL );
-    glEnable( GL_LIGHTING ); // remove
-    //glEnableClientState( GL_NORMAL_ARRAY ); 
-
-    glDisable( GL_BLEND ); // ?
-    glEnable( GL_DEPTH_TEST );
-    //glBlendFunc
-    glBlendFunc( GL_ONE, GL_ZERO );
-    glDisable( GL_TEXTURE_2D );
-
     glDisableClientState( GL_COLOR_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
     glDisableClientState( GL_VERTEX_ARRAY ); 
+
+    glDisable( GL_TEXTURE_2D );
+    glDepthFunc( GL_LEQUAL );
+    glEnable( GL_DEPTH_TEST );
+
+    // blending premultiplied colors
+    //glBlendEquationSeparate( GL_FUNC_ADD, 
+    //                         GL_FUNC_ADD );
+    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+
 
 
 }
