@@ -217,6 +217,10 @@ void iterate()
     glDisable( GL_LIGHTING );
     glDisable( GL_COLOR_MATERIAL );
 
+    //glEnable( GL_LIGHTING );
+    //glEnable( GL_ALPHA_TEST );
+    //glAlphaFunc( GL_GREATER, 0.1 );
+
 	//glDisableClientState(GL_COLOR_ARRAY);
 	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	//glDisableClientState(GL_VERTEX_ARRAY);
@@ -268,9 +272,13 @@ void iterate()
     reset_gl();
 }
 
-
 void reset_gl()
 {
+
+    //glDisable( GL_LIGHTING );
+    //glDisable( GL_ALPHA_TEST );
+    ////glAlphaFunc( GL_GREATER, 0.1 );
+
     // reset the OpenGL state to what new-BATB assumes
     // (see MainWindow::displayMap/MainWindow::displayTerrain)
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );

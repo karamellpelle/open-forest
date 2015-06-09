@@ -27,6 +27,7 @@
 #include <stdio.h>
 
 
+
 // interface for batb::gui to 
 namespace batb
 {
@@ -55,6 +56,13 @@ void tbsystem_ms(double t)
 
 namespace tb
 {
+
+#ifdef TB_RUNTIME_DEBUG_INFO
+void TBDebugOut(const char *str)
+{
+	//printf("%s", str);
+}
+#endif // TB_RUNTIME_DEBUG_INFO
 
 ////////////////////////////////////////////////////////////////////////////////
 //  TBSystem
@@ -116,7 +124,7 @@ int TBSystem::GetDPI()
 ////////////////////////////////////////////////////////////////////////////////
 //  TBFile
 
-
+/*
 // this implementation seems to be boundn to standard C library, 
 // not Linux...
 class TBLinuxFile : public TBFile
@@ -159,6 +167,7 @@ TBFile* TBFile::Open(const char *filename, TBFileMode mode)
 		fclose(f);
 	return tbf;
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //  clipboard (empty)

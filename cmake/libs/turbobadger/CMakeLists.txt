@@ -68,6 +68,7 @@ set(  MY-TURBOBADGER_SOURCES
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_node_tree.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_node_ref_tree.cpp" 
 
+       
       # we provide our own
       #"${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_image_loader_stb.cpp" 
       "${CMAKE_CURRENT_SOURCE_DIR}/src/tb/tb_image_loader_stb.cpp" 
@@ -76,11 +77,21 @@ set(  MY-TURBOBADGER_SOURCES
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/utf8/utf8.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/animation/tb_animation.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/animation/tb_widget_animation.cpp" 
-      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/addons/tbimage/tb_image_manager.cpp" 
-      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/addons/tbimage/tb_image_widget.cpp" 
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/image/tb_image_manager.cpp" 
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/image/tb_image_widget.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/renderers/tb_renderer_batcher.cpp" 
       "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/renderers/tb_renderer_gl.cpp" 
       
+      # these are conditionally compiled with settings in our 
+      # source/batb/gui/tb_config.h:
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_file_posix.cpp" 
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_clipboard_glfw.cpp" 
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_clipboard_win.cpp" 
+      "${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_clipboard_dummy.cpp" 
+      #"${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_system_linux.cpp" 
+      #"${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_system_win.cpp" 
+      #"${MY-TURBOBADGER_SOURCE_DIR}/src/tb/tb_system_android.cpp" 
+
 ) 
 
 

@@ -14,12 +14,14 @@
 /** Enable for some handy runtime debugging, enabled by modifying
 	the various settings in g_tb_debug. A settings window can be
 	shown by calling ShowDebugInfoSettingsWindow. */
-#ifdef _DEBUG
-#define TB_RUNTIME_DEBUG_INFO
+#ifndef NDEBUG
+//#define TB_RUNTIME_DEBUG_INFO
 #endif
 
-// enable this anyway
-//#define TB_RUNTIME_DEBUG_INFO
+#ifndef NDEBUG
+/** Enable compilation of unit tests. */
+//#define TB_UNIT_TESTING
+#endif
 
 /** Enable if the focus state should automatically be set on edit fields even
 	when using the pointer. It is normally set only while moving focus by keyboard. */
@@ -59,5 +61,69 @@
 /** Enable renderer using OpenGL ES. This renderer depends on TB_RENDERER_GL.
 	It is using GL ES version 1. */
 //#define TB_RENDERER_GLES_1
+
+/** The width of the font glyph cache. Must be a power of two. */
+#define TB_GLYPH_CACHE_WIDTH 512
+
+/** The height of the font glyph cache. Must be a power of two. */
+#define TB_GLYPH_CACHE_HEIGHT 512
+
+// == Optional features ===========================================================
+
+/** Enable support for TBImage, TBImageManager, TBImageWidget. */
+#define TB_IMAGE
+
+// == Additional configuration of platform implementations ========================
+
+/** Define for posix implementation of TBFile. */
+//#define TB_FILE_POSIX
+
+/** Defines for implementations of TBClipboard. */
+//#define TB_CLIPBOARD_DUMMY // Cross platform. Not integrating with the OS.
+//#define TB_CLIPBOARD_GLFW // Cross platform using glfw API.
+//#define TB_CLIPBOARD_WINDOWS
+
+/** Defines for implementations of TBSystem. */
+//#define TB_SYSTEM_LINUX
+//#define TB_SYSTEM_WINDOWS
+//#define TB_SYSTEM_ANDROID
+
+/** Defines for additional platform specific issues. */
+// NOTE: currently only used in tb_style_edit.cpp
+//#define TB_TARGET_WINDOWS
+//#define TB_TARGET_MACOSX
+//#define TB_TARGET_LINUX
+
+// == Setting some defaults for platform implementations ==========================
+
+// FIXME: use TB_CLIPBOARD_GLFW or TB_CLIPBOARD_DUMMY or
+//        custom defined in batb/gui/tb_system.cpp as below
+//#define TB_CLIPBOARD_GLFW // 
+
+#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
+#define TB_FILE_POSIX
+//#define TB_TARGET_WINDOWS
+//#define TB_CLIPBOARD_WINDOWS
+//#define TB_SYSTEM_WINDOWS
+#endif
+
+#if defined(__linux) || defined(__linux__)
+#define TB_FILE_POSIX
+//#define TB_TARGET_LINUX
+//#define TB_SYSTEM_LINUX
+//#define TB_CLIPBOARD_GLFW
+#endif
+
+#ifdef MACOSX
+#define TB_FILE_POSIX
+//#define TB_TARGET_MACOSX
+//#define TB_SYSTEM_LINUX
+//#define TB_CLIPBOARD_GLFW
+#endif
+
+#if defined(ANDROID) || defined(__ANDROID__)
+//#define TB_SYSTEM_ANDROID
+#define TB_CLIPBOARD_DUMMY
+#endif
 
 #endif // TB_CONFIG_H

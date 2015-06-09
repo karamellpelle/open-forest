@@ -294,6 +294,7 @@ if ( BATB_BUILD )
 
     # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
+    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/gui" ) # point to _our_ tb_config.h
 
     # yaml-cpp
     list( APPEND BATB_LIBRARIES yaml-cpp )
