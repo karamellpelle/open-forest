@@ -22,3 +22,6 @@
 [submodule "libs/yaml-cpp"]
 	path = libs/yaml-cpp
 	url = https://github.com/t-richards/yaml-cpp.git
+[submodule "libs/alure"]
+	path = libs/alure
+	url = git://repo.or.cz/alure.git

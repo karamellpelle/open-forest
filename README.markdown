@@ -26,11 +26,11 @@ vertex arrays, etc.), C++11, etc.
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
 graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
-sound             : [**OpenAL Soft**](https://github.com/kcat/openal-soft), [MikMod ?](http://mikmod.sourceforge.net)  
+sound             : [**OpenAL Soft**](https://github.com/kcat/openal-soft), [**ALURE**](http://kcat.strangesoft.net/alure.html), [MikMod ?](http://mikmod.sourceforge.net)  
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
-UDP network       : [libuv ?](https://github.com/joyent/libuv/ ?), 
+UDP network       : [libuv ?](https://github.com/libuv/libuv), 
                     (boost ASIO ?)  
 3D rendering      : [**OGRE**](http://www.ogre3d.org)  
 2D rendering      : [nanovg](https://github.com/memononen/nanovg)  
