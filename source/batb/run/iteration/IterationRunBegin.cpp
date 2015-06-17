@@ -94,6 +94,9 @@ bool IterationRunBegin::begin_non_core()
         // load OGRE
         ogre::begin( batb.ogre );
 
+        // load AL
+        al::begin( batb.al );
+
         // load forest
         //forest::begin( batb.forest );
 

@@ -41,13 +41,18 @@ function do_get-submodules()
     # turbobadger
     git submodule init libs/turbobadger   #turbobadger
     git submodule update libs/turbobadger
+
+    # alure
+    git submodule init libs/alure   
+    git submodule update libs/alure
    
+    # yaml-cpp
+    git submodule init libs/yaml-cpp      
+    git submodule update libs/yaml-cpp
+
     ############################################################
     # these must be manually installed :(
 
-    # yaml-cpp
-    #git submodule init libs/yaml-cpp      
-    #git submodule update libs/yaml-cpp
 
     # boost
     #git submodule init libs/boost         #boost

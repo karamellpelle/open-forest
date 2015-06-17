@@ -24,7 +24,7 @@ namespace batb
 
 BATB::BATB(const std::string& path) : log( *this ), value( *this ),  
                                       keys( *this ), gui( *this ),
-                                      ogre( *this ),
+                                      ogre( *this ), al( *this ),
                                       //forest( *this ), race( *this ), run( *this );
                                       run( *this )
 {
@@ -37,11 +37,11 @@ BATB::BATB(const std::string& path) : log( *this ), value( *this ),
 
     // non-core:
     ogre.filepath(      file::directory( path ) + "/ogre/OGRE.yaml" );
+    al.filepath(        file::directory( path ) + "/al/AL.yaml" );
     //forest.filepath(    file::directory( path ) + "/forest/Forest.yaml" );
     //race.filepath(      file::directory( path ) + "/race/Race.yaml" );
     run.filepath(       file::directory( path ) + "/run/Run.yaml" );
     //.filepath(          file::directory( path ) + ".yaml" );
-    
     
 }
 

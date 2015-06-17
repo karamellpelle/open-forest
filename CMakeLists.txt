@@ -41,12 +41,14 @@ add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-
 # C specific compiler options
 #add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,C>:>" )
 
+# the above does not work, use this instead:
+#set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+#set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
+
 # currently, we invoke (typically, by 'build.sh') cmake with -DCMAKE_BUILD_TYPE=None
 # because we got too much compiler warnings without, since Ogre sets the build type to RelWithDebInfo.
 # later, we may actually rely on the default OGRE setting "RelWithDebInfo", since
 # OGRE may be too slow (release build of OGRE can increase performance a lot, according to doc).
-#set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
-#set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 
 
 ################################################################################
@@ -138,6 +140,66 @@ set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build 
 add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
 
 
+################################################################################
+# build library 'ALURE'
+#
+# examples can be disabled by BUILD_EXAMPLES and INSTALL_EXAMPLES, according
+# to alure doc.
+#
+# available codecs (needs libraries) :
+#   Vorbis (needs OGG), FLAC (needs OGG), Opus (needs OGG), SndFile, MPG123, DUMB
+# PhysFS resource streaming available
+set( ALURE_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to install ALURE
+set( ALURE_USE_RTTI          OFF CACHE BOOL "" FORCE ) 
+add_subdirectory( ${LIBS_SOURCE_DIR}/alure )
+# alure2_s does not expose libs, lets add'em
+list( APPEND CMAKE_MODULE_PATH "${LIBS_SOURCE_DIR}/alure/cmake" )
+find_package( OpenAL REQUIRED )
+list( APPEND ALURE_LIBRARIES ${OPENAL_LIBRARY} )
+find_package( Ogg )
+find_package( Vorbis )
+find_package( FLAC )
+find_package( Opus )
+find_package( SndFile )
+find_package( MPG123 )
+find_package( DUMB )
+#find_package( PHYSFS )
+# EXERCISE: make this work:
+#set( ALURE_LIBRARIES  $<$<STREQUAL:TRUE,${OGG_FOUND}>:"${OGG_LIBRARIES}"> 
+#                      $<$<STREQUAL:TRUE,${VORBIS_FOUND}>:"${VORBIS_LIBRARIES}"> 
+#                      $<$<STREQUAL:TRUE,${FLAC_FOUND}>:"${FLAC_LIBRARIES}"> 
+#                      $<$<STREQUAL:TRUE,${OPUS_FOUND}>:"${OPUS_LIBRARIES}"> 
+#                      $<$<STREQUAL:TRUE,${SNDFILE_FOUND}>:"${SNDFILE_LIBRARIES}"> 
+#                      $<$<STREQUAL:TRUE,${MPG123_FOUND}>:"${MPG123_LIBRARIES}"> 
+#                      #$<$<STREQUAL:TRUE,${DUMB_FOUND}>:"${DUMB_LIBRARIES}">
+#                      $<$<STREQUAL:TRUE,${PHYSFS_FOUND}>:"${PHYSFS_LIBRARIES}"> 
+#                      )
+if ( OGG_FOUND )
+list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
+endif()
+if ( VORBIS_FOUND )
+list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
+endif()
+if ( FLAC_FOUND )
+list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
+endif()
+if ( OPUS_FOUND )
+list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
+endif()
+if ( SNDFILE_FOUND )
+list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
+endif()
+if ( MPG123_FOUND )
+list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
+endif()
+if ( DUMB_FOUND )
+list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
+endif()
+if ( PHYSFS_FOUND )
+list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
+endif()
+
+
 
 ################################################################################
 # lib-file
@@ -175,6 +237,7 @@ set(  BATB_SOURCES
       # BATB non-core:
       "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
       "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
+      "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
       #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
@@ -194,6 +257,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
       "${MAIN_SOURCE_DIR}/batb/tmp/ogre.cpp"
+      "${MAIN_SOURCE_DIR}/batb/tmp/al.cpp"
+      
    )
 
 ################################################################################
@@ -312,6 +377,12 @@ if ( BATB_BUILD )
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
         #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
     endif()
+
+    # ALURE
+    list( APPEND BATB_LIBRARIES alure2_s ${ALURE_LIBRARIES} )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/alure/include" )  # NOTE: this adds alc.h, etc. from alure,
+                                                                                          #       if #include "alc.h" and not
+                                                                                          #       #include "AL/alc.h", see lib source
 
     # lib-file
     list( APPEND BATB_LIBRARIES lib-file )

@@ -19,6 +19,7 @@
 #include "batb/gui.hpp"
 #include "batb/tmp/nanovg.hpp"
 #include "batb/tmp/ogre.hpp"
+#include "batb/tmp/al.hpp"
 
 
 namespace batb
@@ -71,6 +72,9 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // nanovg demo
     tmp::nanovg::demo_begin();
 
+    // ALURE demo
+    tmp::al::demo_begin( batb );
+
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
     std::cout << "toggle Ogre demo with the O key..." << std::endl;
@@ -106,6 +110,9 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     {
         tmp::nanovg::demo_iterate( false, false );
     }
+    
+    // ALURE demo:
+    tmp::al::demo_iterate( batb, run );
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP

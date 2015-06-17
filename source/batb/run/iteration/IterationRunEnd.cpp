@@ -57,6 +57,9 @@ void IterationRunEnd::end_non_core()
     // unload forest
     //forest::begin( batb.forest );
 
+    // unload AL
+    al::end( batb.al );
+
     // unload OGRE
     ogre::end( batb.ogre );
 }

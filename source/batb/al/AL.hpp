@@ -15,69 +15,73 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_BATB_HPP
-#define BATB_BATB_HPP
+#ifndef BATB_AL_AL_HPP
+#define BATB_AL_AL_HPP
 #include "batb/batb_include.hpp"
-#include "batb/log.hpp"
-#include "batb/value.hpp"
-#include "batb/keys.hpp"
-#include "batb/gui.hpp"
-#include "batb/ogre.hpp"
-#include "batb/al.hpp"
-//#include "batb/forest.hpp"
-//#include "batb/race.hpp"
-#include "batb/run.hpp"
+#include "AL/alure2.h"
+
+
+// forward declare Ogre classes
+namespace Ogre
+{
+    class LogManager;
+    class Log;
+    class Root;
+    class RenderWindow;
+    class RenderTarget;
+}
 
 
 namespace batb
 {
 
+class BATB;
+class Scene;
 
-class BATB
+
+namespace al
 {
-friend void begin(BATB& batb);
-friend void end(BATB& batb);
+
+
+
+
+class AL
+{
+friend void begin(AL& );
+friend void end(AL& );
 
 public:
-    BATB(const std::string& );
+    AL(BATB& b);
 
-    //env::Env* env;
-
-    // core part of BATB.
-    // these are the parts of BATB fully initialized by 'void begin(BATB& )'.
-    // we need a minimum part for 'iterationRunBegin' to work.
-    log::Log log;
-    value::Value value;
-    keys::Keys keys;
-    gui::GUI gui;
-
-    // non-core part of BATB.
-    // these are parts of BATB initialized later, by 'iterationRunBegin'.
-    ogre::OGRE ogre;
-    al::AL al;
-    //forest::Forest forest;
-    //race::Race race;
-    run::Run run;
-
-    // save this BATB object to its file
+    void filepath(const std::string& path)
+    {
+        filepath_ = path;
+    }
     void save();
+  
+    // render to Scene
+    //void output(const Scene& );
+
+    BATB& batb;
+
+    alure::DeviceManager* devicemanager = nullptr;
+    alure::Device* device = nullptr;
+    alure::Context* context = nullptr;
+
 
 private:
     bool initialized_ = false;
-
     std::string filepath_;
-
+    
 };
 
 
-// start BATB-object
-void begin(BATB& batb);
+void begin(AL& );
+void end(AL& );
 
-
-// end BATB-object
-void end(BATB& batb);
-
+} // namespace al
 
 } // namespace batb
 
 #endif
+

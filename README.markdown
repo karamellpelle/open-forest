@@ -26,7 +26,7 @@ vertex arrays, etc.), C++11, etc.
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
 graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
-sound             : [**OpenAL Soft**](https://github.com/kcat/openal-soft), [**ALURE**](http://kcat.strangesoft.net/alure.html), [MikMod ?](http://mikmod.sourceforge.net)  
+sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html), [MikMod ? (ALURE with DUMB handles such files!)](http://mikmod.sourceforge.net)  
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
@@ -55,16 +55,17 @@ c++               : (boost.filesystem ?),
                     (boost.asio ?),
                     (boost.math ?)
 
-Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `YAML`, `tinyxml2`, `GLM`  are up and running. 
+Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `ALURE`, `YAML`, `tinyxml2`, `GLM`  are up and running. 
 
 
 Building
 --------------------
 
-The current libraries are needed:
+The following libraries are needed:
 
-- boost (I have version 1.55.0)
-- GLEW  (I have version 1.10.0)
+- boost   (I have version 1.55.0)
+- GLEW    (I have version 1.10.0)
+- OpenAL  (I have openal-soft-1.16.0 (and MPG123, since demo plays an mp3 file))
 
 In addition, this git project depends on submodules. Run
 

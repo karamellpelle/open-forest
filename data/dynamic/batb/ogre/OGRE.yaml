@@ -1,5 +1,7 @@
 ---
 
+# TODO: into BATB parent? Cf. other .yaml files
+
 # define our Ogre rendersystem
 rendersystem: "OpenGL Rendering Subsystem" 
 
@@ -15,4 +17,4 @@ plugins:
   - Plugin_OctreeZone
   - Plugin_OctreeSceneManager
 
-
+...
