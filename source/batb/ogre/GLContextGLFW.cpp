@@ -26,6 +26,7 @@ namespace ogre
 
 void GLContextGLFW::setCurrent()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     //
     // TODO: other platforms...
 #ifdef GLFW_EXPOSE_NATIVE_GLX
@@ -39,6 +40,7 @@ void GLContextGLFW::setCurrent()
 
 void GLContextGLFW::endCurrent()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // do nothing
 }
 
@@ -51,6 +53,7 @@ Ogre::GLContext* GLContextGLFW::clone() const
 //
 void begin(GLContextGLFW& context)
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // see the line with _oneTimeContextInitialization();
     // inside void GLRenderSystem::_switchContext(GLContext *context)
     context.setInitialized();   
@@ -59,6 +62,7 @@ void begin(GLContextGLFW& context)
 
 void end(GLContextGLFW& )
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 }
 

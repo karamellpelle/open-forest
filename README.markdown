@@ -26,34 +26,25 @@ vertex arrays, etc.), C++11, etc.
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
 graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
-sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html), [MikMod ? (ALURE with DUMB handles such files!)](http://mikmod.sourceforge.net)  
+sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
 UDP network       : [libuv ?](https://github.com/libuv/libuv), 
                     (boost ASIO ?)  
 3D rendering      : [**OGRE**](http://www.ogre3d.org)  
-2D rendering      : [nanovg](https://github.com/memononen/nanovg)  
+2D rendering      : [**nanovg**](https://github.com/memononen/nanovg)  
 font rendering    : (using turbobadger or nanovg)  
-packaging         : [link 0](http://gamedev.stackexchange.com/questions/37648/how-can-you-put-all-images-from-a-game-to-1-file), 
-                    [link 1](http://en.wikipedia.org/wiki/List_of_archive_formats)  
+packaging         : [gamedev.stackexhange.com](http://gamedev.stackexchange.com/questions/37648/how-can-you-put-all-images-from-a-game-to-1-file), 
+                    [wikipedia.org](http://en.wikipedia.org/wiki/List_of_archive_formats)  
 collision         : do we need collision?,
                     [Bullet3D ?](https://github.com/bulletphysics/bullet3)  
-linear            : [GLM](http://glm.g-truc.net)  
+linear            : [**GLM**](http://glm.g-truc.net)  
 3D animation      : [**OGRE**](http://www.ogre3d.org)  
 video             : [OGRE ?](http://www.ogre3d.org), 
                     [libTheora ?](http://www.theora.org/)  
-c++               : (boost.filesystem ?),
-                    (boost.hash ?),
-                    (boost.integer ?),
-                    (boost.geometry?),
-                    (boost.predef ?),
-                    (boost.random ?),
-                    (boost.string_algo ?),
-                    (boost.system_library ?),
-                    (boost.program_options ?),
-                    (boost.asio ?),
-                    (boost.math ?)
+c++               : [**boost*](http://www.boost.org/)  
+                    (filesystem, hash, integer, geometry, predef, random, string_algo, system_library, program_options, asio, math)
 
 Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `ALURE`, `YAML`, `tinyxml2`, `GLM`  are up and running. 
 
@@ -65,7 +56,8 @@ The following libraries are needed:
 
 - boost   (I have version 1.55.0)
 - GLEW    (I have version 1.10.0)
-- OpenAL  (I have openal-soft-1.16.0 (and MPG123, since demo plays an mp3 file))
+- OpenAL  (I have openal-soft-1.16.0
+- (MPG123, since demo plays an mp3 file)
 
 In addition, this git project depends on submodules. Run
 

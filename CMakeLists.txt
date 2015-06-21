@@ -256,6 +256,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
       "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/tmp/ogre/PerlinNoiseTerrainGenerator.cpp"
       "${MAIN_SOURCE_DIR}/batb/tmp/ogre.cpp"
       "${MAIN_SOURCE_DIR}/batb/tmp/al.cpp"
       
@@ -367,8 +368,12 @@ if ( BATB_BUILD )
 
     # Ogre
     list( APPEND BATB_LIBRARIES OgreMain )
+    list( APPEND BATB_LIBRARIES OgreTerrain )
+    list( APPEND BATB_LIBRARIES OgrePaging )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
     # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
     if ( OGRE_BUILD_RENDERSYSTEM_GL )

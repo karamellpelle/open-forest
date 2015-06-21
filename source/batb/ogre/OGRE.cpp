@@ -69,11 +69,10 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW!
         
 debug::gl::msg( "root->renderOneFrame();" );
-        root->renderOneFrame();
-        //scenemgr->_renderScene( camera, viewport, false );
+        root->renderOneFrame(); // Q?: do overlays need this, cf. SceneManager::_renderScene?
+        //scenemgr->_renderScene( camera, viewport, false ); 
 
         // set back our context
-debug::gl::msg( "set_glfwcontext_();" );
         set_glfwcontext_();
 
         // reset gl-state after Ogre, for this framd
@@ -166,7 +165,6 @@ debug::gl::msg( "ogre.root->initialise" );
 
     ////////////////////////////////////////////////////////////////////////////////
     // 
-debug::gl::msg( "begin( ogre.glcontextglfw_ )" );
     begin( ogre.glcontextglfw_ );
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +182,6 @@ debug::gl::msg( "ogre.root->createRenderWindow()" );
     ogre.renderwindow->setVisible(true);
 
     // set back our context
-debug::gl::msg( "ogre.set_glfwcontext_()" );
     ogre.set_glfwcontext_();
 
 
@@ -218,10 +215,8 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
-debug::gl::msg( " ogre.glcontextglfw_.setCurrent()" );
         ogre.glcontextglfw_.setCurrent();
     
-debug::gl::msg( "end( ogre.glcontextglfw_ )" );
         end( ogre.glcontextglfw_ );
 
     }
@@ -232,6 +227,7 @@ debug::gl::msg( "end( ogre.glcontextglfw_ )" );
 
 void OGRE::set_glfwcontext_()
 {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // TODO: GL vs GL3Plus
     //
     Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( rendersystem );
