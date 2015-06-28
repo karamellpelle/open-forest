@@ -15,47 +15,78 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Forest.hpp"
-#include "BATB/Log.hpp"
+#include "Forest.hpp" 
+#include "batb.hpp" 
 
-namespace BATB
+namespace batb
 {
 
 
 
-void Forest::create(xml::XMLElement* elem)
+namespace forest
 {
-    using namespace xml;
-
-    log << "Forest::create() " << std::endl;    
 
 
-    XMLHandle xml( elem );
-    // FIXME: parse xml...
-  
+////////////////////////////////////////////////////////////////////////////////
+//  Forest
 
-  
-    // create primitives
-    prim->create( xml.FirstChildElement( "Prim" ).ToElement() );
-
-    // create settings
-    //settings->create( xml.FirstChildElement( "Settings" ).ToElement() );
-
-    // create keys
-    keys->create( xml.FirstChildElement( "Keys" ).ToElement() );
-
-
-}
-
-
-void Forest::destroy()
+Forest::Forest(BATB& b) : batb( b ), keyset( b ),
+                          iterationForestDemo( b )
 {
-    log << "Forest::destroy() " << std::endl;    
 
-    prim->destroy();
+}
 
-    keys->destroy();
+
+
+void Forest::save()
+{
+
+    // FIXME: write to file
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// 
+void begin(Forest& forest)
+{
+
+    BATB_LOG_FUNC( forest.batb );
+
+
+    // set up this Forest object from file
+    YAML::Node yaml = YAML::LoadFile( forest.filepath_ );
+
+    // load associated keys 
+    forest.keyset.load("batb/forest/KeySet.yaml");
+
+    // begin iterations:
+    forest::begin( forest.iterationForestDemo );
+
+    forest.initialized_ = true;
 }
+
+void end(Forest& forest)
+{
+    BATB_LOG_FUNC( forest.batb );
+
+    if ( forest.initialized_ )
+    {
+        // end  iterations:
+        forest::end( forest.iterationForestDemo );
+
+        // clear keys
+        forest.keyset.clear();
+
+        forest.save();
+    }
+    
+    forest.initialized_ = false;
+
+}
+
+
+} // namespace forest
+
+} // namespace batb
+
+

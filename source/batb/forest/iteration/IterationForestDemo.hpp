@@ -15,12 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
-#define BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
-#include "batb/run/iteration/IterationRun.hpp"
+#ifndef BATB_FOREST_ITERATION_ITERATION_FOREST_DEMO_HPP
+#define BATB_FOREST_ITERATION_ITERATION_FOREST_DEMO_HPP
+#include "batb/forest/iteration/IterationForest.hpp"
 
-// tmp
-#include "batb/forest.hpp"
 
 namespace batb
 {
@@ -28,28 +26,25 @@ namespace batb
 
 class BATB;
 
-namespace run
+namespace forest
 {
 
 
 
 
-// IterationRunMain:
-//    application is loaded, up and running. present the main screen,
-//    after IterationRunIntro (?). here the user starts to use our 
-//    application, this is the "main menu".
+// IterationForestDemo:
 //
-class IterationRunMain : public IterationRun
+class IterationForestDemo : public IterationForest
 {
-friend void begin(IterationRunMain& );
-friend void end(IterationRunMain& );
+friend void begin(IterationForestDemo& );
+friend void end(IterationForestDemo& );
 
 public:
     // construct from the containing BATB
-    IterationRunMain(BATB& );
+    IterationForestDemo(BATB& );
 
     // iterate
-    void iterate_run(IterationStack& stack, World& world) override;
+    void iterate_forest(IterationStack& stack, World& world) override;
 
     // setup before iteration
     void iterate_begin(World& );
@@ -57,25 +52,27 @@ public:
     ////////////////////////////////////////
 
 private:
-    tb::TBWidget* widget_ = nullptr;
 
-    // tmp:
-    forest::World* forest = nullptr;
-    forest::IterationStack forest_stack;
+    float_t aim_a = 0.0;  // yaw
+    float_t aim_b = 0.0;  // pitch
+    float_t aim_c = 0.0;  // roll
 
+    Runner* aiming = nullptr;
+
+    tick_t aim_tick = 0.0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
-void begin(IterationRunMain& );
+void begin(IterationForestDemo& );
 
 
-void end(IterationRunMain& );
+void end(IterationForestDemo& );
 
 
 
-} // namespace run
+} // namespace forest
 
 } // namespace batb
 

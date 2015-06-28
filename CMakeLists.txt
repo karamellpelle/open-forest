@@ -25,6 +25,9 @@ set( BATB_VERSION_MINOR  0 )
 set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
 
 
+# FIXME: is the -g switch added down to Ogre, even if CMAKE_BUILD_TYPE is 
+#        DebWithRelInfo for Ogre??
+#        
 ################################################################################
 # set compiler flags
 #
@@ -34,16 +37,16 @@ set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
 #        http://stackoverflow.com/questions/23995019/what-is-the-modern-method-for-setting-general-compile-flags-in-cmake
 #     
 # temporary fix: look at linker language for each target
-add_compile_options( -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
+#add_compile_options( -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 # C++ specific compiler options
-add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-std=c++11>" ) 
-add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-non-template-friend>" )
+#add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-std=c++11>" ) 
+#add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-non-template-friend>" )
 # C specific compiler options
 #add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,C>:>" )
 
 # the above does not work, use this instead:
-#set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
-#set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
+set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend -Wno-deprecated-declarations" )
+set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 
 # currently, we invoke (typically, by 'build.sh') cmake with -DCMAKE_BUILD_TYPE=None
 # because we got too much compiler warnings without, since Ogre sets the build type to RelWithDebInfo.
@@ -137,7 +140,17 @@ set( OGRE_INSTALL_DOCS                        OFF CACHE BOOL "" FORCE)  # instal
 set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # install samples
 set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
 set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
+
+set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
+set( CMAKE_CXX_FLAGS_COPY "${CMAKE_CXX_FLAGS}" )
+set( CMAKE_C_FLAGS_COPY "${CMAKE_C_FLAGS}" )
+set( CMAKE_BUILD_TYPE "Release" )
+set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+set( CMAKE_C_FLAGS "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
+set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
+set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_COPY} )
+set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS_COPY} )
 
 
 ################################################################################
@@ -163,17 +176,17 @@ find_package( Opus )
 find_package( SndFile )
 find_package( MPG123 )
 find_package( DUMB )
-#find_package( PHYSFS )
-# EXERCISE: make this work:
-#set( ALURE_LIBRARIES  $<$<STREQUAL:TRUE,${OGG_FOUND}>:"${OGG_LIBRARIES}"> 
-#                      $<$<STREQUAL:TRUE,${VORBIS_FOUND}>:"${VORBIS_LIBRARIES}"> 
-#                      $<$<STREQUAL:TRUE,${FLAC_FOUND}>:"${FLAC_LIBRARIES}"> 
-#                      $<$<STREQUAL:TRUE,${OPUS_FOUND}>:"${OPUS_LIBRARIES}"> 
-#                      $<$<STREQUAL:TRUE,${SNDFILE_FOUND}>:"${SNDFILE_LIBRARIES}"> 
-#                      $<$<STREQUAL:TRUE,${MPG123_FOUND}>:"${MPG123_LIBRARIES}"> 
-#                      #$<$<STREQUAL:TRUE,${DUMB_FOUND}>:"${DUMB_LIBRARIES}">
-#                      $<$<STREQUAL:TRUE,${PHYSFS_FOUND}>:"${PHYSFS_LIBRARIES}"> 
-#                      )
+##find_package( PHYSFS )
+## EXERCISE: make this work:
+##set( ALURE_LIBRARIES  $<$<STREQUAL:TRUE,${OGG_FOUND}>:"${OGG_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${VORBIS_FOUND}>:"${VORBIS_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${FLAC_FOUND}>:"${FLAC_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${OPUS_FOUND}>:"${OPUS_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${SNDFILE_FOUND}>:"${SNDFILE_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${MPG123_FOUND}>:"${MPG123_LIBRARIES}"> 
+##                      #$<$<STREQUAL:TRUE,${DUMB_FOUND}>:"${DUMB_LIBRARIES}">
+##                      $<$<STREQUAL:TRUE,${PHYSFS_FOUND}>:"${PHYSFS_LIBRARIES}"> 
+##                      )
 if ( OGG_FOUND )
 list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
 endif()
@@ -199,6 +212,7 @@ if ( PHYSFS_FOUND )
 list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
 endif()
 
+#add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/alure" )
 
 
 ################################################################################
@@ -238,7 +252,6 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
       "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
       "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
-      #"${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
@@ -248,6 +261,10 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForestDemo.cpp"
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       # library implementations:

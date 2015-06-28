@@ -69,7 +69,7 @@ debug::gl::msg("iterate_run()");
  
 
     // set current tick for world.
-    // FIXME: not here, done by wrapped iteration
+    // TODO: not here, done by wrapped iteration ??
     world.tick = env::tick();
 
     // tmp:

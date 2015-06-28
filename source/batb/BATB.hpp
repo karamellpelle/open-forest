@@ -24,7 +24,7 @@
 #include "batb/gui.hpp"
 #include "batb/ogre.hpp"
 #include "batb/al.hpp"
-//#include "batb/forest.hpp"
+#include "batb/forest.hpp"
 //#include "batb/race.hpp"
 #include "batb/run.hpp"
 
@@ -55,9 +55,9 @@ public:
     // these are parts of BATB initialized later, by 'iterationRunBegin'.
     ogre::OGRE ogre;
     al::AL al;
-    //forest::Forest forest;
-    //race::Race race;
     run::Run run;
+    forest::Forest forest;
+    //race::Race race;
 
     // save this BATB object to its file
     void save();

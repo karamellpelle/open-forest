@@ -15,14 +15,17 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_CONTROL_HPP
-#define BATB_CONTROL_HPP
+#ifndef BATB_FOREST_CONTROL_HPP
+#define BATB_FOREST_CONTROL_HPP
+#include "batb/batb_include.hpp"
 
-
-
-namespace BATB
+namespace batb
 {
 
+class BATB;
+
+namespace forest
+{
 
 // each Control has a definition.
 //
@@ -44,6 +47,8 @@ public:
         return code_;
     }
 
+    // TODO: ...
+    //
 private:
     Code code_;
 };
@@ -94,7 +99,12 @@ private:
 };
 
 
-}
+} // namespace forest
+
+} // namespace batb
+
+
+
 
 
 #endif

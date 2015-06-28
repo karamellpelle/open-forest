@@ -15,12 +15,17 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_MAP_HPP
-#define BATB_MAP_HPP
-#include "BATB/Config.hpp"
+#ifndef BATB_FOREST_MAP_HPP
+#define BATB_FOREST_MAP_HPP
+#include "batb/batb_include.hpp"
 
 
-namespace BATB
+namespace batb
+{
+
+class BATB;
+
+namespace forest
 {
 
 class Map
@@ -42,7 +47,11 @@ private:
 };
 
 
-}
+
+} // namespace forest
+
+} // namespace batb
+
 
 
 #endif

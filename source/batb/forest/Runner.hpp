@@ -17,12 +17,18 @@
 //
 #ifndef BATB_FOREST_RUNNER_HPP
 #define BATB_FOREST_RUNNER_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Run/Player.hpp"
+#include "batb/batb_include.hpp"
+#include "batb/run/Player.hpp"
 
-namespace BATB
+
+namespace batb
 {
 
+class BATB;
+
+
+namespace forest
+{
 
 class Runner
 {
@@ -30,7 +36,7 @@ public:
    
     // Player defines who is running. Player is a part of RunWorld.
     // Player defines stuff like network computer, name, ...
-    Player* player()
+    run::Player* player()
     {
         return player_;
     }
@@ -41,6 +47,10 @@ public:
         return map_;
     }
 
+    glm::vec4 pos;
+    glm::mat4 aim;
+    float_t speed = 0.0;
+
     // a Runner does not imply a Course. Runner's are free to do whatever
     // they will, in a forest.
     // a Course for a Runner may come from competition/training/etc.
@@ -50,7 +60,7 @@ public:
     // TODO:  think through this. for example the possibility to have independent
     //        training and competition for different Runner's at the same time. 
 private: 
-    Player* player_;
+    run::Player* player_;
 
     Map* map_;
 
@@ -72,7 +82,10 @@ private:
 };
 
 
-}
+} // namespace forest
+
+} // namespace batb
+
 
 
 #endif

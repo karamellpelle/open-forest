@@ -40,6 +40,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // GLM
+// see: http://www.glm.g-truc.net/glm.pdf
+#define GLM_SWIZZLE           // implement swizzles (increses compilation time)
+//#define GLM_PRECISION_XXX // define precisions
 //#define GLM_MESSAGES          // let glm print system messages
 #define GLM_FORCE_RADIANS       // let glm angles be in radians
 //#define GLM_FORCE_INLINE      // let glm be inlined

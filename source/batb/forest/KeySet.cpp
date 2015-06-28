@@ -15,25 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Forest/ForestPrim.hpp"
+#include "batb/forest/KeySet.hpp"
+#include "batb.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
 
-void ForestPrim::create(xml::XMLElement* elem)
+namespace forest
 {
-    using namespace xml;
-
-    XMLHandle xml( elem );
-    // FIXME: parse 
 
 
-}
-
-void ForestPrim::destroy()
+KeySet::KeySet(BATB& b) : batb( b )
 {
-}
 
 }
+
+void KeySet::load(const std::string& path)
+{
+    BATB_LOG_FUNC( batb );
+
+    // clear current content
+    clear();
+
+    // FIXME: parse keys from definition in file
+    //        the function createKey is handy...
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // instead, hardcode!
+
+
+    // tmp:
+    //old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
+}
+
+} // namespace forest
+
+} // namespace batb
+

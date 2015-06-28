@@ -15,32 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FORESTWORLD_HPP
-#define BATB_FORESTWORLD_HPP
-#include "BATB/BATB_include.hpp"
-#include "BATB/Forest/ForestEvent.hpp"
-#include "BATB/Forest/Camera.hpp"
-#include "BATB/Forest/Terrain.hpp"
-#include "BATB/Forest/Map.hpp"
-#include "BATB/Forest/Course.hpp"
-#include "BATB/Forest/Control.hpp"
-#include "BATB/Forest/Runner.hpp"
-#include "BATB/Forest/Weather.hpp"
+#ifndef BATB_FOREST_FOREST_WORLD_HPP
+#define BATB_FOREST_FOREST_WORLD_HPP
+#include "batb/batb_include.hpp"
+#include "batb/forest/Event.hpp"
+#include "batb/forest/Camera.hpp"
+#include "batb/forest/Terrain.hpp"
+#include "batb/forest/Map.hpp"
+#include "batb/forest/Course.hpp"
+#include "batb/forest/Control.hpp"
+#include "batb/forest/Runner.hpp"
+#include "batb/forest/Weather.hpp"
 
 
-namespace BATB
+namespace batb
 {
 
-class RunWorld;
-
-class ForestWorld
+namespace run
 {
+class World;
+}
+
+namespace forest
+{
+
+
+class World
+{
+
 public:
     typedef std::forward_list<Control>  ControlList;
     typedef std::forward_list<Map>      MapList;
     typedef std::forward_list<Runner>   RunnerList;
 
-    ForestWorld(RunWorld* r) : run( r )    // worlds shall not be singletons!
+    World(run::World& r) : run( r )
     {
     }
 
@@ -60,32 +68,45 @@ public:
     // TODO: polymorphism
     MapList maps;
 
-    // runners 
+    // Runners
     RunnerList runners;
 
     // current weather
     Weather weather;
 
     // events happened for this ForestWorld    
-    ForestEventList events;
+    EventList events;
 
-    // ForestNetwork (connected to RunNetwork, with a filter)
+    // ForestNetwork (connected to ForestNetwork, with a filter)
 
-    // ForestWorld implies a RunWorld, the RunWorld containing 'this'.
-    // it would be nice to let ForestWorld be totally independent of RunWorld,
-    // so that ForestWorld works alone. however, ForestWorld needs access to
+    // forest::World implies a run::World, the run::World containing 'this'.
+    // it would be nice to let forest::World be totally independent of run::World,
+    // so that forest::World works alone. however, forest::World needs access to
     // external resources. for exapmle Player's, containing information for each
-    // Runner in ForestWorld. we let such external resources be part of RunWorld.
-    // also, since there may (in theory) be more than one RunWorld, some of these
-    // external resources could be different for two different RunWorld's.
-    RunWorld* const run;
-    
-private:
+    // Runner in forest::World. we let such external resources be part of run::World.
+    // also, since there may be more than one forest::World, some of these
+    // external resources could be different for two different forest::World's.
+    // also, 'run' is a reference, hence there is one and only one run::World asso-
+    // ciated with each forest::World
+    run::World& run;
 
+    
+    // tick of world
+    tick_t tick = 0.0;
+
+
+    // number of frames iterated (by IterationForest...)
+    uint frames_count = 0;
+private:
+    
 };
 
 
-}
+} // namespace forest
+
+} // namespace batb
+
+
 
 
 #endif

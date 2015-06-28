@@ -53,7 +53,8 @@ int main(int argc, char** argv)
         batb::run::World run;
         batb::run::IterationStack stack;
 
-        stack.next(
+        stack.next
+        (
               game::begin_iteration( batb.run.iterationRunBegin ),  // create the non-core part of BATB, continue with iterationRunMain, if success
               game::begin_iteration( batb.run.iterationRunEnd )     // destroy game data
         );

@@ -15,58 +15,65 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_HPP
-#define BATB_FOREST_HPP
-#include "BATB/Config.hpp"
-#include "BATB/Forest/ForestPrim.hpp"
-#include "BATB/Forest/ForestSettings.hpp"
-#include "BATB/Forest/ForestWorld.hpp"
-#include "BATB/Forest/ForestKeys.hpp"
-#include "BATB/Forest/Runner.hpp"
+#ifndef BATB_FOREST_FOREST_HPP
+#define BATB_FOREST_FOREST_HPP
+#include "batb/batb_include.hpp"
+#include "batb/forest/KeySet.hpp"
+#include "batb/forest/iteration/IterationForestDemo.hpp"
 
-namespace BATB
+
+
+
+namespace batb
+{
+
+
+class BATB;
+
+
+namespace forest
 {
 
 
 
-// class for Forest-part of BATB
+
 class Forest
 {
+friend void begin(Forest& );
+friend void end(Forest& );
+
 public:
-    Forest() : prim( &prim_ ), settings( &settings_ ), keys( &keys_ ) { }
+    Forest(BATB& b);
 
-    void create(xml::XMLElement* );
-    void destroy();
+    void filepath(const std::string& path)
+    {
+        filepath_ = path;
+    }
+    void save();
 
-    // we access children by pointers (syntax...)
-    ForestPrim* const     prim;
-    ForestSettings* const settings;
-    ForestKeys* const     keys;
-    
 
+
+    BATB& batb;
+    KeySet keyset;
+
+    // Iteration's
+    IterationForestDemo iterationForestDemo;
 
 private:
-    ForestPrim prim_;
-    ForestSettings settings_;
-    ForestKeys keys_;
-
+    bool initialized_ = false;
+    std::string filepath_;
 
 
 };
 
 
+void begin(Forest& );
+void end(Forest& );
 
-// the only Forest, access
-inline Forest* theForest()
-{
-    static Forest ret_;
-    return &ret_;
-}
+} // namespace forest
 
+} // namespace batb
 
-
-
-}
 
 #endif
 

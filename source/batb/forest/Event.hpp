@@ -15,18 +15,46 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_PRIM_ITERATION_HPP
-#define BATB_FOREST_PRIM_ITERATION_HPP
-#include "BATB/BATB_include.hpp"
-#include "Game.hpp"
+#ifndef BATB_FOREST_FOREST_EVENT_HUPP
+#define BATB_FOREST_FOREST_EVENT_HUPP
 
 
-namespace BATB
+namespace batb
 {
 
-typedef Game::Iteration<ForestWorld> IterationForestWorld;
-typedef Game::IterationStack<ForestWorld> IterationStackForestWorld;
 
-}
+class BATB;
+
+
+namespace forest
+{
+
+
+// ControlPunch 
+//    a Runner punched a Control. an Iteration may for example see
+//    if this Control is goal, and take actions based on that, for
+//    example add Runner/Player to a result list. or look at split times
+//    and make status updates about 
+class Event 
+{
+public:
+    enum Type {  };
+    
+    Type type;
+
+private:
+};
+
+class EventList /*: public Game::EventList<ForestEvent> */
+{
+
+};
+
+// class EventEater: add functions for each type
+
+} // namespace forest
+
+} // namespace batb
 
 #endif
+

@@ -15,13 +15,22 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PLAYER_HPP
-#define BATB_RUN_PLAYER_HPP
-#include "BATB/Config.hpp"
+#ifndef BATB_RUN_RUN_PLAYER_HPP
+#define BATB_RUN_RUN_PLAYER_HPP
+//#include "batb"
 
 
-namespace BATB
+namespace batb
 {
+
+
+class BATB;
+
+
+namespace run
+{
+
+
 
 class Player
 {
@@ -32,7 +41,10 @@ private:
 
 };
 
-}
+
+} // namespace run
+
+} // namespace batb
 
 
 #endif

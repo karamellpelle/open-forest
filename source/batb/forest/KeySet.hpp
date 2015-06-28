@@ -15,20 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FORESTSETTINGS_HPP
-#define BATB_FORESTSETTINGS_HPP
-#include "BATB/BATB_include.hpp"
+#ifndef BATB_FOREST_FOREST_KEYSET_HPP
+#define BATB_FOREST_FOREST_KEYSET_HPP
+#include "batb/batb_include.hpp"
+#include "batb/keys.hpp"
 
-
-namespace BATB
+namespace batb
 {
 
-class ForestSettings
+class BATB;
+
+namespace forest
+{
+
+
+class KeySet : public keys::KeySet
 {
 public:
+    KeySet(BATB& );
 
+    // define 'this' from map defined by file
+    void load(const std::string& filepath);
+    void save(const std::string& filepath);
+
+    /////////////////////////////////////////////////
+    // keys for Forest to use
+    //keys::KeyClicker* tb;
+
+    BATB& batb;
 };
 
-}
+} // namespace forest
+
+} // namespace batb
+
 
 #endif

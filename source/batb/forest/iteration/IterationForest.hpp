@@ -15,46 +15,50 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Forest/ForestKeys.hpp"
+#ifndef BATB_FOREST_ITERATION_ITERATION_FOREST_HPP
+#define BATB_FOREST_ITERATION_ITERATION_FOREST_HPP
+#include "batb/batb_include.hpp"
+#include "batb/forest/World.hpp"
 
-
-namespace BATB
+namespace batb
 {
 
 
+class BATB;
 
-void ForestKeys::create(xml::XMLElement* elem)
+
+
+namespace forest
 {
-    using namespace xml;
 
-    XMLHandle xml( elem );
-    // FIXME: parse controls from xml...
+// the type of stack for forest::Iteration
+using IterationStack = game::IterationStack<World>;
 
-    // instead, hardcode!
-    pointer = createKeyPointer( createKeyMouseAxisX(), createKeyMouseAxisY(),
-                                createKeyMouseButton( KeyMouseButton::left ), createKeyMouseButton( KeyMouseButton::right) );
 
-    forward = createKeyButton( GLFW_KEY_W );
-    backward = createKeyButton( GLFW_KEY_S );
-    left = createKeyButton( GLFW_KEY_A );
-    right = createKeyButton( GLFW_KEY_D );
-    jump = createKeyButton( GLFW_KEY_SPACE );
-
-}
-
-void ForestKeys::destroy()
+// the type of iterations for forest::World
+class IterationForest : public game::Iteration<World>
 {
-    pointer = 0;
-    forward = 0;
-    backward = 0;
-    left = 0;
-    right = 0;
-    jump = 0;
+public:
+    IterationForest(BATB& b);
 
-    
-    // delet all
-    clear();
+    // this handles each frame, delegating work to the subclass 
+    // implementation of 'iterate_forest'
+    virtual void iterate(IterationStack& , World& ) final;
+
+    // also, each subclass should typically create a non-virtual method:
+    // void iterate_begin(World& );
+
+    BATB& batb;
+
+protected:
+    // subclasses implements this:
+    virtual void iterate_forest(IterationStack& , World& ) = 0;
+
+
+};
 
 }
 
 }
+
+#endif

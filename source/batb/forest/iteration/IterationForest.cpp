@@ -15,36 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_EVENT_HUPP
-#define BATB_FOREST_EVENT_HUPP
+#include "batb.hpp"
+#include "batb/forest/iteration/IterationForest.hpp"
+#include "batb/forest/World.hpp"
 
-
-namespace BATB
+namespace batb
 {
 
 
-// ControlPunch 
-//    a Runner punched a Control. an Iteration may for example see
-//    if this Control is goal, and take actions based on that, for
-//    example add Runner/Player to a result list. or look at split times
-//    and make status updates about 
-class ForestEvent 
-{
-public:
-    enum Type {  };
-    
-    Type type;
-
-private:
-};
-
-class ForestEventList /*: public Game::EventList<ForestEvent> */
+namespace forest
 {
 
-};
-
+IterationForest::IterationForest(BATB& b) : batb( b )
+{
 
 }
 
-#endif
+void IterationForest::iterate(IterationStack& stack, World& world)
+{
+    ////////////////////////////////////////
+    // actual iteration, implemented by subclass
+    ////////////////////////////////////////
+    iterate_forest( stack, world );
+ 
+
+    // update keys
+    batb.forest.keyset.step( world.tick );
+
+
+    // TODO: finish up, free mem (events, ...)
+
+    // count number of IterationForest-iterations
+    ++world.frames_count;
+
+}
+
+
+} // namespace forest
+
+} // namespace batb
 

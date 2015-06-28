@@ -65,10 +65,17 @@ using namespace Ogre;
 #define ENDLESS_PAGE_MIN_Y (-0x7FFF)
 #define ENDLESS_PAGE_MAX_X 0x7FFF
 #define ENDLESS_PAGE_MAX_Y 0x7FFF
-#define TERRAIN_WORLD_SIZE 12000.0f
+//#define TERRAIN_WORLD_SIZE 12000.0f
+#define TERRAIN_WORLD_SIZE 4000.0f
 #define TERRAIN_SIZE 513
-#define HOLD_LOD_DISTANCE 3000.0
+//#define HOLD_LOD_DISTANCE 3000.0
 
+#define HOLD_LOD_DISTANCE 300.0
+//#define TERRAIN_WORLD_SIZE 4000.0f
+//#define ENDLESS_PAGE_MIN_X 0
+//#define ENDLESS_PAGE_MIN_Y 0
+//#define ENDLESS_PAGE_MAX_X 0
+//#define ENDLESS_PAGE_MAX_Y 0
 
 static bool tmp_empty = true;
 
@@ -325,7 +332,7 @@ void begin_terrain(BATB& batb)
             ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
             ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
 
-    perlin_noise = OGRE_NEW PerlinNoiseTerrainGenerator( 3.3, 2.2, 10, 128, 1.2 );
+    perlin_noise = OGRE_NEW PerlinNoiseTerrainGenerator( 3.3, 2.2, 10, 128, 0.4 );
     paged_world_section->setDefiner( perlin_noise );
 //		paged_world_section->setDefiner( OGRE_NEW SimpleTerrainDefiner );
 
@@ -374,7 +381,7 @@ void demo_end(BATB& batb)
 
 void iterate_terrain(BATB& batb, run::World& world)
 {
-    terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
+    //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
     tick_t tick = world.tick;
     float_t x,z;
     cossin( 0.1 * tick, x, z );

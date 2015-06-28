@@ -15,16 +15,20 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_COURSE_HPP
-#define BATB_COURSE_HPP
-#include "BATB/Config.hpp"
-#include "BATB/Forest/Control.hpp"
+#ifndef BATB_FOREST_COURSE_HPP
+#define BATB_FOREST_COURSE_HPP
+#include "batb/forest/Control.hpp"
+#include "batb/batb_include.hpp"
 
-namespace BATB
+
+namespace batb
 {
 
+class BATB;
 
-// Course does not imply a Map. a Terrain can be viewed in different
+namespace forest
+{
+
 // ways, that is, with different Map's. however, given a Course and 
 // a Map for the same Terrain, the Course can be injected into the Map.
 class Course
@@ -53,7 +57,7 @@ public:
     // also, we should be able to load a course just from 
     // a sequence of ControlDefinition::Code, that is, 
     // a sequence of codes for Control's in Terrain
-    void load(xml::XMLElement* );
+    //void load(xml::XMLElement* );
 
 
 
@@ -83,7 +87,10 @@ private:
 };
 
 
-}
+
+} // namespace forest
+
+} // namespace batb
 
 
 #endif

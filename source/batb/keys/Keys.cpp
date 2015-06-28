@@ -24,6 +24,7 @@ namespace batb
 namespace keys
 {
 
+
 void Keys::charCalling(GLFWcharfun f)
 {
     glfwSetCharCallback( env::screen_window(), f );
@@ -56,6 +57,7 @@ void Keys::scrollCalling(GLFWscrollfun f)
 void begin(Keys& keys)
 {
 
+    glfwSetInputMode( env::screen_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED );
     keys.initialized_ = true;
 }
 

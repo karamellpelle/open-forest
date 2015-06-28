@@ -17,7 +17,7 @@
 //
 #ifndef BATB_FOREST_HPP
 #define BATB_FOREST_HPP
-//#include "batb/forest/Forest.hpp"
+#include "batb/forest/Forest.hpp"
 
 namespace batb
 {

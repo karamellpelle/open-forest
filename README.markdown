@@ -26,7 +26,7 @@ vertex arrays, etc.), C++11, etc.
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
 graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
-sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)
+sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)  
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  

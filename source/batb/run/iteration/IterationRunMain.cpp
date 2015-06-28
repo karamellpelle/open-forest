@@ -82,6 +82,18 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     std::cout << "toggle turbobadger demo with the T key..." << std::endl;
     std::cout << "toggle old-BATB with the INSERT key..." << std::endl; 
     std::cout << std::endl;
+
+
+    // tmp:
+    forest = new forest::World( run );
+    forest::Runner runner;
+    forest->runners.push_front( runner );
+
+    forest_stack.next
+    (
+        game::begin_iteration( batb.forest.iterationForestDemo )
+    );
+    
 }
 
 
@@ -98,6 +110,9 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
     if ( batb.run.keyset.nanovg->click() ) run.toggle_nanovg = !run.toggle_nanovg;
     if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
+
+    // forest
+    forest_stack.iterate( *forest );
 
     // Ogre demo:
     if ( run.toggle_ogre )

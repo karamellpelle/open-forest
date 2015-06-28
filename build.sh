@@ -12,6 +12,13 @@ function do_build()
     cmake -DCMAKE_BUILD_TYPE=None "$@" ../.. && make && cp $BINARY_NAME ..
 }
 
+function do_build_openforest()
+{
+    # FIXME: cd to THIS_PATH
+    cd build/cmake
+    make open-forest/fast  #&& cd ../.. && do_build_openforest
+}
+
 function do_clean()
 {
     # FIXME: cd to THIS_PATH
@@ -66,6 +73,7 @@ function do_usage()
 {
     echo "usage: $THIS_NAME                  : same as '$THIS_NAME build'"
     echo "       $THIS_NAME build            : build into './build' folder, using CMake"
+    echo "       $THIS_NAME build-openforest : try to build open-forest part first"
     echo "       $THIS_NAME clean            : clean build"
     echo "       $THIS_NAME init-submodules  : retrieve git-submodules (only needed for first build)"
 }
@@ -83,6 +91,9 @@ else
     case "$1" in
       "build")  
           do_build
+          ;;
+      "build-openforest")  
+          do_build_openforest
           ;;
       "clean")  
           do_clean
