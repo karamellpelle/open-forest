@@ -117,7 +117,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // Ogre demo:
     if ( run.toggle_ogre )
     {
-        tmp::ogre::demo_iterate( batb, run );
+        tmp::ogre::demo_iterate( batb, run, *forest );
     }
 
     // nanovg demo:

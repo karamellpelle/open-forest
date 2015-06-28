@@ -43,7 +43,7 @@ linear            : [**GLM**](http://glm.g-truc.net)
 3D animation      : [**OGRE**](http://www.ogre3d.org)  
 video             : [OGRE ?](http://www.ogre3d.org), 
                     [libTheora ?](http://www.theora.org/)  
-c++               : [**boost*](http://www.boost.org/)  
+c++               : [**boost**](http://www.boost.org/)
                     (filesystem, hash, integer, geometry, predef, random, string_algo, system_library, program_options, asio, math)
 
 Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `ALURE`, `YAML`, `tinyxml2`, `GLM`  are up and running. 
@@ -56,7 +56,7 @@ The following libraries are needed:
 
 - boost   (I have version 1.55.0)
 - GLEW    (I have version 1.10.0)
-- OpenAL  (I have openal-soft-1.16.0
+- OpenAL  (I have openal-soft-1.16.0)
 - (MPG123, since demo plays an mp3 file)
 
 In addition, this git project depends on submodules. Run

@@ -106,7 +106,7 @@ public:
 void begin_head(BATB& );
 void begin_terrain(BATB& );
 void iterate_head(BATB& batb, run::World& world);
-void iterate_terrain(BATB& batb, run::World& world);
+void iterate_terrain(BATB& batb, run::World& world, forest::World& forest);
 
 void demo_begin(BATB& batb)
 {
@@ -196,19 +196,19 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tmp_empty = false;
 }
 
-void demo_iterate(BATB& batb, run::World& world)
+void demo_iterate(BATB& batb, run::World& run, forest::World& forest)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // no need for gl::ogre_begin/end since no rendering?
 
-    float_t aspect = world.scene.shape.wth / world.scene.shape.hth;
+    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
 
     camera->setAspectRatio( aspect );
-    // TODO: camera->setProjection( world.scene.proj3D );
+    // TODO: camera->setProjection( run.scene.proj3D );
 
-    //iterate_head(batb, world);
-    iterate_terrain(batb, world);
+    //iterate_head(batb, run);
+    iterate_terrain(batb, run, forest);
 
     // TODO: asset no need for GLContextGLFW switch
 }
@@ -379,21 +379,38 @@ void demo_end(BATB& batb)
 }
 
 
-void iterate_terrain(BATB& batb, run::World& world)
+void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
 {
     //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
-    tick_t tick = world.tick;
+    tick_t tick = run.tick;
     float_t x,z;
     cossin( 0.1 * tick, x, z );
     float_t y = sin( tick * 3 );
 
-    Vector3 pos( 0, 400, 0 );
-
-    camera->setPosition( pos );
+    //Vector3 pos( 0, 400, 0 );
+    //camera->setPosition( pos );
     Ogre::Vector3 dir( x, -0.14, z );
     dir.normalise();
+    //camera->setDirection( dir );
+    if ( forest.runners.empty() )
+    {
+        std::cout << "runners.empty!!\n"; 
+        camera->setDirection( dir );
+    }
+    else
+    {
+        forest::Runner runner = forest.runners.front();
+        glm::mat4 aim = runner.aim;
+        glm::vec4 z = aim[2];
+        
+        camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
 
-    camera->setDirection( dir );
+        glm::vec4 pos = runner.pos;
+        camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
+
+    }
+    
+
 }
 
 

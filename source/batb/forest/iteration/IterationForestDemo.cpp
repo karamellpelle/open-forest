@@ -52,6 +52,9 @@ void IterationForestDemo::iterate_begin(World& forest)
     if ( !forest.runners.empty() )
     {
         aiming = &forest.runners.front(); // is this pointer safe??
+
+        // set start pos as in tmp::ogre:
+        aiming->pos = glm::vec4( 0.0, 400.0, 0.0, 1.0 ); 
     }
     std::cout << "Starting Forest demo. " << std::endl;
 }
@@ -77,7 +80,8 @@ void IterationForestDemo::iterate_forest(IterationStack& stack, World& forest)
     // a_acc, b_acc = input
     double x, y;
     glfwGetCursorPos( env::screen_window(), &x, &y );
-    std::cout << "\rcursor: " << x << " " << y << std::flush;
+    bool press_r = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_RIGHT ) == GLFW_PRESS;
+    bool press_l = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_LEFT ) == GLFW_PRESS;
 
     constexpr tick_t aim_dt = 0.02;
 
@@ -91,6 +95,9 @@ void IterationForestDemo::iterate_forest(IterationStack& stack, World& forest)
         aim_tick += aim_dt;
     }
 
+    aim_a = x * (-0.005);
+    aim_b = y * (0.005);
+
     ////////////////////////////////////////
     // set aim of runner from aim_x_
     if ( aiming )
@@ -102,17 +109,27 @@ void IterationForestDemo::iterate_forest(IterationStack& stack, World& forest)
     ////////////////////////////////////////
     // * step dt of runner
     constexpr tick_t dt = 0.02;
+    constexpr float_t press_speed = 100.0;
 
     tick_t tick_next = forest.run.tick;
     while ( forest.tick + dt <= tick_next )
     {
-       
+      
         // TODO: step 'aiming' (physics)
+        if ( press_l || press_r )
+        {
+            glm::vec4 dir = aiming->aim[2];
+            float alpha = ( press_r ? (-1.0) : (1.0) ) * dt * press_speed;
+            aiming->pos += alpha * dir;
+        }
         //
         forest.tick += dt;
     }
 
-
+    glm::vec4 pos = aiming->pos;
+    std::cout << "\rcursor: " << x << " " << y << ", "
+              << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
+              
 
     // continue with this itertion, unless stack handled
     return stack.next( this );

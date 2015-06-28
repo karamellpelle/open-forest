@@ -29,6 +29,11 @@ namespace run
 class World;
 }
 
+namespace forest
+{
+class World;
+}
+
 
 namespace tmp
 {
@@ -39,7 +44,7 @@ namespace ogre
 
 void demo_begin(BATB& );
 
-void demo_iterate(BATB& , run::World& );
+void demo_iterate(BATB& , run::World& , forest::World& );
 
 
 
