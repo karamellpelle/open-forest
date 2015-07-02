@@ -51,6 +51,10 @@ public:
     glm::mat4 aim;
     float_t speed = 0.0;
 
+    //  if ( length pos -> pos_next > epsilon ) trackPush( dt );
+    //    void trackPush(tick_t dt); // push current physics to track at point 'dt'
+    //list (tick_t, pos, aim ) track;
+
     // a Runner does not imply a Course. Runner's are free to do whatever
     // they will, in a forest.
     // a Course for a Runner may come from competition/training/etc.

@@ -44,6 +44,9 @@
 #include "OgreRenderSystemCapabilities.h"
 #include "batb/tmp/ogre/PerlinNoiseTerrainGenerator.h"
 
+//#define USE_SAMPLE_ENDLESSWORLD
+#define USE_SAMPLE_TERRAIN
+
 namespace batb
 {
 
@@ -57,6 +60,8 @@ namespace ogre
 
 
 using namespace Ogre;
+
+#ifdef USE_SAMPLE_ENDLESSWORLD
 
 // max range for a int16
 #define ENDLESS_TERRAIN_FILE_PREFIX String("EndlessWorldTerrain")
@@ -77,6 +82,35 @@ using namespace Ogre;
 //#define ENDLESS_PAGE_MAX_X 0
 //#define ENDLESS_PAGE_MAX_Y 0
 
+#endif
+
+
+#ifdef USE_SAMPLE_TERRAIN
+#define TERRAIN_PAGE_MIN_X 0
+#define TERRAIN_PAGE_MIN_Y 0
+#define TERRAIN_PAGE_MAX_X 0
+#define TERRAIN_PAGE_MAX_Y 0
+
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS || OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+#include "macUtils.h"
+#endif
+
+void getTerrainImage(bool flipX, bool flipY, Image& img);
+void initBlendMaps(Terrain* terrain);
+void defineTerrain(long x, long y, bool flat = false);
+
+bool terrains_imported = false;
+
+Vector3 terrain_pos(1000,0,5000);
+#define TERRAIN_FILE_PREFIX String("testTerrain")
+#define TERRAIN_FILE_SUFFIX String("dat")
+#define TERRAIN_WORLD_SIZE 12000.0f
+#define TERRAIN_SIZE 513
+
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
 static bool tmp_empty = true;
 
 // into ForestWorld:
@@ -91,7 +125,9 @@ static PageManager* page_manager = nullptr;
 static PagedWorld* paged_world = nullptr;
 static TerrainPagedWorldSection* paged_world_section = nullptr;
 static PerlinNoiseTerrainGenerator* perlin_noise;
+#ifdef USE_SAMPLE_ENDLESSWORLD
 static Vector3 terrain_pos;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 class DummyPageProvider : public PageProvider
@@ -258,6 +294,11 @@ void begin_terrain(BATB& batb)
 // http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Terrain+System
 // libs/ogre/Samples/EndlessWorld/include/EndlessWorld.h
 
+#ifdef USE_SAMPLE_TERRAIN
+    if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("Terrain"))
+        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Terrain");
+#endif
+
     // create object, which becomes a singleton
     terrain_globals = OGRE_NEW TerrainGlobalOptions();
 
@@ -265,7 +306,13 @@ void begin_terrain(BATB& batb)
     MaterialManager::getSingleton().setDefaultTextureFiltering(TFO_ANISOTROPIC);
     MaterialManager::getSingleton().setDefaultAnisotropy(7);
 
+#ifdef USE_SAMPLE_ENDLESSWORLD
     scenemgr->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 4000, 10000);
+#endif
+#ifdef USE_SAMPLE_TERRAIN
+    scenemgr->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000); // Terrain
+#endif
+
 
     //LogManager::getSingleton().setLogDetail(LL_BOREME); // ??
 
@@ -276,14 +323,25 @@ void begin_terrain(BATB& batb)
     l->setType(Light::LT_DIRECTIONAL);
     l->setDirection(lightdir);
     l->setDiffuseColour(ColourValue::White);
+#ifdef USE_SAMPLE_ENDLESSWORLD
+    l->setSpecularColour(ColourValue(0.1, 0.1, 0.1));
+#endif
+#ifdef USE_SAMPLE_TERRAIN
     l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
+#endif
 
-    scenemgr->setAmbientLight(ColourValue(0.2, 0.2, 0.2));
+    scenemgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
     terrain_group = OGRE_NEW TerrainGroup(scenemgr, Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
+#ifdef USE_SAMPLE_ENDLESSWORLD
     terrain_group->setFilenameConvention(ENDLESS_TERRAIN_FILE_PREFIX, ENDLESS_TERRAIN_FILE_SUFFIX);
-    //terrain_group->setOrigin( Vector3::ZERO );
     terrain_group->setAutoUpdateLod( TerrainAutoUpdateLodFactory::getAutoUpdateLod(BY_DISTANCE) );
+#endif
+#ifdef USE_SAMPLE_TERRAIN
+    terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
+    terrain_group->setResourceGroup("Terrain");
+#endif
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // configureTerrainDefaults
@@ -308,18 +366,19 @@ void begin_terrain(BATB& batb)
     defaultimp.maxBatchSize = 65;
     // textures
     defaultimp.layerList.resize(3);
-    defaultimp.layerList[0].worldSize = 100;
+    defaultimp.layerList[0].worldSize = 100; // scale layer
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_normalheight.dds");
-    defaultimp.layerList[1].worldSize = 30;
+    defaultimp.layerList[1].worldSize = 30; // scale layer
     defaultimp.layerList[1].textureNames.push_back("grass_green-01_diffusespecular.dds");
     defaultimp.layerList[1].textureNames.push_back("grass_green-01_normalheight.dds");
-    defaultimp.layerList[2].worldSize = 200;
+    defaultimp.layerList[2].worldSize = 200; // scale layer
     defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
     defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
 ////////////////////////////////////////////////////////////////////////////////
 
     // Paging setup
+#ifdef USE_SAMPLE_ENDLESSWORLD
     page_manager = OGRE_NEW PageManager();
     // Since we're not loading any pages from .page files, we need a way just 
     // to say we've loaded them without them actually being loaded
@@ -331,32 +390,57 @@ void begin_terrain(BATB& batb)
     paged_world_section = terrain_paging->createWorldSection(paged_world, terrain_group, 400, 500, 
             ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
             ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
-
     perlin_noise = OGRE_NEW PerlinNoiseTerrainGenerator( 3.3, 2.2, 10, 128, 0.4 );
     paged_world_section->setDefiner( perlin_noise );
 //		paged_world_section->setDefiner( OGRE_NEW SimpleTerrainDefiner );
+
+#endif
+#ifdef USE_SAMPLE_TERRAIN
+    bool blankTerrain = false;
+    for (long x = TERRAIN_PAGE_MIN_X; x <= TERRAIN_PAGE_MAX_X; ++x)
+        for (long y = TERRAIN_PAGE_MIN_Y; y <= TERRAIN_PAGE_MAX_Y; ++y)
+            defineTerrain(x, y, blankTerrain);
+    // sync load since we want everything in place when we start
+    terrain_group->loadAllTerrains(true);
+    if (terrains_imported)
+    {
+        TerrainGroup::TerrainIterator ti = terrain_group->getTerrainIterator();
+        while(ti.hasMoreElements())
+        {
+            Terrain* t = ti.getNext()->instance;
+            initBlendMaps(t);
+        }
+    }
+#endif
 
     terrain_group->freeTemporaryResources();
 
     scenemgr->setSkyBox(true, "Examples/CloudyNoonSkyBox");
 
+#ifdef USE_SAMPLE_TERRAIN
+    camera->setPosition(terrain_pos + Vector3(1683, 50, 2116));
+    camera->lookAt(Vector3(1963, 50, 1660));
+    camera->setNearClipDistance(0.1);
+    camera->setFarClipDistance(50000);
+#endif
+#ifdef USE_SAMPLE_ENDLESSWORLD
     // view
-		Vector3 worldCenter(
-			(ENDLESS_PAGE_MAX_X+ENDLESS_PAGE_MIN_X) / 2 * TERRAIN_WORLD_SIZE,
-			0,
-			-(ENDLESS_PAGE_MAX_Y+ENDLESS_PAGE_MIN_Y) / 2 * TERRAIN_WORLD_SIZE
-			);
-		camera->setPosition(terrain_pos +worldCenter);
-		camera->lookAt(terrain_pos);
-		camera->setNearClipDistance(0.1);
-		camera->setFarClipDistance(50000);
+    Vector3 worldCenter(
+            (ENDLESS_PAGE_MAX_X+ENDLESS_PAGE_MIN_X) / 2 * TERRAIN_WORLD_SIZE,
+            0,
+            -(ENDLESS_PAGE_MAX_Y+ENDLESS_PAGE_MIN_Y) / 2 * TERRAIN_WORLD_SIZE
+            );
+    camera->setPosition(terrain_pos +worldCenter);
+    camera->lookAt(terrain_pos);
+    camera->setNearClipDistance(0.1);
+    camera->setFarClipDistance(50000);
 
-		camera->setFarClipDistance(50000);
+#endif
 
-		if (batb.ogre.root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
-                {
-                    camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
-                }
+    if (batb.ogre.root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
+    {
+        camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
+    }
                
 }
 
@@ -414,6 +498,91 @@ void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
 }
 
 
+#ifdef USE_SAMPLE_TERRAIN
+    void defineTerrain(long x, long y, bool flat )
+    {
+        // if a file is available, use it
+        // if not, generate file from import
+
+        // Usually in a real project you'll know whether the compact terrain data is
+        // available or not; I'm doing it this way to save distribution size
+
+        if (flat)
+        {
+            terrain_group->defineTerrain(x, y, 0.0f);
+        }
+        else
+        {
+            String filename = terrain_group->generateFilename(x, y);
+            if (ResourceGroupManager::getSingleton().resourceExists(terrain_group->getResourceGroup(), filename))
+            {
+                terrain_group->defineTerrain(x, y);
+            }
+            else
+            {
+                Image img;
+                getTerrainImage(x % 2 != 0, y % 2 != 0, img);
+                terrain_group->defineTerrain(x, y, &img);
+                terrains_imported = true;
+            }
+        }
+    }
+
+    void getTerrainImage(bool flipX, bool flipY, Image& img)
+    {
+        img.load("terrain.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        if (flipX)
+            img.flipAroundY();
+        if (flipY)
+            img.flipAroundX();
+    }
+
+    void initBlendMaps(Terrain* terrain)
+    {
+        TerrainLayerBlendMap* blendMap0 = terrain->getLayerBlendMap(1);
+        TerrainLayerBlendMap* blendMap1 = terrain->getLayerBlendMap(2);
+        Real minHeight0 = 70;
+        Real fadeDist0 = 40;
+        Real minHeight1 = 70;
+        Real fadeDist1 = 15;
+        float* pBlend1 = blendMap1->getBlendPointer();
+        for (Ogre::uint16 y = 0; y < terrain->getLayerBlendMapSize(); ++y)
+        {
+            for (Ogre::uint16 x = 0; x < terrain->getLayerBlendMapSize(); ++x)
+            {
+                Real tx, ty;
+
+                blendMap0->convertImageToTerrainSpace(x, y, &tx, &ty);
+                Real height = terrain->getHeightAtTerrainPosition(tx, ty);
+                Real val = (height - minHeight0) / fadeDist0;
+                Math::Clamp(val, (Real)0, (Real)1);
+
+                val = (height - minHeight1) / fadeDist1;
+                val = Math::Clamp(val, (Real)0, (Real)1);
+                *pBlend1++ = val;
+
+
+            }
+        }
+        blendMap0->dirty();
+        blendMap1->dirty();
+        //blendMap0->loadImage("blendmap1.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        blendMap0->update();
+        blendMap1->update();
+
+        // set up a colour map
+        /*
+          if (!terrain->getGlobalColourMapEnabled())
+          {
+          terrain->setGlobalColourMapEnabled(true);
+          Image colourMap;
+          colourMap.load("testcolourmap.jpg", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+          terrain->getGlobalColourMap()->loadImage(colourMap);
+          }
+        */
+    }
+
+#endif
 
 
 } // namespace ogre
