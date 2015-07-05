@@ -21,7 +21,7 @@
 	url = ./libs/ogre
 [submodule "libs/yaml-cpp"]
 	path = libs/yaml-cpp
-	url = https://github.com/t-richards/yaml-cpp.git
+	url = https://github.com/jbeder/yaml-cpp
 [submodule "libs/alure"]
 	path = libs/alure
 	url = git://repo.or.cz/alure.git
