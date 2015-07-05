@@ -87,6 +87,7 @@ void screen_begin_()
     }
 
     
+    // NOTE: error in implementation of glfw, according to valgrind:
     screen_window_ = glfwCreateWindow( wth, hth, title.c_str(), monitor, 0 );
 
     // set GL context as 'theWindow_'

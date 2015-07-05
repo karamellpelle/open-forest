@@ -24,7 +24,8 @@ namespace run
 {
 
 
-IterationRunBegin::IterationRunBegin(BATB& b) : IterationRun( b )
+IterationRunBegin::IterationRunBegin(BATB& b) : IterationRun( b ), 
+                                                loader_( b )
 {
 
 }
@@ -46,19 +47,8 @@ void IterationRunBegin::iterate_begin(World& world)
     // thread use IO fully, but use a different OpenGL context. also, these two threads
     // must work on disjoint memory as usual, but this should not be a problem, since
     // this thread is not interrested in BATB/run::World.
-    //
-    // for now, just present a "loading..." frame, and load the non-core part of BATB
-    // on the same thread, in a blocking manner.
 
-    if ( begin_non_core() )
-    {
-    }
-    else
-    {
-        // we was not able to load the non core part of BATB, hence exit game.
-        batb.log << "begin_non_core() failed! exiting..." << std::endl;
-    }
-
+    // load non-core on current context, but in background thread:
     loader_.begin();
 
 }
@@ -66,46 +56,14 @@ void IterationRunBegin::iterate_begin(World& world)
 
 void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 {
-    /*
-    BATB_LOG_FUNC( batb );
 
-    if ( iteration_count_ == 0 )
-    {
-        // output "loading...", do actual loading on next iteration
-        batb.log << "now loading..." << std::endl;
+    //GLFWwindow * window = glfwGetCurrentContext();
+    //std::cout << __PRETTY_FUNCTION__ << "   ";
+    //std::cout << "thread::id: " <<  std::this_thread::get_id();
+    //std::cout << ", GLFWindow: " << window << std::endl;
+    //
+    //++iteration_count_;
 
-        stack.next( this );
-    }
-    else
-    {
-        // load & block
-        
-        if ( begin_non_core() )
-        {
-            // we now succeded to load all parts of BATB (core and non-core),
-            // so start the actual game in iterationRunMain
-            stack.next( game::begin_iteration( batb.run.iterationRunMain ) );
-        }
-        else
-        {
-            // we was not able to load the non core part of BATB, hence exit game.
-            batb.log << "begin_non_core() failed! exiting..." << std::endl;
-            stack.finish(); 
-        }
-    }
-    ++iteration_count_;
-    */
-
-    if ( iteration_count_ == 0 )
-    {
-        GLFWwindow * window = glfwGetCurrentContext();
-        std::cout << __PRETTY_FUNCTION__ << "   ";
-        std::cout << "thread::id: " <<  std::this_thread::get_id();
-        std::cout << ", GLFWindow: " << window << std::endl;
-
-        ++iteration_count_;
-
-    }
 
     static FiniteLoad* current = nullptr;
 
@@ -113,7 +71,9 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
     {
         if ( cur != current ) 
         {
-            std::cout << "now loading: " << cur->tag << std::endl;
+            uint percent = (uint)( 100.0 * cur->to_alpha() );
+            const char* tag = cur->tag.c_str();
+            std::printf( "[%3u%%] Now loading: %s\n", percent, tag );
         }
 
         current = cur;
@@ -124,73 +84,74 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
     {
         loader_.end();
 
-        stack.finish();
+        // we now succeded to load all parts of BATB (core and non-core),
+        // so start the actual game in iterationRunMain
+        stack.next( game::begin_iteration( batb.run.iterationRunMain ) );
+
+        //stack.finish();
     }
     
     
 }
 
-
-// load the non-core part
-bool IterationRunBegin::begin_non_core()
-{
-    batb.log << "loading non-core part of BATB... " << std::endl;
-
-    try
-    {
-        // load OGRE
-        ogre::begin( batb.ogre );
-
-        // load AL
-        al::begin( batb.al );
-
-        // load forest
-        //forest::begin( batb.forest );
-
-        // load race
-        //race::begin( batb.race );
-
-        // load the non-core part of run
-        run::begin( batb.run );
-    }
-    catch (std::exception& e)
-    {
-        batb.log << "failure: " << e.what() << std::endl; 
-        return false;
-    }
-
-    // loading complete.
-    batb.log << "...OK loading non-core part of BATB" << std::endl;
-    return true;
-}
 
 void IterationRunBegin::Loader::run()
 {
-    GLFWwindow * window = glfwGetCurrentContext();
-    std::cout << __PRETTY_FUNCTION__ << "   ";
-    std::cout << "thread::id: " <<  std::this_thread::get_id();
-    std::cout << ", GLFWindow: " << window << std::endl;
+    //GLFWwindow * window = glfwGetCurrentContext();
+    //std::cout << __PRETTY_FUNCTION__ << "   ";
+    //std::cout << "thread::id: " <<  std::this_thread::get_id();
+    //std::cout << ", GLFWindow: " << window << std::endl;
 
-    FiniteLoad load( 4 );
+    // NOTE: number must be updated to correct number of loads
+    FiniteLoad loading( 4 + 3 );
 
-     
-    //push_current( &FiniteLoad( "test", 0.1 ) );
-    push_current( load( "load A" ) );
-    std::this_thread::sleep_for( std::chrono::seconds(1) );
-    ++load;
+    
+    try
+    {
 
-    push_current( load( "load B" ) );
-    std::this_thread::sleep_for( std::chrono::seconds(1) );
-    ++load;
+        // load gOGRE
+        push_current( loading( "OGRE" ) );
+        ogre::begin( batb.ogre );
+        ++loading;
 
-    push_current( load( "load C" ) );
-    std::this_thread::sleep_for( std::chrono::seconds(1) );
-    ++load;
+        // load AL
+        push_current( loading( "AL" ) );
+        al::begin( batb.al );
+        ++loading;
 
-    push_current( load( "load D" ) );
-    std::this_thread::sleep_for( std::chrono::seconds(1) );
-    ++load;
+        // load forest
+        push_current( loading( "Forest" ) );
+        forest::begin( batb.forest );
+        ++loading;
 
+        // load race
+        //push_current( loading( "" ) );
+        //race::begin( batb.race );
+        //++loading;
+
+        // load the non-core part of run
+        push_current( loading( "Run" ) );
+        run::begin( batb.run );
+        ++loading;
+
+        // tmp: fake loading, to show capabilities:
+        push_current( loading( "Proxy library A" ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        ++loading;
+        push_current( loading( "Proxy library B" ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        ++loading;
+        push_current( loading( "Proxy library C" ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        ++loading;
+    }
+    catch (std::exception& e)
+    {
+        batb.log << "IterationRunBegin::Loader: error: " << e.what() << std::endl; 
+        // TODO: handle exception into IterationRunBegin
+    }
+
+    // must be done to signalize completion
     push_current( nullptr );
 }
 

@@ -57,15 +57,14 @@ public:
 
 
 private:
-    bool begin_non_core();
-
-    uint iteration_count_ = 0;
-
 
     class Loader : public ThreadGLContext<FiniteLoad>
     {
-    public:
-        void run();
+    public: 
+        Loader(BATB& b) : batb( b ) { }
+        void run() override;
+    private: 
+        BATB& batb;
     } loader_;
 };
 

@@ -70,6 +70,7 @@ void begin(Run& run)
     run::begin( run.iterationRunMain );
 
     // set up GUI's
+    // FIXME: memory leak, according to valgring
     run.guiMain = new GUIMain( run.batb );
 
     run.initialized_ = true;

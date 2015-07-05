@@ -24,11 +24,22 @@ namespace batb
 {
 
 
-// https://www.opengl.org/wiki/OpenGL_Context
-// http://hacksoflife.blogspot.no/2008/02/creating-opengl-objects-in-second.html
-// http://stackoverflow.com/questions/3937257/is-opengl-threadsafe-for-multiple-threads-with-distinct-contexts
-// http://stackoverflow.com/questions/17779340/glfw-3-0-resource-loading-with-opengl <= 
-
+// move current GL context into background thread,
+// new context will be bound to current thread. 
+// 
+// nice for loading resources in background thread
+// while reporting progress on current thread.
+//
+// GL (GUI, nanovg) and GLFW (env) are allowed, so
+// these can be used to report progress.
+//
+// Links:
+// * https://www.opengl.org/wiki/OpenGL_Context
+// * http://stackoverflow.com/questions/17779340/glfw-3-0-resource-loading-with-opengl
+// * http://hacksoflife.blogspot.no/2008/02/creating-opengl-objects-in-second.html
+// * http://stackoverflow.com/questions/3937257/is-opengl-threadsafe-for-multiple-threads-with-distinct-contexts
+// 
+// TODO: exception handling!
 template<typename Current>
 class ThreadGLContext
 {
@@ -49,6 +60,8 @@ public:
         {
             // create new context
             // http://www.glfw.org/docs/latest/context.html#context_offscreen
+            //
+            // NOTE: only allowed on main thread (GLFW doc)
             glfwWindowHint( GLFW_VISIBLE, GL_FALSE );
             win = glfwCreateWindow( 1, 1, "ThreadGLContext", nullptr, context_0_);
 
@@ -57,11 +70,11 @@ public:
 
         context_1_ = win;
 
-        // run thread on context_0_ (call virtual function 'void ThreadGLContext::run()')
+        // run thread on context_0_ (set context virtual function 'void ThreadGLContext::run()')
         //thread_ = std::thread( &ThreadGLContext::run, std::ref( *this ) );
-        thread_ = std::thread( &ThreadGLContext::run, this );
+        thread_ = std::thread( &ThreadGLContext::begin_run, this );
 
-        // switch to context_1_
+        // switch to the new context_1_
         glfwMakeContextCurrent( context_1_ );
 
     }
@@ -114,6 +127,8 @@ protected:
         }
         else
         {
+            //std::lock_guard<std::mutex> lock( mutex_ );
+
             currents_.push_front( *c );     // NOTE: copy value
             current_ = &currents_.front();  // NOTE: point to value inside container, not 'c'
         }
@@ -121,6 +136,17 @@ protected:
 
 
 private:
+
+    void begin_run()
+    {
+        // set the old context
+        glfwMakeContextCurrent( context_0_ );
+
+        // call subclass
+        run();
+     
+    }
+
     // invariant: never popped, 
     std::forward_list<Current> currents_; 
 
@@ -129,7 +155,7 @@ private:
     GLFWwindow* free_ = nullptr;
 
     std::thread thread_;
-    std::atomic<Current*> current_; // FIXME: atomic?
+    std::atomic<Current*> current_;
 
 };
 

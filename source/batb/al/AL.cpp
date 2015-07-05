@@ -65,6 +65,7 @@ void begin(AL& al)
 
     al.devicemanager = alure::DeviceManager::get();
 
+    // FIXME: memory leak, according to valgrind
     al.device = al.devicemanager->openPlayback();
 
     al.batb.log << "AL: opened device \""

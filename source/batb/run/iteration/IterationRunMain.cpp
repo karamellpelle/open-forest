@@ -173,7 +173,8 @@ void begin(IterationRunMain& iter)
     BATB_LOG_FUNC( iter.batb );
 
     // create GUI widget. GUI is up and running...
-    // NOTE: memory management is performed by TB!
+    // NOTE: memory management is performed by TB! NO!!:
+    // FIXME: memory leak, according to valgring
     auto* window = new tb::TBWindow();
     window->SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
     window->SetSize(250, 630 );
