@@ -30,6 +30,16 @@
 #include <cstdio>
 #include <list>
 #include <forward_list>
+#include <thread>
+#include <atomic>
+#include <chrono>
+#include <functional>
+#include <initializer_list>
+#include <random>
+#include <algorithm>
+#include <mutex>
+#include <array>
+#include <limits>
 
 ////////////////////////////////////////////////////////////////////////////////
 // project includes

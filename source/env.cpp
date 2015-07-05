@@ -26,7 +26,7 @@ YAML::Node doc_;
 
 static void glfw_error_callback(int error, const char* str)
 {
-    std::cerr << "env : ERROR: could not init GLFW, \"" << str << " (code " << error << ")\" " << std::endl;
+    std::cerr << "env : GLFW error: \"" << str << " (code " << error << ")\" " << std::endl;
 }
 
 

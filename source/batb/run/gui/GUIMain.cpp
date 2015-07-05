@@ -101,8 +101,8 @@ void GUIMain::OnMessageReceived(tb::TBMessage* msg)
 {
     using namespace tb;
 
-    TBID id = msg->message;
-    TBMessageData* data = msg->data;
+    //TBID id = msg->message;
+    //TBMessageData* data = msg->data;
 
     // handle data from id...
 }

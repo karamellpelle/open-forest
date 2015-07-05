@@ -49,11 +49,24 @@ void IterationRunBegin::iterate_begin(World& world)
     //
     // for now, just present a "loading..." frame, and load the non-core part of BATB
     // on the same thread, in a blocking manner.
+
+    if ( begin_non_core() )
+    {
+    }
+    else
+    {
+        // we was not able to load the non core part of BATB, hence exit game.
+        batb.log << "begin_non_core() failed! exiting..." << std::endl;
+    }
+
+    loader_.begin();
+
 }
 
 
 void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 {
+    /*
     BATB_LOG_FUNC( batb );
 
     if ( iteration_count_ == 0 )
@@ -66,6 +79,7 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
     else
     {
         // load & block
+        
         if ( begin_non_core() )
         {
             // we now succeded to load all parts of BATB (core and non-core),
@@ -79,8 +93,41 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
             stack.finish(); 
         }
     }
-
     ++iteration_count_;
+    */
+
+    if ( iteration_count_ == 0 )
+    {
+        GLFWwindow * window = glfwGetCurrentContext();
+        std::cout << __PRETTY_FUNCTION__ << "   ";
+        std::cout << "thread::id: " <<  std::this_thread::get_id();
+        std::cout << ", GLFWindow: " << window << std::endl;
+
+        ++iteration_count_;
+
+    }
+
+    static FiniteLoad* current = nullptr;
+
+    if ( FiniteLoad* cur = loader_.current() )
+    {
+        if ( cur != current ) 
+        {
+            std::cout << "now loading: " << cur->tag << std::endl;
+        }
+
+        current = cur;
+
+        stack.next( this );
+    }
+    else
+    {
+        loader_.end();
+
+        stack.finish();
+    }
+    
+    
 }
 
 
@@ -115,6 +162,36 @@ bool IterationRunBegin::begin_non_core()
     // loading complete.
     batb.log << "...OK loading non-core part of BATB" << std::endl;
     return true;
+}
+
+void IterationRunBegin::Loader::run()
+{
+    GLFWwindow * window = glfwGetCurrentContext();
+    std::cout << __PRETTY_FUNCTION__ << "   ";
+    std::cout << "thread::id: " <<  std::this_thread::get_id();
+    std::cout << ", GLFWindow: " << window << std::endl;
+
+    FiniteLoad load( 4 );
+
+     
+    //push_current( &FiniteLoad( "test", 0.1 ) );
+    push_current( load( "load A" ) );
+    std::this_thread::sleep_for( std::chrono::seconds(1) );
+    ++load;
+
+    push_current( load( "load B" ) );
+    std::this_thread::sleep_for( std::chrono::seconds(1) );
+    ++load;
+
+    push_current( load( "load C" ) );
+    std::this_thread::sleep_for( std::chrono::seconds(1) );
+    ++load;
+
+    push_current( load( "load D" ) );
+    std::this_thread::sleep_for( std::chrono::seconds(1) );
+    ++load;
+
+    push_current( nullptr );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

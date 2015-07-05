@@ -57,7 +57,7 @@ void Keys::scrollCalling(GLFWscrollfun f)
 void begin(Keys& keys)
 {
 
-    glfwSetInputMode( env::screen_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+    //glfwSetInputMode( env::screen_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED );
     keys.initialized_ = true;
 }
 

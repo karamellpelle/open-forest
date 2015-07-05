@@ -15,46 +15,30 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_THREAD_GL_CONTEXT_HPP
-#define BATB_THREAD_GL_CONTEXT_HPP
+#ifndef BATB_LOAD_FINITE_LOAD_HPP
+#define BATB_LOAD_FINITE_LOAD_HPP
 #include "batb/batb_include.hpp"
 
 namespace batb
 {
 
-class TreadGLContext
+class FiniteLoad
 {
 public:
-    class Progress;
+    FiniteLoad() = default;
+    FiniteLoad(uint m) : ns( m ) { }
 
-    ThreadGLContext();
+    std::string tag;
 
-    void start();
-    uint remaining(Progress& current);
+    float_t alpha = 0;
+    uint n = 0;
+    uint ns = 0;;
 
-    std::vector<Progress> completed() const;
+    FiniteLoad& operator++() { ++n; return *this; }
+    FiniteLoad* operator()(const std::string& s) { tag = s; return this; }
 
-
-protected:
-    void setProgress(float_t , const std::string& = std::string());
-
-private:
-    std::vector<Progress> progressions_;
-
-public:
+    float_t to_alpha() const { return (float_t)( n ) / (float_t)( ns );}
 };
-
-class ThreadGLContext::Progress
-{
-public:
-    Progress() { }
-    Progress(float_t a, const std::string& n = std::string()) : alpha( a ), name( n ) { }
-    
-    float_t alpha;
-    std::string name;
-};
-
-
 
 } // namespace batb
 

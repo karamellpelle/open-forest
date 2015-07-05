@@ -27,6 +27,7 @@ namespace game
 
 // IterationStack owns Iterations, hence have the possibility to
 // release memory when no more references to an Iteration
+// TODO: forward_list: insert_after( list.before_begin() )
 template <typename A>
 class IterationStack;
 

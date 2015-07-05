@@ -18,6 +18,8 @@
 #ifndef BATB_RUN_ITERATION_ITERATION_RUN_BEGIN_HPP
 #define BATB_RUN_ITERATION_ITERATION_RUN_BEGIN_HPP
 #include "batb/run/iteration/IterationRun.hpp"
+#include "batb/load/ThreadGLContext.hpp"
+#include "batb/load/FiniteLoad.hpp"
 
 
 namespace batb
@@ -58,6 +60,13 @@ private:
     bool begin_non_core();
 
     uint iteration_count_ = 0;
+
+
+    class Loader : public ThreadGLContext<FiniteLoad>
+    {
+    public:
+        void run();
+    } loader_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

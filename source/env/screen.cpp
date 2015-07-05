@@ -32,7 +32,7 @@ void screen_begin_()
 
     GLFWmonitor* monitor = nullptr;
 
-    // default settings, to be overridden by XML
+    // default settings, to be overridden by yaml 
     uint wth = 640;
     uint hth = 480;
     bool fullscreen = false;

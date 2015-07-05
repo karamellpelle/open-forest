@@ -28,7 +28,7 @@ function do_clean()
     # (ignoring build/open-forest)
 }
 
-function do_get-submodules()
+function do_init-submodules()
 {
     # FIXME: cd to THIS_PATH
     # create git submodules (libs/)

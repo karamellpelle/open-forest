@@ -9,7 +9,7 @@ rendersystem: "OpenGL Rendering Subsystem"
 # plugins for Ogre to load
 plugins:
   - RenderSystem_GL
-  - RenderSystem_GL3Plus
+#  - RenderSystem_GL3Plus
   - Plugin_ParticleFX
   - Plugin_BSPSceneManager
   - Plugin_CgProgramManager
