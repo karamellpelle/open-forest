@@ -38,10 +38,11 @@ void IterationRunEnd::iterate_begin(World& world)
     end_non_core();
 }
 
-void IterationRunEnd::iterate_run(IterationStack& stack, World& world)
+IterationStack IterationRunEnd::iterate_run(World& world)
 {
     BATB_LOG_FUNC( batb );
 
+    return _; 
 }
 
 void IterationRunEnd::end_non_core()

@@ -44,7 +44,7 @@ public:
     IterationForestDemo(BATB& );
 
     // iterate
-    void iterate_forest(IterationStack& stack, World& world) override;
+    IterationStack iterate_forest(World& world) override;
 
     // setup before iteration
     void iterate_begin(World& );

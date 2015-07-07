@@ -31,12 +31,12 @@ IterationForest::IterationForest(BATB& b) : batb( b )
 
 }
 
-void IterationForest::iterate(IterationStack& stack, World& world)
+IterationStack IterationForest::iterate(World& world)
 {
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
-    iterate_forest( stack, world );
+    auto ret = iterate_forest( world );
  
 
     // update keys
@@ -48,6 +48,7 @@ void IterationForest::iterate(IterationStack& stack, World& world)
     // count number of IterationForest-iterations
     ++world.frames_count;
 
+    return ret;
 }
 
 

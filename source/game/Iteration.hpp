@@ -18,6 +18,7 @@
 #ifndef GAME_ITERATION_HPP
 #define GAME_ITERATION_HPP
 #include "game/game_include.hpp"
+#include "game/IterationStack.hpp"
 
 
 
@@ -25,11 +26,6 @@ namespace game
 {
 
 
-// IterationStack owns Iterations, hence have the possibility to
-// release memory when no more references to an Iteration
-// TODO: forward_list: insert_after( list.before_begin() )
-template <typename A>
-class IterationStack;
 
 
 
@@ -39,44 +35,68 @@ class IterationStack;
 template <typename A>
 class Iteration 
 {
-friend class IterationStack<A>;
+template <typename A_>
+friend void iteration_release(Iteration<A_>& iteration);
+template <typename A_>
+friend void iteration_hold(Iteration<A_>& iteration);
+
 
 public:
+
     // our world type
-    typedef A World;
+    //typedef A World;
+    using World = A;
 
     // our delete type
     //using Deleter = [](Iteration<A>*)->void;
-    typedef void (*Deleter)(Iteration<A>*);
+    //typedef std::function<void(Iteration<A>*)> Deleter;
+    using Deleter = std::function<void(Iteration<A>*)>;
+    
 
     virtual ~Iteration() { }
 
     // define this in subclass:
-    virtual void iterate(IterationStack<A>& stack, A& a) = 0;
+    virtual IterationStack<A> iterate(A& a) = 0;
 
 
 protected:
-    Iteration() : Iteration( nullptr )    { }
-    Iteration(Deleter d) : deleter_( d )  { }
+    //Iteration() = default;
+    Iteration() : deleter_( [](Iteration<A>* i) -> void { } ) { }
+    Iteration(const Deleter& d) : deleter_( d )  { }
+    //Deleter deleter_ = [](Iteration<A>* i) -> void { }; <- internal compiler error :(
 
 
 private:
     // autorelease
-    // FIXME: implement copy/assigment/move
-    uint count_         = 0;              
-    Deleter deleter_    = nullptr;
+    // TODO: implement copy/assigment/move
+    uint count_         = 1;              
+    Deleter deleter_;
 
 };
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
-//  deleters
-//
+template <typename A>
+void iteration_release(Iteration<A>& iteration)
+{
+    uint& count = iteration.count_;
+    if ( count != 0 )
+    {
+        if ( --count == 0 )
+        {
+            // call deleter, since no more references 
+            iteration.deleter_( &iteration );
+        }
+    }
+}
+
 
 template <typename A>
-void delete_new(Iteration<A>* iter)
+void iteration_hold(Iteration<A>& iteration)
 {
-    delete iter;
+    uint& count = iteration.count_;
+    ++count; 
 }
 
 

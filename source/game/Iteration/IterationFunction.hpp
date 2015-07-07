@@ -27,37 +27,34 @@ namespace game
 template <typename A>
 class IterationFunction : public Iteration<A>
 {
+template <typename A_>
+friend IterationFunction<A_>* iteration_function(const typename IterationFunction<A_>::Function& f);
+
 public:
-    typedef void (*FunctionT)(Iteration<A>* , IterationStack<A>& , A& );
+    using Function = std::function<IterationStack<A>(Iteration<A>* , A& )>;
+    
+    IterationStack<A> iterate(A& a) override { return function_( this, a ); }
 
-
-    // create/destroy
-    static IterationFunction<A>* create(FunctionT f) { return new IterationFunction( f ); }   // create
-    static void destroy(IterationFunction<A>* iter)  { delete iter; }                        // free mem, for user-release
-
-    void iterate(IterationStack<A>& stack, A& a) { function_(this, stack, a); }
-
-protected:
-    IterationFunction(FunctionT f) : function_( f ) { }
-    ~IterationFunction() { } 
-    void destroy()
-    {
-        delete this;
-    }
 
 private:
+    using IterationBase = Iteration<A>;
 
-    FunctionT function_;
+    IterationFunction(Function f) : IterationBase ( std::default_delete<IterationBase>() ),
+                                    function_( f ) { }
+    Function function_;
 
 };
 
-/*
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 template <typename A>
-IterationFunction<A> function_iteration(IterationFunction<A>::FunctionT f)
+IterationFunction<A>* iteration_function(const typename IterationFunction<A>::Function& f)
+//IterationFunction<A>* iteration_function(typename IterationFunction<A>::Function f)
 {
-    return 
+    return new IterationFunction<A>( f );
 }
-*/
 
 
 }

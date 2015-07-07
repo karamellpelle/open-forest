@@ -40,12 +40,12 @@ void IterationRunOld::iterate_begin(World& world)
 }
 
 
-void IterationRunOld::iterate_run(IterationStack& stack, World& world)
+IterationStack IterationRunOld::iterate_run(World& world)
 {
     if ( old::is_exit() )
     {
         old::end();
-        return stack.finish();
+        return _;
     }
     else
     {
@@ -58,11 +58,11 @@ void IterationRunOld::iterate_run(IterationStack& stack, World& world)
             batb.log << "IterationRunOld -> " << std::endl;
             old::end();
 
-            return stack.finish();
+            return _;
         }
         else
         {
-            return stack.next( this );
+            return { this };
         }
     }
 

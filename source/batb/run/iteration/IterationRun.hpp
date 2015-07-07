@@ -44,7 +44,7 @@ public:
 
     // this handles each frame, delegating work to the subclass 
     // implementation of 'iterate_run'
-    virtual void iterate(IterationStack& , World& ) final;
+    virtual IterationStack iterate(World& ) final;
 
     // also, each subclass should typically create a non-virtual method:
     // void iterate_begin(World& );
@@ -53,7 +53,7 @@ public:
 
 protected:
     // subclasses implements this:
-    virtual void iterate_run(IterationStack& , World& ) = 0;
+    virtual IterationStack iterate_run(World& ) = 0;
 
 
 private:

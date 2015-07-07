@@ -15,36 +15,62 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef GAME_ITERATION_STACK_HPP
-#define GAME_ITERATION_STACK_HPP
+#ifndef GAME_ITERATE_HPP
+#define GAME_ITERATE_HPP
 #include <forward_list>
+#include "game/Iteration.hpp"
 
 
 namespace game
 {
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 template <typename A>
-class Iteration;
+void clear(IterationStack<A>& stack)
+{
+    while ( !stack.empty() )
+    {
+        iteration_release( stack.front() );
+        stack.pop_front();
+    }
+}
 
 
-// define stack type (forward list)
+
+
 template <typename A>
-using IterationStack = std::forward_list<Iteration<A>*>;
+void iterate(IterationStack<A>& stack, A& a)
+{
+    if ( !stack.empty() )
+    {
 
-// there is a bug for empty braces initialization in c++11 :(
-//
-// this should be fixed in c++14, but not for my for gcc libstdc++ yet:
-// http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#2193
-//
-// unreleased source of gcc shows the correct implementation, so emtpy
-// braces initialization will work in the future for c++14 on gcc too
-// 
-// also see: http://stackoverflow.com/questions/24510067/why-does-return-not-apply-to-stdforward-list
-//
-// instead, for now,
-// a dirty fix, when inside implementation of 'iterate':
-#define _ game::IterationStack<World>()
+        // make 1 iteration on 'a'
+        auto top = stack.front()->iterate( a );
 
+        // pop 'iteration'
+        iteration_release( *stack.front() );
+        stack.pop_front();
+
+        // hold 1 reference to each new element for stack (top)
+        for (auto& i : top)
+        {
+            iteration_hold( *i );
+        }
+        // insert top to stack
+        stack.insert_after( stack.before_begin(), std::begin( top ), std::end( top ) );
+
+
+
+    }
+}
+
+    
 
 
 } // namespace game

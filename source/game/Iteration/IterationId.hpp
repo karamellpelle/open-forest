@@ -28,17 +28,21 @@ namespace game
 template <typename A>
 class IterationId : public Iteration<A>
 {
-template <typename B>   // shadows A???
-friend IterationId<B>* iteration_id();
+
+template <typename A_>   // shadows A???
+friend IterationId<A_>* iteration_id();
 
 public:
-    using Iteration<A>::Iteration;
 
-    //IterationId() : Iteration<A>() { }
 
     // empty work
-    void iterate(IterationStack<A>& stack, A& a) override { } 
+    IterationStack<A> iterate(A& a) override
+    {
+        return { }; 
+    } 
 
+private:
+    
 };
 
 
@@ -47,13 +51,14 @@ public:
 //
 //
 
-// deleter for Iteration's created by 'new'
 template <typename A>
 IterationId<A>* iteration_id()
 {
-    return new IterationId<A>( delete_new<A> );
+    auto* ret = new IterationId<A>(  );
+    ret->deleter_ = std::default_delete<Iteration<A>>( ret );
+    return ret;
 }
 
-}
+} // namespace game
 
 #endif

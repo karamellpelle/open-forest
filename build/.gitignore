@@ -3,4 +3,5 @@
 # ..., except these
 !.gitignore
 !data
+!leak-check
 

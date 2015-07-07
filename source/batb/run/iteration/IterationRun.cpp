@@ -31,7 +31,7 @@ IterationRun::IterationRun(BATB& b) : batb( b )
 
 }
 
-void IterationRun::iterate(IterationStack& stack, World& world)
+IterationStack IterationRun::iterate(World& world)
 {
     ////////////////////////////////////////    
     // begin new frame
@@ -65,7 +65,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
 debug::gl::msg("iterate_run()");
-    iterate_run( stack, world );
+    auto ret = iterate_run( world );
  
 
     // set current tick for world.
@@ -89,6 +89,7 @@ debug::gl::msg("iterate_run()");
     // count number of IterationRun-iterations
     ++world.frames_count;
 
+    return ret;
 }
 
 

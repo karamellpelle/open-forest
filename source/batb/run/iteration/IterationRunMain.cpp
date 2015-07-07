@@ -89,15 +89,15 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     forest::Runner runner;
     forest->runners.push_front( runner );
 
-    forest_stack.next
-    (
+    forest_stack = 
+    {
         game::begin_iteration( batb.forest.iterationForestDemo )
-    );
+    };
     
 }
 
 
-void IterationRunMain::iterate_run(IterationStack& stack, World& run)
+IterationStack IterationRunMain::iterate_run(World& run)
 {
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
@@ -112,7 +112,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
 
     // forest
-    forest_stack.iterate( *forest );
+    game::iterate( forest_stack, *forest );
 
     // Ogre demo:
     if ( run.toggle_ogre )
@@ -138,7 +138,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     {
         // escaping from IterationMain finishes iteration.
         batb.log << "IterationRunMain ->" << std::endl;
-        return stack.finish();
+        return _;
     }
 
     // run old-BATB if old-key released
@@ -153,15 +153,12 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
         }
 
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
-        return stack.next(  game::begin_iteration( batb.run.iterationRunOld ), 
-                            game::begin_iteration( *this ) );
+        return {  game::begin_iteration( batb.run.iterationRunOld ), 
+                  game::begin_iteration( *this ) };
     }
 
-
-
-    // continue with this itertion, unless stack handled
-    return stack.next( this );
-
+    // else, continue with current iteration
+    return { this };
 }
 
 

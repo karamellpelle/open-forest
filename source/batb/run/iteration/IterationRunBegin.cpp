@@ -54,7 +54,7 @@ void IterationRunBegin::iterate_begin(World& world)
 }
 
 
-void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
+IterationStack IterationRunBegin::iterate_run(World& world)
 {
 
     //GLFWwindow * window = glfwGetCurrentContext();
@@ -78,7 +78,7 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 
         current = cur;
 
-        stack.next( this );
+        return { this };
     }
     else
     {
@@ -86,9 +86,8 @@ void IterationRunBegin::iterate_run(IterationStack& stack, World& world)
 
         // we now succeded to load all parts of BATB (core and non-core),
         // so start the actual game in iterationRunMain
-        stack.next( game::begin_iteration( batb.run.iterationRunMain ) );
+        return { game::begin_iteration( batb.run.iterationRunMain ) };
 
-        //stack.finish();
     }
     
     

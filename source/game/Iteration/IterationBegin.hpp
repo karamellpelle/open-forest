@@ -40,17 +40,21 @@ public:
 
     // modify world, and maybe also the encapsulated 
     // iteration too, before iteration
-    void iterate(IterationStack<typename Iter::World>& stack, typename Iter::World& a)
+    IterationStack<typename Iter::World> iterate(typename Iter::World& a)
     {
         // start to iterate
         next_.iterate_begin( a );
 
         // iterate
-        next_.iterate( stack, a );
+        return next_.iterate( a );
     }
 
 private:
-    IterationBegin(Iter& next) : Iteration<typename Iter::World>( delete_new ), next_(next) { }
+    using IterationBase = Iteration<typename Iter::World>;
+
+    //IterationBegin(Iter& next) : Iteration<typename Iter::World>( std::default_delete<Iteration<typename Iter::World>>( this )  ),
+    IterationBegin(Iter& next) : IterationBase ( std::default_delete<IterationBase>() ),
+                                 next_( next ) { }
 
     // the encapsulated iteration
     Iter& next_;

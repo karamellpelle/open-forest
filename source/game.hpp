@@ -19,10 +19,10 @@
 #define GAME_HPP
 #include "game/game_include.hpp"
 #include "game/Iteration.hpp"
-#include "game/IterationStack.hpp"
 #include "game/Iteration/IterationId.hpp"
-//#include "game/Iteration/IterationFunction.hpp"
+#include "game/Iteration/IterationFunction.hpp"
 #include "game/Iteration/IterationBegin.hpp"
+#include "game/iterate.hpp"
 
 
 

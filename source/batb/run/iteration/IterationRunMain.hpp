@@ -49,7 +49,7 @@ public:
     IterationRunMain(BATB& );
 
     // iterate
-    void iterate_run(IterationStack& stack, World& world) override;
+    IterationStack iterate_run(World& world) override;
 
     // setup before iteration
     void iterate_begin(World& );

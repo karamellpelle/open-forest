@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# current directory
+DIR_PREV=$( pwd )
+
+# directory path for this file,
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in/246128#246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
+
+
+OUTPUT_NAME="leaks-$(basename "$1").txt"
+OUTPUT_PATH="$DIR_PREV/$OUTPUT_NAME"
+
+# define leak check program
+LEAK_CMD="valgrind --leak-check=full -v $1"   # call valgrind on 1th argument
+# --leak-check=full --show-reachable=yes
+# --show-leak-kinds=all 
+
+# terminate, if no argument given
+if [ -z "$1" ]; then
+      echo "no program argument"
+      exit 1
+fi
+
+# terminate, if program does not exists
+if [[ ! -f "$1" ]]; then
+    echo "no such program: $1"
+    exit 1
+fi
+
+# http://stackoverflow.com/questions/692000/how-do-i-write-stderr-to-a-file-while-using-tee-with-a-pipe#692407
+#$LEAK_CMD > >(tee "$OUTPUT_PATH") 2> >(tee stderr.log >&2)
+
+# dump both stdout and stderr to file,
+# http://unix.stackexchange.com/a/9651
+$LEAK_CMD 2>&1 | tee "$OUTPUT_PATH"
+
+#$LEAK_CMD > >(echo) 2> >(tee "$OUTPUT_PATH" >&2)
+
+

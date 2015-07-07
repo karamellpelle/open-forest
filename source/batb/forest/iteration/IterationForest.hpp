@@ -43,7 +43,7 @@ public:
 
     // this handles each frame, delegating work to the subclass 
     // implementation of 'iterate_forest'
-    virtual void iterate(IterationStack& , World& ) final;
+    virtual IterationStack iterate(World& ) final;
 
     // also, each subclass should typically create a non-virtual method:
     // void iterate_begin(World& );
@@ -52,7 +52,7 @@ public:
 
 protected:
     // subclasses implements this:
-    virtual void iterate_forest(IterationStack& , World& ) = 0;
+    virtual IterationStack iterate_forest(World& ) = 0;
 
 
 };

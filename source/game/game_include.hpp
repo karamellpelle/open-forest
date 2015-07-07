@@ -18,6 +18,9 @@
 #ifndef GAME_GAME_INCLUDE_HPP
 #define GAME_GAME_INCLUDE_HPP
 #include "include.hpp"
+#include <functional>
+#include <memory>
+#include <iterator>
 
 // 
 //#define GAME_DEBUG_REF_OUTPUT

@@ -51,13 +51,11 @@ int main(int argc, char** argv)
 
         // 'main' is iterating batb::run::World
         batb::run::World run;
-        batb::run::IterationStack stack;
-
-        stack.next
-        (
+        batb::run::IterationStack stack =
+        {
               game::begin_iteration( batb.run.iterationRunBegin ),  // create the non-core part of BATB, continue with iterationRunMain, if success
-              game::begin_iteration( batb.run.iterationRunEnd )     // destroy game data
-        );
+              game::begin_iteration( batb.run.iterationRunEnd )     // destroy game data at end, anyway
+        };
 
         // "main loop"
         while ( !stack.empty() )
@@ -66,12 +64,11 @@ int main(int argc, char** argv)
             env::frame_begin();
 
             // make 1 iteration of world
-            stack.iterate( run ); 
+            iterate( stack, run );
 
             // end frame for iteration (swap buffers, poll events)
             env::frame_end();
         }
-
     }
     catch (std::exception& e)
     {

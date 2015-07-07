@@ -60,7 +60,7 @@ void IterationForestDemo::iterate_begin(World& forest)
 }
 
 
-void IterationForestDemo::iterate_forest(IterationStack& stack, World& forest)
+IterationStack IterationForestDemo::iterate_forest(World& forest)
 {
 
 
@@ -131,8 +131,8 @@ void IterationForestDemo::iterate_forest(IterationStack& stack, World& forest)
               << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
               
 
-    // continue with this itertion, unless stack handled
-    return stack.next( this );
+    // continue with this iteration
+    return { this };
 
 }
 
