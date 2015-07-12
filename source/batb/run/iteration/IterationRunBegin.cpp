@@ -86,7 +86,7 @@ IterationStack IterationRunBegin::iterate_run(World& world)
 
         // we now succeded to load all parts of BATB (core and non-core),
         // so start the actual game in iterationRunMain
-        return { game::begin_iteration( batb.run.iterationRunMain ) };
+        return { game::begin_iteration( batb.run.iterationRunMain ) }; // FIXME: mem leak according to valgrind (IterationBegin)
 
     }
     

@@ -15,13 +15,22 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/Event.hpp"
+#ifndef BATB_EVENT_HPP
+#define BATB_EVENT_HPP
+#include "batb/batb_include.hpp"
+#include "batb/event/EventBase.hpp"
+#include "batb/event/EventList.hpp"
+#include "batb/event/EventEater.hpp"
+#include "batb/event/Event.hpp"
+
 
 namespace batb
 {
 
 
+
 } // namespace batb
 
 
+#endif
 

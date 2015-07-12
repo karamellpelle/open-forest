@@ -237,6 +237,7 @@ target_link_libraries( lib-env yaml-cpp )
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/main.cpp"
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
       # BATB core:
@@ -258,7 +259,6 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"

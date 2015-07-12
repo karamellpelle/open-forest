@@ -19,7 +19,7 @@
 #define BATB_RUN_WORLD_HPP
 #include "batb/batb_include.hpp"
 #include "batb/Scene.hpp"
-//#include "BATB/Run/RunEvent.hpp"
+#include "batb/event.hpp"
 //#include "BATB/Run/Player.hpp"
 //#include "BATB/Forest.hpp"
 //#include "BATB/Race.hpp"
@@ -31,6 +31,24 @@ namespace batb
 
 namespace run
 {
+
+class EventA
+{
+public:
+    EventA(const std::string& s) : name( s ) { }
+    std::string name;
+    
+};
+
+class EventB
+{
+public:
+    EventB(uint x_, uint y_) : x( x_ ), y( y_ ) { }
+    uint x;
+    uint y;
+
+};
+
 
 class World
 {
@@ -55,6 +73,8 @@ public:
     bool toggle_ogre = false;
     bool toggle_nanovg = false;
     bool toggle_tb = false;
+
+    EventList events;
 
     // number of frames iterated (by IterationRun...)
     uint frames_count = 0;

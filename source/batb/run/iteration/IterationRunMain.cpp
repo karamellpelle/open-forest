@@ -29,6 +29,18 @@ namespace run
 {
 
 
+void eat_a(const EventA& a)
+{
+    std::cout << "eating event EventA: " << a.name <<  std::endl;
+}
+void eat_b(const EventB& b)
+{
+    std::cout << "eating event EventB: " << b.x << "*" << b.y << std::endl;
+}
+void eat_uint(const uint& n)
+{
+    std::cout << "eating event uint: " << n << std::endl;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,6 +53,11 @@ namespace run
 IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b )
 {
 
+    eater_set.push( eat_a );
+    eater_set.push( eat_b );
+    eater_set.push( eat_uint );
+    eater_set.push( &IterationRunMain::eat_number, this );
+    //EventEater eater(  &IterationRunMain::eat_number, *this );
 }
 
 
@@ -66,6 +83,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         batb.gui.root.AddChild( batb.run.guiMain );
     }
 
+    // FIXME: demo_end()!
+    //
     // Ogre demo
     tmp::ogre::demo_begin( batb );
 
@@ -85,7 +104,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 
     // tmp:
-    forest = new forest::World( run );
+    forest = new forest::World( run ); // FIXME: delete!
     forest::Runner runner;
     forest->runners.push_front( runner );
 
@@ -106,10 +125,39 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
-    if ( batb.run.keyset.i->click() ) {run.toggle_b = !run.toggle_b; std::cout << "FPS: " << env::frame_fps() << std::endl; }
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
     if ( batb.run.keyset.nanovg->click() ) run.toggle_nanovg = !run.toggle_nanovg;
     if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
+
+
+    // tmp:
+    eater_set.eat( run.events );
+    if ( batb.run.keyset.i->click() )
+    {
+        run.toggle_b = !run.toggle_b;
+        std::cout << "FPS: " << env::frame_fps() << std::endl;
+        // push event
+        static uint ix = 0;
+        if ( ix == 0 ) 
+        {
+            std::ostringstream os;
+            os << "fps: " << env::frame_fps();
+            run.events.push( EventA( os.str() ) );
+        }
+        if ( ix == 1 )
+        {
+            double x, y;
+            glfwGetCursorPos( env::screen_window(), &x, &y );
+            run.events.push( new EventB( (uint)( x ), (uint)( y ) ) );
+        }
+        if ( ix == 2 )
+        {
+            static uint m = 0;
+            run.events.push( m++ );
+        }
+        ix = (ix + 1) % 3;
+    }
+    step( run.events );
 
     // forest
     game::iterate( forest_stack, *forest );
@@ -132,7 +180,8 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
-
+    
+    
 
     if ( batb.run.keyset.pause->click() )
     {
@@ -172,7 +221,7 @@ void begin(IterationRunMain& iter)
     // create GUI widget. GUI is up and running...
     // NOTE: memory management is performed by TB! NO!!:
     // FIXME: memory leak, according to valgring
-    auto* window = new tb::TBWindow();
+    auto* window = new tb::TBWindow(); // mem-leak
     window->SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
     window->SetSize(250, 630 );
     //window->Position( 40, 40 );

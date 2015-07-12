@@ -30,9 +30,11 @@ extern "C"
 
 #ifdef NANOVG_GL2_IMPLEMENTATION
         struct NVGcontext* nvgCreateGL2(int atlasw, int atlash, int edgeaa);
+        void nvgDeleteGL2(struct NVGcontext* ctx);
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
         struct NVGcontext* nvgCreateGL3(int atlasw, int atlash, int edgeaa);
+        void nvgDeleteGL3(struct NVGcontext* ctx);
 #endif
 
 }

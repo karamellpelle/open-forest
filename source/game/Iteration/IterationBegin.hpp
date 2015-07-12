@@ -52,7 +52,6 @@ public:
 private:
     using IterationBase = Iteration<typename Iter::World>;
 
-    //IterationBegin(Iter& next) : Iteration<typename Iter::World>( std::default_delete<Iteration<typename Iter::World>>( this )  ),
     IterationBegin(Iter& next) : IterationBase ( std::default_delete<IterationBase>() ),
                                  next_( next ) { }
 

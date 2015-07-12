@@ -62,6 +62,11 @@ private:
     // tmp:
     forest::World* forest = nullptr;
     forest::IterationStack forest_stack;
+    EventEaterSet eater_set;
+    void eat_number(const uint& n)
+    {
+        std::cout << "IterationRunMain eating number: " << n << std::endl;
+    }
 
 };
 

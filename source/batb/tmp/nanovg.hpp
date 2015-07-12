@@ -31,6 +31,8 @@ namespace nanovg
 
 void demo_begin();
 
+void demo_end();
+
 void demo_iterate(bool premult, bool blowup);
 
 

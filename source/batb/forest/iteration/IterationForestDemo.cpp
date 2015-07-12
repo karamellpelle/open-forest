@@ -127,8 +127,8 @@ IterationStack IterationForestDemo::iterate_forest(World& forest)
     }
 
     glm::vec4 pos = aiming->pos;
-    std::cout << "\rcursor: " << x << " " << y << ", "
-              << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
+    //std::cout << "\rcursor: " << x << " " << y << ", "
+    //          << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
               
 
     // continue with this iteration

@@ -62,6 +62,17 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 }
 
 
+void demo_end()
+{
+    if ( !tmp_empty )
+    {
+        freeDemoData(vg, &data); 
+        nvgDeleteGL2(vg);
+    }
+}
+
+
+
 void demo_iterate(bool premult, bool blowup)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );

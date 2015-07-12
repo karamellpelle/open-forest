@@ -18,7 +18,6 @@
 #ifndef BATB_FOREST_FOREST_WORLD_HPP
 #define BATB_FOREST_FOREST_WORLD_HPP
 #include "batb/batb_include.hpp"
-#include "batb/forest/Event.hpp"
 #include "batb/forest/Camera.hpp"
 #include "batb/forest/Terrain.hpp"
 #include "batb/forest/Map.hpp"
@@ -26,6 +25,7 @@
 #include "batb/forest/Control.hpp"
 #include "batb/forest/Runner.hpp"
 #include "batb/forest/Weather.hpp"
+#include "batb/event.hpp"
 
 
 namespace batb

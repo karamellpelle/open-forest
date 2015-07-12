@@ -22,6 +22,7 @@
 #include "batb.hpp"
 
 
+
 // use commandline to modify our BATB object
 void commandline(int argc, char** argv, batb::BATB& batb)
 {
