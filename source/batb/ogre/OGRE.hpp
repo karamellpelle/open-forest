@@ -17,6 +17,7 @@
 //
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
+#include "batb/ModuleBATB.hpp"
 #include "batb/batb_include.hpp"
 #include "batb/ogre/GLContextGLFW.hpp"
 
@@ -35,7 +36,6 @@ namespace Ogre
 namespace batb
 {
 
-class BATB;
 class Scene;
 
 
@@ -45,24 +45,16 @@ namespace ogre
 
 
 
-class OGRE
+class OGRE : public ModuleBATB
 {
 friend void begin(OGRE& );
 friend void end(OGRE& );
 
 public:
-    OGRE(BATB& b);
+    OGRE(BATB& b) : ModuleBATB( b ) { }
 
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-  
     // render to Scene
     void output(const Scene& );
-
-    BATB& batb;
 
 
     Ogre::LogManager* logmanager = nullptr;
@@ -74,9 +66,6 @@ public:
     //       these are instead rendering settings into OGRE
 
 private:
-    bool initialized_ = false;
-    std::string filepath_;
-    
     // Name of current rendersystem
     std::string rendersystem_name_ = "OpenGL Rendering Subsystem";
 

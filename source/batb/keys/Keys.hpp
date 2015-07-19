@@ -18,11 +18,11 @@
 #ifndef BATB_KEYS_KEYS_HPP
 #define BATB_KEYS_KEYS_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
 
 namespace batb
 {
 
-class BATB;
 
 
 namespace keys
@@ -39,19 +39,15 @@ class KeyPointer;
 class KeyPointer;
 
 
-class Keys
+class Keys : public ModuleBATB
 {
 friend void begin(Keys& keys);
 friend void end(Keys& keys);
 
 public:
-    Keys(BATB& b) : batb( b )
-    {
-    }
+    Keys(BATB& b) : ModuleBATB( b ) { }
 
 
-    BATB& batb;
-    
     void clear();
     void reset();
     void step(tick_t t);
@@ -114,8 +110,6 @@ public:
 
 
 private:
-    bool initialized_ = false;
-
     GLFWwindow* window_ = nullptr;
 
     // previous cursor

@@ -18,6 +18,7 @@
 #ifndef BATB_GUI_GUI_HPP
 #define BATB_GUI_GUI_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
 
 // TB
 #include "tb/tb_renderer.h"
@@ -31,7 +32,6 @@
 namespace batb
 {
 
-class BATB;
 class Scene;
 namespace keys { class Keys; }
 
@@ -39,22 +39,13 @@ namespace gui
 {
 
 
-class GUI
+class GUI : public ModuleBATB
 {
 friend void begin(GUI& gui);
 friend void end(GUI& gui);
 
 public:
-    GUI(BATB& b) : batb( b )
-    {
-    }
-
-    // config file
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
+    GUI(BATB& b) : ModuleBATB( b ) { }
 
     // output GUI to env::screen
     void output(const Scene& );
@@ -68,14 +59,8 @@ public:
     // root TB widget
     tb::TBWidget root;
 
-    BATB& batb;
 
 private:
-    bool initialized_ = false;
-
-    std::string filepath_;
-
-    
     uint wth_ = 0;
     uint hth_ = 0;
 

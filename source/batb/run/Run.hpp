@@ -17,6 +17,7 @@
 //
 #ifndef BATB_RUN_RUN_HPP
 #define BATB_RUN_RUN_HPP
+#include "batb/ModuleBATB.hpp"
 #include "batb/run/gui/GUIMain.hpp"
 #include "batb/run/KeySet.hpp"
 #include "batb/run/iteration/IterationRunBegin.hpp"
@@ -31,7 +32,6 @@ namespace batb
 {
 
 
-class BATB;
 
 
 namespace run
@@ -40,23 +40,14 @@ namespace run
 
 
 
-class Run
+class Run : public ModuleBATB
 {
 friend void begin(Run& );
 friend void end(Run& );
 
 public:
-    Run(BATB& b);
+    Run(BATB& );
 
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-
-
-
-    BATB& batb;
     KeySet keyset;
 
     // Iteration's
@@ -76,9 +67,6 @@ public:
     World* world = nullptr;
 
 private:
-    bool initialized_ = false;
-    std::string filepath_;
-
 
 };
 

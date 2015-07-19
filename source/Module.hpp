@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,66 +15,33 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb.hpp"
+#ifndef MODULE_HPP
+#define MODULE_HPP
+#include "include.hpp"
+#include "yaml-cpp/yaml.h"
 
-
-
-
-namespace batb
+class Module
 {
+public:
+    Module() : initialized_( false ) { }
+
+    void config(const YAML::Node& );    // from given Node
+    void config(const std::string& );   // from Node read from file
+    void save();                        // if Node was read from file, write back
+
+protected:
+    YAML::Node yaml;
+    std::string filepath;
+
+    bool init_empty() const { return !initialized_; }
+    bool init_nonempty() const { return initialized_; }
+    void init(bool b) { initialized_ = b; }
+
+private:
+    bool initialized_;
+
+};
 
 
+#endif
 
-namespace xxx
-{
-
-
-////////////////////////////////////////////////////////////////////////////////
-//  Xxx
-
-Xxx::Xxx(BATB& b) : batb( b ), 
-{
-
-}
-
-
-
-void Xxx::save()
-{
-
-    // FIXME: write to file
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(Xxx& xxx)
-{
-
-    xxx.batb.log << THIS_FUNCTION << std::endl;    
-
-
-    // set up this Xxx object from file
-    YAML::Node yaml = YAML::LoadFile( xxx.filepath_ );
-
-    xxx.initialized_ = true;
-}
-
-
-void end(Xxx& xxx)
-{
-    xxx.batb.log << THIS_FUNCTION << std::endl;    
-
-    if ( xxx.initialized_ )
-    {
-        xxx.save();
-    }
-    
-    xxx.initialized_ = false;
-
-}
-
-
-} // namespace xxx
-
-} // namespace batb

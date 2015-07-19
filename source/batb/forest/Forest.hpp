@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_FOREST_HPP
 #define BATB_FOREST_FOREST_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
 #include "batb/forest/KeySet.hpp"
 #include "batb/forest/iteration/IterationForestDemo.hpp"
 
@@ -37,7 +38,7 @@ namespace forest
 
 
 
-class Forest
+class Forest : public ModuleBATB
 {
 friend void begin(Forest& );
 friend void end(Forest& );
@@ -45,23 +46,12 @@ friend void end(Forest& );
 public:
     Forest(BATB& b);
 
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-
-
-
-    BATB& batb;
     KeySet keyset;
 
     // Iteration's
     IterationForestDemo iterationForestDemo;
 
 private:
-    bool initialized_ = false;
-    std::string filepath_;
 
 
 };

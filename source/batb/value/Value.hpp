@@ -18,40 +18,27 @@
 #ifndef BATB_VALUE_VALUE_HPP
 #define BATB_VALUE_VALUE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
 
 
 namespace batb
 {
 
-class BATB;
 
 namespace value
 {
 
 
-class Value
+class Value : public ModuleBATB
 {
 friend void begin(Value& value);
 friend void end(Value& value);
 
 public:
-    Value(BATB& b) : batb( b )
-    {
-    }
-
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-
-    BATB& batb;
-
+    Value(BATB& b) : ModuleBATB( b ) { }
 
 private:
-    bool initialized_ = false;
-    
-    std::string filepath_;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////

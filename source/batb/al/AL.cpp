@@ -31,18 +31,6 @@ namespace al
 ////////////////////////////////////////////////////////////////////////////////
 //  AL
 
-AL::AL(BATB& b) : batb( b )
-{
-
-}
-
-
-
-void AL::save()
-{
-
-    // FIXME: write to file
-}
 
 /*
 void AL::output(const Scene& scene)
@@ -56,28 +44,28 @@ void begin(AL& al)
 {
 
     BATB_LOG_FUNC( al.batb );
+    
+    if ( al.init_empty() )
+    {
+        //////////////////////////////////////////////////
+        // TODO: check nullptr!
 
-    // set up this AL object from file
-    YAML::Node yaml = YAML::LoadFile( al.filepath_ );
+        al.devicemanager = alure::DeviceManager::get();
 
-    //////////////////////////////////////////////////
-    // TODO: check nullptr!
+        // FIXME: memory leak, according to valgrind
+        al.device = al.devicemanager->openPlayback(); // FIXME: leak according to valgrind!
 
-    al.devicemanager = alure::DeviceManager::get();
+        al.batb.log << "AL: opened device \""
+                    << al.device->getName( alure::PlaybackDevType_Basic )
+                    << "\"" << std::endl;
 
-    // FIXME: memory leak, according to valgrind
-    al.device = al.devicemanager->openPlayback(); // FIXME: leak according to valgrind!
+        al.context = al.device->createContext();
+        alure::Context::MakeCurrent( al.context );
 
-    al.batb.log << "AL: opened device \""
-                << al.device->getName( alure::PlaybackDevType_Basic )
-                << "\"" << std::endl;
-
-    al.context = al.device->createContext();
-    alure::Context::MakeCurrent( al.context );
-
+    }
     ////////////////////////////////////////////////////////////////////////////////
     
-    al.initialized_ = true;
+    al.init( true );
 
 
     
@@ -88,7 +76,7 @@ void end(AL& al)
 {
     BATB_LOG_FUNC( al.batb );
 
-    if ( al.initialized_ )
+    if ( al.init_nonempty() )
     {
         al.save();
 
@@ -100,8 +88,7 @@ void end(AL& al)
         
     }
    
-    al.initialized_ = false;
-
+    al.init( false );
 }
 
 } // namespace al

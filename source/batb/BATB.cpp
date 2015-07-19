@@ -16,33 +16,17 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/BATB.hpp"
+#include <chrono>
 
 namespace batb
 {
 
 
 
-BATB::BATB(const std::string& path) : log( *this ), value( *this ),  
-                                      keys( *this ), gui( *this ),
-                                      ogre( *this ), al( *this ),
-                                      run( *this ),
-                                      forest( *this )
-                                      //race( *this ),
+BATB::BATB() : log( *this ), value( *this ), keys( *this ), gui( *this ), ogre( *this ), al( *this ),
+               run( *this ), forest( *this )
 {
 
-    filepath_ = path;
-
-    // core:
-    value.filepath(     file::directory( path ) + "/value/Value.yaml" );
-    gui.filepath(       file::directory( path ) + "/gui/GUI.yaml" );
-
-    // non-core:
-    ogre.filepath(      file::directory( path ) + "/ogre/OGRE.yaml" );
-    al.filepath(        file::directory( path ) + "/al/AL.yaml" );
-    run.filepath(       file::directory( path ) + "/run/Run.yaml" );
-    forest.filepath(    file::directory( path ) + "/forest/Forest.yaml" );
-    //race.filepath(      file::directory( path ) + "/race/Race.yaml" );
-    //.filepath(          file::directory( path ) + ".yaml" );
     
 }
 
@@ -50,54 +34,73 @@ BATB::BATB(const std::string& path) : log( *this ), value( *this ),
 // initialize BATB and its core parts
 void begin(BATB& batb)
 {
+    if ( batb.init_empty() )
+    {
+        // core:
+        batb.value.config(     file::directory( batb.filepath ) + "/value/Value.yaml" );
+        batb.gui.config(       file::directory( batb.filepath ) + "/gui/GUI.yaml" );
 
-    // logging
-    log::begin( batb.log );
+        // non-core:
+        batb.ogre.config(      file::directory( batb.filepath ) + "/ogre/OGRE.yaml" );
+        batb.al.config(        file::directory( batb.filepath ) + "/al/AL.yaml" );
+        batb.run.config(       file::directory( batb.filepath ) + "/run/Run.yaml" );
+        batb.forest.config(    file::directory( batb.filepath ) + "/forest/Forest.yaml" );
 
-    // general values to use 
-    value::begin( batb.value );
+
+        // logging
+        log::begin( batb.log );
+
+        // general values to use 
+        value::begin( batb.value );
 
 
-    // set up this BATB object from file
-    YAML::Node yaml = YAML::LoadFile( batb.filepath_ );
-    // now parse document
-    // ...
+        // now configure module from 'yaml'
+        // ...
+        
+
+
+        //////////////////////////////////////////////////////////
+        //      OpenGL
+        // BATB assumes this GL state:
+        gl::init_state();
+
+
+        //////////////////////////////////////////////////////////
+        //      OpenAL
+
+
+
+        // keys
+        keys::begin( batb.keys );
+
+        // gui
+        gui::begin( batb.gui );
+
+        // we need these two core iterations up and running:
+        run::begin( batb.run.iterationRunBegin );
+        run::begin( batb.run.iterationRunEnd );
+
+        // (now the non-core part of BATB is loaded by iterationRunBegin)
+    }
+
+    batb.init( true );
     
-
-
-    //////////////////////////////////////////////////////////
-    //      OpenGL
-    // BATB assumes this GL state:
-    gl::init_state();
-
-
-    //////////////////////////////////////////////////////////
-    //      OpenAL
-
-
-
-    // keys
-    keys::begin( batb.keys );
-
-    // gui
-    gui::begin( batb.gui );
-
-    // we need these two core iterations up and running:
-    run::begin( batb.run.iterationRunBegin );
-    run::begin( batb.run.iterationRunEnd );
-
-    // (now the non-core part of BATB is loaded by iterationRunBegin)
-
-    
-    batb.initialized_ = true;
 }
 
 
 // end BATB and its core parts
 void end(BATB& batb)
 {
-    if ( batb.initialized_ )
+    if ( batb.init_nonempty() )
     {
+/*
+        std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
+        std::chrono::system_clock::duration dtn = tp.time_since_epoch();
+
+        std::ostringstream os;
+        os << "save-tick is " << dtn.count();
+        batb.yaml[ "TestSave" ] = os.str();
+*/
         // save the configuration to file
         batb.save();
         
@@ -108,24 +111,15 @@ void end(BATB& batb)
         run::end( batb.run.iterationRunBegin );
 
         gui::end( batb.gui );
-
         keys::end( batb.keys );
-
         value::end( batb.value );
-        
         log::end( batb.log );
     }
 
-    batb.initialized_ = false;
-
+    batb.init( false );
 
 }
 
-
-void BATB::save()
-{
-    // FIXME: write to file
-}
 
 
 }

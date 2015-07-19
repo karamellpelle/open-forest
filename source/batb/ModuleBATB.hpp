@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,57 +15,34 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_XXX_XXX_HPP
-#define BATB_XXX_XXX_HPP
-
-
+#ifndef BATB_MODULE_BATB_HPP
+#define BATB_MODULE_BATB_HPP
+#include "batb/batb_include.hpp"
+#include "Module.hpp"
 
 
 namespace batb
 {
 
-
 class BATB;
 
-
-namespace xxx
+class ModuleBATB : public Module
 {
-
-
-
-
-class Xxx
-{
-friend void begin(Xxx& );
-friend void end(Xxx& );
-
 public:
-    Xxx(BATB& b);
-
-    void filepath(const std::string& path)
-    {
-        filepath_ = path;
-    }
-    void save();
-
-
+    ModuleBATB(BATB& b) : Module(), batb( b ) { }
 
     BATB& batb;
 
-private:
-    bool initialized_ = false;
-    std::string filepath_;
-
-
+protected:
+    using Module::yaml;
+    using Module::filepath;
+    using Module::init_empty;
+    using Module::init_nonempty;
+    using Module::init;
 };
 
-
-void begin(Xxx& );
-void end(Xxx& );
-
-} // namespace xxx
-
 } // namespace batb
+
 
 #endif
 

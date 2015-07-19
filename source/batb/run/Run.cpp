@@ -32,7 +32,7 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
-Run::Run(BATB& b) : batb( b ), keyset( b ), 
+Run::Run(BATB& b) : ModuleBATB( b ), keyset( b ), 
                     iterationRunBegin( b ), 
                     iterationRunEnd( b ),
                     iterationRunMain( b ),
@@ -41,13 +41,6 @@ Run::Run(BATB& b) : batb( b ), keyset( b ),
 
 }
 
-
-
-void Run::save()
-{
-
-    // FIXME: write to file
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,21 +52,21 @@ void begin(Run& run)
     BATB_LOG_FUNC( run.batb );
 
 
-    // set up this Run object from file
-    YAML::Node yaml = YAML::LoadFile( run.filepath_ );
+    if ( run.init_empty() )
+    {
+        // load associated keys 
+        run.keyset.load("batb/run/KeySet.yaml");
 
-    // load associated keys 
-    run.keyset.load("batb/run/KeySet.yaml");
+        // begin non-core iterations:
+        run::begin( run.iterationRunOld );
+        run::begin( run.iterationRunMain );
 
-    // begin non-core iterations:
-    run::begin( run.iterationRunOld );
-    run::begin( run.iterationRunMain );
+        // set up GUI's
+        // FIXME: memory leak, according to valgring
+        run.guiMain = new GUIMain( run.batb );
+    }
 
-    // set up GUI's
-    // FIXME: memory leak, according to valgring
-    run.guiMain = new GUIMain( run.batb );
-
-    run.initialized_ = true;
+    run.init( true );
 }
 
 // end the non-core part of Run
@@ -81,19 +74,19 @@ void end(Run& run)
 {
     BATB_LOG_FUNC( run.batb );
 
-    if ( run.initialized_ )
+    if ( run.init_nonempty() )
     {
+        run.save();
+
         run.guiMain = nullptr; // GUI memory handled by TB
 
         // end non-core iterations:
         run::end( run.iterationRunMain );
         run::end( run.iterationRunOld );
 
-        run.save();
     }
     
-    run.initialized_ = false;
-
+    run.init( false );
 }
 
 

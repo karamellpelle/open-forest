@@ -18,12 +18,12 @@
 #ifndef BATB_LOG_LOG_HPP
 #define BATB_LOG_LOG_HPP
 #include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
 
 
 namespace batb
 {
 
-class BATB;
 
 namespace log
 {
@@ -39,29 +39,25 @@ public:
     virtual int overflow (int c) override;
 };
 
-class Log : public std::ostream
+
+class Log : public ModuleBATB, public std::ostream
 {
 friend void begin(Log& log);
 friend void end(Log& log);
 
 public:
-    Log(BATB& b) : std::ostream( &streambuf_ ), batb( b )
-    {
-    }
+    Log(BATB& b) : ModuleBATB( b ), std::ostream( &streambuf_ ) { }
+
 
     // TODO: tag messages
     //std::ostream& info();
     //std::ostream& error();
     //
 
-    BATB& batb;
-
     // TMP:
     //std::ostream& operator<<(std::ostream&) { return std::cout; }
 
 private:
-    bool initialized_ = false;
-
     class LogStreamBuf streambuf_;
 
     // TODO:

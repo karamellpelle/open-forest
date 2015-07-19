@@ -29,8 +29,12 @@ namespace log
 
 std::streamsize LogStreamBuf::xsputn(const char* s, std::streamsize n)
 {
+    //if ( s == '\n' ) indent 
+
     // TMP:
     return std::cout.rdbuf()->sputn( s, n );
+
+    
 }
 
 int LogStreamBuf::overflow (int c)
@@ -43,17 +47,21 @@ int LogStreamBuf::overflow (int c)
 //  
 void begin(Log& log)
 {
+    if ( log.ModuleBATB::init_empty() )
+    {
 
-    log.initialized_ = true;
+    }
+
+    log.ModuleBATB::init( true );
 }
 
 void end(Log& log)
 {
-    if ( log.initialized_ )
+    if ( log.ModuleBATB::init_nonempty() )
     {
-
+        log.save();
     }
-    log.initialized_ = false;
+    log.ModuleBATB::init( false );
 }
 
 

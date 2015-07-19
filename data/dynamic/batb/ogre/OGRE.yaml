@@ -1,20 +1,9 @@
----
-
-# TODO: into BATB parent? Cf. other .yaml files
-
-# define our Ogre rendersystem
-rendersystem: "OpenGL Rendering Subsystem" 
-
-
-# plugins for Ogre to load
+rendersystem: !<!> OpenGL Rendering Subsystem
 plugins:
   - RenderSystem_GL
-#  - RenderSystem_GL3Plus
   - Plugin_ParticleFX
   - Plugin_BSPSceneManager
   - Plugin_CgProgramManager
   - Plugin_PCZSceneManager
   - Plugin_OctreeZone
   - Plugin_OctreeSceneManager
-
-...

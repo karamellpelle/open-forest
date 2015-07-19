@@ -27,19 +27,20 @@
 #include "batb/forest.hpp"
 //#include "batb/race.hpp"
 #include "batb/run.hpp"
+#include "Module.hpp"
 
 
 namespace batb
 {
 
 
-class BATB
+class BATB : public Module
 {
 friend void begin(BATB& batb);
 friend void end(BATB& batb);
 
 public:
-    BATB(const std::string& );
+    BATB();
 
     //env::Env* env;
 
@@ -58,14 +59,6 @@ public:
     run::Run run;
     forest::Forest forest;
     //race::Race race;
-
-    // save this BATB object to its file
-    void save();
-
-private:
-    bool initialized_ = false;
-
-    std::string filepath_;
 
 };
 

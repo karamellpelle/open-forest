@@ -110,13 +110,6 @@ void GUI::bind(keys::Keys& keys)
 }
 
 
-void GUI::save()
-{
-    // FIXME: populate
-    //YAML::Node node;
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
@@ -124,77 +117,77 @@ void begin(GUI& gui)
 {
     BATB_LOG_FUNC( gui.batb );
 
+    if ( gui.init_empty() )
+    {
+        debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+            // TODO: parse yaml
 
-    // set up this GUI object from YAML
-    YAML::Node yaml = YAML::LoadFile( gui.filepath_ );
-    // TODO: parse file
+          
+            gui.tb_renderer_ =  new tb::TBRendererGL();
 
-  
-    gui.tb_renderer_ =  new tb::TBRendererGL();
+            // init the core of TB
+            tb::tb_core_init( gui.tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
 
-    // init the core of TB
-    tb::tb_core_init( gui.tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
+            // Load the default skin, and override skin that contains the graphics specific to the demo.
+            tb::g_tb_skin->Load(  file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
+                                  file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
 
-    // Load the default skin, and override skin that contains the graphics specific to the demo.
-    tb::g_tb_skin->Load(  file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
-                          file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
-
-    // Register font renderers.
-    // for some reason, these are not part of namespace tb...
-    // declared in top of this file.
+            // Register font renderers.
+            // for some reason, these are not part of namespace tb...
+            // declared in top of this file.
 #ifdef TB_FONT_RENDERER_TBBF
-    register_tbbf_font_renderer();
+            register_tbbf_font_renderer();
 #endif
 #ifdef TB_FONT_RENDERER_STB
-    register_stb_font_renderer();
+            register_stb_font_renderer();
 #endif
 #ifdef TB_FONT_RENDERER_FREETYPE
-    register_freetype_font_renderer();
+            register_freetype_font_renderer();
 #endif
 
-    // Add fonts we can use to the font manager.
+            // Add fonts we can use to the font manager.
 #if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
-    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/vera.ttf" ).c_str(),                                      "Vera");
+            tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/vera.ttf" ).c_str(),                                      "Vera");
 #endif
 #ifdef TB_FONT_RENDERER_TBBF
-    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str() ,  "Segoe");
-    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(),                                  "Neon" );
-    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(),                            "Orangutang" );
-    tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(),                                "Orange" );
+            tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str() ,  "Segoe");
+            tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(),                                  "Neon" );
+            tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(),                            "Orangutang" );
+            tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(),                                "Orange" );
 #endif
 
-    // Set the default font description for widgets to one of the fonts we just added
-    tb::TBFontDescription fd;
+            // Set the default font description for widgets to one of the fonts we just added
+            tb::TBFontDescription fd;
 #ifdef TB_FONT_RENDERER_TBBF
-    fd.SetID( tb::TBIDC("Segoe"));
+            fd.SetID( tb::TBIDC("Segoe"));
 #else
-    fd.SetID( tb::TBIDC("Vera"));
+            fd.SetID( tb::TBIDC("Vera"));
 #endif
-    fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx( 20 ));
-    tb::g_font_manager->SetDefaultFontDescription(fd);
+            fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx( 20 ));
+            tb::g_font_manager->SetDefaultFontDescription(fd);
 
-    // Create the font now.
-    tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());
+            // Create the font now.
+            tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());
 
-    // Render some glyphs in one go now since we know we are going to use them. It would work fine
-    // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
-    if ( font )
-    {
-        font->RenderGlyphs( " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-                            "â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ€â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â¦Â§Â¨Â©ÂªÂ«Â¬Â®"
-                            "Â¯Â°Â±Â²Â³Â´ÂµÂ¶Â·Â¸Â¹ÂºÂ»Â¼Â½Â¾Â¿Ã€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃŽÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃÃžÃŸÃ Ã"
-                            "¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿"
-        );
+            // Render some glyphs in one go now since we know we are going to use them. It would work fine
+            // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
+            if ( font )
+            {
+                font->RenderGlyphs( " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+                                    "â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ€â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â¦Â§Â¨Â©ÂªÂ«Â¬Â®"
+                                    "Â¯Â°Â±Â²Â³Â´ÂµÂ¶Â·Â¸Â¹ÂºÂ»Â¼Â½Â¾Â¿Ã€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃŽÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃÃžÃŸÃ Ã"
+                                    "¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿"
+                );
+            }
+
+            // Give the root widget a background skin
+            //root.SetSkinBg(TBIDC("background"));
+
+            tb::TBWidgetsAnimationManager::Init();
     }
 
-    // Give the root widget a background skin
-    //root.SetSkinBg(TBIDC("background"));
-
-    tb::TBWidgetsAnimationManager::Init();
-
-    gui.initialized_ = true;
+    gui.init( true );
 }
 
 
@@ -202,8 +195,10 @@ void end(GUI& gui)
 {
     BATB_LOG_FUNC( gui.batb );
 
-    if ( gui.initialized_ )
+    if ( gui.init_nonempty() )
     {
+        gui.save();
+
         tb::TBWidgetsAnimationManager::Shutdown();
 
         tb::tb_core_shutdown();
@@ -215,8 +210,7 @@ void end(GUI& gui)
         gui.hth_ = 0;
     }
     
-    gui.initialized_ = false;
-
+    gui.init( false );
 }
 
 

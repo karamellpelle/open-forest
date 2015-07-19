@@ -238,6 +238,7 @@ target_link_libraries( lib-env yaml-cpp )
 # define batb sources
 set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/main.cpp"
+      "${MAIN_SOURCE_DIR}/Module.cpp"
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
       # BATB core:
       "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"

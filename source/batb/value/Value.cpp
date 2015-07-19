@@ -29,41 +29,34 @@ namespace value
 ////////////////////////////////////////////////////////////////////////////////
 //  Value
 
-void Value::save()
-{
-    // FIXME: populate
-    YAML::Node yaml;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
 void begin(Value& value)
 {
-    // set up this Value object from file
-    YAML::Node yaml = YAML::Load( value.filepath_ );
+    if ( value.init_empty() )
+    {
+        // TODO: use 'Value::yaml'
 
-    // default values:
-    proj3DNear =        0.1;
-    proj3DFar =         512.0;
-    proj3DFOVY =        1.047;
+        // default values:
+        proj3DNear =        0.1;
+        proj3DFar =         512.0;
+        proj3DFOVY =        1.047;
 
-    // FIXME: now override values, if defined
-    
-    value.initialized_ = true;
+        // FIXME: now override values, if defined
+    }
+    value.init( true );
 }
 
 void end(Value& value)
 {
-    if ( value.initialized_ )
+    if ( value.init_nonempty() )
     {
         // save the configuration to its file
         value.save();
-
-
         
     }
-    value.initialized_ = false;
+    value.init( false );
 }
 
 

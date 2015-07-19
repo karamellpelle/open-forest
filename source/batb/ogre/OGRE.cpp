@@ -39,26 +39,13 @@ namespace ogre
 ////////////////////////////////////////////////////////////////////////////////
 //  OGRE
 
-OGRE::OGRE(BATB& b) : batb( b )
-{
-
-}
-
-
-
-void OGRE::save()
-{
-
-    // FIXME: write to file
-}
-
 
 void OGRE::output(const Scene& scene)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 
-    if ( initialized_ )
+    if ( init_nonempty() )
     {
         // setup ogre
         gl::begin_ogre();
@@ -88,108 +75,108 @@ void begin(OGRE& ogre)
 
     BATB_LOG_FUNC( ogre.batb );
 
+    if ( ogre.init_empty() )
+    {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-    // set up this OGRE object from file
-    YAML::Node yaml = YAML::LoadFile( ogre.filepath_ );
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // setup Ogre
-    //
+            ////////////////////////////////////////////////////////////////////////////////
+            // setup Ogre
+            //
 
-    // control the log output from Ogre by creating the LogManager ourselves,
-    // before creating Ogre::Root
+            // control the log output from Ogre by creating the LogManager ourselves,
+            // before creating Ogre::Root
 debug::gl::msg( "OGRE_NEW LogManager" );
-    ogre.logmanager = OGRE_NEW Ogre::LogManager();
-    ogre.logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
+            ogre.logmanager = OGRE_NEW Ogre::LogManager();
+            ogre.logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // create Ogre root object
+            ////////////////////////////////////////////////////////////////////////////////
+            // create Ogre root object
 debug::gl::msg( "OGRE_NEW Root" );
-    ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
-   
-    ////////////////////////////////////////////////////////////////////////////////
-    // add plugins (rendersystem, scene managers, ...)
-    ogre.batb.log << "OGRE: loading plugins:" << std::endl;
-    if ( YAML::Node plugins = yaml[ "plugins" ] )
-    {
-        for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
-        {
-            std::string plugin = i->as<std::string>();
-            ogre.batb.log << "  " << plugin;
-            
-            try
+            ogre.root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
+           
+            ////////////////////////////////////////////////////////////////////////////////
+            // add plugins (rendersystem, scene managers, ...)
+            ogre.batb.log << "OGRE: loading plugins:" << std::endl;
+            if ( YAML::Node plugins = ogre.yaml[ "plugins" ] )
             {
+                for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
+                {
+                    std::string plugin = i->as<std::string>();
+                    ogre.batb.log << "  " << plugin;
+                    
+                    try
+                    {
 std::ostringstream os; os << "ogre.root->loadPlugin( " << plugin << ")";                
 debug::gl::msg( os.str() );
-                ogre.root->loadPlugin( plugin );
+                        ogre.root->loadPlugin( plugin );
+                    }
+                    catch (Ogre::Exception& e)
+                    {
+                        ogre.batb.log << " (" << e.what() << " )";
+                    }
+
+                    ogre.batb.log << std::endl;
+                }
             }
-            catch (Ogre::Exception& e)
+            else
             {
-                ogre.batb.log << " (" << e.what() << " )";
+                throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
             }
 
-            ogre.batb.log << std::endl;
-        }
-    }
-    else
-    {
-        throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
-    }
+            ////////////////////////////////////////////////////////////////////////////////
+            // set rendersystem for Ogre
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // set rendersystem for Ogre
-
-    // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
+            // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
 debug::gl::msg( "ogre.root->getRenderSystemByName" );
-    ogre.rendersystem_name_ = yaml["rendersystem"] ? yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
-    ogre.rendersystem = ogre.root->getRenderSystemByName( ogre.rendersystem_name_ );
+            ogre.rendersystem_name_ = ogre.yaml["rendersystem"] ? ogre.yaml["rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+            ogre.rendersystem = ogre.root->getRenderSystemByName( ogre.rendersystem_name_ );
 
-    // set our Ogre render system
-    if ( ogre.rendersystem )
-    {
+            // set our Ogre render system
+            if ( ogre.rendersystem )
+            {
 debug::gl::msg( "ogre.root->setRenderSystem" );
-        ogre.root->setRenderSystem( ogre.rendersystem );
-    }
-    else
-    {
-        throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre.rendersystem_name_ );
-    }
+                ogre.root->setRenderSystem( ogre.rendersystem );
+            }
+            else
+            {
+                throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre.rendersystem_name_ );
+            }
 
-    ////////////////////////////////////////////////////////////////////////////////    
-    // initialize Root, using our defined RenderSystem
-    // (this method returns nullptr, since our argument is 'false')
+            ////////////////////////////////////////////////////////////////////////////////    
+            // initialize Root, using our defined RenderSystem
+            // (this method returns nullptr, since our argument is 'false')
 debug::gl::msg( "ogre.root->initialise" );
-    ogre.root->initialise( false ); 
+            ogre.root->initialise( false ); 
 
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // 
-    begin( ogre.glcontextglfw_ );
+            ////////////////////////////////////////////////////////////////////////////////
+            // 
+            begin( ogre.glcontextglfw_ );
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // create an Ogre window, using our existing GLFW window.
-    //
-    // see implementation of Ogre::GLXWindow for settings:
-    //  - currentGLContext 
-    //  - FSAA
-    //  - ... 
+            ////////////////////////////////////////////////////////////////////////////////
+            // create an Ogre window, using our existing GLFW window.
+            //
+            // see implementation of Ogre::GLXWindow for settings:
+            //  - currentGLContext 
+            //  - FSAA
+            //  - ... 
 debug::gl::msg( "ogre.root->createRenderWindow()" );
-    Ogre::NameValuePairList params;
-    params["currentGLContext"] = "true";  // let RenderWindow use our GL context
-    params["externalGLControl"] = "true"; // no automatic swapping
-    ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
-    ogre.renderwindow->setVisible(true);
+            Ogre::NameValuePairList params;
+            params["currentGLContext"] = "true";  // let RenderWindow use our GL context
+            params["externalGLControl"] = "true"; // no automatic swapping
+            ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
+            ogre.renderwindow->setVisible(true);
 
-    // set back our context
-    ogre.set_glfwcontext_();
-
-
+            // set back our context
+            ogre.set_glfwcontext_();
 
 
+
+    }
     ////////////////////////////////////////////////////////////////////////////////
     
-    ogre.initialized_ = true;
+    ogre.init( true );
 
 
     
@@ -201,7 +188,7 @@ void end(OGRE& ogre)
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     BATB_LOG_FUNC( ogre.batb );
 
-    if ( ogre.initialized_ )
+    if ( ogre.init_nonempty() )
     {
         ogre.save();
 
@@ -221,8 +208,7 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
     }
    
-    ogre.initialized_ = false;
-
+    ogre.init( false );
 }
 
 void OGRE::set_glfwcontext_()

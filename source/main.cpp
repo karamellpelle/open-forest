@@ -35,13 +35,14 @@ int main(int argc, char** argv)
     int ret = 0;
  
     // our BATB object
-    batb::BATB batb( file::dynamic_data( "batb/BATB.yaml" ) );
+    batb::BATB batb;
+    batb.config( file::dynamic_data( "batb/BATB.yaml" ) );
 
     try
     {
         
         // create our environment
-        env::begin( file::dynamic_data( "env.yaml" ) );
+        env::begin( file::dynamic_data( "env.yaml" ) ); // TODO: Module
 
         // initialize the core parts of BATB.
         // the non-core part is created by 'iterationRunBegin'

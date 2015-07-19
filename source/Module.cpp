@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,64 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_AL_AL_HPP
-#define BATB_AL_AL_HPP
-#include "batb/batb_include.hpp"
-#include "batb/ModuleBATB.hpp"
-#include "AL/alure2.h"
+#include <fstream>
+#include "Module.hpp"
 
-
-// forward declare Ogre classes
-namespace Ogre
+void Module::config(const YAML::Node& cfg)
 {
-    class LogManager;
-    class Log;
-    class Root;
-    class RenderWindow;
-    class RenderTarget;
+    // important: YAML::Node is similar to a shared_ptr
+    yaml = cfg;     
+    filepath.clear();
+}
+
+void Module::config(const std::string& path)
+{
+    try
+    {
+        filepath = path;
+        yaml = YAML::LoadFile( filepath );
+    }
+    catch (std::exception& e)
+    {
+        std::ostringstream os;
+        os << "Module could not load YAML: " << path;
+        throw std::runtime_error( os.str() );
+    }
 }
 
 
-namespace batb
+void Module::save()
 {
+    // save iff this Module has its own config file
+    if ( !filepath.empty() )
+    {
+        std::ofstream os( filepath );
+        os << yaml;
+    }
+}
 
-class Scene;
-
-
-namespace al
-{
-
-
-
-
-class AL : public ModuleBATB
-{
-friend void begin(AL& );
-friend void end(AL& );
-
-public:
-    AL(BATB& b) : ModuleBATB( b ) { }
-
-    // render to Scene
-    //void output(const Scene& );
-
-
-    alure::DeviceManager* devicemanager = nullptr;
-    alure::Device* device = nullptr;
-    alure::Context* context = nullptr;
-
-
-private:
-    
-};
-
-
-void begin(AL& );
-void end(AL& );
-
-} // namespace al
-
-} // namespace batb
-
-#endif
 

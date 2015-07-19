@@ -167,24 +167,28 @@ Key* Keys::createKey(const YAML::Node& yaml)
 
 void begin(Keys& keys)
 {
-    keys.window_ = env::screen_window(); // TODO: batb.env.window
+    if ( keys.init_empty() )
+    {
+        keys.window_ = env::screen_window(); // TODO: batb.env.window
 
-    // cursor input mode is _NORMAL!
-    glfwSetInputMode( keys.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
-    keys.cursor_free_ = false;
+        // cursor input mode is _NORMAL!
+        glfwSetInputMode( keys.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
+        keys.cursor_free_ = false;
+    }
 
-    //
-    keys.initialized_ = true;
+    keys.init( true );
 }
 
 void end(Keys& keys)
 {
-    if ( keys.initialized_ )
+    if ( keys.init_nonempty() )
     {
+        keys.save();
+
         keys.clear();
     }
 
-    keys.initialized_ = false;
+    keys.init( false );
 }
 
 } // namespace keys

@@ -30,19 +30,12 @@ namespace forest
 ////////////////////////////////////////////////////////////////////////////////
 //  Forest
 
-Forest::Forest(BATB& b) : batb( b ), keyset( b ),
+Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b ),
                           iterationForestDemo( b )
 {
 
 }
 
-
-
-void Forest::save()
-{
-
-    // FIXME: write to file
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,34 +44,34 @@ void begin(Forest& forest)
 {
 
     BATB_LOG_FUNC( forest.batb );
+    
+    if ( forest.init_empty() )
+    {
+        // load associated keys 
+        forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
 
+        // begin iterations:
+        forest::begin( forest.iterationForestDemo );
 
-    // set up this Forest object from file
-    YAML::Node yaml = YAML::LoadFile( forest.filepath_ );
+    }
 
-    // load associated keys 
-    forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
-
-    // begin iterations:
-    forest::begin( forest.iterationForestDemo );
-
-    forest.initialized_ = true;
+    forest.init( true );
 }
 
 void end(Forest& forest)
 {
     BATB_LOG_FUNC( forest.batb );
 
-    if ( forest.initialized_ )
+    if ( forest.init_nonempty() )
     {
+        forest.save();
+
         // end  iterations:
         forest::end( forest.iterationForestDemo );
 
-        forest.save();
     }
     
-    forest.initialized_ = false;
-
+    forest.init( false );
 }
 
 
