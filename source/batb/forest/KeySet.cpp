@@ -27,7 +27,7 @@ namespace forest
 {
 
 
-KeySet::KeySet(BATB& b) : batb( b )
+KeySet::KeySet(BATB& b) : keys::KeySet( b.keys ), batb( b )
 {
 
 }
@@ -36,18 +36,26 @@ void KeySet::load(const std::string& path)
 {
     BATB_LOG_FUNC( batb );
 
-    // clear current content
-    clear();
+    // TODO: release current pointers back to Keys
 
-    // FIXME: parse keys from definition in file
-    //        the function createKey is handy...
+    // TODO: parse keys from definition in file
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // instead, hardcode!
+    // for now, hardcode:
+    forward = createKeyClicker( createKeyButton( GLFW_KEY_W ) );
+    backward = createKeyClicker( createKeyButton( GLFW_KEY_S ) );
+    left = createKeyClicker( createKeyButton( GLFW_KEY_A ) );
+    right = createKeyClicker( createKeyButton( GLFW_KEY_D ) );
+    aim = createKeyPointer();
 
+}
 
-    // tmp:
-    //old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
+void KeySet::reset()
+{
+    forward->reset();
+    backward->reset();
+    left->reset();
+    right->reset();
+    aim->reset();
 }
 
 } // namespace forest

@@ -1,23 +1,12 @@
-* define build platform, env_include.hpp
-* set screen size for Ogre
+* class Key { shared_ptr<KeyImpl> impl_; }
 * env-object, with ref inside BATB
-* prevent GLX segfaullt on shutdown
-  cause: GLXContext::endCurrent sets glx context to None, called from GLRenderSystem::_unregisterContext on deletion of GLXContext,
-         on shutdwn of the GL plugin
-  fix?: use different Ogre::GLContexts, one for BATB and one for Ogre.
-        then we also fix the GL interference with Turbobagder
 * CMakeLists.txt with different compile options for CXX and C !!
 * continous save to file (YAML, save())
-* base event class (Game::), implement for Run/Race/Forest/... 
-  true iff handled??
 * implement Log: current indentation, error/warning tags, etc
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
 * FPS and other BATB-stats
 * glext.h (part of official OpenGL Registry) as git submodule, or something
-* use C++11 coding actively. see for example:
-    http://blog.smartbear.com/c-plus-plus/the-biggest-changes-in-c11-and-why-you-should-care/
-    http://www.codeproject.com/Articles/570638/Ten-Cplusplus-Features-Every-Cplusplus-Developer
 * define invariants (OpenGL, ...)
 * Define gameobjects more preciseand start to implement them
 * find a suitable UDP-library (http://www.codeofhonor.com/blog/choosing-a-game-network-lib)

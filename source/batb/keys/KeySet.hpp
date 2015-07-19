@@ -32,7 +32,9 @@ namespace batb
 namespace keys
 {
 
-// create Key's
+class Keys;
+
+// create Key's from bound Keys
 // 
 // should typically be subclassed into a class having members
 // of each Key necessary. this subclass should typically have
@@ -41,53 +43,35 @@ namespace keys
 class KeySet
 {
 public:
-    KeySet()                              { }
-    ~KeySet()                             { clear(); }
+    KeySet(Keys& k) : keys_( k )          { }
+
+    // TODO: shared_ptr's or only 1 object (delete below)
     KeySet(const KeySet& k)               = delete;
     KeySet& operator=(const KeySet& k)    = delete;
     KeySet(KeySet&& k)                    = delete;
 
 
+protected:
     // prims
-    KeyButton*      createKeyButton(KeyButton::Code code)             { return push( new KeyButton( code ) ); }
-    KeyMouseButton* createKeyMouseButton(KeyMouseButton::Code code)   { return push( new KeyMouseButton( code ) ); }
-    KeyMouseAxisX*  createKeyMouseAxisX()                             { return push( new KeyMouseAxisX() ); }
-    KeyMouseAxisY*  createKeyMouseAxisY()                             { return push( new KeyMouseAxisY() ); }
+    KeyButton*      createKeyButton(int code)                         { return keys_.createKeyButton( code ); }
+    KeyMouseButton* createKeyMouseButton(int code)                    { return keys_.createKeyMouseButton( code ); }
+    KeyMouseAxisX*  createKeyMouseAxisX()                             { return keys_.createKeyMouseAxisX(); }
+    KeyMouseAxisY*  createKeyMouseAxisY()                             { return keys_.createKeyMouseAxisY(); }
     // cons
-    KeyClicker*     createKeyClicker(Key* k)                          { return push( new KeyClicker( k ) ); }
-    KeyAlpha*       createKeyAlpha(Key* k)                            { return push( new KeyAlpha( k ) ); }
-    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return push( new KeyPointer( x, y, l, r ) ); }
+    KeyClicker*     createKeyClicker(Key* k)                          { return keys_.createKeyClicker( k ); }
+    KeyAlpha*       createKeyAlpha(Key* k)                            { return keys_.createKeyAlpha( k ); }
+    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r)  { return keys_.createKeyPointer( x, y, l, r ); }
+    KeyPointer*     createKeyPointer()                                { return keys_.createKeyPointer(); }
 
     // create Key from definition
-    Key* createKey(/* std::string&*/ /*XML def*/ );
+    Key* createKey(const YAML::Node& yaml)                            { return keys_.createKey( yaml ); }
 
 
     ////////////////////////////////////////////////////////////////////////////////
     //
 
-    // invalidate and delete all keys
-    // NOTE: this is very different from Key::clear()!!
-    void clear();
-
-    // Keys::clear() for all keys:
-    // FIXME: rename Key::clear() -> Key::reset()
-    void reset();
-
-    // update all keys, to be done at end of each frame:
-    // FIXME: rename Key::update(tick_t) -> Key::step(tick_t)
-    void step(tick_t t);
-   
-
 private:
-    typedef std::vector<Key*> Container;
-    Container keys_;
-
-    template <typename KeyPtr>
-    KeyPtr push(KeyPtr k)
-    {
-        keys_.push_back( k );
-        return k;
-    }
+    Keys& keys_;
 
 };
 

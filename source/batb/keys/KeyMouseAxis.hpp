@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_KEY_MOUSE_AXIS_HPP
 #define BATB_KEYS_KEY_MOUSE_AXIS_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 
 namespace batb
 {
@@ -28,41 +29,35 @@ namespace keys
 
 class KeyMouseAxisX : public Key
 {
-friend class KeySet;
 
 public:
-    void clear() override             { }
-    void update(tick_t ) override     { }
+    void reset() override             { }
+    void step(tick_t ) override     { }
     float_t alpha() override
     {
-        int wth; int hth;
-        glfwGetWindowSize( env::screen_window(), &wth, &hth );
-        double x; double y;
-        glfwGetCursorPos( env::screen_window(), &x, &y );
-
-        return x / (double)( wth );
+        double x, y;
+        keys_.getCursorPos( x, y );
+        return x;
     }
 
+    KeyMouseAxisX(Keys& keys) : Key( typeid( this ), keys ) { }
 
 };
 
 class KeyMouseAxisY: public Key
 {
-friend class KeySet;
 
 public:
-    void clear() override             { }
-    void update(tick_t ) override     { }
+    void reset() override             { }
+    void step(tick_t ) override     { }
     float_t alpha() override
     {
-        int wth; int hth;
-        glfwGetWindowSize( env::screen_window(), &wth, &hth );
-        double x; double y;
-        glfwGetCursorPos( env::screen_window(), &x, &y );
-
-        return y / (double)( hth );
+        double x, y;
+        keys_.getCursorPos( x, y );
+        return y;
     }
 
+    KeyMouseAxisY(Keys& keys) : Key( typeid( this ), keys ) { }
 
 };
 

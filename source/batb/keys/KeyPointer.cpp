@@ -25,14 +25,14 @@ namespace keys
 {
 
 
-void KeyPointer::update(tick_t t)
+void KeyPointer::step(tick_t t)
 {
-    axis_x_->update( t );
-    axis_y_->update( t );
-    clicker_left_.update( t );
-    clicker_right_.update( t );
+    axis_x_->step( t );
+    axis_y_->step( t );
+    clicker_left_->step( t );
+    clicker_right_->step( t );
 
-    if ( clicker_left_.pressed() )
+    if ( clicker_left_->pressed() )
     {
         x0_ = axis_x_->alpha();
         y0_ = axis_y_->alpha();
@@ -44,7 +44,7 @@ void KeyPointer::update(tick_t t)
 
 bool KeyPointer::drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
 {
-    if ( clicker_left_.press( ticks ) )
+    if ( clicker_left_->press( ticks ) )
     {
         x0 = (1.0 - x0_) * x_a + x0_ * x_b;
         y0 = (1.0 - y0_) * y_a + y0_ * y_b;
@@ -62,7 +62,7 @@ bool KeyPointer::drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_
 
 bool KeyPointer::drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b,  float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
 {
-    if ( clicker_left_.released( ticks ) )
+    if ( clicker_left_->released( ticks ) )
     {
         x0 = (1.0 - x0_) * x_a + x0_ * x_b;
         y0 = (1.0 - y0_) * y_a + y0_ * y_b;

@@ -39,13 +39,13 @@ set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
 # temporary fix: look at linker language for each target
 #add_compile_options( -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 # C++ specific compiler options
-#add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-std=c++11>" ) 
+#add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-std=c++14>" ) 
 #add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,CXX>:-Wno-non-template-friend>" )
 # C specific compiler options
 #add_compile_options( "$<$<STREQUAL:$<TARGET_PROPERTY:LINKER_LANGUAGE>,C>:>" )
 
 # the above does not work, use this instead:
-set( CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend -Wno-deprecated-declarations" )
+set( CMAKE_CXX_FLAGS "-std=c++14 -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend -Wno-deprecated-declarations" )
 set( CMAKE_C_FLAGS "-g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 
 # currently, we invoke (typically, by 'build.sh') cmake with -DCMAKE_BUILD_TYPE=None
@@ -145,7 +145,7 @@ set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
 set( CMAKE_CXX_FLAGS_COPY "${CMAKE_CXX_FLAGS}" )
 set( CMAKE_C_FLAGS_COPY "${CMAKE_C_FLAGS}" )
 set( CMAKE_BUILD_TYPE "Release" )
-set( CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
+set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
 set( CMAKE_C_FLAGS "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 add_subdirectory( "${LIBS_SOURCE_DIR}/ogre" )
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
@@ -237,7 +237,6 @@ target_link_libraries( lib-env yaml-cpp )
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/main.cpp"
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
       # BATB core:
@@ -258,6 +257,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"

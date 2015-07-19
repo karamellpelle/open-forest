@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_POINTER_HPP
 #define BATB_KEYS_POINTER_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 #include "batb/keys/KeyClicker.hpp"
 
 
@@ -28,25 +29,31 @@ namespace keys
 {
 
 // create a Pointer-key (i.e. mouse)
-// FIXME: this is more a container then a Key
+// (this is more a container then a Key)
 class KeyPointer : public Key
 {
-friend class KeySet;
-friend class KeyClicker;
 
 public:
-    void clear() override
+    KeyPointer(Keys& keys, Key* x, Key* y, Key* l, Key* r) : Key( typeid( this ), keys )
     {
-        axis_x_->clear();
-        axis_y_->clear();
-        clicker_left_.clear();
-        clicker_right_.clear();
+        axis_x_ = x;
+        axis_y_ = y;
+        clicker_left_ = keys_.createKeyClicker( l );
+        clicker_right_ = keys_.createKeyClicker( r );
+    }
+
+    void reset() override
+    {
+        axis_x_->reset();
+        axis_y_->reset();
+        clicker_left_->reset();
+        clicker_right_->reset();
 
     }
-    void update(tick_t ) override;
+    void step(tick_t ) override;
     float_t alpha() override
     {
-        // FIXME: implement something linear based on a mouse
+        // TODO: implement something based on a mouse
         return 0.5;
     }
 
@@ -143,11 +150,10 @@ public:
         return right_released( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
     }
   
-    KeyClicker* left()      { return &clicker_left_; }
-    KeyClicker* right()     { return &clicker_right_; }
+    KeyClicker* left()      { return clicker_left_; }
+    KeyClicker* right()     { return clicker_right_; }
 
 private:
-    KeyPointer(Key* x, Key* y, Key* l, Key* r) : axis_x_( x ), axis_y_( y ), clicker_left_( l ), clicker_right_( r )    { }
     bool drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool left_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
@@ -189,10 +195,11 @@ private:
 
     }
 
-    Key* const axis_x_;
-    Key* const axis_y_;
-    KeyClicker clicker_left_;
-    KeyClicker clicker_right_;
+    // TODO: public
+    Key* axis_x_;
+    Key* axis_y_;
+    KeyClicker* clicker_left_;
+    KeyClicker* clicker_right_;
 
     float_t x0_;
     float_t y0_;

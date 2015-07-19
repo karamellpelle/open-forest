@@ -26,8 +26,7 @@ namespace batb
 namespace run
 {
 
-
-KeySet::KeySet(BATB& b) : batb( b )
+KeySet::KeySet(BATB& b) : keys::KeySet( b.keys ), batb( b )
 {
 
 }
@@ -36,24 +35,30 @@ void KeySet::load(const std::string& path)
 {
     BATB_LOG_FUNC( batb );
 
-    // clear current content
-    clear();
+    // TODO: release current pointers back to Keys
 
-    // FIXME: parse keys from definition in file
-    //        the function createKey is handy...
+    // TODO: parse keys from definition in file
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // instead, hardcode!
-
+    // for now, hardcode:
     pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
-
-    // tmp:
     old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
     u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
     i = createKeyClicker( createKeyButton( GLFW_KEY_I      ) );
     ogre = createKeyClicker( createKeyButton( GLFW_KEY_O      ) );
     nanovg = createKeyClicker( createKeyButton( GLFW_KEY_N      ) );
     tb = createKeyClicker( createKeyButton( GLFW_KEY_T      ) );
+}
+
+
+void KeySet::reset()
+{
+    pause->reset();
+    old->reset();
+    u->reset();
+    i->reset();
+    ogre->reset();
+    nanovg->reset();
+    tb->reset();
 }
 
 } // namespace run

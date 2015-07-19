@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_KEY_ALPHA_HPP
 #define BATB_KEYS_KEY_ALPHA_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 
 
 namespace batb
@@ -30,11 +31,14 @@ namespace keys
 // build up alpha value, based on child Key in lower/upper part of.
 class KeyAlpha : public Key
 {
-friend class KeySet;
-
 public:
-    virtual void clear() override                 { alpha_ = clear_; }
-    virtual void update(tick_t tick) override
+    KeyAlpha(Keys& keys, Key* k) : KeyAlpha(keys, k, -1.0, 1.0 )                                                                { }
+    KeyAlpha(Keys& keys, Key* k, float_t a, float_t b) : KeyAlpha( keys, k, a, b, 0.5 )                                         { }
+    KeyAlpha(Keys& keys, Key* k, float_t a, float_t b, float_t c) : Key( typeid( this ), keys ), key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
+
+
+    virtual void reset() override                 { alpha_ = clear_; }
+    virtual void step(tick_t tick) override
     {
         // FIXME: prevent too big dt, espcecially first time...
         tick_t dt = tick - tick_prev_;           // assuming dt not too smal, i.e. when high frame rate and dt ~= 0...
@@ -60,10 +64,6 @@ public:
 
 
 private:
-    KeyAlpha(Key* k) : KeyAlpha(k, -1.0, 1.0 )                                                                { }
-    KeyAlpha(Key* k, float_t a, float_t b) : KeyAlpha( k, a, b, 0.5 )                                         { }
-    KeyAlpha(Key* k, float_t a, float_t b, float_t c) : key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
-
     Key* const key_;
 
     tick_t tick_prev_;

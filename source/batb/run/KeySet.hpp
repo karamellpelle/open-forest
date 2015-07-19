@@ -32,22 +32,25 @@ namespace run
 class KeySet : public keys::KeySet
 {
 public:
-    KeySet(BATB& );
+    KeySet(BATB& b);
 
     // define 'this' from map defined by file
     void load(const std::string& filepath);
     void save(const std::string& filepath);
 
+    // set clean state
+    void reset();
+
     /////////////////////////////////////////////////
     // keys for Run to use
     // TMP:
-    keys::KeyClicker* pause;
-    keys::KeyClicker* old; 
-    keys::KeyClicker* u;
-    keys::KeyClicker* i;
-    keys::KeyClicker* ogre;
-    keys::KeyClicker* nanovg;
-    keys::KeyClicker* tb;
+    keys::KeyClicker* pause   = nullptr;
+    keys::KeyClicker* old     = nullptr;
+    keys::KeyClicker* u       = nullptr; 
+    keys::KeyClicker* i       = nullptr;
+    keys::KeyClicker* ogre    = nullptr;
+    keys::KeyClicker* nanovg  = nullptr;
+    keys::KeyClicker* tb      = nullptr;
 
     BATB& batb;
 };

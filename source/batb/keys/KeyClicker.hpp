@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_KEY_CLICKER_HPP
 #define BATB_KEYS_KEY_CLICKER_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 
 namespace batb
 {
@@ -27,17 +28,19 @@ namespace keys
 
 
 // click information for child Key
-// FIXME: this is more a container then a Key
+// (this is more a container then a Key)
 class KeyClicker : public Key
 {
-friend class KeySet;
-friend class KeyPointer;
-
 public:
+    KeyClicker(Keys& keys, Key* c);
 
-    void clear() override;
-    void update(tick_t ) override;
+    void reset() override;
+    void step(tick_t ) override;
     float_t alpha()      override     { return key_->alpha(); }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // substructure:
+    //
 
     bool click()                      { return released_ && 1 <= click_count_; }
     bool click_double()               { return released_ && 2 == click_count_; }
@@ -77,21 +80,20 @@ private:
     static constexpr tick_t ticks_clicks_a_ = 0.2;
     static constexpr tick_t ticks_clicks_b_ = 0.2;    
 
-    KeyClicker(Key* c);
 
-    Key* const key_;
+    Key* key_;
 
     bool is_down_()                   { return key_->is_down(); } 
 
-    bool down_prev_;
-    bool down_;
-    tick_t tick_down_;
-    tick_t tick_up_;
-    tick_t tick_;
+    bool down_prev_ = false;
+    bool down_ = false;
+    tick_t tick_down_ = 0.0;
+    tick_t tick_up_ = 0.0;
+    tick_t tick_ = 0.0;
 
-    bool pressed_;
-    bool released_;
-    uint click_count_;
+    bool pressed_ = false;
+    bool released_ = false;
+    uint click_count_ = 0;
 };
 
 

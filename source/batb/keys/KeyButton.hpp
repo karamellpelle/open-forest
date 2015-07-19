@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_KEY_BUTTON_HPP
 #define BATB_KEYS_KEY_BUTTON_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 
 namespace batb
 {
@@ -28,24 +29,44 @@ namespace keys
 
 class KeyButton : public Key
 {
-friend class KeySet;
-
 public:
-    void clear() override             { }
-    void update(tick_t ) override     { }
-    float_t alpha() override          { return glfwGetKey( env::screen_window(), code_ ) ? 1.0 : 0.0; }
+    KeyButton(Keys& keys, int c) : Key( typeid( this ), keys ), code_( c )    { } 
 
-    typedef int Code;
+    void reset() override             { }
+    void step(tick_t ) override       { }
+    float_t alpha() override          { return keys_.getKey( code_ ) ? 1.0 : 0.0; } 
 
-    void code(Code c)                 { code_ = c; } 
-    void load(/*def*/)             { } 
 
 private:
-    KeyButton() : code_( 0 )          { } // FIXME: GLFW_???
-    KeyButton(Code c) : code_( c )    { } 
-    Code code_;
+    int code_;
 
 };
+
+// TODO: custom convert:
+/*
+namespace YAML {
+template<>
+struct convert<Vec3> {
+  static Node encode(const Vec3& rhs) {
+    Node node;
+    node.push_back(rhs.x);
+    node.push_back(rhs.y);
+    node.push_back(rhs.z);
+    return node;
+  }
+
+  static bool decode(const Node& node, Vec3& rhs) {
+    if(!node.IsSequence() || node.size() != 3) {
+      return false;
+    }
+
+    rhs.x = node[0].as<double>();
+    rhs.y = node[1].as<double>();
+    rhs.z = node[2].as<double>();
+    return true;
+  }
+};
+*/
 
 
 } // namespace keys

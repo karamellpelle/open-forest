@@ -71,7 +71,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // we want clean state for our Key's, no garbage:
     batb.run.keyset.reset();
 
-    // let GUI grab the Keys callbacks
+    // point Keys to GUI 
     batb.gui.bind( batb.keys );
 
 

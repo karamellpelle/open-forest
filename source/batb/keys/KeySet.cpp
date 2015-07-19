@@ -24,43 +24,6 @@ namespace keys
 {
 
 
-// create from definition in file
-Key* KeySet::createKey(/*std::string filepath*/)
-{
-    // FIXME:
-    return nullptr;
-}
-
-void KeySet::clear()
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        delete *i;
-    }
-    keys_.clear();
-}
-
-
-// FIXME: rename Key::clear()
-// Key::clear() for all keys:
-void KeySet::reset()
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        (*i)->clear();
-    }
-}
-
-// FIXME: rename Key::update()
-// update all keys, to be done at each frame:
-void KeySet::step(tick_t t)
-{
-    for (Container::iterator i = keys_.begin(); i != keys_.end(); ++i)
-    {
-        (*i)->update( t );
-    }
-}
-
 } // namespace keys
 
 } // namespace batb

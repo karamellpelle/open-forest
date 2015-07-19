@@ -39,10 +39,6 @@ IterationStack IterationForest::iterate(World& world)
     auto ret = iterate_forest( world );
  
 
-    // update keys
-    batb.forest.keyset.step( world.tick );
-
-
     // TODO: finish up, free mem (events, ...)
 
     // count number of IterationForest-iterations

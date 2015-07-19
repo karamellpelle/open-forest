@@ -93,7 +93,7 @@ inline void screen_shape(float_t& wth, float_t& hth)
     screen_size( wth_n, hth_n );
 
     float_t wth_f = wth_n;
-    float_t hth_f = hth_f;
+    float_t hth_f = hth_n;
     float_t scale = 1.0 / std::max( wth_n, hth_n );
 
     wth = wth_f * scale;

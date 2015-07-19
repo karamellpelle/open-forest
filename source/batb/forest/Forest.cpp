@@ -57,7 +57,7 @@ void begin(Forest& forest)
     YAML::Node yaml = YAML::LoadFile( forest.filepath_ );
 
     // load associated keys 
-    forest.keyset.load("batb/forest/KeySet.yaml");
+    forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
 
     // begin iterations:
     forest::begin( forest.iterationForestDemo );
@@ -73,9 +73,6 @@ void end(Forest& forest)
     {
         // end  iterations:
         forest::end( forest.iterationForestDemo );
-
-        // clear keys
-        forest.keyset.clear();
 
         forest.save();
     }

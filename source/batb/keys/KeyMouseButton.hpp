@@ -18,6 +18,7 @@
 #ifndef BATB_KEYS_KEY_MOUSE_BUTTON_HPP
 #define BATB_KEYS_KEY_MOUSE_BUTTON_HPP
 #include "batb/keys/Key.hpp"
+#include "batb/keys/Keys.hpp"
 
 namespace batb
 {
@@ -28,26 +29,20 @@ namespace keys
 
 class KeyMouseButton : public Key
 {
-friend class KeySet;
-
 public:
-    void clear() override                 { }
-    void update(tick_t ) override         { }
-    float_t alpha() override              { return glfwGetMouseButton( env::screen_window(), code_ ) ? 1.0 : 0.0; }
+    KeyMouseButton(Keys& keys, int c) : Key( typeid( this ), keys ), code_( c )   { } 
+
+    void reset() override                 { }
+    void step(tick_t ) override           { }
+    float_t alpha() override              { return keys_.getMouseButton( code_ ) ? 1.0 : 0.0; }
 
     
-    typedef int Code;
-    static constexpr Code left   = GLFW_MOUSE_BUTTON_LEFT;
-    static constexpr Code right  = GLFW_MOUSE_BUTTON_RIGHT;
-
-    void code(Code c)                     { code_ = c; }
-    void load(/*def*/)                 { } 
+    static constexpr int left   = GLFW_MOUSE_BUTTON_LEFT;
+    static constexpr int right  = GLFW_MOUSE_BUTTON_RIGHT;
 
 private:
-    KeyMouseButton() : code_( 0 )         { } // FIXME: GLFW_???
-    KeyMouseButton(Code c) : code_( c )   { } 
 
-    Code code_ = 0;
+    int code_ = 0;
 };
 
 

@@ -29,18 +29,22 @@ namespace forest
 {
 
 
-class KeySet : public keys::KeySet
+class KeySet : public keys::KeySet //, Module
 {
 public:
-    KeySet(BATB& );
+    KeySet(BATB& b);
 
     // define 'this' from map defined by file
     void load(const std::string& filepath);
     void save(const std::string& filepath);
 
-    /////////////////////////////////////////////////
-    // keys for Forest to use
-    //keys::KeyClicker* tb;
+    void reset();
+
+    keys::KeyClicker* forward = nullptr;
+    keys::KeyClicker* backward = nullptr;
+    keys::KeyClicker* left = nullptr;
+    keys::KeyClicker* right = nullptr;
+    keys::KeyPointer* aim = nullptr;
 
     BATB& batb;
 };

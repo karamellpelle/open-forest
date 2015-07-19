@@ -49,6 +49,9 @@ void IterationForestDemo::iterate_begin(World& forest)
     // we want clean state for our Key's, no garbage:
     batb.forest.keyset.reset();
 
+    // we want free movement (no pointer, only movement)
+    batb.keys.setCursorFree( true );
+
     if ( !forest.runners.empty() )
     {
         aiming = &forest.runners.front(); // is this pointer safe??
@@ -64,39 +67,18 @@ IterationStack IterationForestDemo::iterate_forest(World& forest)
 {
 
 
-    //if ( batb.forest.keyset.u->click() ) forest.toggle_a = !forest.toggle_a;
-    //if ( batb.forest.keyset.i->click() ) {forest.toggle_b = !forest.toggle_b; std::cout << "FPS: " << env::frame_fps() << std::endl; }
-    //if ( batb.forest.keyset.ogre->click() ) forest.toggle_ogre = !forest.toggle_ogre;
-    //if ( batb.forest.keyset.nanovg->click() ) forest.toggle_nanovg = !forest.toggle_nanovg;
-    //if ( batb.forest.keyset.tb->click() ) forest.toggle_tb = !forest.toggle_tb;
-
-
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
 
-    ////////////////////////////////////////
-    // * set aim_x_ based on input and run-time
-    // a_acc, b_acc = input
-    double x, y;
-    glfwGetCursorPos( env::screen_window(), &x, &y );
-    bool press_r = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_RIGHT ) == GLFW_PRESS;
-    bool press_l = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_LEFT ) == GLFW_PRESS;
+    float_t x, y;
+    batb.forest.keyset.aim->axis( x, y );
+    bool press_l = batb.forest.keyset.aim->left()->press();
+    bool press_r = batb.forest.keyset.aim->right()->press();
 
     constexpr tick_t aim_dt = 0.02;
-
-    tick_t aim_tick_next = forest.run.tick;
-    while ( aim_tick_next + aim_dt <= aim_tick_next )
-    {
-        // TODO: step aim_ab based on input 
-        aim_a += 0.0;
-        aim_b += 0.0;
-
-        aim_tick += aim_dt;
-    }
-
-    aim_a = x * (-0.005);
-    aim_b = y * (0.005);
+    aim_a = (-x);
+    aim_b = y;
 
     ////////////////////////////////////////
     // set aim of runner from aim_x_

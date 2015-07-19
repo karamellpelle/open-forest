@@ -105,6 +105,8 @@ void GUI::bind(keys::Keys& keys)
     keys.keyCalling(         glfw_callback_key );
     keys.charCalling(        glfw_callback_char );
 
+    // set cursor mode to non-free (pointer type)
+    keys.setCursorFree( false );
 }
 
 

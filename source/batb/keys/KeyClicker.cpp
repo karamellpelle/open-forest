@@ -24,16 +24,16 @@ namespace batb
 namespace keys
 { 
 
-KeyClicker::KeyClicker(Key* k) : key_( k )
+KeyClicker::KeyClicker(Keys& keys, Key* k) : Key( typeid(this), keys ), key_( k )
 {
-    clear();
+    key_->reset();
 }
 
 
-void KeyClicker::clear()
+void KeyClicker::reset()
 {
     // child
-    key_->clear();
+    key_->reset();
 
     down_prev_ = false;
     down_ = false;
@@ -48,10 +48,10 @@ void KeyClicker::clear()
 }
 
 
-void KeyClicker::update(tick_t tick)
+void KeyClicker::step(tick_t tick)
 {
     // child
-    key_->update( tick );
+    key_->step( tick );
 
     pressed_ = false;
     released_ = false;

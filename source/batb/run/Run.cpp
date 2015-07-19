@@ -89,9 +89,6 @@ void end(Run& run)
         run::end( run.iterationRunMain );
         run::end( run.iterationRunOld );
 
-        // clear keys
-        run.keyset.clear();
-
         run.save();
     }
     

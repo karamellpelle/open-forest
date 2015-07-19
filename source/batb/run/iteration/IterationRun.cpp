@@ -50,16 +50,14 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // setup scene for this frame
     begin( world.scene );
 
-    // draw OGRE 
-    // FIXME: out of the general IterationRun and into specific 
-    //        IterationRunXXX? Is there only 1 Ogre, or can we
-    //        use more than one Ogre::SceneManager's?
-    //        
     // tmp:
     if (world.toggle_ogre)
     {
         batb.ogre.output( world.scene );
     }
+
+    // step all Key's
+    batb.keys.step( world.tick );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -78,10 +76,6 @@ debug::gl::msg("iterate_run()");
         batb.gui.output( world.scene );
         batb.gui.step( world.tick );
     }
-
-    // update keys
-    batb.run.keyset.step( world.tick );
-
 
     // TODO: finish up, free mem (events, ...)
 

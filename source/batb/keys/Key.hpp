@@ -17,6 +17,8 @@
 //
 #ifndef BATB_KEYS_KEY_HPP
 #define BATB_KEYS_KEY_HPP
+#include <typeinfo>
+#include <typeindex>
 #include "batb/batb_include.hpp"
 
 
@@ -27,26 +29,27 @@ namespace batb
 namespace keys
 {
 
-class KeySet;
+class Keys;
 
 // base Key class
-// abstracting a key as a continuous valueo [0, 1]
+// abstracting a key as a continuous value in \RR
 class Key
 {
-friend class KeySet;
-protected:
-    Key()                         { }
-    virtual ~Key()                { }
+friend class Keys;
+
+public:
+    Key(const std::type_index& ix, Keys& k) : keys_( k ), type_( ix ) { }
+    virtual ~Key()                                                    { }
+
+    // TODO: if using shared_ptr's, set these to default:
     Key(const Key& k)             = delete;
     Key& operator=(const Key& k)  = delete;
     Key(Key&& k)                  = delete;
 
-public:
-    virtual void clear() = 0;
-    virtual void update(tick_t ) = 0;
-    virtual float_t alpha() = 0;
-
-
+    // this implements the empty key
+    virtual void reset() { }
+    virtual void step(tick_t ) { }
+    virtual float_t alpha() { return 0.0; }
 
     //////////////////////////////////////////////////////////////////
     //      helpers
@@ -69,8 +72,11 @@ public:
         return 0.5 < alpha(); // NOTE: strict larger than
     }
 
-private:
 
+protected:
+
+    Keys& keys_;
+    std::type_index type_;
 };
 
 } // namespace keys
@@ -78,3 +84,4 @@ private:
 } // namespace batb
 
 #endif
+
