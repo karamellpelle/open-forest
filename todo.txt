@@ -1,3 +1,4 @@
+* ThreadGLContext: exception on 'current'
 * class Key { shared_ptr<KeyImpl> impl_; }
 * env-object, with ref inside BATB
 * CMakeLists.txt with different compile options for CXX and C !!

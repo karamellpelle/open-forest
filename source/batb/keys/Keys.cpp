@@ -22,6 +22,7 @@
 #include "batb/keys/KeyClicker.hpp"
 #include "batb/keys/KeyAlpha.hpp"
 #include "batb/keys/KeyPointer.hpp"
+#include "batb/BATB.hpp"
 
 
 
@@ -169,7 +170,7 @@ void begin(Keys& keys)
 {
     if ( keys.init_empty() )
     {
-        keys.window_ = env::screen_window(); // TODO: batb.env.window
+        keys.window_ = keys.batb.env.window;
 
         // cursor input mode is _NORMAL!
         glfwSetInputMode( keys.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 

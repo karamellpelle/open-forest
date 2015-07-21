@@ -225,9 +225,7 @@ target_include_directories( lib-file PUBLIC "${MAIN_SOURCE_DIR}" )
 ################################################################################
 # lib-env
 add_library(  lib-env STATIC
-              "${MAIN_SOURCE_DIR}/env.cpp"
-              "${MAIN_SOURCE_DIR}/env/screen.cpp"
-              "${MAIN_SOURCE_DIR}/env/frame.cpp"
+              "${MAIN_SOURCE_DIR}/env/Env.cpp"
            )
 target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
 target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )

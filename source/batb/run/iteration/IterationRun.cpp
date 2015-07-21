@@ -68,7 +68,7 @@ debug::gl::msg("iterate_run()");
 
     // set current tick for world.
     // TODO: not here, done by wrapped iteration ??
-    world.tick = env::tick();
+    world.tick = batb.env.tick();
 
     // tmp:
     if ( world.toggle_tb )
@@ -89,13 +89,13 @@ debug::gl::msg("iterate_run()");
 
 // set up our Scene object for a new frame.
 // currently, our Scene is just the default FBO,
-// the FBO for our env::screen.
+// from Env
 void IterationRun::begin(Scene& scene)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
-    // set fragment size of scene. FBO is env::screen
-    env::screen_size( scene.wth, scene.hth );
+    // set fragment size of scene.
+    batb.env.screenSize( scene.wth, scene.hth );
 
     // set shape
     scene.shape.size( scene.wth, scene.hth );

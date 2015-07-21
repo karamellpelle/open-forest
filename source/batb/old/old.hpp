@@ -71,11 +71,7 @@ inline void puGetWindowSizeOLD ( int *width, int *height )
 {
     //*width  = glutGet ( (GLenum) OLD_WINDOW_WIDTH  ) ;
     //*height = glutGet ( (GLenum) OLD_WINDOW_HEIGHT ) ;
-    env::uint wth, hth;
-    env::screen_size( wth, hth );
-
-    *width = wth;
-    *height = hth;
+    glfwGetFramebufferSize( glfwGetCurrentContext(), width, height );
 }
 
 inline void puSetWindowSizeOLD ( int width, int height )

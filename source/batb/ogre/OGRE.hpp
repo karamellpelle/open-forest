@@ -51,7 +51,7 @@ friend void begin(OGRE& );
 friend void end(OGRE& );
 
 public:
-    OGRE(BATB& b) : ModuleBATB( b ) { }
+    OGRE(BATB& b) : ModuleBATB( b ), glcontextglfw_( b ) { }
 
     // render to Scene
     void output(const Scene& );

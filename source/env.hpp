@@ -17,25 +17,10 @@
 //
 #ifndef ENV_HPP
 #define ENV_HPP
-#include "env/screen.hpp"
-#include "env/sound.hpp"
-#include "env/tick.hpp"
-#include "env/frame.hpp"
+#include "env/Env.hpp"
 
-
-// this env-module has a global interface, we do not work with
-// a Env object...
 namespace env
 {
-
-////////////////////////////////////////////////////////////////////////////////
-// public:
-
-void begin(const std::string& );
-
-void end();
-
-
 
 
 }

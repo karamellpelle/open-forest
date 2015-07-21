@@ -453,9 +453,10 @@ void MainWindow::specialUpFn(int key, int, int)
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::glfwCursorPos(GLFWwindow* win, double x, double y)
 {
-    bool left_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_LEFT );
-    bool right_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_RIGHT ); 
-    bool middle_press = glfwGetMouseButton( env::screen_window(), GLFW_MOUSE_BUTTON_MIDDLE ); 
+    //GLFWwindow* win = glfwGetCurrentContext();
+    bool left_press = glfwGetMouseButton( win, GLFW_MOUSE_BUTTON_LEFT );
+    bool right_press = glfwGetMouseButton( win, GLFW_MOUSE_BUTTON_RIGHT ); 
+    bool middle_press = glfwGetMouseButton( win, GLFW_MOUSE_BUTTON_MIDDLE ); 
 
     // motionfn
     if ( left_press || right_press || middle_press )

@@ -94,18 +94,20 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // compute
     static tick_t tick_prev = 0.0;
-    tick_t tick = env::tick();
+    tick_t tick = glfwGetTime();
     tick_t dt = tick - tick_prev;
     tick_prev = tick;
 
     updateGraph(&fps, dt);
 
+
+    GLFWwindow* win = glfwGetCurrentContext();
     double mx, my;
-    glfwGetCursorPos( env::screen_window(), &mx, &my);
+    glfwGetCursorPos( win, &mx, &my);
     int winWidth, winHeight;
-    glfwGetWindowSize( env::screen_window(), &winWidth, &winHeight );
+    glfwGetWindowSize( win, &winWidth, &winHeight );
     int fbWidth, fbHeight;
-    glfwGetFramebufferSize( env::screen_window(), &fbWidth, &fbHeight );
+    glfwGetFramebufferSize( win, &fbWidth, &fbHeight );
 
     // Calculate pixel ration for hi-dpi devices.
     float pxRatio = (float)fbWidth / (float)winWidth;

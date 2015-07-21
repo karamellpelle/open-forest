@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/ogre/GLContextGLFW.hpp"
+#include "batb/BATB.hpp"
 
 namespace batb
 {
@@ -31,8 +32,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // TODO: other platforms...
 #ifdef GLFW_EXPOSE_NATIVE_GLX
     ::Display* display = glfwGetX11Display();
-    ::Window drawable = glfwGetX11Window( env::screen_window() );
-    ::GLXContext context = glfwGetGLXContext( env::screen_window() );
+    ::Window drawable = glfwGetX11Window( batb.env.window );
+    ::GLXContext context = glfwGetGLXContext( batb.env.window );
     glXMakeCurrent( display, drawable, context );
 #endif
     

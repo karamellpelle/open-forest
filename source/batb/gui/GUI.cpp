@@ -405,7 +405,7 @@ void GUI::glfw_callback_mouse_button(GLFWwindow *window, int button, int action,
 
 			//double time = tb::TBSystem::GetTimeMS();
                         static tick_t last_time = 0;
-                        tick_t time = env::tick();
+                        tick_t time = glfwGetTime();
 
 			if (time < last_time + 600 && last_x == x && last_y == y)
 				counter++;

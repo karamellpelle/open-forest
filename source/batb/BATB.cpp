@@ -23,8 +23,8 @@ namespace batb
 
 
 
-BATB::BATB() : log( *this ), value( *this ), keys( *this ), gui( *this ), ogre( *this ), al( *this ),
-               run( *this ), forest( *this )
+BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gui( *this ), ogre( *this ), al( *this ),
+                           run( *this ), forest( *this )
 {
 
     

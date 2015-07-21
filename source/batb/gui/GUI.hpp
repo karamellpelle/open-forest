@@ -47,7 +47,7 @@ friend void end(GUI& gui);
 public:
     GUI(BATB& b) : ModuleBATB( b ) { }
 
-    // output GUI to env::screen
+    // output GUI
     void output(const Scene& );
 
     // step GUI

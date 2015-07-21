@@ -40,9 +40,10 @@ friend void begin(BATB& batb);
 friend void end(BATB& batb);
 
 public:
-    BATB();
+    BATB(env::Env& );
 
-    //env::Env* env;
+    // our environment
+    env::Env& env;
 
     // core part of BATB.
     // these are the parts of BATB fully initialized by 'void begin(BATB& )'.

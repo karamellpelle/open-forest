@@ -51,15 +51,16 @@ void begin()
 
         // implemented as GLFW:
 
-        glfwSetKeyCallback( env::screen_window(), MainWindow::glfwKey  );                  //glutKeyboardFunc      (MainWindow::keyDownFn); 
+        GLFWwindow* win = glfwGetCurrentContext();
+        glfwSetKeyCallback( win, MainWindow::glfwKey  );                  //glutKeyboardFunc      (MainWindow::keyDownFn); 
                                                                                           //glutSpecialFunc       (MainWindow::specialDownFn);
                                                                                           ////glutKeyboardUpFunc    (MainWindow::keyUpFn);
                                                                                           ////glutSpecialUpFunc     (MainWindow::specialUpFn);
-        glfwSetCursorPosCallback( env::screen_window(), MainWindow::glfwCursorPos );       //glutMouseFunc         (MainWindow::mousefn); 
-        glfwSetMouseButtonCallback( env::screen_window(), MainWindow::glfwMouseButton);    //glutMotionFunc        (MainWindow::motionfn);
+        glfwSetCursorPosCallback( win, MainWindow::glfwCursorPos );       //glutMouseFunc         (MainWindow::mousefn); 
+        glfwSetMouseButtonCallback( win, MainWindow::glfwMouseButton);    //glutMotionFunc        (MainWindow::motionfn);
                                                                                           
-        glfwSetWindowSizeCallback( env::screen_window(), MainWindow::glfwWindowSize );     //glutReshapeFunc       (MainWindow::reshapefn);
-        glfwSetWindowFocusCallback( env::screen_window(), MainWindow::glfwWindowFocus );   //glutVisibilityFunc    (MainWindow::visibility);
+        glfwSetWindowSizeCallback( win, MainWindow::glfwWindowSize );     //glutReshapeFunc       (MainWindow::reshapefn);
+        glfwSetWindowFocusCallback( win, MainWindow::glfwWindowFocus );   //glutVisibilityFunc    (MainWindow::visibility);
         
         
         
@@ -165,11 +166,12 @@ void end()
     // FIXME: old-BATB specific shutdown
 
     // remove key callbacks
-    glfwSetKeyCallback( env::screen_window(), 0  );                  //glutKeyboardFunc      (MainWindow::keyDownFn); 
-    glfwSetCursorPosCallback( env::screen_window(), 0 );       //glutMouseFunc         (MainWindow::mousefn); 
-    glfwSetMouseButtonCallback( env::screen_window(), 0 );    //glutMotionFunc        (MainWindow::motionfn);
-    glfwSetWindowSizeCallback( env::screen_window(), 0 );     //glutReshapeFunc       (MainWindow::reshapefn);
-    glfwSetWindowFocusCallback( env::screen_window(), 0 );   //glutVisibilityFunc    (MainWindow::visibility);
+    GLFWwindow* win = glfwGetCurrentContext();
+    glfwSetKeyCallback( win, 0  );                  //glutKeyboardFunc      (MainWindow::keyDownFn); 
+    glfwSetCursorPosCallback( win, 0 );       //glutMouseFunc         (MainWindow::mousefn); 
+    glfwSetMouseButtonCallback( win, 0 );    //glutMotionFunc        (MainWindow::motionfn);
+    glfwSetWindowSizeCallback( win, 0 );     //glutReshapeFunc       (MainWindow::reshapefn);
+    glfwSetWindowFocusCallback( win, 0 );   //glutVisibilityFunc    (MainWindow::visibility);
 
     // do some clean up
     mainWindow.exit();
@@ -231,8 +233,8 @@ void iterate()
         glDisableClientState(GL_NORMAL_ARRAY);
 
     // force reshape
-    env::uint wth, hth;
-    env::screen_size( wth, hth );
+    int wth, hth;
+    glfwGetFramebufferSize( glfwGetCurrentContext(), &wth, &hth );
     MainWindow::reshapefn( wth, hth );
 
     // "glut display func"
@@ -324,7 +326,7 @@ std::string file(const char* path)
 int getElapsedTime()
 {
     // assuming not too long elaps from env::init to old start.
-    env::tick_t tick = env::tick();
+    env::tick_t tick = glfwGetTime();
     return (int)( tick * 1000.0 );
 }
 

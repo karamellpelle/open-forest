@@ -135,20 +135,20 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     if ( batb.run.keyset.i->click() )
     {
         run.toggle_b = !run.toggle_b;
-        std::cout << "FPS: " << env::frame_fps() << std::endl;
+        std::cout << "FPS: " << batb.env.frameFPS() << std::endl;
         // push event
         static uint ix = 0;
         if ( ix == 0 ) 
         {
             std::ostringstream os;
-            os << "fps: " << env::frame_fps();
+            os << "fps: " << batb.env.frameFPS();
             run.events.push( EventA( os.str() ) );
         }
         if ( ix == 1 )
         {
-            double x, y;
-            glfwGetCursorPos( env::screen_window(), &x, &y );
-            run.events.push( new EventB( (uint)( x ), (uint)( y ) ) );
+            uint x, y;
+            batb.keys.getCursorPos( x, y );
+            run.events.push( new EventB( x, y ) );
         }
         if ( ix == 2 )
         {

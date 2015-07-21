@@ -23,6 +23,8 @@
 namespace batb
 {
 
+class BATB;
+
 namespace ogre
 {
 
@@ -40,12 +42,15 @@ friend void begin(GLContextGLFW& );
 friend void end(GLContextGLFW& );
 
 public:
+    GLContextGLFW(BATB& b) : batb( b ) { }
+
     void setCurrent() override;
     void endCurrent() override;
     Ogre::GLContext* clone() const override;
 
+    BATB& batb;
+
 private:
-     
 
 };
 

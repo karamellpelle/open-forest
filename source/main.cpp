@@ -23,33 +23,42 @@
 
 
 
-// use commandline to modify our BATB object
-void commandline(int argc, char** argv, batb::BATB& batb)
-{
-
-}
+//void commandline_env(int argc, char** argv, YAML::Node& yaml)
+//{
+//
+//}
+//void commandline_batb(int argc, char** argv, YAML::Node& yaml)
+//{
+//
+//}
 
 
 int main(int argc, char** argv)
 {
     int ret = 0;
- 
+
+    // TODO: use YAML::LoadFile, modify node from cmdline, pass to module.
+    //       if so, configurations from command line options will be saved
+    //       to file.
+
+    env::Env env;
+    env.config( file::dynamic_data( "env/Env.yaml" ) );
+
     // our BATB object
-    batb::BATB batb;
+    batb::BATB batb( env );
     batb.config( file::dynamic_data( "batb/BATB.yaml" ) );
+
 
     try
     {
-        
+            
         // create our environment
-        env::begin( file::dynamic_data( "env.yaml" ) ); // TODO: Module
+        env::begin( env );
 
         // initialize the core parts of BATB.
-        // the non-core part is created by 'iterationRunBegin'
+        // (the non-core part is created by 'iterationRunBegin')
         batb::begin( batb );
 
-        // modify BATB from command line
-        commandline( argc, argv, batb );
 
         // 'main' is iterating batb::run::World
         batb::run::World run;
@@ -63,28 +72,26 @@ int main(int argc, char** argv)
         while ( !stack.empty() )
         {
             // begin frame for iteration
-            env::frame_begin();
+            env.frameBegin();
 
             // make 1 iteration of world
             iterate( stack, run );
 
-            // end frame for iteration (swap buffers, poll events)
-            env::frame_end();
+            // end frame for iteration
+            env.frameEnd();
         }
     }
     catch (std::exception& e)
     {
         // some serious error occured above, lets handle it
-        std::cerr << "main: fatal error: \n" << e.what() << "\n" << std::endl;
+        std::cerr << "main: " << e.what() << std::endl;
         ret = 1;
     }
 
-    // shut down...
-
-    env::end();
 
     batb::end( batb );
 
+    env::end( env );
 
     return ret;
 }
