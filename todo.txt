@@ -1,8 +1,7 @@
+* Free us from Ogre: no OgreRoot::renderOneFrame, instead use SceneMgr::renderScene
 * ThreadGLContext: exception on 'current'
 * class Key { shared_ptr<KeyImpl> impl_; }
-* env-object, with ref inside BATB
 * CMakeLists.txt with different compile options for CXX and C !!
-* continous save to file (YAML, save())
 * implement Log: current indentation, error/warning tags, etc
 * implement batb/gui/tb_system.cpp, in a platform independent way.
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger

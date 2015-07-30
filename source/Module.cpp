@@ -46,9 +46,14 @@ void Module::save()
     // save iff this Module has its own config file
     if ( !filepath.empty() )
     {
-        std::ofstream os( filepath );
-        os << yaml;
+        save( filepath );
     }
+}
+
+void Module::save(const std::string& path)
+{
+    std::ofstream os( path );
+    os << yaml;
 }
 
 

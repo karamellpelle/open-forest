@@ -18,6 +18,7 @@
 #ifndef BATB_GL_HPP
 #define BATB_GL_HPP
 #include "batb/batb_include.hpp"
+#include "batb/gl/GL.hpp"
 
 namespace batb
 {

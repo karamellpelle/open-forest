@@ -48,9 +48,7 @@ public:
     typedef std::forward_list<Map>      MapList;
     typedef std::forward_list<Runner>   RunnerList;
 
-    World(run::World& r) : run( r )
-    {
-    }
+    World(run::World& r) : run( r ) { }
 
     // viewing 
     Camera camera;
@@ -65,7 +63,6 @@ public:
 
     // different views of Terrain. a Terrain can be viewed in different ways, 
     // for example old/new map, corridor orienteering, maps of different parts of terrain
-    // TODO: polymorphism
     MapList maps;
 
     // Runners

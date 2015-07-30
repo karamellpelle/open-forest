@@ -47,6 +47,7 @@ void KeySet::load(const std::string& path)
     right = createKeyClicker( createKeyButton( GLFW_KEY_D ) );
     aim = createKeyPointer();
 
+    tmp = createKeyClicker( createKeyButton( GLFW_KEY_B ) );
 }
 
 void KeySet::reset()

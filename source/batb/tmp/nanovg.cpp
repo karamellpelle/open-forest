@@ -15,6 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb/BATB.hpp"
 #include "batb/tmp/nanovg.hpp"
 #include "batb/tmp/nanovg/demo.h"
 #include "batb/tmp/nanovg/perf.h"
@@ -31,49 +32,36 @@ namespace nanovg
 
 
 static struct DemoData data;
-static struct NVGcontext* vg = 0;
 static struct PerfGraph fps;
 static bool tmp_empty = true;
 
 
-void demo_begin()
+void demo_begin(BATB& batb)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     if ( tmp_empty )
     {
-#ifdef NANOVG_GL2_IMPLEMENTATION
-        vg = nvgCreateGL2(512, 512, 0);
-#endif
-#ifdef NANOVG_GL3_IMPLEMENTATION
-	vg = nvgCreateGL3(512, 512, 0);
-#endif
-	if (vg == NULL) {
-		printf("Could not init nanovg.\n");
-		return;
-	}
-
 	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
 
-	if (loadDemoData(vg, &data) == -1)
+	if (loadDemoData(batb.gl.nvg_context, &data) == -1)
 		return;
     }
     tmp_empty = false;
 }
 
 
-void demo_end()
+void demo_end(BATB& batb)
 {
     if ( !tmp_empty )
     {
-        freeDemoData(vg, &data); 
-        nvgDeleteGL2(vg);
+        freeDemoData(batb.gl.nvg_context, &data); 
     }
 }
 
 
 
-void demo_iterate(bool premult, bool blowup)
+void demo_iterate(BATB& batb, bool premult, bool blowup)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
@@ -112,12 +100,12 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // Calculate pixel ration for hi-dpi devices.
     float pxRatio = (float)fbWidth / (float)winWidth;
 
-    nvgBeginFrame(vg, winWidth, winHeight, pxRatio, premult ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
+    nvgBeginFrame(batb.gl.nvg_context, winWidth, winHeight, pxRatio, premult ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
 
-    renderDemo(vg, mx,my, winWidth,winHeight, tick, blowup, &data);
-    renderGraph(vg, 5,5, &fps);
+    renderDemo(batb.gl.nvg_context, mx,my, winWidth,winHeight, tick, blowup, &data);
+    renderGraph(batb.gl.nvg_context, 5,5, &fps);
 
-    nvgEndFrame(vg);
+    nvgEndFrame(batb.gl.nvg_context);
 
 
     // end GL state for nanovg

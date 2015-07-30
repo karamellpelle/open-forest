@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,45 +15,36 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_FOREST_KEYSET_HPP
-#define BATB_FOREST_FOREST_KEYSET_HPP
+#ifndef BATB_GUI_WIDGETS_TBPROGRESSBARWIDGET_HPP
+#define BATB_GUI_WIDGETS_TBPROGRESSBARWIDGET_HPP
 #include "batb/batb_include.hpp"
-#include "batb/keys.hpp"
+#include "tb/tb_widgets_common.h"
 
-namespace batb
-{
 
-class BATB;
-
-namespace forest
+namespace tb
 {
 
 
-class KeySet : public keys::KeySet //, Module
+class TBProgressBarWidget : public TBButton
 {
 public:
-    KeySet(BATB& b);
+    TBProgressBarWidget();
 
-    // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
+    // TODO: SetValue
+    void SetAlpha(double a); // -> SetValue( a * 100.0 );
+    //void SetText(const TBStr& );
+    void Set(double a, const TBStr& s);
 
-    void reset();
-
-    keys::KeyClicker* forward = nullptr;
-    keys::KeyClicker* backward = nullptr;
-    keys::KeyClicker* left = nullptr;
-    keys::KeyClicker* right = nullptr;
-    keys::KeyPointer* aim = nullptr;
-
-    keys::KeyClicker* tmp = nullptr;
-
-    BATB& batb;
+protected:
+    //double m_alpha; 
+    //TBStr m_text;
+     
 };
 
-} // namespace forest
 
-} // namespace batb
+
+} // namespace tb
 
 
 #endif
+

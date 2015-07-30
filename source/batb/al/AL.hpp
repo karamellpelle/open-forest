@@ -22,16 +22,6 @@
 #include "AL/alure2.h"
 
 
-// forward declare Ogre classes
-namespace Ogre
-{
-    class LogManager;
-    class Log;
-    class Root;
-    class RenderWindow;
-    class RenderTarget;
-}
-
 
 namespace batb
 {

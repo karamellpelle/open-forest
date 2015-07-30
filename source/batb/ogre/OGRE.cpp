@@ -151,10 +151,6 @@ debug::gl::msg( "ogre.root->initialise" );
 
 
             ////////////////////////////////////////////////////////////////////////////////
-            // 
-            begin( ogre.glcontextglfw_ );
-
-            ////////////////////////////////////////////////////////////////////////////////
             // create an Ogre window, using our existing GLFW window.
             //
             // see implementation of Ogre::GLXWindow for settings:
@@ -168,8 +164,11 @@ debug::gl::msg( "ogre.root->createRenderWindow()" );
             ogre.renderwindow = ogre.root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
             ogre.renderwindow->setVisible(true);
 
-            // set back our context
-            ogre.set_glfwcontext_();
+            ////////////////////////////////////////////////////////////////////////////////
+            // Ogre GL context
+            // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
+            //       OGRE in another GL context (background thread)
+            begin( ogre.glcontextglfw_ );
 
 
 

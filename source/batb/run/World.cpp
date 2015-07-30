@@ -28,7 +28,7 @@ namespace run
 
 World::World()
 {
-
+    toggle_tb = true;
 }
 
 

@@ -32,6 +32,7 @@ namespace run
 {
 
 
+class RunBeginTBWidget;
 
 
 // IterationRunBegin:
@@ -57,6 +58,7 @@ public:
 
 
 private:
+    RunBeginTBWidget* tb_widget_ = nullptr;
 
     class Loader : public ThreadGLContext<FiniteLoad>
     {
@@ -66,6 +68,8 @@ private:
     private: 
         BATB& batb;
     } loader_;
+
+    void tmp_output();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

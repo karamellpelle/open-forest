@@ -68,7 +68,7 @@ public:
     tick_t tick;
 
     // tmp
-    bool toggle_a = true;
+    bool toggle_a = false;
     bool toggle_b = true;
     bool toggle_ogre = false;
     bool toggle_nanovg = false;

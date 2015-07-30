@@ -57,7 +57,12 @@ public:
     ////////////////////////////////////////
 
 private:
-    tb::TBWidget* widget_ = nullptr;
+    //tb::TBWidget* widget_ = nullptr;
+
+    // GUI's
+    // TODO: remove into IterationRunMain!!
+    GUIMain* guiMain = nullptr;
+
 
     // tmp:
     forest::World* forest = nullptr;

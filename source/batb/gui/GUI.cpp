@@ -199,6 +199,8 @@ void end(GUI& gui)
     {
         gui.save();
 
+        //root.DeleteAllChildren();
+
         tb::TBWidgetsAnimationManager::Shutdown();
 
         tb::tb_core_shutdown();

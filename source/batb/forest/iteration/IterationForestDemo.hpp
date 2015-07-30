@@ -59,7 +59,18 @@ private:
 
     Runner* aiming = nullptr;
 
-    tick_t aim_tick = 0.0;
+    float_t map_scale_0_ = 0;
+    float_t map_scale_1_ = 0;
+    glm::vec2 map_pos_1_;
+    glm::vec2 map_dir_0_;
+ 
+    using BezierPoints = std::vector<glm::vec2>;
+
+    BezierPoints beziers_;
+    BezierPoints random(const glm::vec2& , const glm::vec2& );
+    void tmp_show_bezier(World& );
+    glm::vec2 p0;
+    glm::vec2 p1;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

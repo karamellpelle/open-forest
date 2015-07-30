@@ -60,10 +60,6 @@ void begin(Run& run)
         // begin non-core iterations:
         run::begin( run.iterationRunOld );
         run::begin( run.iterationRunMain );
-
-        // set up GUI's
-        // FIXME: memory leak, according to valgring
-        run.guiMain = new GUIMain( run.batb );
     }
 
     run.init( true );
@@ -78,7 +74,6 @@ void end(Run& run)
     {
         run.save();
 
-        run.guiMain = nullptr; // GUI memory handled by TB
 
         // end non-core iterations:
         run::end( run.iterationRunMain );

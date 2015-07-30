@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,45 +15,38 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_FOREST_KEYSET_HPP
-#define BATB_FOREST_FOREST_KEYSET_HPP
-#include "batb/batb_include.hpp"
-#include "batb/keys.hpp"
+#include "batb/gui/widgets/TBProgressBarWidget.hpp"
 
-namespace batb
+namespace tb
 {
 
-class BATB;
-
-namespace forest
+TBProgressBarWidget::TBProgressBarWidget() 
 {
+    // SetSpacing
+    SetSqueezable( false );
 
+}
 
-class KeySet : public keys::KeySet //, Module
+void TBProgressBarWidget::SetAlpha(double a)
 {
-public:
-    KeySet(BATB& b);
+    uint percent = (uint)( a * 100.0 );
+    std::ostringstream os;
+    os << percent << "%";
+    SetText( os.str().c_str() );
+   
+}
 
-    // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
+void TBProgressBarWidget::Set(double a, const TBStr& text)
+{
+    uint percent = (uint)( a * 100.0 );
+    std::ostringstream os;
+    os << text.CStr() << " [" << percent << "%]";
+    SetText( os.str().c_str() );
 
-    void reset();
-
-    keys::KeyClicker* forward = nullptr;
-    keys::KeyClicker* backward = nullptr;
-    keys::KeyClicker* left = nullptr;
-    keys::KeyClicker* right = nullptr;
-    keys::KeyPointer* aim = nullptr;
-
-    keys::KeyClicker* tmp = nullptr;
-
-    BATB& batb;
-};
-
-} // namespace forest
-
-} // namespace batb
+}
 
 
-#endif
+} // namespace tb
+
+
+

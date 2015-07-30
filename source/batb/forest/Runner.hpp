@@ -30,30 +30,61 @@ class BATB;
 namespace forest
 {
 
+
+class Runner;
+
+
+/*
+class Runner::Trace
+{
+public:
+    class TracePoint
+    {
+    public:
+        TracePoint(tick_t t, const glm::vec4& p) : tick( t ), pos( p ) { } 
+        tick_t tick = 0.0;
+        glm::vec4 pos; // TODO: mat4
+    };
+
+    void push(const TracePoint& p)
+    {
+        points.push_back( point );
+        point = p;
+    }
+
+    TracePoint point;
+    std::vector<TracePoint> points;
+
+private:
+};
+
+*/
+
+
 class Runner
 {
 public:
-   
+  
     // Player defines who is running. Player is a part of RunWorld.
     // Player defines stuff like network computer, name, ...
-    run::Player* player()
-    {
-        return player_;
-    }
+    run::Player* player = nullptr; 
 
     // Map, from ForestWorld, this Runner is using. 
-    Map* const map() const
-    {
-        return map_;
-    }
+    Map* map = nullptr;
+
+    float_t speed = 0.0;
 
     glm::vec4 pos;
     glm::mat4 aim;
-    float_t speed = 0.0;
+    // ^ TODO: merge into 1 mat4
+
+    //ogre_
+    //al_
 
     //  if ( length pos -> pos_next > epsilon ) trackPush( dt );
     //    void trackPush(tick_t dt); // push current physics to track at point 'dt'
     //list (tick_t, pos, aim ) track;
+    //Trace trace;
 
     // a Runner does not imply a Course. Runner's are free to do whatever
     // they will, in a forest.
@@ -63,10 +94,6 @@ public:
     // to a Player. 
     // TODO:  think through this. for example the possibility to have independent
     //        training and competition for different Runner's at the same time. 
-private: 
-    run::Player* player_;
-
-    Map* map_;
 
     // physical stuff
     // * position (relative to Terrain)
@@ -84,7 +111,6 @@ private:
     // * animation
     // ...
 };
-
 
 } // namespace forest
 

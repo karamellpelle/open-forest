@@ -24,8 +24,7 @@ namespace batb
 {
 
 
-// move current GL context into background thread,
-// new context will be bound to current thread. 
+// background thread with own GL context
 // 
 // nice for loading resources in background thread
 // while reporting progress on current thread.
@@ -39,7 +38,7 @@ namespace batb
 // * http://hacksoflife.blogspot.no/2008/02/creating-opengl-objects-in-second.html
 // * http://stackoverflow.com/questions/3937257/is-opengl-threadsafe-for-multiple-threads-with-distinct-contexts
 // 
-// TODO: exception handling!
+// TODO: exceptions handled and then throwed from 'current'
 template<typename Current>
 class ThreadGLContext
 {
@@ -70,23 +69,17 @@ public:
 
         context_1_ = win;
 
-        // run thread on context_0_ (set context virtual function 'void ThreadGLContext::run()')
-        //thread_ = std::thread( &ThreadGLContext::run, std::ref( *this ) );
+        // run thread on context_1_ (set context, call virtual function 'void ThreadGLContext::run()')
         thread_ = std::thread( &ThreadGLContext::begin_run, this );
 
-        // switch to the new context_1_
-        glfwMakeContextCurrent( context_1_ );
+        // (context_0_ is still bound on this thread)
 
     }
 
     void end()
     {
-        // TODO: join thread?
+        // wait for background thread to finish
         thread_.join();
-
-        // switch back context
-        glfwMakeContextCurrent( context_0_ );
-
 
         // release context_1_ if it was temporary created
         glfwDestroyWindow( free_ );
@@ -109,15 +102,15 @@ public:
     //} 
 
 protected:
-    virtual void run()
-    {
-    
-        GLFWwindow * window = glfwGetCurrentContext();
-        std::cout << __PRETTY_FUNCTION__ << "   ";
-        std::cout << "thread::id: " <<  std::this_thread::get_id();
-        std::cout << ", GLFWindow: " << window << std::endl;
-
-    }
+    virtual void run() = 0;
+    //{
+    //
+    //    GLFWwindow * window = glfwGetCurrentContext();
+    //    std::cout << __PRETTY_FUNCTION__ << "   ";
+    //    std::cout << "thread::id: " <<  std::this_thread::get_id();
+    //    std::cout << ", GLFWindow: " << window << std::endl;
+    //
+    //}
 
     void push_current(const Current* c)
     {
@@ -139,15 +132,15 @@ private:
 
     void begin_run()
     {
-        // set the old context
-        glfwMakeContextCurrent( context_0_ );
+        // set the new context
+        glfwMakeContextCurrent( context_1_ );
 
         // call subclass
         run();
      
     }
 
-    // invariant: never popped, 
+    // invariant: never popped, ...
     std::forward_list<Current> currents_; 
 
     GLFWwindow* context_0_ = nullptr;

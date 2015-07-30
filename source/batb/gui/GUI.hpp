@@ -45,7 +45,7 @@ friend void begin(GUI& gui);
 friend void end(GUI& gui);
 
 public:
-    GUI(BATB& b) : ModuleBATB( b ) { }
+    GUI(BATB& b) : ModuleBATB( b )        { }
 
     // output GUI
     void output(const Scene& );
@@ -58,6 +58,9 @@ public:
 
     // root TB widget
     tb::TBWidget root;
+
+    void addWidget(tb::TBWidget* w)       { root.AddChild( w ); }
+    void removeWidget(tb::TBWidget* w)    { root.RemoveChild( w ); }
 
 
 private:

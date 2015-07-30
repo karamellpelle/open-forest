@@ -28,6 +28,7 @@ public:
     void config(const YAML::Node& );    // from given Node
     void config(const std::string& );   // from Node read from file
     void save();                        // if Node was read from file, write back
+    void save(const std::string& );     // save to file
 
 protected:
     YAML::Node yaml;

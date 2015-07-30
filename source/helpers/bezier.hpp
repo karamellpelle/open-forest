@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,45 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_FOREST_KEYSET_HPP
-#define BATB_FOREST_FOREST_KEYSET_HPP
-#include "batb/batb_include.hpp"
-#include "batb/keys.hpp"
+#ifndef HELPERS_BEZIER_HPP
+#define HELPERS_BEZIER_HPP
+#include "include.hpp"
+#include <vector>
 
-namespace batb
+
+
+// TODO: make this template general for more container types
+template <typename A, typename Container>
+typename Container::value_type bezier(const Container& points, const A& a)
 {
+    // here, we assume size is non-empty
 
-class BATB;
+    // copy
+    // TODO: std::array instead of copy
+    Container ps = points;
 
-namespace forest
-{
+    uint n = ps.size();
+    while ( n != 0 )
+    {
+        for (uint i = 0; i + 1 != n; ++i)
+        {
+            // interpolate p0 -> p1
+            ps[ i ] *= (1 - a);
+            ps[ i ] += a * ps[ i + 1 ];
+        }
+        --n;
+    }
 
+    return ps[0];
+}
 
-class KeySet : public keys::KeySet //, Module
-{
-public:
-    KeySet(BATB& b);
-
-    // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
-
-    void reset();
-
-    keys::KeyClicker* forward = nullptr;
-    keys::KeyClicker* backward = nullptr;
-    keys::KeyClicker* left = nullptr;
-    keys::KeyClicker* right = nullptr;
-    keys::KeyPointer* aim = nullptr;
-
-    keys::KeyClicker* tmp = nullptr;
-
-    BATB& batb;
-};
-
-} // namespace forest
-
-} // namespace batb
 
 
 #endif
+

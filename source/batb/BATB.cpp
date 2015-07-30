@@ -23,7 +23,7 @@ namespace batb
 
 
 
-BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gui( *this ), ogre( *this ), al( *this ),
+BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gl( *this ), gui( *this ), ogre( *this ), al( *this ),
                            run( *this ), forest( *this )
 {
 
@@ -39,6 +39,7 @@ void begin(BATB& batb)
         // core:
         batb.value.config(     file::directory( batb.filepath ) + "/value/Value.yaml" );
         batb.gui.config(       file::directory( batb.filepath ) + "/gui/GUI.yaml" );
+        batb.gl.config(        file::directory( batb.filepath ) + "/gl/GL.yaml" );
 
         // non-core:
         batb.ogre.config(      file::directory( batb.filepath ) + "/ogre/OGRE.yaml" );
@@ -59,19 +60,11 @@ void begin(BATB& batb)
         
 
 
-        //////////////////////////////////////////////////////////
-        //      OpenGL
-        // BATB assumes this GL state:
-        gl::init_state();
-
-
-        //////////////////////////////////////////////////////////
-        //      OpenAL
-
-
-
         // keys
         keys::begin( batb.keys );
+
+        // gl
+        gl::begin( batb.gl );
 
         // gui
         gui::begin( batb.gui );
@@ -111,6 +104,7 @@ void end(BATB& batb)
         run::end( batb.run.iterationRunBegin );
 
         gui::end( batb.gui );
+        gl::end( batb.gl );
         keys::end( batb.keys );
         value::end( batb.value );
         log::end( batb.log );

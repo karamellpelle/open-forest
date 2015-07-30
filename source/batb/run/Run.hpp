@@ -58,10 +58,6 @@ public:
     //IterationRunOutro     iterationRunOutro;
     IterationRunOld       iterationRunOld; 
 
-
-    // GUI's
-    GUIMain* guiMain = nullptr;
-
     // the world 'this' is currently working on:
     // (working target for GUI, ...)
     World* world = nullptr;

@@ -75,12 +75,12 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     batb.gui.bind( batb.keys );
 
 
+    // FIXME: into this!
     // show GUI window
     //if ( widget_->GetParent() == nullptr )
-    if ( batb.run.guiMain->GetParent() == nullptr )
+    if ( guiMain->GetParent() == nullptr )
     {
-        //batb.gui.root.AddChild( widget_ );
-        batb.gui.root.AddChild( batb.run.guiMain );
+        batb.gui.addWidget( guiMain );
     }
 
     // FIXME: demo_end()!
@@ -89,7 +89,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tmp::ogre::demo_begin( batb );
 
     // nanovg demo
-    tmp::nanovg::demo_begin();
+    tmp::nanovg::demo_begin( batb );
 
     // ALURE demo
     tmp::al::demo_begin( batb );
@@ -159,21 +159,21 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
     step( run.events );
 
-    // forest
-    game::iterate( forest_stack, *forest );
-
     // Ogre demo:
     if ( run.toggle_ogre )
     {
         tmp::ogre::demo_iterate( batb, run, *forest );
     }
-
     // nanovg demo:
     if ( run.toggle_nanovg )
     {
-        tmp::nanovg::demo_iterate( false, false );
+        tmp::nanovg::demo_iterate( batb, false, false );
     }
     
+
+    // forest
+    game::iterate( forest_stack, *forest );
+
     // ALURE demo:
     tmp::al::demo_iterate( batb, run );
 
@@ -195,10 +195,9 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     {
         // remove window
         //if ( widget_->GetParent() != nullptr )
-        if ( batb.run.guiMain->GetParent() != nullptr )
+        if ( guiMain->GetParent() != nullptr )
         {
-            //batb.gui.root.RemoveChild( widget_ );
-            batb.gui.root.RemoveChild( batb.run.guiMain );
+            batb.gui.removeWidget( guiMain );
         }
 
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
@@ -217,7 +216,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 void begin(IterationRunMain& iter)
 {
     BATB_LOG_FUNC( iter.batb );
-
+/*
     // create GUI widget. GUI is up and running...
     // NOTE: memory management is performed by TB! NO!!:
     // FIXME: memory leak, according to valgring
@@ -229,12 +228,21 @@ void begin(IterationRunMain& iter)
     window->SetText( "testing turbobadger. a window." );
     window->SetGravity( tb::WIDGET_GRAVITY_ALL );
     iter.widget_ = window;
+*/
+    // set up GUI's
+    // FIXME: memory leak, according to valgring
+    iter.guiMain = new GUIMain( iter.batb );
+
 
 }
 
 void end(IterationRunMain& iter)
 {
     BATB_LOG_FUNC( iter.batb );
+
+    iter.batb.gui.removeWidget( iter.guiMain );
+    delete iter.guiMain;
+    iter.guiMain = nullptr;
 }
 
 

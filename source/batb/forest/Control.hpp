@@ -35,22 +35,15 @@ namespace forest
 // object", size information, like "1.3m high", and other things.
 // such information must be reflected in the Terrain. so, when we create a 
 // Control in Terrain, then Terrain must write the corresponding ControlDefinition
-// into Control.
+// into Control. ??
 class ControlDefinition
 {
 public:
-    typedef uint Code;
+    using Code = uint;
 
-    // code for this Control
-    Code code() const
-    {
-        return code_;
-    }
+    Code code;
 
-    // TODO: ...
-    //
-private:
-    Code code_;
+    // ...
 };
 
 
@@ -61,34 +54,27 @@ friend class Terrain;
 public:
 
     // a Control always belong to a Terrain
-    Control(Terrain* t) : terrain_( t )
-    {
-    }
+    //Control(Terrain* t) : terrain_( t ) { }
+    
 
-
-    Terrain* terrain() const
-    {
-        return terrain_;
-    }
-    const ControlDefinition& definition() const
-    {
-        return definition_;
-    }
-
+    ControlDefinition definition;
+    glm::vec4 pos;
 
 
     // should we define type of control, like normal, start, finish, etc?
     // no. i think we should not bind a control to be of a specific type, instead
     // just let a course define this. however, the GLAnimation for this Control
-    // can be more specific for users, however, this is just a cosmetic detail.
+    // can be more specific for users, but this is just a cosmetic detail.
 
 private:
+    //ogre_;
+    //ALuint al_source_;
 
     // Control implies a Terrain, where this control is placed.
-    Terrain* const terrain_;
+    //Terrain* const terrain_;
 
     // definition for this Control
-    ControlDefinition definition_;
+    //ControlDefinition definition_;
 
     // statistic stuff:
     // * punches (player, time, ...)

@@ -21,6 +21,7 @@
 #include "batb/log.hpp"
 #include "batb/value.hpp"
 #include "batb/keys.hpp"
+#include "batb/gl.hpp"
 #include "batb/gui.hpp"
 #include "batb/ogre.hpp"
 #include "batb/al.hpp"
@@ -51,6 +52,7 @@ public:
     log::Log log;
     value::Value value;
     keys::Keys keys;
+    gl::GL gl;
     gui::GUI gui;
 
     // non-core part of BATB.

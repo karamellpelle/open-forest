@@ -212,7 +212,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
         scenemgr = batb.ogre.root->createSceneManager( "DefaultSceneManager" );
         
-        // create a view into scene, a Camera!
+        //// create a view into scene, a Camera!
         camera = scenemgr->createCamera( "PlayerCam" );
       
         // create Viewport, the 2D target of Camera
@@ -354,8 +354,7 @@ void begin_terrain(BATB& batb)
     terrain_globals->getDefaultMaterialGenerator()->setLightmapEnabled(false);
 
     terrain_globals->setCompositeMapAmbient(scenemgr->getAmbientLight());
-    terrain_globals->setCompositeMapDiffuse(l->getDiffuseColour());
-    terrain_globals->setLightMapDirection(l->getDerivedDirection());
+    terrain_globals->setCompositeMapDiffuse(l->getDiffuseColour());    terrain_globals->setLightMapDirection(l->getDerivedDirection());
 
     // Configure default import settings for if we use imported image
     Terrain::ImportData& defaultimp = terrain_group->getDefaultImportSettings();
@@ -402,6 +401,12 @@ void begin_terrain(BATB& batb)
             defineTerrain(x, y, blankTerrain);
     // sync load since we want everything in place when we start
     terrain_group->loadAllTerrains(true);
+    // ^FIXME:
+    //  loadAllTerrains does something to our GL context/state, causing wrong output until
+    //  OGRE::output called. the error is caused in OgreTerrainGroup::loadTerrainImpl when
+    //  a work request is added to Ogre. The request handler is OgreTerrainGroup, but I 
+    //  have not tracked the error there and further down.
+
     if (terrains_imported)
     {
         TerrainGroup::TerrainIterator ti = terrain_group->getTerrainIterator();
