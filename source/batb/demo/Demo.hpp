@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,12 +15,55 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "nanovg.hpp"
+#ifndef BATB_DEMO_DEMO_HPP
+#define BATB_DEMO_DEMO_HPP
+#include "batb/batb_include.hpp"
+#include "batb/ModuleBATB.hpp"
+#include "batb/demo/KeySet.hpp"
+#include "batb/demo/iteration/IterationDemoDemo.hpp"
 
 
-// this must only be included in 1 source file:
-#include "nanovg_gl.h"
+
+
+namespace batb
+{
+
+
+class BATB;
+
+
+namespace demo
+{
 
 
 
+
+class Demo : public ModuleBATB
+{
+friend void begin(Demo& );
+friend void end(Demo& );
+
+public:
+    Demo(BATB& b);
+
+    KeySet keyset;
+
+    // Iteration's
+    IterationDemoDemo iterationDemoDemo;
+
+private:
+
+
+};
+
+
+void begin(Demo& );
+void end(Demo& );
+
+} // namespace demo
+
+} // namespace batb
+
+
+#endif
 

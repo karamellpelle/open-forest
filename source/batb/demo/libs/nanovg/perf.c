@@ -5,7 +5,6 @@
 #ifdef NANOVG_GLEW
 #  include <GL/glew.h>
 #endif
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "nanovg.h"
 
@@ -22,7 +21,7 @@
 //pfnGLGETQUERYOBJECTUI64V glGetQueryObjectui64v = 0;
 #endif
 
-void initGPUTimer(struct GPUtimer* timer)
+void initGPUTimer(GPUtimer* timer)
 {
 	memset(timer, 0, sizeof(*timer));
 
@@ -40,7 +39,7 @@ void initGPUTimer(struct GPUtimer* timer)
 	}*/
 }
 
-void startGPUTimer(struct GPUtimer* timer)
+void startGPUTimer(GPUtimer* timer)
 {
 	if (!timer->supported)
 		return;
@@ -48,8 +47,10 @@ void startGPUTimer(struct GPUtimer* timer)
 	timer->cur++;
 }
 
-int stopGPUTimer(struct GPUtimer* timer, float* times, int maxTimes)
+int stopGPUTimer(GPUtimer* timer, float* times, int maxTimes)
 {
+	NVG_NOTUSED(times);
+	NVG_NOTUSED(maxTimes);
 	GLint available = 1;
 	int n = 0;
 	if (!timer->supported)
@@ -73,21 +74,21 @@ int stopGPUTimer(struct GPUtimer* timer, float* times, int maxTimes)
 }
 
 
-void initGraph(struct PerfGraph* fps, int style, const char* name)
+void initGraph(PerfGraph* fps, int style, const char* name)
 {
-	memset(fps, 0, sizeof(struct PerfGraph));
+	memset(fps, 0, sizeof(PerfGraph));
 	fps->style = style;
 	strncpy(fps->name, name, sizeof(fps->name));
 	fps->name[sizeof(fps->name)-1] = '\0';
 }
 
-void updateGraph(struct PerfGraph* fps, float frameTime)
+void updateGraph(PerfGraph* fps, float frameTime)
 {
 	fps->head = (fps->head+1) % GRAPH_HISTORY_COUNT;
 	fps->values[fps->head] = frameTime;
 }
 
-float getGraphAverage(struct PerfGraph* fps)
+float getGraphAverage(PerfGraph* fps)
 {
 	int i;
 	float avg = 0;
@@ -97,7 +98,7 @@ float getGraphAverage(struct PerfGraph* fps)
 	return avg / (float)GRAPH_HISTORY_COUNT;
 }
 
-void renderGraph(struct NVGcontext* vg, float x, float y, struct PerfGraph* fps)
+void renderGraph(NVGcontext* vg, float x, float y, PerfGraph* fps)
 {
 	int i;
 	float avg, w, h;
@@ -122,6 +123,15 @@ void renderGraph(struct NVGcontext* vg, float x, float y, struct PerfGraph* fps)
 			if (v > 80.0f) v = 80.0f;
 			vx = x + ((float)i/(GRAPH_HISTORY_COUNT-1)) * w;
 			vy = y + h - ((v / 80.0f) * h);
+			nvgLineTo(vg, vx, vy);
+		}
+	} else if (fps->style == GRAPH_RENDER_PERCENT) {
+		for (i = 0; i < GRAPH_HISTORY_COUNT; i++) {
+			float v = fps->values[(fps->head+i) % GRAPH_HISTORY_COUNT] * 1.0f;
+			float vx, vy;
+			if (v > 100.0f) v = 100.0f;
+			vx = x + ((float)i/(GRAPH_HISTORY_COUNT-1)) * w;
+			vy = y + h - ((v / 100.0f) * h);
 			nvgLineTo(vg, vx, vy);
 		}
 	} else {
@@ -153,12 +163,19 @@ void renderGraph(struct NVGcontext* vg, float x, float y, struct PerfGraph* fps)
 		nvgFillColor(vg, nvgRGBA(240,240,240,255));
 		sprintf(str, "%.2f FPS", 1.0f / avg);
 		nvgText(vg, x+w-3,y+1, str, NULL);
-		
+
 		nvgFontSize(vg, 15.0f);
 		nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_BOTTOM);
 		nvgFillColor(vg, nvgRGBA(240,240,240,160));
 		sprintf(str, "%.2f ms", avg * 1000.0f);
 		nvgText(vg, x+w-3,y+h-1, str, NULL);
+	}
+	else if (fps->style == GRAPH_RENDER_PERCENT) {
+		nvgFontSize(vg, 18.0f);
+		nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+		nvgFillColor(vg, nvgRGBA(240,240,240,255));
+		sprintf(str, "%.1f %%", avg * 1.0f);
+		nvgText(vg, x+w-3,y+1, str, NULL);
 	} else {
 		nvgFontSize(vg, 18.0f);
 		nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);

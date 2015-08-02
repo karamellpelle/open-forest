@@ -119,11 +119,12 @@ void IterationRunBegin::tmp_output()
     auto ctx = batb.gl.nvg_context;
 
     float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
-    nvgBeginFrame( ctx, winWidth, winHeight, pxRatio, false ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
+    nvgBeginFrame( ctx, winWidth, winHeight, pxRatio);
 
-    nvgSave( ctx );
+    //nvgSave( ctx );
     //nvgScale( ctx, (float)(forest.run.scene.wth), (float)(forest.run.scene.hth) );
 
+    // draw pulsating square
     nvgStrokeWidth( ctx, 32 );
     nvgLineCap(ctx, NVG_ROUND );
     nvgStrokeColor(ctx, nvgRGBA(100,192,0,128));
@@ -135,9 +136,9 @@ void IterationRunBegin::tmp_output()
     nvgStroke(ctx);
    
     
-    nvgRestore( ctx );
-
+    //nvgRestore( ctx );
     nvgEndFrame( ctx );
+
     gl::end_nanovg();
 
 

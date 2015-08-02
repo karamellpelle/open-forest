@@ -12,11 +12,18 @@ function do_build()
     cmake -DCMAKE_BUILD_TYPE=None "$@" ../.. && make && cp $BINARY_NAME ..
 }
 
-function do_build_openforest()
+function do_make()
 {
     # FIXME: cd to THIS_PATH
     cd build/cmake
-    make open-forest/fast  #&& cd ../.. && do_build_openforest
+    make && cp $BINARY_NAME ..
+}
+
+function do_make_openforest()
+{
+    # FIXME: cd to THIS_PATH
+    cd build/cmake
+    make open-forest/fast && cp $BINARY_NAME ..
 }
 
 function do_clean()
@@ -72,8 +79,9 @@ function do_init-submodules()
 function do_usage()
 {
     echo "usage: $THIS_NAME                  : same as '$THIS_NAME build'"
-    echo "       $THIS_NAME build            : build into './build' folder, using CMake"
-    echo "       $THIS_NAME build-openforest : try to build open-forest part first"
+    echo "       $THIS_NAME build            : configure and build into './build' folder, using CMake"
+    echo "       $THIS_NAME make             : make preconfigured CMake by 'build'"
+    echo "       $THIS_NAME make-openforest  : make openforest part of preconfigured CMake by 'build'"
     echo "       $THIS_NAME clean            : clean build"
     echo "       $THIS_NAME init-submodules  : retrieve git-submodules (only needed for first build)"
 }
@@ -92,8 +100,11 @@ else
       "build")  
           do_build
           ;;
-      "build-openforest")  
-          do_build_openforest
+      "make")  
+          do_make
+          ;;
+      "make-openforest")  
+          do_make_openforest
           ;;
       "clean")  
           do_clean

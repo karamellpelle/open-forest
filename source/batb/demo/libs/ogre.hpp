@@ -2,62 +2,59 @@
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
-//    it under the terms of the GNU Genergl Public License as published by
+//    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation; either version 2 of the License, or
 //    (at your option) any later version.
 //
 //    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU Genergl Public License for more details.
+//    GNU General Public License for more details.
 //
-//    You should have received a copy of the GNU Genergl Public License glong
+//    You should have received a copy of the GNU General Public License along
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_GL_GL_HPP
-#define BATB_GL_GL_HPP
+#ifndef BATB_DEMO_LIBS_OGRE_HPP
+#define BATB_DEMO_LIBS_OGRE_HPP
 #include "batb/batb_include.hpp"
-#include "batb/ModuleBATB.hpp"
-
-// TODO: GL 3+
-#define NANOVG_GL2_IMPLEMENTATION
-#include "nanovg.h"
 
 namespace batb
 {
 
-class Scene;
+class BATB;
+
+namespace run
+{
+class World;
+}
+
+namespace forest
+{
+class World;
+}
 
 
-namespace gl
+namespace demo
+{
+
+namespace ogre
 {
 
 
+void demo_begin(BATB& );
+
+void demo_iterate(BATB& , run::World& , forest::World& );
 
 
-class GL : public ModuleBATB
-{
-friend void begin(GL& );
-friend void end(GL& );
 
-public:
-    GL(BATB& b) : ModuleBATB( b ) { }
+} // namespace ogre
 
-    NVGcontext* nvg_context = nullptr;
-
-
-private:
-    
-};
-
-
-void begin(GL& );
-void end(GL& );
-
-} // namespace gl
+} // namespace demo
 
 } // namespace batb
 
+
 #endif
+
 

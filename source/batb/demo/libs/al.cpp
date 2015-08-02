@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/tmp/al.hpp"
+#include "batb/demo/libs/al.hpp"
 #include "batb.hpp"
 #include "batb/al.hpp"
 #include "batb/run/World.hpp"
@@ -25,7 +25,7 @@ namespace batb
 {
 
 
-namespace tmp
+namespace demo
 {
 
 namespace al
@@ -45,13 +45,13 @@ void demo_begin(BATB& batb)
 
     if ( tmp_empty )
     {
-        std::string path = file::static_data( "tmp/al/demo00.mp3" );
+        std::string path = file::static_data( "demo/libs/al/demo00.mp3" );
 
         decoder = batb.al.context->createDecoder( path );
         source = batb.al.context->getSource();
         source->play( decoder, 32768, 4);
 
-        std::cout << "tmp::al: playing " << path 
+        std::cout << "demo::al: playing " << path 
                   << " ("<< alure::GetSampleTypeName(decoder->getSampleType())<< ", "
                   << alure::GetSampleConfigName(decoder->getSampleConfig()) << ", "
                   << decoder->getFrequency() << "hz)" 
@@ -80,7 +80,7 @@ void demo_iterate(BATB& batb, run::World& world)
     {
         if ( !once )
         {
-            std::cout <<  "tmp::al: source stopped." << std::endl;
+            std::cout <<  "demo::al: source stopped." << std::endl;
             once = true;
         }
 
@@ -106,7 +106,7 @@ void demo_end(BATB& batb)
 
 } // namespace al
 
-} // namespace tmp
+} // namespace demo
 
 
 } // namespace batb

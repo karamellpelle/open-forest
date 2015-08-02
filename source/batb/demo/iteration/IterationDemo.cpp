@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,37 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_TMP_NANOVG_HPP
-#define BATB_TMP_NANOVG_HPP
-#include "batb/batb_include.hpp"
+#include "batb.hpp"
+#include "batb/demo/iteration/IterationDemo.hpp"
+#include "batb/demo/World.hpp"
 
 namespace batb
 {
 
-class BATB;
 
-namespace tmp
+namespace demo
 {
 
-namespace nanovg
+IterationDemo::IterationDemo(BATB& b) : batb( b )
 {
 
+}
 
-void demo_begin(BATB& );
+IterationStack IterationDemo::iterate(World& world)
+{
+    ////////////////////////////////////////
+    // actual iteration, implemented by subclass
+    ////////////////////////////////////////
+    auto ret = iterate_demo( world );
+ 
 
-void demo_end(BATB& );
+    // TODO: finish up, free mem (events, ...)
 
-void demo_iterate(BATB& , bool premult, bool blowup);
+    // count number of IterationDemo-iterations
+    ++world.frames_count;
+
+    return ret;
+}
 
 
-
-} // namespace nanovg
-
-} // namespace tmp
+} // namespace demo
 
 } // namespace batb
-
-
-#endif
-
 

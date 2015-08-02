@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,46 +15,50 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_TMP_OGRE_HPP
-#define BATB_TMP_OGRE_HPP
+#ifndef BATB_DEMO_ITERATION_ITERATION_DEMO_HPP
+#define BATB_DEMO_ITERATION_ITERATION_DEMO_HPP
 #include "batb/batb_include.hpp"
+#include "batb/demo/World.hpp"
 
 namespace batb
 {
 
+
 class BATB;
 
-namespace run
+
+
+namespace demo
 {
-class World;
+
+// the type of stack for demo::Iteration
+using IterationStack = game::IterationStack<World>;
+
+
+// the type of iterations for demo::World
+class IterationDemo : public game::Iteration<World>
+{
+public:
+    IterationDemo(BATB& b);
+
+    // this handles each frame, delegating work to the subclass 
+    // implementation of 'iterate_demo'
+    virtual IterationStack iterate(World& ) final;
+
+    // also, each subclass should typically create a non-virtual method:
+    // void iterate_begin(World& );
+
+    BATB& batb;
+
+protected:
+    // subclasses implements this:
+    virtual IterationStack iterate_demo(World& ) = 0;
+
+
+};
+
 }
 
-namespace forest
-{
-class World;
 }
-
-
-namespace tmp
-{
-
-namespace ogre
-{
-
-
-void demo_begin(BATB& );
-
-void demo_iterate(BATB& , run::World& , forest::World& );
-
-
-
-} // namespace ogre
-
-} // namespace tmp
-
-} // namespace batb
-
 
 #endif
-
-

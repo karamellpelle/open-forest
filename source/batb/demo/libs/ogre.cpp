@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/tmp/ogre.hpp"
+#include "batb/demo/libs/ogre.hpp"
 #include "batb.hpp"
 #include "batb/ogre.hpp"
 #include "batb/run/World.hpp"
@@ -42,7 +42,7 @@
 #include "OgreTerrainPaging.h"
 #include "OgrePageManager.h"
 #include "OgreRenderSystemCapabilities.h"
-#include "batb/tmp/ogre/PerlinNoiseTerrainGenerator.h"
+#include "batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
 
 //#define USE_SAMPLE_ENDLESSWORLD
 #define USE_SAMPLE_TERRAIN
@@ -52,7 +52,7 @@ namespace batb
 
 
 
-namespace tmp
+namespace demo
 {
 
 namespace ogre
@@ -153,7 +153,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         // begin GL state for Ogre
         gl::begin_ogre();
 
-        YAML::Node yaml = YAML::LoadFile( file::static_data( "tmp/ogre.yaml" ) );
+        YAML::Node yaml = YAML::LoadFile( file::static_data( "demo/libs/ogre.yaml" ) );
 
         // add resources for demo
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
@@ -167,7 +167,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
                 YAML::Node group = i->first;
                 std::string name = group.as<std::string>();
                 
-                batb.log << "batb::tmp::ogre: adding items to resource group '" << name << "':\n";
+                batb.log << "batb::demo::ogre: adding items to resource group '" << name << "':\n";
                 // iterate over defined content for that group
                 for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
                 {
@@ -203,7 +203,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         }
         else
         {
-            throw std::runtime_error( "batb::tmp::ogre: no 'resources' defined in config" );
+            throw std::runtime_error( "batb::demo::ogre: no 'resources' defined in config" );
         }
         Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
@@ -592,7 +592,7 @@ void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
 
 } // namespace ogre
 
-} // namespace tmp
+} // namespace demo
 
 
 } // namespace batb

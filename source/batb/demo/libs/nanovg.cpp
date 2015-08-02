@@ -16,23 +16,28 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/BATB.hpp"
-#include "batb/tmp/nanovg.hpp"
-#include "batb/tmp/nanovg/demo.h"
-#include "batb/tmp/nanovg/perf.h"
+#include "batb/demo/libs/nanovg.hpp"
+#include "batb/demo/libs/nanovg/demo.h"
+#include "batb/demo/libs/nanovg/perf.h"
 
 namespace batb
 {
 
 
-namespace tmp
+namespace demo
 {
 
 namespace nanovg
 {
 
 
-static struct DemoData data;
-static struct PerfGraph fps;
+
+static GLFWwindow* window;
+static DemoData data;
+static NVGcontext* vg = NULL;
+static PerfGraph fps;
+static double prevt = 0;
+
 static bool tmp_empty = true;
 
 
@@ -79,33 +84,40 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // begin GL state for nanovg
     gl::begin_nanovg();
+    window = batb.env.window;
+    vg = batb.gl.nvg_context;
 
-    // compute
-    static tick_t tick_prev = 0.0;
-    tick_t tick = glfwGetTime();
-    tick_t dt = tick - tick_prev;
-    tick_prev = tick;
+		double mx, my, t, dt;
+		int winWidth, winHeight;
+		int fbWidth, fbHeight;
+		float pxRatio;
 
-    updateGraph(&fps, dt);
+		t = glfwGetTime();
+		dt = t - prevt;
+		prevt = t;
+		updateGraph(&fps, dt);
 
+		glfwGetCursorPos(window, &mx, &my);
+		glfwGetWindowSize(window, &winWidth, &winHeight);
+		glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
 
-    GLFWwindow* win = glfwGetCurrentContext();
-    double mx, my;
-    glfwGetCursorPos( win, &mx, &my);
-    int winWidth, winHeight;
-    glfwGetWindowSize( win, &winWidth, &winHeight );
-    int fbWidth, fbHeight;
-    glfwGetFramebufferSize( win, &fbWidth, &fbHeight );
+		// Calculate pixel ration for hi-dpi devices.
+		pxRatio = (float)fbWidth / (float)winWidth;
 
-    // Calculate pixel ration for hi-dpi devices.
-    float pxRatio = (float)fbWidth / (float)winWidth;
+		// Update and render
+		//glViewport(0, 0, fbWidth, fbHeight);
+		//if (premult)
+		//	glClearColor(0,0,0,0);
+		//else
+		//	glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
-    nvgBeginFrame(batb.gl.nvg_context, winWidth, winHeight, pxRatio, premult ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
+		nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
 
-    renderDemo(batb.gl.nvg_context, mx,my, winWidth,winHeight, tick, blowup, &data);
-    renderGraph(batb.gl.nvg_context, 5,5, &fps);
+		renderDemo(vg, mx,my, winWidth,winHeight, t, blowup, &data);
+		renderGraph(vg, 5,5, &fps);
 
-    nvgEndFrame(batb.gl.nvg_context);
+		nvgEndFrame(vg);
 
 
     // end GL state for nanovg
@@ -118,7 +130,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 } // namespace nanovg
 
-} // namespace tmp
+} // namespace demo
 
 
 } // namespace batb

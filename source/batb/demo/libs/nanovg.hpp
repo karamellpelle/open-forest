@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_TMP_AL_HPP
-#define BATB_TMP_AL_HPP
+#ifndef BATB_DEMO_LIBS_NANOVG_HPP
+#define BATB_DEMO_LIBS_NANOVG_HPP
 #include "batb/batb_include.hpp"
 
 namespace batb
@@ -24,29 +24,24 @@ namespace batb
 
 class BATB;
 
-namespace run
-{
-class World;
-}
-
-
-namespace tmp
+namespace demo
 {
 
-namespace al
+namespace nanovg
 {
 
 
 void demo_begin(BATB& );
 
-void demo_iterate(BATB& , run::World& );
-
 void demo_end(BATB& );
 
+void demo_iterate(BATB& , bool premult, bool blowup);
 
-} // namespace al
 
-} // namespace tmp
+
+} // namespace nanovg
+
+} // namespace demo
 
 } // namespace batb
 

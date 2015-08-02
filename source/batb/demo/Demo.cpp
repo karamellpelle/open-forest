@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/forest/Forest.hpp" 
+#include "batb/demo/Demo.hpp" 
 #include "batb.hpp" 
 
 namespace batb
@@ -23,15 +23,15 @@ namespace batb
 
 
 
-namespace forest
+namespace demo
 {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Forest
+//  Demo
 
-Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b ),
-                          iterationForestDemo( b )
+Demo::Demo(BATB& b) : ModuleBATB( b ), keyset( b ),
+                          iterationDemoDemo( b )
 {
 
 }
@@ -40,42 +40,42 @@ Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b ),
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
-void begin(Forest& forest)
+void begin(Demo& demo)
 {
 
-    BATB_LOG_FUNC( forest.batb );
+    BATB_LOG_FUNC( demo.batb );
     
-    if ( forest.init_empty() )
+    if ( demo.init_empty() )
     {
         // load associated keys 
-        forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
+        demo.keyset.load( file::dynamic_data( "batb/demo/KeySet.yaml" ) ); // TODO: from yaml!!
 
         // begin iterations:
-        forest::begin( forest.iterationForestDemo );
+        demo::begin( demo.iterationDemoDemo );
 
     }
 
-    forest.init( true );
+    demo.init( true );
 }
 
-void end(Forest& forest)
+void end(Demo& demo)
 {
-    BATB_LOG_FUNC( forest.batb );
+    BATB_LOG_FUNC( demo.batb );
 
-    if ( forest.init_nonempty() )
+    if ( demo.init_nonempty() )
     {
-        forest.save();
+        demo.save();
 
         // end  iterations:
-        forest::end( forest.iterationForestDemo );
+        demo::end( demo.iterationDemoDemo );
 
     }
     
-    forest.init( false );
+    demo.init( false );
 }
 
 
-} // namespace forest
+} // namespace demo
 
 } // namespace batb
 

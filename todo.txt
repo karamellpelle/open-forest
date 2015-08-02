@@ -1,3 +1,4 @@
+* OpenGL 3+, premultiplied colors by default
 * Free us from Ogre: no OgreRoot::renderOneFrame, instead use SceneMgr::renderScene
 * ThreadGLContext: exception on 'current'
 * class Key { shared_ptr<KeyImpl> impl_; }

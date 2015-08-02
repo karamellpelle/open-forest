@@ -15,30 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef NANOVG_HPP
-#define NANOVG_HPP
-#include "env.hpp"
-#include "nanovg.h"
+#ifndef BATB_DEMO_LIBS_AL_HPP
+#define BATB_DEMO_LIBS_AL_HPP
+#include "batb/batb_include.hpp"
 
-// FIXME: since we want OpenGL 3.3+! (NANOVG_GL3_IMPLEMENTATION did not work on my (old linux) computer :( )
-//#define NANOVG_GL3_IMPLEMENTATION 
-#define NANOVG_GL2_IMPLEMENTATION
-
-
-extern "C"
+namespace batb
 {
 
-#ifdef NANOVG_GL2_IMPLEMENTATION
-        struct NVGcontext* nvgCreateGL2(int atlasw, int atlash, int edgeaa);
-        void nvgDeleteGL2(struct NVGcontext* ctx);
-#endif
-#ifdef NANOVG_GL3_IMPLEMENTATION
-        struct NVGcontext* nvgCreateGL3(int atlasw, int atlash, int edgeaa);
-        void nvgDeleteGL3(struct NVGcontext* ctx);
-#endif
+class BATB;
 
+namespace run
+{
+class World;
 }
 
 
+namespace demo
+{
+
+namespace al
+{
+
+
+void demo_begin(BATB& );
+
+void demo_iterate(BATB& , run::World& );
+
+void demo_end(BATB& );
+
+
+} // namespace al
+
+} // namespace demo
+
+} // namespace batb
+
+
 #endif
+
 

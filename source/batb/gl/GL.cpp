@@ -16,7 +16,11 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/gl/GL.hpp"
 #include "batb/Scene.hpp"
+
+// include implementation of nanovg code
+#include "nanovg_gl.h"
 
 
 namespace batb
@@ -47,10 +51,10 @@ void begin(GL& gl)
         gl::init_state();
 
 #ifdef NANOVG_GL2_IMPLEMENTATION
-        gl.nvg_context = nvgCreateGL2(512, 512, 0);
+        gl.nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES | NVG_DEBUG );
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
-	gl.nvg_context = nvgCreateGL3(512, 512, 0);
+
 #endif
 	if ( gl.nvg_context == nullptr )
         {
@@ -74,7 +78,12 @@ void end(GL& gl)
 
     if ( gl.init_nonempty() )
     {
+#ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2(gl.nvg_context);
+#endif
+#ifdef NANOVG_GL3_IMPLEMENTATION
+
+#endif
     }
    
     gl.init( false );

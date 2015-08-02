@@ -122,9 +122,8 @@ IterationStack IterationForestDemo::iterate_forest(World& forest)
 }
 
 
-inline void nvg_point(NVGcontext* vg, uint x, uint y)
+inline void nvg_point(NVGcontext* vg, uint x, uint y, float r = 4.0)
 {
-    constexpr float r = 4.0;
    
     
 	nvgBeginPath(vg);
@@ -145,10 +144,9 @@ void IterationForestDemo::tmp_show_bezier(World& forest)
     auto ctx = batb.gl.nvg_context;
 
     float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
-    nvgBeginFrame( ctx, winWidth, winHeight, pxRatio, false ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
-
     //float pxRatio  = 1.0;
-    //nvgBeginFrame( ctx, fbWidth, fbHeight, pxRatio, false ? NVG_PREMULTIPLIED_ALPHA : NVG_STRAIGHT_ALPHA);
+    nvgBeginFrame( ctx, winWidth, winHeight, pxRatio);
+
 
     nvgSave( ctx );
     //nvgScale( ctx, (float)(forest.run.scene.wth), (float)(forest.run.scene.hth) );
@@ -178,7 +176,17 @@ void IterationForestDemo::tmp_show_bezier(World& forest)
         nvgStrokeColor(ctx, nvgRGBA(200,0,0,200));
         nvg_point( ctx, p[0], p[1] );
     }
-    
+   
+    // test Shape
+    nvgScale( ctx, (float)(forest.run.scene.wth), (float)(forest.run.scene.hth) );
+    nvgStrokeWidth( ctx, 4 );
+    nvgStrokeColor(ctx, nvgRGBA( 255, 0, 0, 128 ));
+    nvg_point( ctx, 0.5, 0.5, 16.0 );
+    nvgStrokeColor(ctx, nvgRGBA( 0, 255, 0, 128 ));
+    nvg_point( ctx, 0.2, 0.2, 16.0 );
+    nvgStrokeColor(ctx, nvgRGBA( 0, 0, 255, 128 ));
+    nvg_point( ctx, 0.9, 0.5, 16.0 );
+
     nvgRestore( ctx );
 
     nvgEndFrame( ctx );

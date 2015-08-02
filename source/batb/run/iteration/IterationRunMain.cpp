@@ -17,9 +17,9 @@
 //
 #include "batb.hpp"
 #include "batb/gui.hpp"
-#include "batb/tmp/nanovg.hpp"
-#include "batb/tmp/ogre.hpp"
-#include "batb/tmp/al.hpp"
+#include "batb/demo/libs/nanovg.hpp"
+#include "batb/demo/libs/ogre.hpp"
+#include "batb/demo/libs/al.hpp"
 
 
 namespace batb
@@ -86,13 +86,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // FIXME: demo_end()!
     //
     // Ogre demo
-    tmp::ogre::demo_begin( batb );
+    demo::ogre::demo_begin( batb );
 
     // nanovg demo
-    tmp::nanovg::demo_begin( batb );
+    demo::nanovg::demo_begin( batb );
 
     // ALURE demo
-    tmp::al::demo_begin( batb );
+    demo::al::demo_begin( batb );
 
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
@@ -162,12 +162,12 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // Ogre demo:
     if ( run.toggle_ogre )
     {
-        tmp::ogre::demo_iterate( batb, run, *forest );
+        demo::ogre::demo_iterate( batb, run, *forest );
     }
     // nanovg demo:
     if ( run.toggle_nanovg )
     {
-        tmp::nanovg::demo_iterate( batb, false, false );
+        demo::nanovg::demo_iterate( batb, false, false );
     }
     
 
@@ -175,7 +175,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     game::iterate( forest_stack, *forest );
 
     // ALURE demo:
-    tmp::al::demo_iterate( batb, run );
+    demo::al::demo_iterate( batb, run );
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP

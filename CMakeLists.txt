@@ -89,9 +89,6 @@ add_subdirectory( ${LIBS_SOURCE_DIR}/glfw )
 # build library 'my-tinyxml2'. this exports the necessary include directories
 add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/tinyxml2" )
 
-################################################################################
-# build library 'my-nanovg'. this exports the necessary include directories
-add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/nanovg" )
 
 ################################################################################
 # build library 'my-turbobadger'. this exports the necessary include directories
@@ -269,15 +266,15 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForestDemo.cpp"
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
-      # library implementations:
-      "${MAIN_SOURCE_DIR}/nanovg.cpp"             
-      # tmp:
-      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/demo.c"
-      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg/perf.c"
-      "${MAIN_SOURCE_DIR}/batb/tmp/nanovg.cpp"
-      "${MAIN_SOURCE_DIR}/batb/tmp/ogre/PerlinNoiseTerrainGenerator.cpp"
-      "${MAIN_SOURCE_DIR}/batb/tmp/ogre.cpp"
-      "${MAIN_SOURCE_DIR}/batb/tmp/al.cpp"
+      # nanovg
+      "${CMAKE_SOURCE_DIR}/libs/nanovg/src/nanovg.c"
+      # demo:
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/demo.c"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/perf.c"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/al.cpp"
       
    )
 
@@ -362,6 +359,7 @@ if ( BATB_BUILD )
     target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/glm" )
     target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/tmp/nanovg" )
+    target_include_directories( open-forest PRIVATE "${CMAKE_SOURCE_DIR}/libs/nanovg/src" )
 
     # GLEW
     list( APPEND BATB_LIBRARIES ${GLEW_LIBRARIES} )
@@ -373,9 +371,6 @@ if ( BATB_BUILD )
 
     # my-tinyxml2
     list( APPEND BATB_LIBRARIES my-tinyxml2 )
-
-    # my-nanovg
-    list( APPEND BATB_LIBRARIES my-nanovg )
 
     # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
