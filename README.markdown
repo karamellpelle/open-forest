@@ -1,9 +1,11 @@
+![](https://raw.githubusercontent.com/karamellpelle/open-forest/master/data/static/batb/openforest-512x256.png "OpenForest")
+
 Open Forest
 --------------------
 
 This was originally a fork of an orienteering game I found on GitHub, ["Beat About The Bush]( 
 https://github.com/jarvinet/orienteering-game), but it is now completely rewritten.
-The old game is still runnable, but it needs additional libs in order to build (plib, ...).
+The old game is still runnable (?), but it needs additional libs in order to build (plib, ...).
 
 The intention is to build up a foundation for an open source orienteering game. Despite the sport of 
 orienteering is small, there are multiple commercial orienteering games available (Catching Features, 
@@ -18,8 +20,7 @@ to join. I try to work on this project when I have time.
 Programming
 --------------------
 
-We shall aim at using modern programming and libraries. This means OpenGL 3.3+ (shaders, buffers, 
-vertex arrays, etc.), C++11, etc.
+We shall aim at using modern programming and libraries (OpenGL 3.3+, C++11/14/17, etc.)
 
 #### Libraries
 
@@ -30,8 +31,7 @@ sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
-UDP network       : [libuv ?](https://github.com/libuv/libuv), 
-                    (boost ASIO ?)  
+UDP network       : ?  
 3D rendering      : [**OGRE**](http://www.ogre3d.org)  
 2D rendering      : [**nanovg**](https://github.com/memononen/nanovg)  
 font rendering    : (using turbobadger or nanovg)  
@@ -58,6 +58,7 @@ The following libraries are needed:
 - GLEW    (I have version 1.10.0)
 - OpenAL  (I have openal-soft-1.16.0)
 - (MPG123, since demo plays an mp3 file)
+- (various libs for Ogre; try to build Ogre samples)
 
 In addition, this git project depends on submodules. Run
 
