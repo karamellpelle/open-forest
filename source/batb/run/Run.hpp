@@ -18,7 +18,6 @@
 #ifndef BATB_RUN_RUN_HPP
 #define BATB_RUN_RUN_HPP
 #include "batb/ModuleBATB.hpp"
-#include "batb/run/gui/GUIMain.hpp"
 #include "batb/run/KeySet.hpp"
 #include "batb/run/iteration/IterationRunBegin.hpp"
 #include "batb/run/iteration/IterationRunEnd.hpp"

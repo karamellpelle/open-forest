@@ -41,7 +41,7 @@ class IterationDemo : public game::Iteration<World>
 public:
     IterationDemo(BATB& b);
 
-    // this handles each frame, delegating work to the subclass 
+    // this handles each frame, delegating work to the subclass' 
     // implementation of 'iterate_demo'
     virtual IterationStack iterate(World& ) final;
 

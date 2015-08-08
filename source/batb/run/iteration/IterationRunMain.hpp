@@ -18,6 +18,7 @@
 #ifndef BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
 #define BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
 #include "batb/run/iteration/IterationRun.hpp"
+#include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
 
 // tmp
 #include "batb/forest.hpp"
@@ -57,12 +58,8 @@ public:
     ////////////////////////////////////////
 
 private:
-    //tb::TBWidget* widget_ = nullptr;
-
-    // GUI's
-    // TODO: remove into IterationRunMain!!
-    GUIMain* guiMain = nullptr;
-
+    RunMainTBWidget* tb_widget_ = nullptr;
+    EventList events_;
 
     // tmp:
     forest::World* forest = nullptr;

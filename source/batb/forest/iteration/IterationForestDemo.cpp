@@ -55,7 +55,7 @@ void IterationForestDemo::iterate_begin(World& forest)
 
     if ( !forest.runners.empty() )
     {
-        aiming = &forest.runners.front(); // is this pointer safe??
+        aiming = &forest.runners.front();
 
         // set start pos as in tmp::ogre:
         aiming->pos = glm::vec4( 0.0, 400.0, 0.0, 1.0 ); 

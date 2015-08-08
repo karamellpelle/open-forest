@@ -18,13 +18,7 @@
 #ifndef BATB_DEMO_DEMO_WORLD_HPP
 #define BATB_DEMO_DEMO_WORLD_HPP
 #include "batb/batb_include.hpp"
-#include "batb/demo/Camera.hpp"
-#include "batb/demo/Terrain.hpp"
-#include "batb/demo/Map.hpp"
-#include "batb/demo/Course.hpp"
-#include "batb/demo/Control.hpp"
-#include "batb/demo/Runner.hpp"
-#include "batb/demo/Weather.hpp"
+#include "batb/forest.hpp"
 #include "batb/event.hpp"
 
 
@@ -40,25 +34,40 @@ namespace demo
 {
 
 
+class ControlPoint
+{
+public:
+    ControlPoint(const glm::vec2& v) : point( v ) { }
+
+    forest::Control* control = nullptr;
+    glm::vec2 point;
+};
+
+
 class World
 {
 
 public:
     World(run::World& r) : run( r ) { }
-    // demo::World implies a run::World, the run::World containing 'this'.
-    // it would be nice to let demo::World be totally independent of run::World,
-    // so that demo::World works alone. however, demo::World needs access to
-    // external resources. for exapmle Player's, containing information for each
-    // Runner in demo::World. we let such external resources be part of run::World.
-    // also, since there may be more than one demo::World, some of these
-    // external resources could be different for two different demo::World's.
-    // also, 'run' is a reference, hence there is one and only one run::World asso-
-    // ciated with each demo::World
-    run::World& run;
 
-    
-    // tick of world
+    run::World& run;
+    EventList events;
     tick_t tick = 0.0;
+
+    // 
+    ControlPoint cpoint;
+    std::forward_list<ControlPoint> cpoint_nexts;
+    std::forward_list<ControlPoint> cpoint_prevs;
+
+
+
+    forest::World& forest;
+    forest::IterationStack forest_stack;
+    
+    forest::Runner* runner;
+
+
+    // tick of world
 
 private:
     

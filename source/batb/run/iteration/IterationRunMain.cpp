@@ -20,6 +20,8 @@
 #include "batb/demo/libs/nanovg.hpp"
 #include "batb/demo/libs/ogre.hpp"
 #include "batb/demo/libs/al.hpp"
+#include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
+#include "batb/run/events.hpp"
 
 
 namespace batb
@@ -75,12 +77,9 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     batb.gui.bind( batb.keys );
 
 
-    // FIXME: into this!
-    // show GUI window
-    //if ( widget_->GetParent() == nullptr )
-    if ( guiMain->GetParent() == nullptr )
+    if ( tb_widget_->GetParent() == nullptr )
     {
-        batb.gui.addWidget( guiMain );
+        batb.gui.addWidget( tb_widget_ );
     }
 
     // FIXME: demo_end()!
@@ -123,6 +122,8 @@ IterationStack IterationRunMain::iterate_run(World& run)
     //
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
+    // add events from this to world
+    run.events.move( events_ );
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
@@ -157,7 +158,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
         }
         ix = (ix + 1) % 3;
     }
-    step( run.events );
 
     // Ogre demo:
     if ( run.toggle_ogre )
@@ -195,9 +195,9 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     {
         // remove window
         //if ( widget_->GetParent() != nullptr )
-        if ( guiMain->GetParent() != nullptr )
+        if ( tb_widget_->GetParent() != nullptr )
         {
-            batb.gui.removeWidget( guiMain );
+            batb.gui.removeWidget( tb_widget_ );
         }
 
         batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
@@ -205,8 +205,24 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
                   game::begin_iteration( *this ) };
     }
 
-    // else, continue with current iteration
-    return { this };
+    IterationStack nexts = { this };
+
+/*
+    // look at events
+    caseOf( run.events )
+    (
+        [&](const DoDemo& demo)
+        {
+            //if ( demo == DoDemo::Forest ) nexts = { new IterationRunDemoForest(), this };
+            //if ( demo == DoDemo::XXX ) nexts = { new IterationRunDemoForest(), this };
+        },
+        [&](const uint& value)
+        {
+            batb.log << "run::World: event value " << value << std::endl;
+        }
+    );
+*/
+    return nexts;
 }
 
 
@@ -231,7 +247,7 @@ void begin(IterationRunMain& iter)
 */
     // set up GUI's
     // FIXME: memory leak, according to valgring
-    iter.guiMain = new GUIMain( iter.batb );
+    iter.tb_widget_ = new RunMainTBWidget( iter );
 
 
 }
@@ -240,9 +256,9 @@ void end(IterationRunMain& iter)
 {
     BATB_LOG_FUNC( iter.batb );
 
-    iter.batb.gui.removeWidget( iter.guiMain );
-    delete iter.guiMain;
-    iter.guiMain = nullptr;
+    iter.batb.gui.removeWidget( iter.tb_widget_ );
+    delete iter.tb_widget_;
+    iter.tb_widget_ = nullptr;
 }
 
 

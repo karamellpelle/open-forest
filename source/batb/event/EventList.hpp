@@ -30,6 +30,7 @@ namespace batb
 class EventList
 {
 friend class EventEaterSet;
+friend class CaseEvent;
 friend void step(EventList& );
 
 public:
@@ -46,6 +47,18 @@ public:
     {
         events_.push_back( std::make_shared<EventDataPoint<T>>( d, del ) );
     }
+    
+    // push events from event list
+    void push(const EventList& es)
+    {
+        std::copy( es.events_.begin(), es.events_.end(), std::back_inserter( events_ ) );
+    }
+    // push and clear
+    void move(EventList& es)
+    {
+        push( es );
+        es.events_.clear();
+    }
 
 
 
@@ -57,7 +70,7 @@ private:
     uint frame_ = 0;
 
     //std::list<std::unique_ptr<EventBase>> events_;
-    std::list<std::shared_ptr<EventBase>> events_;
+    std::list<std::shared_ptr<EventBase>> events_; // TODO: list of Event's
 
     static bool step_lifes(const std::shared_ptr<EventBase>& e)
     {
@@ -77,10 +90,9 @@ private:
 
 inline void step(EventList& list)
 {
-        // TODO: decrease frame_lifes
-        // free mem iff frame_lifes == 0
-        //events_.remove_if( [](auto e) { return e->frame_lifes == 0; } ); // c++14
-        list.events_.remove_if( EventList::step_lifes );
+    // free mem iff frame_lifes == 0
+    //events_.remove_if( [](auto e) { return e->frame_lifes == 0; } ); // c++14
+    list.events_.remove_if( EventList::step_lifes );
 
 }
 

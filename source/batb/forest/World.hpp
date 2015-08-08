@@ -61,6 +61,8 @@ public:
     // ...
     Terrain terrain;
 
+    ControlList controls;
+
     // different views of Terrain. a Terrain can be viewed in different ways, 
     // for example old/new map, corridor orienteering, maps of different parts of terrain
     MapList maps;
@@ -74,7 +76,7 @@ public:
     // events happened for this ForestWorld    
     EventList events;
 
-    // ForestNetwork (connected to ForestNetwork, with a filter)
+    // ForestNetwork (connected to RunNetwork, with a filter)
 
     // forest::World implies a run::World, the run::World containing 'this'.
     // it would be nice to let forest::World be totally independent of run::World,
@@ -93,7 +95,13 @@ public:
 
 
     // number of frames iterated (by IterationForest...)
-    uint frames_count = 0;
+    uint frames = 0;
+
+
+    Control* pushControl(const glm::vec2& , const ControlDefinition& );
+    //Control* pushControl(const Control& );
+    //
+
 private:
     
 };

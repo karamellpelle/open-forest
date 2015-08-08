@@ -259,9 +259,10 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/gui/GUIMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain/RunMainTBWidget.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForestDemo.cpp"
       # helpers

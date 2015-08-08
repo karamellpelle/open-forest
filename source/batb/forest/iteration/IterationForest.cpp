@@ -40,9 +40,11 @@ IterationStack IterationForest::iterate(World& world)
  
 
     // TODO: finish up, free mem (events, ...)
+    //
+    step( world.events );
 
     // count number of IterationForest-iterations
-    ++world.frames_count;
+    ++world.frames;
 
     return ret;
 }

@@ -52,13 +52,12 @@ class Control
 {
 friend class Terrain;
 public:
-
     // a Control always belong to a Terrain
     //Control(Terrain* t) : terrain_( t ) { }
     
 
     ControlDefinition definition;
-    glm::vec4 pos;
+    glm::vec4 pos;    // TODO: glm::dvec4?
 
 
     // should we define type of control, like normal, start, finish, etc?

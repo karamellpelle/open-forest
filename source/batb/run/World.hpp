@@ -77,7 +77,7 @@ public:
     EventList events;
 
     // number of frames iterated (by IterationRun...)
-    uint frames_count = 0;
+    uint frames = 0;
     
 };
 

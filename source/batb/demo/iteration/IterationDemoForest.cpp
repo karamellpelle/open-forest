@@ -36,21 +36,21 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-IterationDemoDemo::IterationDemoDemo(BATB& b) : IterationDemo( b )
+IterationDemoForest::IterationDemoForest(BATB& b) : IterationDemo( b )
 {
 
 }
 
 
 
-void IterationDemoDemo::iterate_begin(World& demo)
+void IterationDemoForest::iterate_begin(World& demo)
 {
     BATB_LOG_FUNC( batb );
 
 }
 
 
-IterationStack IterationDemoDemo::iterate_demo(World& demo)
+IterationStack IterationDemoForest::iterate_demo(World& demo)
 {
     // continue with this iteration
     return { this };
@@ -61,14 +61,14 @@ IterationStack IterationDemoDemo::iterate_demo(World& demo)
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
-void begin(IterationDemoDemo& iter)
+void begin(IterationDemoForest& iter)
 {
     BATB_LOG_FUNC( iter.batb );
 
 
 }
 
-void end(IterationDemoDemo& iter)
+void end(IterationDemoForest& iter)
 {
     BATB_LOG_FUNC( iter.batb );
 }

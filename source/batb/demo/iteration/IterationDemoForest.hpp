@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_ITERATION_ITERATION_DEMO_DEMO_HPP
-#define BATB_DEMO_ITERATION_ITERATION_DEMO_DEMO_HPP
+#ifndef BATB_DEMO_ITERATION_ITERATION_DEMO_FOREST_HPP
+#define BATB_DEMO_ITERATION_ITERATION_DEMO_FOREST_HPP
 #include "batb/demo/iteration/IterationDemo.hpp"
 
 
@@ -32,16 +32,16 @@ namespace demo
 
 
 
-// IterationDemoDemo:
+// IterationDemoForest:
 //
-class IterationDemoDemo : public IterationDemo
+class IterationDemoForest : public IterationDemo
 {
-friend void begin(IterationDemoDemo& );
-friend void end(IterationDemoDemo& );
+friend void begin(IterationDemoForest& );
+friend void end(IterationDemoForest& );
 
 public:
     // construct from the containing BATB
-    IterationDemoDemo(BATB& );
+    IterationDemoForest(BATB& );
 
     // iterate
     IterationStack iterate_demo(World& world) override;
@@ -76,10 +76,10 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
-void begin(IterationDemoDemo& );
+void begin(IterationDemoForest& );
 
 
-void end(IterationDemoDemo& );
+void end(IterationDemoForest& );
 
 
 

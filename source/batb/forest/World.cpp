@@ -15,30 +15,32 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_EVENT_HPP
-#define BATB_RUN_EVENT_HPP
-#include "BATB/Config.hpp"
+#include "batb/forest.hpp"
+#include "batb/run.hpp"
 
 
+namespace batb
+{
 
-namespace BATB
+namespace forest
 {
 
 
-class RunEvent
+Control* World::pushControl(const glm::vec2& point, const ControlDefinition& def)
 {
-public:
-    enum Type { };
-    
-    Type type;
+    Control c;
+    c.definition = def;
+    c.pos = glm::vec4( point[0], point[1], 0.0, 1.0 );
 
+    controls.push_front( c );
 
-private:
-
-
-};
-
+    return &controls.front();
 
 }
 
-#endif
+} // namespace forest
+
+} // namespace batb
+
+
+

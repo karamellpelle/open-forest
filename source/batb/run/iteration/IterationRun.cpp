@@ -38,8 +38,11 @@ IterationStack IterationRun::iterate(World& world)
     ////////////////////////////////////////
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
-    // set current world the Run-object is working on
+    // set current world the Run-object is working on (used by GUI)
     batb.run.world = &world;
+
+    // set current tick for world.
+    world.tick = batb.env.tick();
 
     // tmp:
     if ( world.toggle_a )
@@ -50,13 +53,15 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // setup scene for this frame
     begin( world.scene );
 
-    // tmp:
     if (world.toggle_ogre)
     {
+        // output OGRE. 
+        // TODO: not here (every frame), instead let 'iterate_run' iteration use 
+        // call Ogre::SceneManager->_renderScene( camera, viewport, false ); 
         batb.ogre.output( world.scene );
     }
 
-    // step all Key's
+    // step all Key's, before 'iterate_run' implementation
     batb.keys.step( world.tick );
 
     ////////////////////////////////////////
@@ -66,22 +71,17 @@ debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
  
 
-    // set current tick for world.
-    // TODO: not here, done by wrapped iteration ??
-    world.tick = batb.env.tick();
+    // output and step GUI (every frame!)
+    batb.gui.output( world.scene );
+    batb.gui.step( world.tick );
 
-    // tmp:
-    if ( world.toggle_tb )
-    {
-        batb.gui.output( world.scene );
-        batb.gui.step( world.tick );
-    }
+    ////////////////////////////////////////////////////////////////////////////////
+    // free resources
 
-    // TODO: finish up, free mem (events, ...)
+    step( world.events );
 
 
-    // count number of IterationRun-iterations
-    ++world.frames_count;
+    ++world.frames;
 
     return ret;
 }

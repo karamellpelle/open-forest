@@ -15,19 +15,69 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_EVENT_HPP
-#define BATB_EVENT_HPP
-#include "batb/batb_include.hpp"
-#include "batb/event/EventBase.hpp"
+#ifndef BATB_EVENT_CASEEVENT_HPP
+#define BATB_EVENT_CASEEVENT_HPP
 #include "batb/event/EventList.hpp"
-#include "batb/event/CaseEvent.hpp"
 #include "batb/event/EventEater.hpp"
-#include "batb/event/Event.hpp"
+
+
+
 
 
 namespace batb
 {
 
+
+// Haskell <3 <3 <3
+class CaseEvent
+{
+
+public:
+    CaseEvent(const EventList& es) : es_( es ) { } 
+    CaseEvent(const Event& e)
+    {
+        es_.push( e );
+    }
+
+    template <typename... Fns>
+    void operator()(Fns... fns)
+    {
+        // handle each event
+        for (const auto& ptr : es_.events_ )
+        {
+            // eat 'e'
+            eat( *ptr, fns... );
+        }
+    }
+
+
+private:
+    EventList es_;
+
+    template <typename Fn, typename... Fns>
+    void eat(const EventBase& e, const Fn& fn, Fns... fns)
+    {
+        EventEater eater( fn );
+        eater( e );
+
+        eat( e, fns... );
+    }
+    template <typename... Fns>
+    void eat(const EventBase& e)
+    {
+    }
+};
+
+
+inline CaseEvent caseOf(const EventList& es)
+{
+    return CaseEvent( es );
+}
+
+inline CaseEvent caseOf(const Event& e)
+{
+    return CaseEvent( e ); 
+}
 
 
 } // namespace batb

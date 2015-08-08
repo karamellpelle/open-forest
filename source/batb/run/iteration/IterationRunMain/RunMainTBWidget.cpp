@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/run/gui/GUIMain.hpp"
+#include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
 #include "batb.hpp"
 
 namespace batb
@@ -24,7 +24,7 @@ namespace batb
 namespace run
 {
 
-GUIMain::GUIMain(BATB& b) : batb( b )
+RunMainTBWidget::RunMainTBWidget(IterationRunMain& i) : iteration( i )
 {
     using namespace tb;
 
@@ -34,9 +34,8 @@ GUIMain::GUIMain(BATB& b) : batb( b )
     //if ( node.ReadFile( file::static_data( "batb/run/gui/main.tb.txt" ).c_str() ) )
     //if ( node.ReadFile( "Demo/demo01/ui_resources/test_connections.tb.txt" ) )
     //static const char* path =  "batb/gui/Demo/demo01/ui_resources/test_connections.tb.txt";
-    static const char* path = "batb/run/gui/main.tb.txt"; 
+    static const char* path = "batb/run/iteration/IterationRunMain/runmain.tb.txt"; 
     if ( node.ReadFile( file::static_data( path ).c_str() ) )
-	//LoadResourceFile("Demo/demo01/ui_resources/test_connections.tb.txt");
     {
         // let TB populate this TBWindow from file
 	g_widgets_reader->LoadNodeTree( this, &node );
@@ -51,25 +50,27 @@ GUIMain::GUIMain(BATB& b) : batb( b )
         //
         // ...
 
-        SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
-        SetSize( 360, 360  );
-        SetPosition( TBPoint( 30, 30 ) );
-        SetText( "GUIMain" );
-	SetOpacity(0.50f);
-        //SetGravity( tb::WIDGET_GRAVITY_ALL );
-	//ResizeToFitContent();
-	EnsureFocus();
     }
     else
     {
-        batb.log << "GUIMain: could not read associated file." << std::endl;
+        iteration.batb.log << "RunMainTBWidget: could not read associated file." << std::endl;
 
-        throw std::runtime_error( "GUIMain: error reading file" );
+        throw std::runtime_error( "RunMainTBWidget: error reading file" );
     }
+
+    // set TB window settings:
+    SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
+    SetSize( 360, 360  );
+    SetPosition( TBPoint( 30, 30 ) );
+    SetText( "RunMainTBWidget" );
+    SetOpacity(0.50f);
+    //SetGravity( tb::WIDGET_GRAVITY_ALL );
+    //ResizeToFitContent();
+    EnsureFocus();
 }
 
 
-bool GUIMain::OnEvent(const tb::TBWidgetEvent& ev)
+bool RunMainTBWidget::OnEvent(const tb::TBWidgetEvent& ev)
 {
     using namespace tb; 
     if ( ev.type == EVENT_TYPE_CLICK )
@@ -77,17 +78,17 @@ bool GUIMain::OnEvent(const tb::TBWidgetEvent& ev)
         TBID id = ev.target->GetID(); 
         if ( id == TBIDC( "run-old" ) )
         {
-            batb.log << "GUIMain -> \"run old-BATB\"" << std::endl; 
+            iteration.batb.log << "RunMainTBWidget -> \"run old-BATB\"" << std::endl; 
             return true;
         }
         if ( id == TBIDC( "run-nanovg" ) )
         {
-            batb.log << "GUIMain -> \"run nanovg\"" << std::endl; 
+            iteration.batb.log << "RunMainTBWidget -> \"run nanovg\"" << std::endl; 
             return true;
         }
         if ( id == TBIDC( "exit" ) )
         {
-            batb.log << "GUIMain -> \"exit\"" << std::endl;
+            iteration.batb.log << "RunMainTBWidget -> \"exit\"" << std::endl;
             return true;
         }
     } 
@@ -97,7 +98,7 @@ bool GUIMain::OnEvent(const tb::TBWidgetEvent& ev)
     return tb::TBWindow::OnEvent( ev );
 }
 
-void GUIMain::OnMessageReceived(tb::TBMessage* msg)
+void RunMainTBWidget::OnMessageReceived(tb::TBMessage* msg)
 {
     using namespace tb;
 
