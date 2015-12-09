@@ -52,6 +52,9 @@ public:
     ////////////////////////////////////////
 
 private:
+    forest::StepDT stepDT;
+    forest::ModifyControlCamera modifyControlCamera;
+    forest::ModifyControlRunner modifyControlRunner;
 
     //float_t aim_a = 0.0;  // yaw
     //float_t aim_b = 0.0;  // pitch

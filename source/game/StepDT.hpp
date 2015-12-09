@@ -15,43 +15,30 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WEATHER_HPP
-#define BATB_FOREST_WEATHER_HPP
-#include "batb/batb_include.hpp"
+#ifndef GAME_STEPDT_HPP
+#define GAME_STEPDT_HPP
+#include "game/game_include.hpp"
+#include "game/IterationStack.hpp"
 
-namespace Ogre
-{
-class Light;
-}
 
-namespace batb
+
+namespace game
 {
 
-class BATB;
-
-namespace forest
-{
-
-class World;
-
-// night/day and other properties
-class Weather
+template <typename A, typename Tick>
+class StepDT
 {
 public:
-    // Date: day, time
-    // ...
-    void load(const YAML::Node& );
+    virtual ~StepDT() {};
+    virtual void operator()(A& a, Tick dt)   { }
 
-private:
 };
 
 
 
 
-} // namespace forest
-
-} // namespace batb
-
-
+} // namespace game
 
 #endif
+
+

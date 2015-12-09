@@ -15,43 +15,30 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WEATHER_HPP
-#define BATB_FOREST_WEATHER_HPP
-#include "batb/batb_include.hpp"
+#ifndef GAME_OUTPUT_HPP
+#define GAME_OUTPUT_HPP
+#include "game/game_include.hpp"
+#include "game/IterationStack.hpp"
 
-namespace Ogre
-{
-class Light;
-}
 
-namespace batb
+
+namespace game
 {
 
-class BATB;
-
-namespace forest
-{
-
-class World;
-
-// night/day and other properties
-class Weather
+template <typename A>
+class Output
 {
 public:
-    // Date: day, time
-    // ...
-    void load(const YAML::Node& );
+    virtual ~Output() {};
+    virtual void operator()(A& a)   { }
 
-private:
 };
 
 
 
 
-} // namespace forest
-
-} // namespace batb
-
-
+} // namespace game
 
 #endif
+
+

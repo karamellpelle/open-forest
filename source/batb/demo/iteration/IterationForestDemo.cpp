@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,43 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WEATHER_HPP
-#define BATB_FOREST_WEATHER_HPP
-#include "batb/batb_include.hpp"
-
-namespace Ogre
-{
-class Light;
-}
+#include "batb.hpp"
+#include "batb/demo/iteration/IterationForestDemo.hpp"
 
 namespace batb
 {
 
-class BATB;
 
-namespace forest
+namespace demo
 {
 
-class World;
-
-// night/day and other properties
-class Weather
+IterationForestDemo::IterationForestDemo(BATB& b) : batb( b )
 {
-public:
-    // Date: day, time
-    // ...
-    void load(const YAML::Node& );
 
-private:
-};
+}
+
+forest::IterationStack IterationForestDemo::iterate_forest(forest::World& world)
+{
+
+    batb.forest.modifyBegin( world );
+
+    tick_t tick = world.run.tick;
+
+    while ( world.tick + value::forestDT <= tick )
+    {
+        batb.forest.stepDT( value::forestDT, world );
+        world.tick += value::forestDT;
+
+        // look at events:
+        // if xxx return _;
+    }
+
+    // continue
+    return { this };
+}
 
 
-
-
-} // namespace forest
+} // namespace demo
 
 } // namespace batb
 
-
-
-#endif

@@ -15,37 +15,21 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WEATHER_HPP
-#define BATB_FOREST_WEATHER_HPP
-#include "batb/batb_include.hpp"
+#include "batb/forest.hpp"
 
-namespace Ogre
-{
-class Light;
-}
 
 namespace batb
 {
 
-class BATB;
-
 namespace forest
 {
 
-class World;
 
-// night/day and other properties
-class Weather
+
+void Weather::load(const YAML::Node& yaml)
 {
-public:
-    // Date: day, time
-    // ...
-    void load(const YAML::Node& );
 
-private:
-};
-
-
+}
 
 
 } // namespace forest
@@ -54,4 +38,3 @@ private:
 
 
 
-#endif

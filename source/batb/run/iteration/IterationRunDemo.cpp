@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,60 +15,78 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "OgreCamera.h"
 #include "batb.hpp"
-#include "glm/gtx/euler_angles.hpp"
-#include <random>
-#include "helpers/bezier.hpp"
+#include "batb/run/iteration/IterationRunDemo.hpp"
 
 namespace batb
 {
 
-namespace demo
+namespace run
 {
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-IterationDemoForest::IterationDemoForest(BATB& b) : 
-    IterationDemo( b ), modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
+IterationRunDemo::IterationRunDemo(BATB& b) : IterationRun( b )
 {
 
 }
 
 
-
-void IterationDemoForest::iterate_begin(World& demo)
+void IterationRunDemo::iterate_begin(World& run)
 {
     BATB_LOG_FUNC( batb );
 
+    //// create stack for demo::World
+    //stack_ = { new IterationDemo( batb ) };
+
+    // load Forest
+    static bool init = false;
+    if (!init)
+    {
+        demo = new demo::World( run );
+        forest::WorldLoader loader( batb );
+        loader.load( demo->forest, YAML::Node() );
+    }
+    init = true;
+
+    tick_ = run.tick;
 }
 
 
-IterationStack IterationDemoForest::iterate_demo(World& demo)
+IterationStack IterationRunDemo::iterate_run(World& run)
 {
 /*
- *  from demo_iterate
+    // TODO: demo::iterate_terrain
+    // iterate demo::World
+    game::iterate_stack( stack_, world_ )
+    if ( stack_.empty() )
+    {
+        return _;
+    }
+    else
+    {
+        return { this };
+    }
+*/   
+/*
+    constexpr tick_t time = 4.0;
+    if ( tick_ + time <= world.tick )
+    {
+        batb.log << "out of IterationRunDemo!!" << std::endl;
+        return _;
+    }
+    else
+    {
+        return { this };
+    }
+*/
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
 
-    camera->setAspectRatio( aspect );
+    demo->forest.camera.ogre_camera->setAspectRatio( aspect );
     // TODO: camera->setProjection( run.scene.proj3D );
-
-    //iterate_head(batb, run);
-    iterate_terrain(batb, run, forest);
-
-    camera->setAspectRatio( aspect );
-*/ 
-
-// from demo::iterate_terrain
-/*
     //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
+    //
+    /*
     tick_t tick = run.tick;
     float_t x,z;
     cossin( 0.1 * tick, x, z );
@@ -79,6 +97,8 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     Ogre::Vector3 dir( x, -0.14, z );
     dir.normalise();
     //camera->setDirection( dir );
+    */
+    /*
     if ( forest.runners.empty() )
     {
         std::cout << "runners.empty!!\n"; 
@@ -96,72 +116,23 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
         camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
 
     }
-*/
-/*
- *  from IterationForestDemo:
-    batb.forest.modifyBegin( world );
+    */ 
 
-    tick_t tick = world.run.tick;
 
-    while ( world.tick + value::forestDT <= tick )
+    if ( batb.run.keyset.ogre->click() )
     {
-        batb.forest.stepDT( value::forestDT, world );
-        world.tick += value::forestDT;
-
-        // look at events:
-        // if xxx return _;
+        batb.log << "out of IterationRunDemo!!" << std::endl;
+        return _;
     }
-*/
-
-    // control Camera
-    modifyControlCamera( world );
-
-    // controlRunner
-    modifyControlRunner( world );
-
-    constexpr tick_t dt = 0.02;
-    tick_t tick_next = forest.run.tick;
-
-    while ( forest.tick + dt <= tick_next )
+    else
     {
-      
-        // step World
-        stepDT( forest, dt );
-
-        forest.tick += dt;
+        return { this };
     }
-
-    // TODO: look at events! and purge
-
-    // continue with this iteration
-    return { this };
-
 }
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
-//
-void begin(IterationDemoForest& iter)
-{
-    BATB_LOG_FUNC( iter.batb );
 
-
-}
-
-void end(IterationDemoForest& iter)
-{
-    BATB_LOG_FUNC( iter.batb );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-//
-
-
-
-} // namespace demo
+} // namespace run
 
 } // namespace batb
-
 
