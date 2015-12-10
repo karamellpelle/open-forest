@@ -28,6 +28,7 @@ class Iteration;
 
 
 // define stack type (forward list)
+// TODO: forward_list<shared_ptr<A>> ?
 template <typename A>
 using IterationStack = std::forward_list<Iteration<A>*>;
 

@@ -32,6 +32,7 @@ IterationRunDemo::IterationRunDemo(BATB& b) : IterationRun( b )
 }
 
 
+
 void IterationRunDemo::iterate_begin(World& run)
 {
     BATB_LOG_FUNC( batb );
@@ -40,14 +41,17 @@ void IterationRunDemo::iterate_begin(World& run)
     //stack_ = { new IterationDemo( batb ) };
 
     // load Forest
+    // NOTE: this fails anyway; 'this' is destroyed upon 
+    //       iteration is finished
     static bool init = false;
     if (!init)
     {
         demo = new demo::World( run );
         forest::WorldLoader loader( batb );
         loader.load( demo->forest, YAML::Node() );
+
+        init = true;
     }
-    init = true;
 
     tick_ = run.tick;
 }
@@ -82,7 +86,12 @@ IterationStack IterationRunDemo::iterate_run(World& run)
 */
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
 
+    batb.ogre.sceneBegin( run.scene );
     demo->forest.camera.ogre_camera->setAspectRatio( aspect );
+    // only render the scenemanager for this forest::World
+    batb.ogre.outputCamera( demo->forest.camera.ogre_camera );
+    batb.ogre.sceneEnd();
+
     // TODO: camera->setProjection( run.scene.proj3D );
     //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
     //

@@ -19,6 +19,12 @@
 #define BATB_FOREST_CAMERA_HPP
 #include "batb/batb_include.hpp"
 
+namespace Ogre
+{
+class Camera;
+}
+
+
 namespace batb
 {
 
@@ -30,6 +36,9 @@ namespace forest
 class Camera 
 {
 public:
+    glm::vec4 aim;
+
+    Ogre::Camera* ogre_camera = nullptr;
 
 private:
 };

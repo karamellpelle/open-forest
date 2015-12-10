@@ -53,7 +53,7 @@ public:
 
 
 private:
-    demo::World* demo;
+    demo::World* demo = nullptr;
     //demo::IterationStack stack_;
 
     tick_t tick_;

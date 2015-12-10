@@ -53,21 +53,41 @@ friend void end(OGRE& );
 public:
     OGRE(BATB& b) : ModuleBATB( b ), glcontextglfw_( b ) { }
 
-    // render to Scene
+    ////////////////////////////////////////////////////////////////////////////////
+    // Scene rendering
+    //
+
+    // start/end frame (each iteration, i.e. inside IterationRun::iterate)
+    void frameBegin();
+    void frameEnd();
+
+    // set Scene for rendering 
+    // only Ogre output (i.e. outputCamera/outputViewport) should be done 
+    // inside, since other gl may mess up
+    void sceneBegin(const Scene& );
+    void sceneEnd();
+
+    // render into Scene, using camera
+    void outputCamera(Ogre::Camera* );
+    // render into Scene, using a viewports camera
+    void outputViewport(Ogre::Viewport* );
+    ////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // for each frame, let Ogre render everything inside it
+    // (no frameXXX, sceneXXX, outputXXX should be used)
     void output(const Scene& );
+    ////////////////////////////////////////////////////////////////////////////////
 
-
-    Ogre::LogManager* logmanager = nullptr;
-    Ogre::Root* root = nullptr;
-    Ogre::RenderSystem* rendersystem = nullptr;
-    Ogre::RenderWindow* renderwindow = nullptr; // this is a Ogre::RenderTarget
-
-    // NOTE: Viewport's and Camera'a shall not be parts of OGRE,
-    //       these are instead rendering settings into OGRE
+    Ogre::LogManager*   ogre_logmanager = nullptr;
+    Ogre::Root*         ogre_root = nullptr;
+    Ogre::RenderSystem* ogre_rendersystem = nullptr;
+    Ogre::RenderWindow* ogre_renderwindow = nullptr; // this is a Ogre::RenderTarget
 
 private:
-    // Name of current rendersystem
-    std::string rendersystem_name_ = "OpenGL Rendering Subsystem";
+    // Name of current ogre_rendersystem
+    std::string ogre_rendersystem_name_ = "OpenGL Rendering Subsystem";
 
     // FIXME: differate between GL an GL3Plus
     GLContextGLFW glcontextglfw_;

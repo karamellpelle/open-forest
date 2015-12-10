@@ -82,6 +82,7 @@ void Terrain::load(const YAML::Node& yaml)
 #endif
 
     // create the only TerrainGlobalOptions, if not present
+    // Terrain::setResourceGroup overrides this (??)
     if ( ogre_terrain_globals == nullptr )
     {
         ogre_terrain_globals = OGRE_NEW TerrainGlobalOptions();
@@ -122,6 +123,7 @@ void Terrain::load(const YAML::Node& yaml)
     defaultimp.minBatchSize = 33;
     defaultimp.maxBatchSize = 65;
     // textures
+    // see 'initBlendMaps below 
     defaultimp.layerList.resize(3);
     defaultimp.layerList[0].worldSize = 100; // scale layer
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");

@@ -35,6 +35,8 @@ class IterationBegin : public Iteration<typename Iter::World>
 
 template <typename Iter_> 
 friend Iteration<typename Iter_::World>* begin_iteration(Iter_& );
+template <typename Iter_> 
+friend Iteration<typename Iter_::World>* begin_iteration(Iter_* );
 
 public:
 
@@ -68,6 +70,11 @@ template <typename Iter>
 Iteration<typename Iter::World>* begin_iteration(Iter& iter)
 {
     return new IterationBegin<Iter>( iter );
+}
+template <typename Iter>
+Iteration<typename Iter::World>* begin_iteration(Iter* iter)
+{
+    return new IterationBegin<Iter>( *iter );
 }
 
 // this is _very_ ugly:

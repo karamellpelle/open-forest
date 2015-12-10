@@ -22,6 +22,7 @@
 #include "batb/demo/libs/al.hpp"
 #include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
 #include "batb/run/events.hpp"
+#include "batb/run/iteration/IterationRunDemo.hpp"
 
 
 namespace batb
@@ -85,7 +86,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // FIXME: demo_end()!
     //
     // Ogre demo
-    demo::ogre::demo_begin( batb );
+    //demo::ogre::demo_begin( batb );
 
     // nanovg demo
     demo::nanovg::demo_begin( batb );
@@ -95,22 +96,22 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
-    std::cout << "toggle Ogre demo with the O key..." << std::endl;
+    //std::cout << "toggle Ogre demo with the O key..." << std::endl;
     std::cout << "toggle nanovg demo with the N key..." << std::endl;
     std::cout << "toggle turbobadger demo with the T key..." << std::endl;
     std::cout << "toggle old-BATB with the INSERT key..." << std::endl; 
     std::cout << std::endl;
 
 
-    // tmp:
-    forest = new forest::World( run ); // FIXME: delete!
-    forest::Runner runner;
-    forest->runners.push_front( runner );
-
-    forest_stack = 
-    {
-        game::begin_iteration( batb.forest.iterationForestDemo )
-    };
+    //// tmp:tmp
+    //forest = new forest::World( run ); // FIXME: delete!
+    //forest::Runner runner;
+    //forest->runners.push_front( runner );
+    //
+    //forest_stack = 
+    //{
+    //    game::begin_iteration( batb.forest.iterationForestDemo )
+    //};
     
 }
 
@@ -160,27 +161,44 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
 
     // Ogre demo:
-    if ( run.toggle_ogre )
-    {
-        demo::ogre::demo_iterate( batb, run, *forest );
-    }
+    //if ( run.toggle_ogre )
+    //{
+    //    demo::ogre::demo_iterate( batb, run, *forest );
+    //}
     // nanovg demo:
     if ( run.toggle_nanovg )
     {
         demo::nanovg::demo_iterate( batb, false, false );
     }
     
-
-    // forest
-    game::iterate( forest_stack, *forest );
-
     // ALURE demo:
     demo::al::demo_iterate( batb, run );
+
+
+
+    // forest
+    //game::iterate( forest_stack, *forest );
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
     
+    // start ogre-demo:
+    if ( batb.run.keyset.ogre->click() )
+    {
+        //return {  game::begin_iteration( batb.run.iterationRunOld ), 
+        //          game::begin_iteration( *this ) };
+        //demo::World demo = new demo::World( run );
+        return { game::begin_iteration( new IterationRunDemo( batb ) ), 
+                 game::begin_iteration( this ) };
+    /*
+    case event of
+      demo::World world;
+      demo -> return { game::begin_iteration( new IterationDemoForest( std::move( world ) ) ) };
+      return loading_iteration<demo::World>( std::move( world ), &demo::load, &demo::unload, IterationDemoForest( batb ) );
+          :: A
+     */   
+    }
     
 
     if ( batb.run.keyset.pause->click() )

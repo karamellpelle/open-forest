@@ -15,12 +15,6 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/demo/libs/ogre.hpp"
-#include "batb.hpp"
-#include "batb/ogre.hpp"
-#include "batb/run/World.hpp"
-
-
 #include "OgreMaterialManager.h"
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
@@ -42,7 +36,14 @@
 #include "OgreTerrainPaging.h"
 #include "OgrePageManager.h"
 #include "OgreRenderSystemCapabilities.h"
+
+#include "batb.hpp"
+#include "batb/ogre.hpp"
+#include "batb/run/World.hpp"
 #include "batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
+#include "batb/demo/libs/ogre.hpp"
+
+
 
 //#define USE_SAMPLE_ENDLESSWORLD
 #define USE_SAMPLE_TERRAIN
@@ -76,12 +77,6 @@ using namespace Ogre;
 //#define HOLD_LOD_DISTANCE 3000.0
 
 #define HOLD_LOD_DISTANCE 300.0
-//#define TERRAIN_WORLD_SIZE 4000.0f
-//#define ENDLESS_PAGE_MIN_X 0
-//#define ENDLESS_PAGE_MIN_Y 0
-//#define ENDLESS_PAGE_MAX_X 0
-//#define ENDLESS_PAGE_MAX_Y 0
-
 #endif
 
 
@@ -90,17 +85,19 @@ using namespace Ogre;
 #define TERRAIN_PAGE_MIN_Y 0
 #define TERRAIN_PAGE_MAX_X 0
 #define TERRAIN_PAGE_MAX_Y 0
+#define ENDLESS_TERRAIN_FILE_SUFFIX String("dat")
+#define ENDLESS_PAGE_MIN_X (-0x7FFF)
+#define ENDLESS_PAGE_MIN_Y (-0x7FFF)
+#define ENDLESS_PAGE_MAX_X 0x7FFF
+#define ENDLESS_PAGE_MAX_Y 0x7FFF
+#define HOLD_LOD_DISTANCE 300.0
 
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS || OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include "macUtils.h"
 #endif
 
-void getTerrainImage(bool flipX, bool flipY, Image& img);
-void initBlendMaps(Terrain* terrain);
-void defineTerrain(long x, long y, bool flat = false);
 
-bool terrains_imported = false;
 
 Vector3 terrain_pos(1000,0,5000);
 #define TERRAIN_FILE_PREFIX String("testTerrain")
@@ -109,6 +106,11 @@ Vector3 terrain_pos(1000,0,5000);
 #define TERRAIN_SIZE 513
 
 #endif
+
+bool terrains_imported = false;
+void getTerrainImage(bool flipX, bool flipY, Image& img);
+void initBlendMaps(Terrain* terrain);
+void defineTerrain(long x, long y, bool flat = false);
 
 ////////////////////////////////////////////////////////////////////////////////
 static bool tmp_empty = true;
@@ -184,7 +186,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
                         // add resource item
                         try
                         {
-                            batb.ogre.root->addResourceLocation(  file::static_data( path ), type, name );
+                            batb.ogre.ogre_root->addResourceLocation(  file::static_data( path ), type, name );
                         }
                         catch (Ogre::Exception& e)
                         {
@@ -210,13 +212,14 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         ////////////////////////////////////////////////////////////////////////////////
         // create SceneManager
         // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-        scenemgr = batb.ogre.root->createSceneManager( "DefaultSceneManager" );
+        scenemgr = batb.ogre.ogre_root->createSceneManager( "DefaultSceneManager" );
         
         //// create a view into scene, a Camera!
         camera = scenemgr->createCamera( "PlayerCam" );
       
         // create Viewport, the 2D target of Camera
-        viewport = batb.ogre.renderwindow->addViewport( camera );
+        viewport = batb.ogre.ogre_renderwindow->addViewport( camera );
+
         viewport->setClearEveryFrame( false, 0 ); // TODO: remove 0??
 
        
@@ -300,6 +303,7 @@ void begin_terrain(BATB& batb)
 #endif
 
     // create object, which becomes a singleton
+    // Terrain::setResourceGroup overrides this (??)
     terrain_globals = OGRE_NEW TerrainGlobalOptions();
 
 
@@ -364,6 +368,7 @@ void begin_terrain(BATB& batb)
     defaultimp.minBatchSize = 33;
     defaultimp.maxBatchSize = 65;
     // textures
+    // see 'initBlendMaps' below 
     defaultimp.layerList.resize(3);
     defaultimp.layerList[0].worldSize = 100; // scale layer
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
@@ -377,7 +382,7 @@ void begin_terrain(BATB& batb)
 ////////////////////////////////////////////////////////////////////////////////
 
     // Paging setup
-#ifdef USE_SAMPLE_ENDLESSWORLD
+#ifndef USE_SAMPLE_TERRAIN
     page_manager = OGRE_NEW PageManager();
     // Since we're not loading any pages from .page files, we need a way just 
     // to say we've loaded them without them actually being loaded
@@ -386,12 +391,33 @@ void begin_terrain(BATB& batb)
     page_manager->setDebugDisplayLevel(0);
     terrain_paging = OGRE_NEW TerrainPaging(page_manager);
     paged_world = page_manager->createWorld();
-    paged_world_section = terrain_paging->createWorldSection(paged_world, terrain_group, 400, 500, 
+    paged_world_section = terrain_paging->createWorldSection(paged_world, terrain_group, 
+#ifdef USE_SAMPLE_ENDLESSWORLD
+            400, 500, 
             ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
             ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
+#endif
+#ifdef USE_SAMPLE_TERRAIN
+            400, 500, 
+            ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
+            ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
+            //2000, 3000,
+            //TERRAIN_PAGE_MIN_X, TERRAIN_PAGE_MIN_Y,
+            //TERRAIN_PAGE_MAX_X, TERRAIN_PAGE_MAX_Y);
+#endif
+#endif
+
+#ifdef USE_SAMPLE_ENDLESSWORLD
     perlin_noise = OGRE_NEW PerlinNoiseTerrainGenerator( 3.3, 2.2, 10, 128, 0.4 );
     paged_world_section->setDefiner( perlin_noise );
 //		paged_world_section->setDefiner( OGRE_NEW SimpleTerrainDefiner );
+
+        TerrainGroup::TerrainIterator ti = terrain_group->getTerrainIterator();
+        while(ti.hasMoreElements())
+        {
+            Terrain* t = ti.getNext()->instance;
+            initBlendMaps(t);
+        }
 
 #endif
 #ifdef USE_SAMPLE_TERRAIN
@@ -442,7 +468,7 @@ void begin_terrain(BATB& batb)
 
 #endif
 
-    if (batb.ogre.root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
+    if (batb.ogre.ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
     {
         camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
@@ -503,7 +529,7 @@ void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
 }
 
 
-#ifdef USE_SAMPLE_TERRAIN
+//#ifdef USE_SAMPLE_TERRAIN
     void defineTerrain(long x, long y, bool flat )
     {
         // if a file is available, use it
@@ -587,7 +613,7 @@ void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
         */
     }
 
-#endif
+//#endif
 
 
 } // namespace ogre

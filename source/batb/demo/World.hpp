@@ -48,24 +48,24 @@ class World
 {
 
 public:
-    World(run::World& r) : run( r ) { }
+    World(run::World& r) : run( r ), forest( r ) { }
 
     run::World& run;
     EventList events;
     tick_t tick = 0.0;
-
+/*
     // 
     ControlPoint cpoint;
     std::forward_list<ControlPoint> cpoint_nexts;
     std::forward_list<ControlPoint> cpoint_prevs;
 
 
-
-    forest::World& forest;
-    forest::IterationStack forest_stack;
+*/
+    // forest subworld
+    forest::World forest;
+    //forest::IterationStack forest_stack;
     
     forest::Runner* runner;
-
 
     // tick of world
 

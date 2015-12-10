@@ -58,11 +58,13 @@ public:
     // rendering target:
     Scene scene;
 
-    //RaceWorld race;
+    //RaceWorld race; FIXME: into own IterationRun
     //IterationStackRaceWorld race_stack;
 
     // RunNetwork network;
-    // [RunEvent] events;
+
+    // events
+    EventList events;
 
     // tick of world
     tick_t tick;
@@ -74,7 +76,6 @@ public:
     bool toggle_nanovg = false;
     bool toggle_tb = false;
 
-    EventList events;
 
     // number of frames iterated (by IterationRun...)
     uint frames = 0;

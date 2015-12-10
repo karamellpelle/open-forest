@@ -48,6 +48,10 @@ public:
 
     KeySet keyset;
 
+    //Output output;
+    //StepDT stepDT;
+    //ModifyBegin modifyBegin;
+    
     // Iteration's
     IterationForestDemo iterationForestDemo;
 

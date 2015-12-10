@@ -18,7 +18,7 @@ PerlinNoiseTerrainGenerator::PerlinNoiseTerrainGenerator(const Real& alpha, cons
     , mHeightScale(heightScale)
     , mOriginPoint(0.f)
 {
-    for (int i = 0 ; i < B ; i++) {
+    for (int i = 0 ; i < PERLIN_B ; i++) {
         p[i] = i;
         g1[i] = Math::SymmetricRandom();
 
@@ -29,19 +29,19 @@ PerlinNoiseTerrainGenerator::PerlinNoiseTerrainGenerator(const Real& alpha, cons
         g3[i].normalise();
     }
 
-    for (int i = 0 ; i < B ; i++) {
-        int j = (int) Math::RangeRandom (0,B);
+    for (int i = 0 ; i < PERLIN_B ; i++) {
+        int j = (int) Math::RangeRandom (0,PERLIN_B);
 
         int k = p[i];
         p[i] = p[j];
         p[j] = k;
     }
 
-    for (int i = 0 ; i < B + 2 ; i++) {
-        p[B + i] = p[i];
-        g1[B + i] = g1[i];
-        g2[B + i] = g2[i];
-        g3[B + i] = g3[i];
+    for (int i = 0 ; i < PERLIN_B + 2 ; i++) {
+        p[PERLIN_B + i] = p[i];
+        g1[PERLIN_B + i] = g1[i];
+        g2[PERLIN_B + i] = g2[i];
+        g3[PERLIN_B + i] = g3[i];
     }
 }
 

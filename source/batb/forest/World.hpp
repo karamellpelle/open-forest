@@ -28,6 +28,14 @@
 #include "batb/event.hpp"
 
 
+
+namespace Ogre
+{
+    class SceneManager;
+    class Viewport;
+}
+
+
 namespace batb
 {
 
@@ -97,13 +105,40 @@ public:
     // number of frames iterated (by IterationForest...)
     uint frames = 0;
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // methods
+    //
 
     Control* pushControl(const glm::vec2& , const ControlDefinition& );
     //Control* pushControl(const Control& );
     //
 
+
+
+    Ogre::SceneManager* ogre_scenemgr = nullptr;
+    Ogre::Viewport*     ogre_viewport = nullptr;
+
 private:
     
+};
+
+
+// setup and destroy a World
+class WorldLoader
+{
+public:
+    WorldLoader(BATB& );
+
+    //void setState( FiniteLoad* state) { state_ = state };
+
+    void load(World& , const YAML::Node& );
+    void unload(World& );
+
+private:
+    BATB& batb;
+
+    //FiniteLoad* state_ = nullptr;
+
 };
 
 
