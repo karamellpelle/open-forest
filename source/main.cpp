@@ -20,6 +20,7 @@
 #include "game.hpp"
 #include "file.hpp"
 #include "batb.hpp"
+#include "batb/run/workers.hpp" 
 
 
 
@@ -60,12 +61,17 @@ int main(int argc, char** argv)
         batb::begin( batb );
 
 
-        // 'main' is iterating batb::run::World
-        batb::run::World run;
-        batb::run::IterationStack stack =
+        using namespace batb;
+          
+        // 'main' is iterating run::World
+        run::World run;
+        auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
+        auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
+        run::IterationStack stack =
         {
-              game::begin_iteration( batb.run.iterationRunBegin ),  // create the non-core part of BATB, continue with iterationRunMain, if success
-              game::begin_iteration( batb.run.iterationRunEnd )     // destroy game data at end, anyway
+              game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
+              game::begin_iteration( batb.run.iterationRunMain ),     // main
+              game::begin_iteration( unloadBATB )                     // destroy game data at end
         };
 
         // "main loop"
@@ -74,7 +80,7 @@ int main(int argc, char** argv)
             // begin frame for iteration
             env.frameBegin();
 
-            // make 1 iteration of world
+            // make 1 iteration of 'run'
             iterate( stack, run );
 
             // end frame for iteration

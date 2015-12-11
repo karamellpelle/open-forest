@@ -298,6 +298,10 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     if ( ogre.init_nonempty() )
     {
         ogre.save();
+   
+        // needs to be done before modding Ogre, since
+        // frameBegin/End may be done in other thread (i.e. main thread)
+        ogre.init( false );
 
         
 debug::gl::msg( "OGRE_DELETE Root" );
@@ -315,7 +319,6 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
     }
    
-    ogre.init( false );
 }
 
 void OGRE::set_glfwcontext_()

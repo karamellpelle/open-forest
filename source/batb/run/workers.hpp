@@ -15,56 +15,48 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_ITERATION_ITERATION_RUN_END_HPP
-#define BATB_RUN_ITERATION_ITERATION_RUN_END_HPP
-#include "batb/run/iteration/IterationRun.hpp"
+#ifndef BATB_RUN_WORKERS_HPP
+#define BATB_RUN_WORKERS_HPP
+#include "batb/batb_include.hpp"
+#include "batb/run/iteration/IterationRunWork.hpp"
 
 
 namespace batb
 {
 
 
-class BATB;
 
 namespace run
 {
 
-
-
-
-
-class IterationRunEnd : public IterationRun
+////////////////////////////////////////////////////////////////////////////////
+// load non-core part of BATB
+template <>
+class LoadWorker<BATB>
 {
-friend void begin(IterationRunEnd& );
-friend void end(IterationRunEnd& );
-
 public:
-    // construct from the containing Run object
-    IterationRunEnd(BATB& );
+    LoadWorker(BATB& b) : batb( b ) { }
+    void operator()(Work& );
 
-    // iterate
-    IterationStack iterate_run(World& world) override;
-
-    // setup before iteration
-    void iterate_begin(World& );
-
-    ////////////////////////////////////////
-
-private:
-    void end_non_core();
-
+    BATB& batb;
 };
 
+
+  
 ////////////////////////////////////////////////////////////////////////////////
-//  
+// unload non-core part of BATB
+template <>
+class UnloadWorker<BATB>
+{
+public:
+    UnloadWorker(BATB& b) : batb( b ) { }
+    void operator()(Work& );
 
-void begin(IterationRunEnd& );
+    BATB& batb;
+};
 
 
-void end(IterationRunEnd& );
-
-
-
+  
 } // namespace run
 
 } // namespace batb

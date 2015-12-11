@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
-#include "batb/run/iteration/IterationRunBegin/RunBeginTBWidget.hpp"
+#include "batb/run/iteration/IterationRunWork/RunWorkTBWidget.hpp"
 #include "batb/gui/widgets/TBProgressBarWidget.hpp"
 #include "tb/image/tb_image_widget.h"
 
@@ -28,7 +28,7 @@ namespace run
 
 using namespace tb;
 
-RunBeginTBWidget::RunBeginTBWidget(const std::string& path) : TBLayout( AXIS_Y )
+RunWorkTBWidget::RunWorkTBWidget(const std::string& path) : TBLayout( AXIS_Y )
 {
     // hardcode settings
     //
@@ -63,14 +63,14 @@ RunBeginTBWidget::RunBeginTBWidget(const std::string& path) : TBLayout( AXIS_Y )
 	//ResizeToFitContent();
 }
 
-RunBeginTBWidget::~RunBeginTBWidget()
+RunWorkTBWidget::~RunWorkTBWidget()
 {
     delete tb_bar_;
     delete tb_image_;
 }
 
 
-void RunBeginTBWidget::set(float_t alpha, const std::string& text)
+void RunWorkTBWidget::set(float_t alpha, const std::string& text)
 {
     tb_bar_->Set( alpha, text.c_str() );
 }

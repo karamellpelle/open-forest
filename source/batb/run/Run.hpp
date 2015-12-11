@@ -19,8 +19,6 @@
 #define BATB_RUN_RUN_HPP
 #include "batb/ModuleBATB.hpp"
 #include "batb/run/KeySet.hpp"
-#include "batb/run/iteration/IterationRunBegin.hpp"
-#include "batb/run/iteration/IterationRunEnd.hpp"
 #include "batb/run/iteration/IterationRunMain.hpp"
 #include "batb/run/iteration/IterationRunOld.hpp"
 
@@ -50,8 +48,6 @@ public:
     KeySet keyset;
 
     // Iteration's
-    IterationRunBegin     iterationRunBegin;
-    IterationRunEnd       iterationRunEnd;
     //IterationRunIntro     iterationRunIntro;
     IterationRunMain      iterationRunMain;
     //IterationRunOutro     iterationRunOutro;

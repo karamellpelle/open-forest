@@ -84,12 +84,20 @@ IterationStack IterationRunDemo::iterate_run(World& run)
         return { this };
     }
 */
-    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
 
     batb.ogre.sceneBegin( run.scene );
+
+    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     demo->forest.camera.ogre_camera->setAspectRatio( aspect );
-    // only render the scenemanager for this forest::World
+    demo->forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
+
+    float_t x,z;
+    cossin( 0.1 * run.tick, x, z );
+    demo->forest.camera.ogre_camera->setDirection( Ogre::Vector3( x, -0.18, z ) );
+
+    // render 3D view from camera into Scene
     batb.ogre.outputCamera( demo->forest.camera.ogre_camera );
+
     batb.ogre.sceneEnd();
 
     // TODO: camera->setProjection( run.scene.proj3D );

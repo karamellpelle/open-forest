@@ -249,9 +249,9 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunBegin/RunBeginTBWidget.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunEnd.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork/RunWorkTBWidget.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/workers.cpp"
       # BATB non-core:
       "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
       "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"

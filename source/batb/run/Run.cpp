@@ -33,8 +33,6 @@ namespace run
 //  Run
 
 Run::Run(BATB& b) : ModuleBATB( b ), keyset( b ), 
-                    iterationRunBegin( b ), 
-                    iterationRunEnd( b ),
                     iterationRunMain( b ),
                     iterationRunOld( b )
 {

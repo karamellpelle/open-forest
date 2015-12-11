@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_ITERATION_RUN_BEGIN_RUN_BEGIN_TBWIDGET_HPP
-#define BATB_RUN_ITERATION_RUN_BEGIN_RUN_BEGIN_TBWIDGET_HPP
+#ifndef BATB_RUN_ITERATION_RUN_BEGIN_RUNWORKTBWIDGET_HPP
+#define BATB_RUN_ITERATION_RUN_BEGIN_RUNWORKTBWIDGET_HPP
 #include "batb/batb_include.hpp"
 #include "tb/tb_layout.h"
 
@@ -34,11 +34,11 @@ namespace batb
 namespace run
 {
 
-class RunBeginTBWidget : public tb::TBLayout
+class RunWorkTBWidget : public tb::TBLayout
 {
 public:
-    RunBeginTBWidget(const std::string& = "" );
-    ~RunBeginTBWidget();
+    RunWorkTBWidget(const std::string& = "" );
+    ~RunWorkTBWidget();
 
     void set(float_t a, const std::string& msg = "");
 

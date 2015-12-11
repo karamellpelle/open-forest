@@ -69,11 +69,7 @@ void begin(BATB& batb)
         // gui
         gui::begin( batb.gui );
 
-        // we need these two core iterations up and running:
-        run::begin( batb.run.iterationRunBegin );
-        run::begin( batb.run.iterationRunEnd );
-
-        // (now the non-core part of BATB is loaded by iterationRunBegin)
+        // (now the non-core part of BATB is loaded by IterationRunWork)
     }
 
     batb.init( true );
@@ -97,12 +93,7 @@ void end(BATB& batb)
         // save the configuration to file
         batb.save();
         
-        // (the non-core parts, created by iterationRunBegin, 
-        // are unloaded by 'iterationRunEnd')
-
-        run::end( batb.run.iterationRunEnd );
-        run::end( batb.run.iterationRunBegin );
-
+        // (the non-core part of BATB is unloaded by IterationRunWork)
         gui::end( batb.gui );
         gl::end( batb.gl );
         keys::end( batb.keys );
