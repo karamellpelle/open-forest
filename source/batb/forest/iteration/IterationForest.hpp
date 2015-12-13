@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_ITERATION_ITERATION_FOREST_HPP
-#define BATB_FOREST_ITERATION_ITERATION_FOREST_HPP
+#ifndef BATB_FOREST_ITERATION_ITERATIONFOREST_HPP
+#define BATB_FOREST_ITERATION_ITERATIONFOREST_HPP
 #include "batb/batb_include.hpp"
 #include "batb/forest/World.hpp"
 
@@ -36,7 +36,7 @@ using IterationStack = game::IterationStack<World>;
 
 
 // the type of iterations for forest::World
-class IterationForest : public game::Iteration<World>
+class IterationForest
 {
 public:
     IterationForest(BATB& b);

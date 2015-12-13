@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,39 +15,25 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_ITERATION_ITERATIONFORESTDEMO_HPP
-#define BATB_DEMO_ITERATION_ITERATIONFORESTDEMO_HPP
-#include "batb/batb_include.hpp"
+#include "batb/forest/ModifyControlRunner.hpp"
 #include "batb/forest.hpp"
+#include "batb.hpp"
+
 
 namespace batb
 {
 
-
-class BATB;
-
-
-
-namespace demo
+namespace forest
 {
 
-// the type of iterations for demo::World
-class IterationForestDemo : public forest::IterationForest
+void ModifyControlRunner::operator()(World& forest)
 {
-public:
-    IterationForestDemo(BATB& b);
-
-    forest::IterationStack iterate_forest(World& ) override;
-
-    BATB& batb;
-
-protected:
-
-
-};
 
 }
 
-}
+} // namespace forest
 
-#endif
+} // namespace batb
+
+
+

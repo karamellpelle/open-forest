@@ -30,8 +30,7 @@ namespace forest
 ////////////////////////////////////////////////////////////////////////////////
 //  Forest
 
-Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b ),
-                          iterationForestDemo( b )
+Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b )
 {
 
 }
@@ -50,9 +49,6 @@ void begin(Forest& forest)
         // load associated keys 
         forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
 
-        // begin iterations:
-        forest::begin( forest.iterationForestDemo );
-
     }
 
     forest.init( true );
@@ -65,9 +61,6 @@ void end(Forest& forest)
     if ( forest.init_nonempty() )
     {
         forest.save();
-
-        // end  iterations:
-        forest::end( forest.iterationForestDemo );
 
     }
     

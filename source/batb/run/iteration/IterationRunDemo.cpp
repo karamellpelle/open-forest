@@ -18,6 +18,7 @@
 #include "OgreCamera.h"
 #include "batb.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
+#include "batb/demo/iteration/IterationDemoForest.hpp"
 
 namespace batb
 {
@@ -52,18 +53,18 @@ void IterationRunDemo::iterate_begin(World& run)
 
         init = true;
     }
+    // setup substack
+    stack = { new demo::IterationDemoForest( batb ) };
 
-    tick_ = run.tick;
+    demo->tick = run.tick;
 }
 
 
 IterationStack IterationRunDemo::iterate_run(World& run)
 {
-/*
-    // TODO: demo::iterate_terrain
     // iterate demo::World
-    game::iterate_stack( stack_, world_ )
-    if ( stack_.empty() )
+    game::iterate( stack, *demo );
+    if ( stack.empty() )
     {
         return _;
     }
@@ -71,80 +72,8 @@ IterationStack IterationRunDemo::iterate_run(World& run)
     {
         return { this };
     }
-*/   
-/*
-    constexpr tick_t time = 4.0;
-    if ( tick_ + time <= world.tick )
-    {
-        batb.log << "out of IterationRunDemo!!" << std::endl;
-        return _;
-    }
-    else
-    {
-        return { this };
-    }
-*/
-
-    batb.ogre.sceneBegin( run.scene );
-
-    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
-    demo->forest.camera.ogre_camera->setAspectRatio( aspect );
-    demo->forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
-
-    float_t x,z;
-    cossin( 0.1 * run.tick, x, z );
-    demo->forest.camera.ogre_camera->setDirection( Ogre::Vector3( x, -0.18, z ) );
-
-    // render 3D view from camera into Scene
-    batb.ogre.outputCamera( demo->forest.camera.ogre_camera );
-
-    batb.ogre.sceneEnd();
-
-    // TODO: camera->setProjection( run.scene.proj3D );
-    //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
-    //
-    /*
-    tick_t tick = run.tick;
-    float_t x,z;
-    cossin( 0.1 * tick, x, z );
-    float_t y = sin( tick * 3 );
-
-    //Vector3 pos( 0, 400, 0 );
-    //camera->setPosition( pos );
-    Ogre::Vector3 dir( x, -0.14, z );
-    dir.normalise();
-    //camera->setDirection( dir );
-    */
-    /*
-    if ( forest.runners.empty() )
-    {
-        std::cout << "runners.empty!!\n"; 
-        camera->setDirection( dir );
-    }
-    else
-    {
-        forest::Runner runner = forest.runners.front();
-        glm::mat4 aim = runner.aim;
-        glm::vec4 z = aim[2];
-        
-        camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
-
-        glm::vec4 pos = runner.pos;
-        camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
-
-    }
-    */ 
 
 
-    if ( batb.run.keyset.ogre->click() )
-    {
-        batb.log << "out of IterationRunDemo!!" << std::endl;
-        return _;
-    }
-    else
-    {
-        return { this };
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 //

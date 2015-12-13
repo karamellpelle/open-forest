@@ -58,6 +58,8 @@ extern float_t proj3DNear;
 extern float_t proj3DFar;
 extern float_t proj3DFOVY;
 
+extern tick_t dt;
+extern tick_t dt_max;
 
 } // namespace value
 

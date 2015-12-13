@@ -15,9 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_ITERATION_ITERATION_RUN_DEMO_HPP
-#define BATB_RUN_ITERATION_ITERATION_RUN_DEMO_HPP
+#ifndef BATB_RUN_ITERATION_ITERATIONRUNDEMO_HPP
+#define BATB_RUN_ITERATION_ITERATIONRUNDEMO_HPP
 #include "batb/run/iteration/IterationRun.hpp"
+#include "batb/demo/iteration/IterationDemo.hpp"
 #include "batb/demo/World.hpp"
 
 
@@ -29,9 +30,6 @@ class BATB;
 
 namespace run
 {
-
-
-
 
 // IterationRunDemo:
 //    loads the non-core part of BATB (and afterwards run::World??), 
@@ -52,10 +50,10 @@ public:
     ////////////////////////////////////////
 
 
-private:
     demo::World* demo = nullptr;
-    //demo::IterationStack stack_;
+    demo::IterationStack stack;
 
+private:
     tick_t tick_;
 
 };

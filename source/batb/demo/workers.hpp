@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,50 +15,52 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_ITERATION_ITERATIONDEMO_HPP
-#define BATB_DEMO_ITERATION_ITERATIONDEMO_HPP
+#ifndef BATB_DEMO_WORKERS_HPP
+#define BATB_DEMO_WORKERS_HPP
 #include "batb/batb_include.hpp"
-#include "batb/demo/World.hpp"
+#include "batb/demo/iteration/IterationRunWork.hpp"
+
 
 namespace batb
 {
-
-
-class BATB;
 
 
 
 namespace demo
 {
 
-// the type of stack for demo::Iteration
-using IterationStack = game::IterationStack<World>;
-
-
-// the type of iterations for demo::World
-class IterationDemo : public game::Iteration<World>
+////////////////////////////////////////////////////////////////////////////////
+// load non-core part of BATB
+template <>
+class LoadWorker<World>
 {
 public:
-    IterationDemo(BATB& b);
-
-    // this handles each frame, delegating work to the subclass' 
-    // implementation of 'iterate_demo'
-    virtual IterationStack iterate(World& ) final;
-
-    // also, each subclass should typically create a non-virtual method:
-    // void iterate_begin(World& );
+    LoadWorker(BATB& b, World* w) : batb( b ), demo( w ) { }
+    void operator()(Work& );
 
     BATB& batb;
-
-protected:
-    // subclasses implements this:
-    virtual IterationStack iterate_demo(World& ) = 0;
-
-
+    World* demo;
 };
 
-}
 
-}
+  
+////////////////////////////////////////////////////////////////////////////////
+// unload non-core part of BATB
+template <>
+class UnloadWorker<BATB>
+{
+public:
+    UnloadWorker(BATB& b, World* w) : batb( b ), demo( w ) { }
+    void operator()(Work& );
+
+    BATB& batb;
+    World* demo;
+};
+
+
+  
+} // namespace demo
+
+} // namespace batb
 
 #endif

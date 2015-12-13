@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_DEMO_WORLD_HPP
-#define BATB_DEMO_DEMO_WORLD_HPP
+#ifndef BATB_DEMO_WORLD_HPP
+#define BATB_DEMO_WORLD_HPP
 #include "batb/batb_include.hpp"
 #include "batb/forest.hpp"
 #include "batb/event.hpp"
@@ -34,14 +34,14 @@ namespace demo
 {
 
 
-class ControlPoint
-{
-public:
-    ControlPoint(const glm::vec2& v) : point( v ) { }
-
-    forest::Control* control = nullptr;
-    glm::vec2 point;
-};
+//class ControlPoint
+//{
+//public:
+//    ControlPoint(const glm::vec2& v) : point( v ) { }
+//
+//    forest::Control* control = nullptr;
+//    glm::vec2 point;
+//};
 
 
 class World
@@ -65,7 +65,7 @@ public:
     forest::World forest;
     //forest::IterationStack forest_stack;
     
-    forest::Runner* runner;
+    //forest::Runner* runner;
 
     // tick of world
 

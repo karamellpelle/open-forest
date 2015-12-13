@@ -266,8 +266,13 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Weather.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Terrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlCamera.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/StepDT.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForestDemo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       # nanovg

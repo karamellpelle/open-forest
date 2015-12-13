@@ -50,9 +50,6 @@ void begin(Demo& demo)
         // load associated keys 
         demo.keyset.load( file::dynamic_data( "batb/demo/KeySet.yaml" ) ); // TODO: from yaml!!
 
-        // begin iterations:
-        demo::begin( demo.iterationDemoDemo );
-
     }
 
     demo.init( true );

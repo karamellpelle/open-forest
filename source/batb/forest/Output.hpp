@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,10 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_ITERATION_ITERATIONDEMO_HPP
-#define BATB_DEMO_ITERATION_ITERATIONDEMO_HPP
+#ifndef BATB_FOREST_OUTPUT_HPP
+#define BATB_FOREST_OUTPUT_HPP
 #include "batb/batb_include.hpp"
-#include "batb/demo/World.hpp"
+#include "game/Output.hpp"
 
 namespace batb
 {
@@ -27,38 +27,31 @@ namespace batb
 class BATB;
 
 
-
-namespace demo
+namespace forest
 {
-
-// the type of stack for demo::Iteration
-using IterationStack = game::IterationStack<World>;
+class World;
 
 
-// the type of iterations for demo::World
-class IterationDemo : public game::Iteration<World>
+// the default outputter (OpenGL, sound, network, ...)
+class Output : public game::Output<World>
 {
 public:
-    IterationDemo(BATB& b);
+    Output(BATB& b) : batb( b )       { }
 
-    // this handles each frame, delegating work to the subclass' 
-    // implementation of 'iterate_demo'
-    virtual IterationStack iterate(World& ) final;
+    virtual void operator()(World& ) override;
 
-    // also, each subclass should typically create a non-virtual method:
-    // void iterate_begin(World& );
-
-    BATB& batb;
+    // TODO: controls:
+    // ...
 
 protected:
-    // subclasses implements this:
-    virtual IterationStack iterate_demo(World& ) = 0;
-
-
+    BATB& batb;
 };
 
-}
 
-}
+} // namespace forest
+
+} // namespace batb
+
 
 #endif
+

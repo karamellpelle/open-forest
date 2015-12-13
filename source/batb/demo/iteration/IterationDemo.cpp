@@ -31,19 +31,20 @@ IterationDemo::IterationDemo(BATB& b) : batb( b )
 
 }
 
-IterationStack IterationDemo::iterate(World& world)
+IterationStack IterationDemo::iterate(World& demo)
 {
 
-    world.tick = run.tick;
+    // demo-tick is run-tick:
+    demo.tick = demo.run.tick;
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
-    auto ret = iterate_demo( world );
+    auto ret = iterate_demo( demo );
  
 
     // TODO: finish up, free mem (events, ...)
-    step( events );
+    step( demo.events );
 
     return ret;
 }

@@ -15,9 +15,13 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_ITERATION_ITERATION_DEMO_FOREST_HPP
-#define BATB_DEMO_ITERATION_ITERATION_DEMO_FOREST_HPP
+#ifndef BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
+#define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "batb/demo/iteration/IterationDemo.hpp"
+#include "batb/forest/Output.hpp"
+#include "batb/forest/ModifyControlCamera.hpp"
+#include "batb/forest/ModifyControlRunner.hpp"
+#include "batb/forest/StepDT.hpp"
 
 
 namespace batb
@@ -52,9 +56,10 @@ public:
     ////////////////////////////////////////
 
 private:
-    forest::StepDT stepDT;
+    forest::Output output;
     forest::ModifyControlCamera modifyControlCamera;
     forest::ModifyControlRunner modifyControlRunner;
+    forest::StepDT stepDT;
 
     //float_t aim_a = 0.0;  // yaw
     //float_t aim_b = 0.0;  // pitch

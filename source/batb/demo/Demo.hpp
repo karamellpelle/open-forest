@@ -48,9 +48,6 @@ public:
 
     KeySet keyset;
 
-    // Iteration's
-    IterationDemoDemo iterationDemoDemo;
-
 private:
 
 

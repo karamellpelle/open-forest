@@ -176,9 +176,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
 
-    // forest
-    //game::iterate( forest_stack, *forest );
-
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
@@ -186,9 +183,12 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // start ogre-demo:
     if ( batb.run.keyset.ogre->click() )
     {
-        //return {  game::begin_iteration( batb.run.iterationRunOld ), 
-        //          game::begin_iteration( *this ) };
-        //demo::World demo = new demo::World( run );
+        //auto* demo = new demo::World( run );
+        //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
+        //         game::begin_iteration( new IterationRunDemo( batb ) ),
+        //         game::begin_iteration( new IterationRunWork( batb, UnloadWorker<demo::World>( batb, demo ) ) ),
+        //         game::begin_iteration( this )
+        //       }
         return { game::begin_iteration( new IterationRunDemo( batb ) ), 
                  game::begin_iteration( this ) };
     /*

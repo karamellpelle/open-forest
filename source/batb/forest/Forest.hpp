@@ -20,7 +20,6 @@
 #include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 #include "batb/forest/KeySet.hpp"
-#include "batb/forest/iteration/IterationForestDemo.hpp"
 
 
 
@@ -51,9 +50,6 @@ public:
     //Output output;
     //StepDT stepDT;
     //ModifyBegin modifyBegin;
-    
-    // Iteration's
-    IterationForestDemo iterationForestDemo;
 
 private:
 

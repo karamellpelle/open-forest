@@ -36,14 +36,16 @@ void begin(Value& value)
 {
     if ( value.init_empty() )
     {
-        // TODO: use 'Value::yaml'
 
         // default values:
         proj3DNear =        0.1;
         proj3DFar =         512.0;
         proj3DFOVY =        1.047;
 
-        // FIXME: now override values, if defined
+        dt =                0.02;  
+        dt_max =            2.0;
+
+        // TODO: use 'Value::yaml', override values, if defined
     }
     value.init( true );
 }
@@ -72,7 +74,9 @@ float_t proj3DFar;
 
 float_t proj3DFOVY;
 
+tick_t dt;
 
+tick_t dt_max;
 
 } // namespace value
 

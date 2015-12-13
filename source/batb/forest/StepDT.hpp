@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_STEPDT_HPP
 #define BATB_FOREST_STEPDT_HPP
 #include "batb/batb_include.hpp"
+#include "game/StepDT.hpp"
 
 namespace batb
 {
@@ -28,13 +29,16 @@ class BATB;
 
 namespace forest
 {
+class World;
 
 
 // the default physics stepper
 class StepDT : public game::StepDT<World, tick_t>
 {
-    StepDT(BATB& b) : batb( b )       { }
+public:
+    StepDT(BATB& b) : batb( b )       { }
 
+    // tick of world is not updated!
     virtual void operator()(World& , tick_t ) override;
 
     // TODO: controls:

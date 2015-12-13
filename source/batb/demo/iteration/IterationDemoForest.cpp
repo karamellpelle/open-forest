@@ -16,9 +16,10 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
-#include "glm/gtx/euler_angles.hpp"
+#include "batb/demo/iteration/IterationDemoForest.hpp"
+#include "batb/demo/World.hpp"
 #include <random>
-#include "helpers/bezier.hpp"
+//#include "helpers/bezier.hpp"
 
 namespace batb
 {
@@ -37,7 +38,7 @@ namespace demo
 
 
 IterationDemoForest::IterationDemoForest(BATB& b) : 
-    IterationDemo( b ), modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
+    IterationDemo( b ), output( b ), modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
 {
 
 }
@@ -48,93 +49,64 @@ void IterationDemoForest::iterate_begin(World& demo)
 {
     BATB_LOG_FUNC( batb );
 
+    // set ticks to current run-tick
+    demo.tick = demo.run.tick;
+    demo.forest.tick = demo.tick;
 }
 
 
 IterationStack IterationDemoForest::iterate_demo(World& demo)
 {
-/*
- *  from demo_iterate
-    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
+    auto& forest = demo.forest;
 
-    camera->setAspectRatio( aspect );
-    // TODO: camera->setProjection( run.scene.proj3D );
+    ////////////////////////////////////////////////////////////////////////////////
+    // OUTPUT
+    //
 
-    //iterate_head(batb, run);
-    iterate_terrain(batb, run, forest);
+    // output forest
+    output( forest );
 
-    camera->setAspectRatio( aspect );
-*/ 
 
-// from demo::iterate_terrain
-/*
-    //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
-    tick_t tick = run.tick;
-    float_t x,z;
-    cossin( 0.1 * tick, x, z );
-    float_t y = sin( tick * 3 );
+    ////////////////////////////////////////////////////////////////////////////////
+    // STEP
+    //
 
-    //Vector3 pos( 0, 400, 0 );
-    //camera->setPosition( pos );
-    Ogre::Vector3 dir( x, -0.14, z );
-    dir.normalise();
-    //camera->setDirection( dir );
-    if ( forest.runners.empty() )
-    {
-        std::cout << "runners.empty!!\n"; 
-        camera->setDirection( dir );
-    }
-    else
-    {
-        forest::Runner runner = forest.runners.front();
-        glm::mat4 aim = runner.aim;
-        glm::vec4 z = aim[2];
-        
-        camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
-
-        glm::vec4 pos = runner.pos;
-        camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
-
-    }
-*/
-/*
- *  from IterationForestDemo:
-    batb.forest.modifyBegin( world );
-
-    tick_t tick = world.run.tick;
-
-    while ( world.tick + value::forestDT <= tick )
-    {
-        batb.forest.stepDT( value::forestDT, world );
-        world.tick += value::forestDT;
-
-        // look at events:
-        // if xxx return _;
-    }
-*/
 
     // control Camera
-    modifyControlCamera( world );
+    modifyControlCamera( forest );
 
     // controlRunner
-    modifyControlRunner( world );
+    modifyControlRunner( forest );
 
-    constexpr tick_t dt = 0.02;
-    tick_t tick_next = forest.run.tick;
 
-    while ( forest.tick + dt <= tick_next )
+    tick_t tick_next = demo.tick;
+    // prevent too many dt steps:
+    forest.tick = forest.tick + value::dt_max <= tick_next ? tick_next - value::dt_max : forest.tick;
+
+    // make a dt-step of forest::World
+    while ( forest.tick + value::dt <= tick_next )
     {
       
         // step World
-        stepDT( forest, dt );
+        stepDT( forest, value::dt );
 
-        forest.tick += dt;
+        forest.tick += value::dt;
     }
 
-    // TODO: look at events! and purge
+    ////////////////////////////////////////////////////////////////////////////////
+    // THINK
+    //
+    // TODO: look at demo-events!
+    if ( batb.run.keyset.ogre->click() )
+    {
+        batb.log << "out of IterationRunDemo!!" << std::endl;
+        return _;
+    }
+    else
+    {
+        return { this };
+    }
 
-    // continue with this iteration
-    return { this };
 
 }
 

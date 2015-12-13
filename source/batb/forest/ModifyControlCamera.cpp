@@ -15,9 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/forest/StepDT.hpp"
+#include "batb/forest/ModifyControlCamera.hpp"
 #include "batb/forest.hpp"
 #include "batb.hpp"
+#include "glm/gtx/euler_angles.hpp"
 
 
 namespace batb
@@ -26,52 +27,43 @@ namespace batb
 namespace forest
 {
 
-void StepDT::operator()(World& forest, tick_t dt)
+
+void ModifyControlCamera::operator()(World& forest)
 {
-/*
-    // TODO: update runners, camera, ...
     float_t x, y;
     batb.forest.keyset.aim->axis( x, y );
     bool press_l = batb.forest.keyset.aim->left()->press();
     bool press_r = batb.forest.keyset.aim->right()->press();
 
     constexpr tick_t aim_dt = 0.02;
-    aim_a = (-x) * 2.0;
-    aim_b = y * 2.0;
-
-    ////////////////////////////////////////
-    // set aim of runner from aim_x_
-    if ( aiming )
+    //aim_a = (-x) * 2.0;
+    //aim_b = y * 2.0;
+    //
+    //////////////////////////////////////////
+    //// set aim of runner from aim_x_
+    //if ( aiming )
+    //{
+    //    aiming->aim = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
+    //}
+/*
+    if ( forest.runners.empty() )
     {
-        aiming->aim = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
+        std::cout << "runners.empty!!\n"; 
+        camera->setDirection( dir );
     }
-
-
-    ////////////////////////////////////////
-    // * step dt of runner
-    constexpr tick_t dt = 0.02;
-    constexpr float_t press_speed = 100.0;
-
-    tick_t tick_next = forest.run.tick;
-    while ( forest.tick + dt <= tick_next )
+    else
     {
-      
-        // TODO: step 'aiming' (physics)
-        if ( press_l || press_r )
-        {
-            glm::vec4 dir = aiming->aim[2];
-            float alpha = ( press_r ? (-1.0) : (1.0) ) * dt * press_speed;
-            aiming->pos += alpha * dir;
-        }
-        //
-        forest.tick += dt;
-    }
+        forest::Runner runner = forest.runners.front();
+        glm::mat4 aim = runner.aim;
+        glm::vec4 z = aim[2];
+        
+        camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
 
-    glm::vec4 pos = aiming->pos;
-    //std::cout << "\rcursor: " << x << " " << y << ", "
-    //          << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
-              
-*/
+        glm::vec4 pos = runner.pos;
+        camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
+
+    }
+    */ 
 
 }
 
