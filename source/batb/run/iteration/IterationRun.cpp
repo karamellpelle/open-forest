@@ -53,26 +53,25 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // setup scene for this frame
     begin( world.scene );
 
-    //if (world.toggle_ogre)
-    //{
-        // output OGRE. 
-        // TODO: not here (every frame), instead let 'iterate_run' iteration use 
-        // call Ogre::SceneManager->_renderScene( camera, viewport, false ); 
-        //batb.ogre.output( world.scene );
-    //}
-
-
     // step all Key's, before 'iterate_run' implementation
     batb.keys.step( world.tick );
 
     // setup Ogre for a new frame
     batb.ogre.frameBegin(); 
 
-    ////////////////////////////////////////
+    // begin frame for AL
+    batb.al.frameBegin();
+
+
+    ////////////////////////////////////////////////////////////////////////////////
     // actual iteration, implemented by subclass
-    ////////////////////////////////////////
 debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
+    ////////////////////////////////////////////////////////////////////////////////
+
+    
+    // end AL frame
+    batb.al.frameEnd();
 
     // end Ogre frame
     batb.ogre.frameEnd();

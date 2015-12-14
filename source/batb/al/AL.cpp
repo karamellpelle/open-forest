@@ -38,6 +38,25 @@ void AL::output(const Scene& scene)
 }
 */
 
+
+void AL::frameBegin()
+{
+    if ( init_nonempty() )
+    { 
+
+    }
+
+}
+
+void AL::frameEnd()
+{
+    if ( init_nonempty() )
+    { 
+        alure_context->update();
+    }
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // 
 void begin(AL& al)
@@ -50,17 +69,17 @@ void begin(AL& al)
         //////////////////////////////////////////////////
         // TODO: check nullptr!
 
-        al.devicemanager = alure::DeviceManager::get();
+        al.alure_devicemanager = alure::DeviceManager::get();
 
         // FIXME: memory leak, according to valgrind
-        al.device = al.devicemanager->openPlayback(); // FIXME: leak according to valgrind!
+        al.alure_device = al.alure_devicemanager->openPlayback(); // FIXME: leak according to valgrind!
 
-        al.batb.log << "AL: opened device \""
-                    << al.device->getName( alure::PlaybackDevType_Basic )
+        al.batb.log << "AL: opened alure_device \""
+                    << al.alure_device->getName( alure::PlaybackDevType_Basic )
                     << "\"" << std::endl;
 
-        al.context = al.device->createContext();
-        alure::Context::MakeCurrent( al.context );
+        al.alure_context = al.alure_device->createContext();
+        alure::Context::MakeCurrent( al.alure_context );
 
 
         //////////////////////////////////////////////////////////
@@ -87,10 +106,10 @@ void end(AL& al)
         al.save();
 
         alure::Context::MakeCurrent( nullptr );
-        al.context->destroy();
-        al.context = nullptr;
-        al.device->close();
-        al.device = nullptr;
+        al.alure_context->destroy();
+        al.alure_context = nullptr;
+        al.alure_device->close();
+        al.alure_device = nullptr;
         
     }
    

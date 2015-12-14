@@ -82,6 +82,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     {
         batb.gui.addWidget( tb_widget_ );
     }
+    tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_VISIBLE ); // lililili :)
 
     // FIXME: demo_end()!
     //
@@ -183,6 +184,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // start ogre-demo:
     if ( batb.run.keyset.ogre->click() )
     {
+        tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );
         //auto* demo = new demo::World( run );
         //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
         //         game::begin_iteration( new IterationRunDemo( batb ) ),

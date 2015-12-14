@@ -45,11 +45,12 @@ public:
 
     // render to Scene
     //void output(const Scene& );
+    void frameBegin();
+    void frameEnd();
 
-
-    alure::DeviceManager* devicemanager = nullptr;
-    alure::Device* device = nullptr;
-    alure::Context* context = nullptr;
+    alure::DeviceManager* alure_devicemanager = nullptr;
+    alure::Device* alure_device = nullptr;
+    alure::Context* alure_context = nullptr;
 
 
 private:

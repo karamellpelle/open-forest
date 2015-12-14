@@ -37,7 +37,7 @@ void Output::operator()(World& forest)
     forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
 
     float_t x,z;
-    cossin( 0.1 * run.tick, x, z );
+    cossin( 0.25 * run.tick, x, z );
     forest.camera.ogre_camera->setDirection( Ogre::Vector3( x, -0.18, z ) );
     // TODO: 
     //  camera->setProjection( run.scene.proj3D );

@@ -24,6 +24,9 @@
 #include "batb/run.hpp"
 #include "batb/BATB.hpp"
 #include "OgreCamera.h"
+#include "OgreSceneNode.h"
+#include "OgreEntity.h"
+#include "OgreTerrainGroup.h"
 //#include "OgreSceneNode.h"
 //#include "OgreViewport.h"
 //#include "OgreRenderWindow.h"
@@ -200,6 +203,56 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     {
         world.camera.ogre_camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
+    ////////////////////////////////////////////////////////////////////////////////
+    // models:
+    Ogre::Entity* head0 = world.ogre_scenemgr->createEntity( "head0", "ogrehead.mesh" );
+    Ogre::Entity* head1 = world.ogre_scenemgr->createEntity( "head1", "ogrehead.mesh" );
+    Ogre::SceneNode* node0 = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
+    Ogre::SceneNode* node1 = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
+    node0->scale( 0.2, 0.2, 0.2 );
+    node1->scale( 0.4, 0.4, 0.4 );
+    Ogre::Vector3 pos0( 100, 0, -120 );
+    Ogre::Vector3 pos1( 0, 0, -200 );
+    float_t height0 = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( pos0 );
+    float_t height1 = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( pos1 );
+    node0->setPosition( pos0[0], height0 + 1, pos0[2] );
+    node1->setPosition( pos1[0], height1 + 1, pos1[2] );
+    node0->attachObject( head0 );
+    node1->attachObject( head1 );
+    ////////////////////////////////////////////////////////////////////////////////
+    // see: SinbadCharacterController.h
+    using namespace Ogre;
+    auto* bodyNode = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode(Vector3::UNIT_Y * 5);
+    bodyNode->scale( 3, 3, 3 );
+    auto* bodyEnt = world.ogre_scenemgr->createEntity("SinbadBody", "Sinbad.mesh");
+    bodyNode->attachObject(bodyEnt);
+    Vector3 bodyPos( 40, 0, -160 );
+    float_t bodyHeight = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( bodyPos );
+    bodyNode->setPosition( bodyPos[0], bodyHeight + 8, bodyPos[2] );
+
+        // this is very important due to the nature of the exported animations
+        //bodyEnt->getSkeleton()->setBlendMode(ANIMBLEND_CUMULATIVE);
+        //String animNames[] =
+        //{"IdleBase", "IdleTop", "RunBase", "RunTop", "HandsClosed", "HandsRelaxed", "DrawSwords",
+        //"SliceVertical", "SliceHorizontal", "Dance", "JumpStart", "JumpLoop", "JumpEnd"};
+        //
+        //// populate our animation list
+        //for (int i = 0; i < NUM_ANIMS; i++)
+        //{
+        //    mAnims[i] = mBodyEnt->getAnimationState(animNames[i]);
+        //    mAnims[i]->setLoop(true);
+        //    mFadingIn[i] = false;
+        //    mFadingOut[i] = false;
+        //}
+        //
+        //// start off in the idle state (top and bottom together)
+        //setBaseAnimation(ANIM_IDLE_BASE);
+        //setTopAnimation(ANIM_IDLE_TOP);
+        //
+        //// relax the hands since we're not holding anything
+        //mAnims[ANIM_HANDS_RELAXED]->setEnabled(true);
+
+
 
     gl::end_ogre();
 }

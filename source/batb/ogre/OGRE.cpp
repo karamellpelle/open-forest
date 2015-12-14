@@ -166,11 +166,10 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     {
         sceneBegin( scene );
 
-        Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW!
+        Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW! (?)
         
 debug::gl::msg( "ogre_root->renderOneFrame();" );
-        ogre_root->renderOneFrame(); // Q?: do overlays need this, cf. SceneManager::_renderScene?
-        //scenemgr->_renderScene( camera, viewport, false ); 
+        ogre_root->renderOneFrame();
 
         sceneEnd();
     }

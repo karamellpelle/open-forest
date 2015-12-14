@@ -45,10 +45,11 @@ void demo_begin(BATB& batb)
 
     if ( tmp_empty )
     {
-        std::string path = file::static_data( "demo/libs/al/demo00.mp3" );
+        //std::string path = file::static_data( "demo/libs/al/demo00.mp3" );
+        std::string path = file::static_data( "demo/libs/al/demo01.mp3" );
 
-        decoder = batb.al.context->createDecoder( path );
-        source = batb.al.context->getSource();
+        decoder = batb.al.alure_context->createDecoder( path );
+        source = batb.al.alure_context->getSource();
         source->play( decoder, 32768, 4);
 
         std::cout << "demo::al: playing " << path 
@@ -86,10 +87,6 @@ void demo_iterate(BATB& batb, run::World& world)
 
         // TODO: load new
     }
-
-    // TODO: into AL class:
-    batb.al.context->update();
-
 
 }
 
