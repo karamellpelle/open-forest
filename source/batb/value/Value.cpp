@@ -16,6 +16,8 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/value/Value.hpp"
+#include "batb/value/forest.hpp"
+#include "batb/value/run.hpp"
 #include "batb/BATB.hpp"
 
 
@@ -45,6 +47,11 @@ void begin(Value& value)
         dt =                0.02;  
         dt_max =            2.0;
 
+        forestAimX =        4.0;
+        forestAimY =        4.0;
+        forestMoveX =       32.0;
+        forestMoveZ =       32.0;
+
         // TODO: use 'Value::yaml', override values, if defined
     }
     value.init( true );
@@ -66,17 +73,23 @@ void end(Value& value)
 //
 
 ////////////////////////////////////////////////////////////////////////////////
-//  rendering
+//  run.hpp
 //
 float_t proj3DNear;
-
 float_t proj3DFar;
-
 float_t proj3DFOVY;
 
 tick_t dt;
-
 tick_t dt_max;
+
+////////////////////////////////////////////////////////////////////////////////
+//  forest.hpp
+//
+float_t forestAimX;
+float_t forestAimY;
+float_t forestMoveX;
+float_t forestMoveZ;
+
 
 } // namespace value
 

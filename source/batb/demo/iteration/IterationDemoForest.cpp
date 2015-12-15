@@ -18,6 +18,8 @@
 #include "batb.hpp"
 #include "batb/demo/iteration/IterationDemoForest.hpp"
 #include "batb/demo/World.hpp"
+#include "batb/value/forest.hpp"
+#include "batb/value/run.hpp"
 #include <random>
 //#include "helpers/bezier.hpp"
 

@@ -30,31 +30,46 @@ namespace forest
 void Output::operator()(World& forest)
 {
     run::World& run = forest.run;
-    batb.ogre.sceneBegin( run.scene );
 
+    // TODO: instead for below, use Scene: camera->setProjection( run.scene.proj3D );
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     forest.camera.ogre_camera->setAspectRatio( aspect );
-    forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
 
+/*
+    ////////////////////////////////////////////////////////////////////////////////
+    // turn camera automatically 
+    forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
     float_t x,z;
-    cossin( 0.25 * run.tick, x, z );
+    cossin( 0.25 * forest.tick, x, z );
     forest.camera.ogre_camera->setDirection( Ogre::Vector3( x, -0.18, z ) );
+    ////////////////////////////////////////////////////////////////////////////////
+*/
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // set camera from its DTMovable 
+    const auto& dir = forest.camera.move.aim[ 2 ];
+    const auto& pos = forest.camera.move.aim[ 3 ];
+    
+    forest.camera.ogre_camera->setDirection( Ogre::Vector3( dir[0], dir[1], dir[2] ) );
+    forest.camera.ogre_camera->setPosition(  Ogre::Vector3( pos[0], pos[1], pos[2] ) );
+
+    ////////////////////////////////////////////////////////////////////////////////
+
     // TODO: 
-    //  camera->setProjection( run.scene.proj3D );
-    //  glm::vec4 dir = aim[2];
-    //  Ogre::Vector3 dir( aim
-    //  world.camera.ogre_camera->setDirection( world.camera.aim );
     //  terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) )); // ???
 
-    // render 3D view from camera into Scene
-    batb.ogre.outputCamera( forest.camera.ogre_camera );
 
+    // render 3D view from camera into Scene
+    batb.ogre.sceneBegin( run.scene );
+    batb.ogre.outputCamera( forest.camera.ogre_camera );
     batb.ogre.sceneEnd();
 
+
+    ////////////////////////////////////////////////////////////////////////////////
     // TODO: other output
-    // * sound (set 
-    // * network
-    // * 
+    //  * sound 
+    //  * network
+    //  * 
 }
 
 

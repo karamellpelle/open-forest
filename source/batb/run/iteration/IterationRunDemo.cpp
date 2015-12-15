@@ -57,15 +57,31 @@ void IterationRunDemo::iterate_begin(World& run)
     stack = { new demo::IterationDemoForest( batb ) };
 
     demo->tick = run.tick;
+
+    batb.forest.keyset.reset();
+
+    // no cursor
+    batb.keys.setCursorFree( true );
 }
 
 
 IterationStack IterationRunDemo::iterate_run(World& run)
 {
+    // toogle free cursor (make debugging possible!)
+    static bool cursor = false;
+    if ( batb.forest.keyset.tmp0->click() )
+    {
+        cursor = !cursor;
+        batb.keys.setCursorFree( cursor );
+    }
+
     // iterate demo::World
     game::iterate( stack, *demo );
     if ( stack.empty() )
     {
+        // cursor
+        batb.keys.setCursorFree( false );
+
         return _;
     }
     else

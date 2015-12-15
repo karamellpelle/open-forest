@@ -15,33 +15,27 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_CAMERA_HPP
-#define BATB_FOREST_CAMERA_HPP
+#ifndef BATB_FOREST_DTMOVABLE_HPP
+#define BATB_FOREST_DTMOVABLE_HPP
 #include "batb/batb_include.hpp"
-#include "batb/forest/DTMovable.hpp"
-
-namespace Ogre
-{
-class Camera;
-}
 
 
 namespace batb
 {
 
-class BATB;
 
 namespace forest
 {
 
-class Camera 
+class DTMovable 
 {
 public:
-    DTMovable move;
+    glm::mat4 aim;      // position and orientation  
+    glm::mat4 vel;      // velocity of 'aim'
+    glm::mat4 acc;      // acceleration of 'aim' (velocity of 'vel')
+    //glm::vec4 jerk;
 
-    Ogre::Camera* ogre_camera = nullptr;
 
-private:
 };
 
 

@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/run/iteration/IterationRun.hpp"
 #include "batb/run/World.hpp"
+#include "batb/value/run.hpp"
 
 namespace batb
 {

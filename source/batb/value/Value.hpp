@@ -50,16 +50,8 @@ void end(Value& );
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// values
+// values included in headers (not by default)
 
-
-// 3D viewing transformations
-extern float_t proj3DNear;
-extern float_t proj3DFar;
-extern float_t proj3DFOVY;
-
-extern tick_t dt;
-extern tick_t dt_max;
 
 } // namespace value
 

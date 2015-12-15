@@ -47,7 +47,8 @@ void KeySet::load(const std::string& path)
     right = createKeyClicker( createKeyButton( GLFW_KEY_D ) );
     aim = createKeyPointer();
 
-    tmp = createKeyClicker( createKeyButton( GLFW_KEY_B ) );
+    tmp0 = createKeyClicker( createKeyButton( GLFW_KEY_V ) );
+    tmp1 = createKeyClicker( createKeyButton( GLFW_KEY_B ) );
 }
 
 void KeySet::reset()
@@ -57,6 +58,9 @@ void KeySet::reset()
     left->reset();
     right->reset();
     aim->reset();
+
+    tmp0->reset();
+    tmp1->reset();
 }
 
 } // namespace forest

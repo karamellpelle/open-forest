@@ -18,6 +18,7 @@
 #include "batb/forest/ModifyControlCamera.hpp"
 #include "batb/forest.hpp"
 #include "batb.hpp"
+#include "batb/value/forest.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
 
@@ -30,40 +31,43 @@ namespace forest
 
 void ModifyControlCamera::operator()(World& forest)
 {
+    Camera& camera = forest.camera;
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // move camera in xy-plane from mouse (yaw, pitch)
     float_t x, y;
     batb.forest.keyset.aim->axis( x, y );
-    bool press_l = batb.forest.keyset.aim->left()->press();
-    bool press_r = batb.forest.keyset.aim->right()->press();
+    aim_a_ = value::forestAimX * (-x);
+    aim_b_ = value::forestAimY * (y);
+    auto aim = glm::eulerAngleYXZ( aim_a_, aim_b_, aim_c_ );
+    camera.move.aim[0] = aim[0];
+    camera.move.aim[1] = aim[1];
+    camera.move.aim[2] = aim[2];
+    // camera.move.aim[3] is position!
 
-    constexpr tick_t aim_dt = 0.02;
-    //aim_a = (-x) * 2.0;
-    //aim_b = y * 2.0;
-    //
-    //////////////////////////////////////////
-    //// set aim of runner from aim_x_
-    //if ( aiming )
-    //{
-    //    aiming->aim = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
-    //}
-/*
-    if ( forest.runners.empty() )
-    {
-        std::cout << "runners.empty!!\n"; 
-        camera->setDirection( dir );
-    }
-    else
-    {
-        forest::Runner runner = forest.runners.front();
-        glm::mat4 aim = runner.aim;
-        glm::vec4 z = aim[2];
-        
-        camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
 
-        glm::vec4 pos = runner.pos;
-        camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
 
-    }
-    */ 
+    ////////////////////////////////////////////////////////////////////////////////
+    // move camera from keys. this should modify Runner
+    float_t move_x = (batb.forest.keyset.left->press()  ? (1.0)  : (0.0)) +
+                     (batb.forest.keyset.right->press() ? (-1.0) : (0.0));
+    float_t move_z = (batb.forest.keyset.forward->press()  ? (1.0)  : (0.0)) +
+                     (batb.forest.keyset.backward->press() ? (-1.0) : (0.0));
+    auto& vel = camera.move.vel[ 3 ];
+    auto& x_ = aim[0];
+    auto& z_ = aim[2];
+    vel  = (move_x * value::forestMoveX) * x_ + 
+           (move_z * value::forestMoveZ) * z_;
+       
+
+    std::cout << "\r";
+    std::cout << "vel: " << vel[0] << " "<< vel[1] << " "<< vel[2] ;
+    std::cout << ", ";
+    auto& pos = camera.move.aim[ 3 ];
+    std::cout << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
+    std::cout << "move_x: " << move_x << ", move_z: " << move_z;
+              
+    
 
 }
 

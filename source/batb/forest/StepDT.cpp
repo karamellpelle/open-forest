@@ -28,51 +28,38 @@ namespace forest
 
 void StepDT::operator()(World& forest, tick_t dt)
 {
-/*
-    // TODO: update runners, camera, ...
-    float_t x, y;
-    batb.forest.keyset.aim->axis( x, y );
-    bool press_l = batb.forest.keyset.aim->left()->press();
-    bool press_r = batb.forest.keyset.aim->right()->press();
+    // TODO: Camera and Runner should have pointers to DTMovable.
+    //       all DTMovable's should be in continuos memory. 
+    //       hence update of dt can be done directly and fast
+    //       by compute all of the DTMovable's in one bulk.
 
-    constexpr tick_t aim_dt = 0.02;
-    aim_a = (-x) * 2.0;
-    aim_b = y * 2.0;
+    ////////////////////////////////////////////////////////////////////////////////
+    // step camera
+    // 
+    Camera& camera = forest.camera;
 
-    ////////////////////////////////////////
-    // set aim of runner from aim_x_
-    if ( aiming )
-    {
-        aiming->aim = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
-    }
+    // currently, only the position part (mat4x4[ 3 ]) is updated
+    auto& pos = camera.move.aim[ 3 ];
+    auto& vel = camera.move.vel[ 3 ];
+    auto& acc = camera.move.acc[ 3 ];
+    
+    acc[3] = 1.0;
 
+    vel += (float)( dt ) * acc;
+    vel[3] = 1.0;
 
-    ////////////////////////////////////////
-    // * step dt of runner
-    constexpr tick_t dt = 0.02;
-    constexpr float_t press_speed = 100.0;
+    pos += (float)( dt ) * vel;
+    pos[3] = 1.0;
 
-    tick_t tick_next = forest.run.tick;
-    while ( forest.tick + dt <= tick_next )
-    {
-      
-        // TODO: step 'aiming' (physics)
-        if ( press_l || press_r )
-        {
-            glm::vec4 dir = aiming->aim[2];
-            float alpha = ( press_r ? (-1.0) : (1.0) ) * dt * press_speed;
-            aiming->pos += alpha * dir;
-        }
-        //
-        forest.tick += dt;
-    }
-
-    glm::vec4 pos = aiming->pos;
-    //std::cout << "\rcursor: " << x << " " << y << ", "
-    //          << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
-              
-*/
-
+    camera.move.aim[3] = pos;
+    camera.move.vel[3] = vel;
+    camera.move.acc[3] = acc;
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    // step runners
+    // 
+   
+    // 
 }
 
 

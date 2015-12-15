@@ -10,7 +10,7 @@ The old game is still runnable (?), but it needs additional libs in order to bui
 The intention is to build up a foundation for an open source orienteering game. Despite the sport of 
 orienteering is small, there are multiple commercial orienteering games available (Catching Features, 
 Suunnistussimulaattori, Oriantica), and all these costs money. I don't see the point of having so many
-commercial games, for something that probably not will generate enough money for an high-end product.
+commercial games for something that probably not will generate enough money for a high-end product.
 Also, a lot of orienteers are good programmers/developers. We'll see how this goes...
 
 This project is currently under construction, there needs more work (from me) before I expect others

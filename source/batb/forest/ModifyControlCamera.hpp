@@ -40,6 +40,11 @@ public:
 
 protected:
     BATB& batb;
+
+private:
+    float_t aim_a_ = 0.0;
+    float_t aim_b_ = 0.0;
+    float_t aim_c_ = 0.0;
 };
 
 

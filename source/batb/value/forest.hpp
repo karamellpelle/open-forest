@@ -15,43 +15,29 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_CAMERA_HPP
-#define BATB_FOREST_CAMERA_HPP
+#ifndef BATB_VALUE_FOREST_HPP
+#define BATB_VALUE_FOREST_HPP
 #include "batb/batb_include.hpp"
-#include "batb/forest/DTMovable.hpp"
-
-namespace Ogre
-{
-class Camera;
-}
 
 
 namespace batb
 {
 
-class BATB;
 
-namespace forest
+namespace value
 {
 
-class Camera 
-{
-public:
-    DTMovable move;
-
-    Ogre::Camera* ogre_camera = nullptr;
-
-private:
-};
+extern float_t forestAimX;
+extern float_t forestAimY;
+extern float_t forestMoveX;
+extern float_t forestMoveZ;
 
 
-} // namespace forest
+
+
+
+} // namespace value
 
 } // namespace batb
 
-
-
-
-
 #endif
-

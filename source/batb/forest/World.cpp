@@ -203,6 +203,11 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     {
         world.camera.ogre_camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
+
+    float_t height = 50 + world.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
+    world.camera.move.aim[3] = glm::vec4( 0, height, 0, 1 );
+    //world.camera.ogre_camera->setPosition(terrain_pos +worldCenter);
+
     ////////////////////////////////////////////////////////////////////////////////
     // models:
     Ogre::Entity* head0 = world.ogre_scenemgr->createEntity( "head0", "ogrehead.mesh" );

@@ -46,7 +46,8 @@ public:
     keys::KeyClicker* right = nullptr;
     keys::KeyPointer* aim = nullptr;
 
-    keys::KeyClicker* tmp = nullptr;
+    keys::KeyClicker* tmp0 = nullptr;
+    keys::KeyClicker* tmp1 = nullptr;
 
     BATB& batb;
 };
