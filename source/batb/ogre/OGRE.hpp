@@ -80,6 +80,10 @@ public:
     void output(const Scene& );
     ////////////////////////////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // 
+    void addResourceLocation(const YAML::Node& );
+      
     Ogre::LogManager*   ogre_logmanager = nullptr;
     Ogre::Root*         ogre_root = nullptr;
     Ogre::RenderSystem* ogre_rendersystem = nullptr;

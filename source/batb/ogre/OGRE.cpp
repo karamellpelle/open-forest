@@ -177,6 +177,63 @@ debug::gl::msg( "ogre_root->renderOneFrame();" );
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
+// NB: only static currently!
+void OGRE::addResourceLocation(const YAML::Node& yaml)
+{
+    // begin GL state for Ogre
+    // FIXME: necessary?
+    gl::begin_ogre();
+
+    // iterate over group names
+    for (auto i = std::begin( yaml ); i != std::end( yaml ); ++i )
+    {
+        // NOTE: yaml is a map, not a list. and 'i' is a key. 
+        //       this is yaml stuff (scalar, list, map)
+        YAML::Node group = i->first;
+        std::string name = group.as<std::string>();
+        
+        batb.log << "OGRE: adding items to resource group '" << name << "':\n";
+        // iterate over defined content for that group
+        for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
+        {
+            batb.log << "  ";
+
+            YAML::Node resource = *j;
+            if ( resource[ "type" ] && resource[ "path" ] )
+            {
+                std::string type = resource[ "type" ].as<std::string>();
+                std::string path = resource[ "path" ].as<std::string>();
+                
+                batb.log << path;
+
+                // add resource item
+                try
+                {
+                    batb.ogre.ogre_root->addResourceLocation(  file::static_data( path ), type, name );
+                }
+                catch (Ogre::Exception& e)
+                {
+                    batb.log << " (" << e.what() << ")";
+                }
+
+            }
+            else
+            {
+                batb.log << "(invalid item definition)";
+            }
+
+            batb.log << "\n";
+        }
+    }
+
+    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+    gl::end_ogre();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 
 void begin(OGRE& ogre)
 {
 

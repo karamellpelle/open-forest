@@ -15,6 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include <random>
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
 #include "OgreSceneManager.h"
@@ -59,7 +60,7 @@ WorldLoader::WorldLoader(BATB& b) : batb( b )
 }
 
 
-void WorldLoader::load(World& world, const YAML::Node& def)
+void WorldLoader::load(World& world, const YAML::Node& yaml)
 {
     using namespace Ogre;
     // TODO: delete old before loading
@@ -68,60 +69,22 @@ void WorldLoader::load(World& world, const YAML::Node& def)
     //  * add demo resources (demo_begin)
     gl::begin_ogre();
 
-        YAML::Node yaml = YAML::LoadFile( file::static_data( "demo/libs/ogre.yaml" ) );
+
+    {
+        // TODO: use yaml above
+        YAML::Node yaml = YAML::LoadFile( file::static_data( "batb/forest/ogre.yaml" ) );
 
         // add resources for demo
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            // iterate over group names
-            for (auto i = std::begin( resources ); i != std::end( resources ); ++i )
-            {
-                // NOTE: resources is a map, not a list. and 'i' is a key. 
-                //       this is yaml stuff (scalar, list, map)
-                YAML::Node group = i->first;
-                std::string name = group.as<std::string>();
-                
-                batb.log << "batb::demo::ogre: adding items to resource group '" << name << "':\n";
-                // iterate over defined content for that group
-                for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
-                {
-                    batb.log << "  ";
-
-                    YAML::Node resource = *j;
-                    if ( resource[ "type" ] && resource[ "path" ] )
-                    {
-                        std::string type = resource[ "type" ].as<std::string>();
-                        std::string path = resource[ "path" ].as<std::string>();
-                        
-                        batb.log << path;
-
-                        // add resource item
-                        try
-                        {
-                            batb.ogre.ogre_root->addResourceLocation(  file::static_data( path ), type, name );
-                        }
-                        catch (Ogre::Exception& e)
-                        {
-                            batb.log << " (" << e.what() << ")";
-                        }
-
-                    }
-                    else
-                    {
-                        batb.log << "(invalid item definition)";
-                    }
-
-                    batb.log << "\n";
-                }
-            }
+            batb.ogre.addResourceLocation( yaml["resources"] );
         }
         else
         {
-            throw std::runtime_error( "batb::demo::ogre: no 'resources' defined in config" );
+            batb.log << "forest::WorldLoader: no resources defined!" << std::endl;
         }
-        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
+    } 
         
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -210,20 +173,35 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
 
     ////////////////////////////////////////////////////////////////////////////////
     // models:
-    Ogre::Entity* head0 = world.ogre_scenemgr->createEntity( "head0", "ogrehead.mesh" );
-    Ogre::Entity* head1 = world.ogre_scenemgr->createEntity( "head1", "ogrehead.mesh" );
-    Ogre::SceneNode* node0 = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
-    Ogre::SceneNode* node1 = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
-    node0->scale( 0.2, 0.2, 0.2 );
-    node1->scale( 0.4, 0.4, 0.4 );
-    Ogre::Vector3 pos0( 100, 0, -120 );
-    Ogre::Vector3 pos1( 0, 0, -200 );
-    float_t height0 = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( pos0 );
-    float_t height1 = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( pos1 );
-    node0->setPosition( pos0[0], height0 + 1, pos0[2] );
-    node1->setPosition( pos1[0], height1 + 1, pos1[2] );
-    node0->attachObject( head0 );
-    node1->attachObject( head1 );
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // control :)
+    constexpr uint n = 8;
+    constexpr float_t spread = 300.0;
+    for (uint i = 0; i != n; ++i)
+    {
+        static std::default_random_engine rand; 
+        std::uniform_int_distribution<int> gen_x( -spread, spread );
+        std::uniform_int_distribution<int> gen_y( -spread, spread );
+
+        Ogre::Vector3 pos( gen_x( rand ), 0, gen_y( rand ) );
+        std::ostringstream name;
+        name << "control" << i;
+
+        Ogre::Entity* control = world.ogre_scenemgr->createEntity( name.str(), "control.mesh" );
+        Ogre::SceneNode* node = world.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
+        node->scale( 16, 16, 16 );
+        float_t height = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( pos );
+        node->setPosition( pos[0], height + 1, pos[2] );
+        node->attachObject( control );
+    }
+
+        
+
+    //Ogre::Vector3 pos0( 100, 0, -120 );
+    //Ogre::Vector3 pos1( 0, 0, -200 );
+
+
     ////////////////////////////////////////////////////////////////////////////////
     // see: SinbadCharacterController.h
     using namespace Ogre;
@@ -231,9 +209,9 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     bodyNode->scale( 3, 3, 3 );
     auto* bodyEnt = world.ogre_scenemgr->createEntity("SinbadBody", "Sinbad.mesh");
     bodyNode->attachObject(bodyEnt);
-    Vector3 bodyPos( 40, 0, -160 );
+    Vector3 bodyPos( 40, 0, -120 );
     float_t bodyHeight = world.terrain.ogre_terrain_group->getHeightAtWorldPosition( bodyPos );
-    bodyNode->setPosition( bodyPos[0], bodyHeight + 8, bodyPos[2] );
+    bodyNode->setPosition( bodyPos[0], bodyHeight + 14, bodyPos[2] );
 
         // this is very important due to the nature of the exported animations
         //bodyEnt->getSkeleton()->setBlendMode(ANIMBLEND_CUMULATIVE);

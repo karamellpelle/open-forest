@@ -152,6 +152,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     if ( tmp_empty )
     {
+        //
         // begin GL state for Ogre
         gl::begin_ogre();
 
@@ -161,53 +162,12 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            // iterate over group names
-            for (auto i = std::begin( resources ); i != std::end( resources ); ++i )
-            {
-                // NOTE: resources is a map, not a list. and 'i' is a key. 
-                //       this is yaml stuff (scalar, list, map)
-                YAML::Node group = i->first;
-                std::string name = group.as<std::string>();
-                
-                batb.log << "batb::demo::ogre: adding items to resource group '" << name << "':\n";
-                // iterate over defined content for that group
-                for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
-                {
-                    batb.log << "  ";
-
-                    YAML::Node resource = *j;
-                    if ( resource[ "type" ] && resource[ "path" ] )
-                    {
-                        std::string type = resource[ "type" ].as<std::string>();
-                        std::string path = resource[ "path" ].as<std::string>();
-                        
-                        batb.log << path;
-
-                        // add resource item
-                        try
-                        {
-                            batb.ogre.ogre_root->addResourceLocation(  file::static_data( path ), type, name );
-                        }
-                        catch (Ogre::Exception& e)
-                        {
-                            batb.log << " (" << e.what() << ")";
-                        }
-
-                    }
-                    else
-                    {
-                        batb.log << "(invalid item definition)";
-                    }
-
-                    batb.log << "\n";
-                }
-            }
+            batb.ogre.addResourceLocation( yaml["resources"] );
         }
         else
         {
             throw std::runtime_error( "batb::demo::ogre: no 'resources' defined in config" );
         }
-        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
         ////////////////////////////////////////////////////////////////////////////////
         // create SceneManager

@@ -49,8 +49,8 @@ void begin(Value& value)
 
         forestAimX =        4.0;
         forestAimY =        4.0;
-        forestMoveX =       32.0;
-        forestMoveZ =       32.0;
+        forestMoveX =       45.0;
+        forestMoveZ =       45.0;
 
         // TODO: use 'Value::yaml', override values, if defined
     }
