@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/demo/iteration/IterationDemoForest.hpp"
 #include "batb/demo/World.hpp"
+#include "batb/forest/World.hpp"
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
 #include <random>
@@ -50,10 +51,41 @@ IterationDemoForest::IterationDemoForest(BATB& b) :
 void IterationDemoForest::iterate_begin(World& demo)
 {
     BATB_LOG_FUNC( batb );
+    
+    run::World& run = demo.run;
+    forest::World& forest = demo.forest;
 
     // set ticks to current run-tick
-    demo.tick = demo.run.tick;
-    demo.forest.tick = demo.tick;
+    demo.tick = run.tick;
+    forest.tick = demo.tick;
+
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    // add some control's
+
+    constexpr uint n = 8;
+    constexpr float_t spread = 300.0;
+    for (uint i = 0; i != n; ++i)
+    {
+        static std::default_random_engine rand; 
+        std::uniform_int_distribution<int> gen_x( -spread, spread );
+        std::uniform_int_distribution<int> gen_y( -spread, spread );
+       
+        int x = gen_x( rand );
+        int y = gen_x( rand );
+        static forest::ControlDefinition::Code code = 0;
+
+        forest::ControlDefinition def( x, y, code++ );
+        auto* control = forest.addControl( def );
+    }
+
+        
+    ////////////////////////////////////////////////////////////////////////////////
+    // add a Runner
+
+    auto* runner = forest.addRunner();
+    runner->reset( glm::vec2( 40, -120 ) );
+
 }
 
 

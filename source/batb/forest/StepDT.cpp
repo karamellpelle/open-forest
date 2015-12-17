@@ -17,7 +17,10 @@
 //
 #include "batb/forest/StepDT.hpp"
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
+#include "batb/forest/events.hpp"
 #include "batb.hpp"
+#include "batb/value/forest.hpp"
 
 
 namespace batb
@@ -25,6 +28,29 @@ namespace batb
 
 namespace forest
 {
+
+
+void stepdt(DTMovable& move, tick_t dt)
+{
+    // currently, only the position part (mat4x4[ 3 ]) is updated
+    auto& pos = move.aim[ 3 ];
+    auto& vel = move.vel[ 3 ];
+    auto& acc = move.acc[ 3 ];
+    
+    acc[3] = 1.0;
+
+    vel += (float)( dt ) * acc;
+    vel[3] = 1.0;
+
+    pos += (float)( dt ) * vel;
+    pos[3] = 1.0;
+
+    //move.aim[3] = pos;
+    //move.vel[3] = vel;
+    //move.acc[3] = acc;
+
+}
+
 
 void StepDT::operator()(World& forest, tick_t dt)
 {
@@ -38,27 +64,50 @@ void StepDT::operator()(World& forest, tick_t dt)
     // 
     Camera& camera = forest.camera;
 
-    // currently, only the position part (mat4x4[ 3 ]) is updated
-    auto& pos = camera.move.aim[ 3 ];
-    auto& vel = camera.move.vel[ 3 ];
-    auto& acc = camera.move.acc[ 3 ];
-    
-    acc[3] = 1.0;
-
-    vel += (float)( dt ) * acc;
-    vel[3] = 1.0;
-
-    pos += (float)( dt ) * vel;
-    pos[3] = 1.0;
-
-    camera.move.aim[3] = pos;
-    camera.move.vel[3] = vel;
-    camera.move.acc[3] = acc;
+    stepdt( camera.move, dt );
+   
     
     ////////////////////////////////////////////////////////////////////////////////
     // step runners
     // 
-   
+    for (auto i = std::begin( forest.runners ); i != std::end( forest.runners ); ++i)
+    {
+        auto& runner_a = *i;
+
+        // step runner
+        stepdt( runner_a.move, dt );
+
+        // collide with controls
+        for (auto j = std::begin( forest.controls ); j != std::end( forest.controls ); ++j)
+        {
+            auto& control = *j;
+
+            // see if runner is close to control
+            auto diff = runner_a.move.aim[3] - control.aim[3];
+            float_t epseps = glm::dot( diff, diff );
+            if ( epseps < value::forestProximityControl )
+            {
+                // event::ProximityControl
+                forest.events.push( event::ProximityControl( &control, &runner_a, epseps ) );
+            }
+        }
+
+        // collide with other runners
+        auto j = i;
+        for (++j; j != std::end( forest.runners ); ++j)
+        {
+            auto& runner_b = *j;
+
+            // see if runner is close to control
+            auto diff = runner_a.move.aim[3] - runner_b.move.aim[3];
+            float_t epseps = glm::dot( diff, diff );
+            if ( epseps < value::forestProximityRunner )
+            {
+                // event::ProximityRunner
+                forest.events.push( event::ProximityRunner( &runner_a, &runner_b, epseps ) );
+            }
+        }
+    }
     // 
 }
 

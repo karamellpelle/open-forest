@@ -15,19 +15,19 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_HPP
-#define BATB_FOREST_HPP
-#include "batb/forest/Forest.hpp"
-//#include "batb/forest/World.hpp" // not to be included; prevent recompilation on World changes!
+#ifndef BATB_FOREST_GLM_HPP
+#define BATB_FOREST_GLM_HPP
+#include "batb.hpp"
 
 namespace batb
 {
 
-namespace forest
+template <typename GLMVec>
+bool epsilon(GLMVec::value_type eps, const GLMVec& p0, const GLMVec& p1)
 {
+    return dot(p0, p1) < eps * eps;
+}
 
-
-} // namespace forest
 
 } // namespace batb
 

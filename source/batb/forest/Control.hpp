@@ -19,6 +19,12 @@
 #define BATB_FOREST_CONTROL_HPP
 #include "batb/batb_include.hpp"
 
+namespace Ogre
+{
+class Entity;
+}
+
+
 namespace batb
 {
 
@@ -26,6 +32,9 @@ class BATB;
 
 namespace forest
 {
+
+class World;
+class Runner;
 
 // each Control has a definition.
 //
@@ -40,47 +49,58 @@ class ControlDefinition
 {
 public:
     using Code = uint;
+    ControlDefinition() { }
+    ControlDefinition(float_t x_, float_t z_, Code c = 0) : x( x_ ), z( z_ ), code( c ) { } 
 
+
+    float_t x = 0.0;
+    float_t z = 0.0;
     Code code;
 
+    // for  placement and output
+    // N,S,W,E,NW,NE,SW,SE
     // ...
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
 // Control
+//
+// should we have different classes of controls for start, finish, normal, etc?
+// no. i think we should have only one control type, 'Control', and
+// let definition and output (Ogre, AL) define their type. then a external
+// Course (of a superworld of forest::World) interpret Control's as wanted type.
+
 class Control
 {
-friend class Terrain;
 public:
-    // a Control always belong to a Terrain
-    //Control(Terrain* t) : terrain_( t ) { }
+    Control(World& w) : forest( w ) { }
+
+    // assignment/copy allowed, if object copy, create 'clone()'
+    Control(const Control& ) = default;
+    Control& operator=(const Control& ) = default;
     
+    ////////////////////////////////////////////////////////////////////////////////
+    void reset(const ControlDefinition& def);
+    void punch(Runner* );
 
+    ////////////////////////////////////////////////////////////////////////////////
+    World& forest;
     ControlDefinition definition;
-    glm::vec4 pos;    // TODO: glm::dvec4?
+    glm::mat4 aim; // position and aim. TODO: glm::dvec4?
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // output
 
-    // should we define type of control, like normal, start, finish, etc?
-    // no. i think we should not bind a control to be of a specific type, instead
-    // just let a course define this. however, the GLAnimation for this Control
-    // can be more specific for users, but this is just a cosmetic detail.
-
-private:
-    //ogre_;
+    Ogre::Entity* ogre_entity;
     //ALuint al_source_;
 
-    // Control implies a Terrain, where this control is placed.
-    //Terrain* const terrain_;
-
-    // definition for this Control
-    //ControlDefinition definition_;
-
-    // statistic stuff:
-    // * punches (player, time, ...)
+    ////////////////////////////////////////////////////////////////////////////////
+    // statistic
+    uint stats_punches;
+    // TODO: list of Punch (player, time, ...)
     // ...
 
-    // output props:
-    // GLAnimation anim_; // regular, start point
 };
 
 

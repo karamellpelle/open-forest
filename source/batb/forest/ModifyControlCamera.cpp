@@ -17,6 +17,8 @@
 //
 #include "batb/forest/ModifyControlCamera.hpp"
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
+#include "batb/forest/Camera.hpp"
 #include "batb.hpp"
 #include "batb/value/forest.hpp"
 #include "glm/gtx/euler_angles.hpp"

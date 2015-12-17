@@ -40,6 +40,7 @@
 #include "batb.hpp"
 #include "batb/ogre.hpp"
 #include "batb/run/World.hpp"
+#include "batb/forest/World.hpp"
 #include "batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
 #include "batb/demo/libs/ogre.hpp"
 
@@ -475,12 +476,12 @@ void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
     else
     {
         forest::Runner runner = forest.runners.front();
-        glm::mat4 aim = runner.aim;
+        glm::mat4 aim = runner.move.aim;
         glm::vec4 z = aim[2];
         
         camera->setDirection( Ogre::Vector3( z[0], z[1], z[2] ) );
 
-        glm::vec4 pos = runner.pos;
+        glm::vec4 pos = runner.move.aim[3];
         camera->setPosition( Ogre::Vector3( pos[0], pos[1], pos[2] ) );
 
     }

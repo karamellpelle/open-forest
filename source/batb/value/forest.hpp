@@ -32,6 +32,9 @@ extern float_t forestAimY;
 extern float_t forestMoveX;
 extern float_t forestMoveZ;
 
+extern float_t forestProximityControl;
+extern float_t forestProximityRunner;
+
 
 
 

@@ -22,8 +22,9 @@
 
 namespace batb
 {
-
 namespace run
+{
+namespace event
 {
 
 enum class DoDemo
@@ -32,6 +33,8 @@ enum class DoDemo
     Turbobadger,
     NanoVG,
 };
+
+} // namespace event
 
 } // namespace run
 

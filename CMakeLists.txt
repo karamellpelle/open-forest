@@ -270,6 +270,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/StepDT.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Runner.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Control.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"

@@ -30,6 +30,8 @@ namespace forest
 class DTMovable 
 {
 public:
+    // TODO: dmat4 for better precision i a big world?
+    //
     glm::mat4 aim;      // position and orientation  
     glm::mat4 vel;      // velocity of 'aim'
     glm::mat4 acc;      // acceleration of 'aim' (velocity of 'vel')

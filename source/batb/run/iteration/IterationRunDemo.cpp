@@ -38,9 +38,6 @@ void IterationRunDemo::iterate_begin(World& run)
 {
     BATB_LOG_FUNC( batb );
 
-    //// create stack for demo::World
-    //stack_ = { new IterationDemo( batb ) };
-
     // load Forest
     // NOTE: this fails anyway; 'this' is destroyed upon 
     //       iteration is finished
@@ -54,7 +51,7 @@ void IterationRunDemo::iterate_begin(World& run)
         init = true;
     }
     // setup substack
-    stack = { new demo::IterationDemoForest( batb ) };
+    stack = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
 
     demo->tick = run.tick;
 

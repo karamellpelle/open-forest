@@ -16,8 +16,11 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "OgreCamera.h"
+#include "OgreEntity.h"
+#include "OgreNode.h"
 #include "batb/forest/Output.hpp"
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
 #include "batb.hpp"
 
 
@@ -31,6 +34,19 @@ void Output::operator()(World& forest)
 {
     run::World& run = forest.run;
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // setup output
+
+    // place Ogre::Node's relative to position
+    for (auto i = std::begin( forest.runners ); i != std::end( forest.runners ); ++i)
+    {
+        auto& runner = *i;
+        auto* node = runner.ogre_entity->getParentNode();
+        const auto& xyz = runner.move.aim[3];
+        node->setPosition( xyz.x, xyz.y, xyz.z );
+    }
+
+  
     // TODO: instead for below, use Scene: camera->setProjection( run.scene.proj3D );
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     forest.camera.ogre_camera->setAspectRatio( aspect );

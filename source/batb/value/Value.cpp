@@ -52,6 +52,9 @@ void begin(Value& value)
         forestMoveX =       45.0;
         forestMoveZ =       45.0;
 
+        forestProximityControl  = 16.0;
+        forestProximityRunner   = 16.0;
+
         // TODO: use 'Value::yaml', override values, if defined
     }
     value.init( true );
@@ -90,6 +93,8 @@ float_t forestAimY;
 float_t forestMoveX;
 float_t forestMoveZ;
 
+float_t forestProximityControl;
+float_t forestProximityRunner;
 
 } // namespace value
 

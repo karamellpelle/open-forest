@@ -19,6 +19,7 @@
 #define BATB_DEMO_WORLD_HPP
 #include "batb/batb_include.hpp"
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
 #include "batb/event.hpp"
 
 

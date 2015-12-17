@@ -39,6 +39,7 @@
 #include "batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
 
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
 
 using namespace Ogre;
 

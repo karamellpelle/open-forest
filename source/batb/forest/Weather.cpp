@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
 
 
 namespace batb

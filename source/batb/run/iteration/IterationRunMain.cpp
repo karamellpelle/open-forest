@@ -231,7 +231,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // look at events
     caseOf( run.events )
     (
-        [&](const DoDemo& demo)
+        [&](const event::DoDemo& demo)
         {
             //if ( demo == DoDemo::Forest ) nexts = { new IterationRunDemoForest(), this };
             //if ( demo == DoDemo::XXX ) nexts = { new IterationRunDemoForest(), this };

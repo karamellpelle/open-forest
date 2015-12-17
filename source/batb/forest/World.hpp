@@ -58,6 +58,13 @@ public:
 
     World(run::World& r) : run( r ) { }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //
+
+    Control* addControl(const ControlDefinition& );
+    Runner* addRunner(run::Player* = nullptr);
+    
+
     // viewing 
     Camera camera;
 
@@ -104,15 +111,6 @@ public:
 
     // number of frames iterated (by IterationForest...)
     uint frames = 0;
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // methods
-    //
-
-    Control* pushControl(const glm::vec2& , const ControlDefinition& );
-    //Control* pushControl(const Control& );
-    //
-
 
 
     Ogre::SceneManager* ogre_scenemgr = nullptr;
