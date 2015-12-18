@@ -30,7 +30,7 @@ namespace batb
 class EventList
 {
 friend class EventEaterSet;
-friend void step(EventList& );
+friend void events_step(EventList& );
 
 public:
     // push new event (copy data)
@@ -47,20 +47,25 @@ public:
         events_.push_back( std::make_shared<EventDataPoint<T>>( d, del ) );
     }
     
+    // NOTE: it is not allowed (yet) to copy events from one EventList to another.
+    //       because the function 'events_step' below will decrease frame life more
+    //       than once each frame, if events_step more than once each frame.
+    //       hence only use 'take'
     // push events from event list
-    void push(const EventList& es)
+    //void push(const EventList& es)
+    //{
+    //    std::copy( es.events_.begin(), es.events_.end(), std::back_inserter( events_ ) );
+    //}
+
+    // push and clear
+    void take(EventList& es)
     {
         std::copy( es.events_.begin(), es.events_.end(), std::back_inserter( events_ ) );
-    }
-    // push and clear
-    void move(EventList& es)
-    {
-        push( es );
         es.events_.clear();
     }
 
 
-
+    // TODO?
     void set_tick(tick_t t) { tick_ = t; }
     void set_frame(uint n) { frame_ = n; }
 
@@ -78,7 +83,7 @@ private:
             return true;
         }
         // we are not allowed to modify e (cppreference.com of list::remove_if)
-        // but we can surely modify the object pointed too!
+        // but we can surely modify the object it points to!
         --(e->frame_lifes);
         return false;
     }
@@ -87,7 +92,7 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-inline void step(EventList& list)
+inline void events_step(EventList& list)
 {
     // free mem iff frame_lifes == 0
     //events_.remove_if( [](auto e) { return e->frame_lifes == 0; } ); // c++14

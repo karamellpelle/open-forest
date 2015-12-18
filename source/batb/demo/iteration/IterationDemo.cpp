@@ -44,7 +44,7 @@ IterationStack IterationDemo::iterate(World& demo)
  
 
     // TODO: finish up, free mem (events, ...)
-    step( demo.events );
+    events_step( demo.events );
 
     return ret;
 }

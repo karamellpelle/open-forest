@@ -42,10 +42,11 @@ class Run : public ModuleBATB
 {
 friend void begin(Run& );
 friend void end(Run& );
+friend class IterationRun;
 
 public:
     Run(BATB& );
- 
+
     // text interface
     Console console;
 
@@ -57,11 +58,22 @@ public:
     //IterationRunOutro     iterationRunOutro;
     IterationRunOld       iterationRunOld; 
 
-    // the world 'this' is currently working on:
-    // (working target for GUI, ...)
-    World* world = nullptr;
+    ////////////////////////////////////////////////////////////////////////////////
+    // push events
+    template <typename T>
+    void push(const T& d)
+    {
+        events_.push( d );
+    }
+    template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
+    void push(T* d, const D& del = D())
+    {
+        events_.push( d, del );
+    }
 
 private:
+    // events to move over to world
+    EventList events_;
 
 };
 

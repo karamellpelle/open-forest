@@ -39,17 +39,8 @@ IterationStack IterationRun::iterate(World& world)
     ////////////////////////////////////////
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
-    // set current world the Run-object is working on (used by GUI)
-    batb.run.world = &world;
-
     // set current tick for world.
     world.tick = batb.env.tick();
-
-    // tmp:
-    if ( world.toggle_a )
-        glClearColor( 0.4, 0.1, 0.5, 1.0 );
-    else
-        glClearColor( 0.0, 0.0, 0.0, 0.0 );
 
     // setup scene for this frame
     begin( world.scene );
@@ -63,6 +54,18 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // begin frame for AL
     batb.al.frameBegin();
 
+    // move events from Run over to World
+    // all events (from Run and subclasses of IterationRun (henc
+    // there is no need for EventList's in subclasses of IterationRun)
+    // are propagated down to World.
+    //
+    // events can not be doubled. 
+    // hence only 1 run::World will receive the events from Run
+    // each frame. in practice this is no problem, since we will
+    // only work on 1 run::World
+    //world.events.push( events_ ); 
+    //
+    world.events.take( batb.run.events_ );
 
     ////////////////////////////////////////////////////////////////////////////////
     // actual iteration, implemented by subclass
@@ -84,7 +87,7 @@ debug::gl::msg("iterate_run()");
     ////////////////////////////////////////////////////////////////////////////////
     // free resources
 
-    step( world.events );
+    events_step( world.events );
 
 
     ++world.frames;

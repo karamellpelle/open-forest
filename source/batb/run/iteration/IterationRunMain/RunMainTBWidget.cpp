@@ -73,6 +73,7 @@ RunMainTBWidget::RunMainTBWidget(IterationRunMain& i) : iteration( i )
 bool RunMainTBWidget::OnEvent(const tb::TBWidgetEvent& ev)
 {
     using namespace tb; 
+    // TODO: push events to batb.run
     if ( ev.type == EVENT_TYPE_CLICK )
     {
         TBID id = ev.target->GetID(); 

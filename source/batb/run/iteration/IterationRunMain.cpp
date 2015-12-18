@@ -125,7 +125,7 @@ IterationStack IterationRunMain::iterate_run(World& run)
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     // add events from this to world
-    run.events.move( events_ );
+    run.events.take( events_ );
 
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
