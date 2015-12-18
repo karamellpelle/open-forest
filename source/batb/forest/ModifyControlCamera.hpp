@@ -29,6 +29,7 @@ class BATB;
 namespace forest
 {
 
+class DTMovable;
 class World;
 
 class ModifyControlCamera 
@@ -38,13 +39,24 @@ public:
 
     void operator()(World& );
 
-protected:
+    // free (continuous movement)
+    void free(DTMovable* , tick_t = 0.0);
+    // follow at distance (continuous movement)
+    void follow(DTMovable* , tick_t = 0.0);
+    // connect to  (continuous movement)
+    void attach(DTMovable* , tick_t = 0.0);
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //
     BATB& batb;
 
 private:
     float_t aim_a_ = 0.0;
     float_t aim_b_ = 0.0;
     float_t aim_c_ = 0.0;
+
+    DTMovable* following_ = nullptr;
+    DTMovable* attached_ = nullptr;
 };
 
 

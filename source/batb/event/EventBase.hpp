@@ -53,6 +53,7 @@ private:
     EventBase(const EventBase& ) = delete;
     EventBase& operator=(const EventBase& ) = delete;
 
+    void frames(uint n) { frame_lifes = n; }
 
     // content
     std::type_index type_;

@@ -35,16 +35,26 @@ friend void events_step(EventList& );
 public:
     // push new event (copy data)
     template <typename T>
-    void push(const T& d) // enable_if is_reference
+    void push(const T& d, uint frames = 1) // enable_if is_reference
     {
-        push_back( std::make_shared<EventDataCopy<T>>( d ) );
+        if ( frames )
+        {
+            auto ptr = std::make_shared<EventDataCopy<T>>( d );
+            ptr->frames( frames );
+            push_back( ptr );
+        }
     }
 
     // push new event (point to data)
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
-    void push(T* d, const D& del = D())
+    void push(T* d, const D& del = D(), uint frames = 1)
     {
-        push_back( std::make_shared<EventDataPoint<T>>( d, del ) );
+        if ( frames )
+        {
+            auto ptr = std::make_shared<EventDataPoint<T>>( d, del );
+            ptr->frames( frames );
+            push_back( ptr );
+        }
     }
     
     // NOTE: it is not allowed (yet) to copy events from one EventList to another.

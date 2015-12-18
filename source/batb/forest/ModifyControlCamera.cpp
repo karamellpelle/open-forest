@@ -74,6 +74,44 @@ void ModifyControlCamera::operator()(World& forest)
 }
 
 
+void ModifyControlCamera::free(DTMovable* move, tick_t time)
+{
+    attached_ = nullptr;
+    following_ = nullptr;
+}
+
+void ModifyControlCamera::follow(DTMovable* move, tick_t time)
+{
+    if ( move )
+    {
+        following_ = move;
+
+        // can not be attached and following at the same timd
+        attached_ = nullptr;
+
+    }
+    else
+    {
+        // set free
+    }
+}
+
+void ModifyControlCamera::attach(DTMovable* move, tick_t time)
+{
+    if ( move )
+    {
+        attached_ = move;
+
+        // can not be attached and following at the same timd
+        following_ = nullptr;
+    }
+    else
+    {
+        // set free
+    }
+}
+
+
 } // namespace forest
 
 } // namespace batb
