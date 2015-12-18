@@ -45,9 +45,9 @@ public:
     Event& operator=(const Event& ) = default;
     Event(Event&& ) = default;
 
-private:
-    Event(const std::shared_ptr<EventBase>& b) : base_( b ) { } 
+    Event(const std::shared_ptr<EventBase>& b) : base_( b ) { } // public for EventList. the whole event implementation should instead be redesigned at bit
 
+private:
     std::shared_ptr<EventBase> base_;
 };
 

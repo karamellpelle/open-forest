@@ -59,12 +59,9 @@ public:
 
 private:
     RunMainTBWidget* tb_widget_ = nullptr; // TODO?: general TBWidget, and this only pushes events?
-    EventList events_;
+    //EventList events_;
 
-    //// tmp: FIXME: into IterationRunDemo
-    //forest::World* forest = nullptr;
-    //forest::IterationStack forest_stack;
-    EventEaterSet eater_set;
+    EventEaterSet event_eat;
     void eat_number(const uint& n)
     {
         std::cout << "IterationRunMain eating number: " << n << std::endl;

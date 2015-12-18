@@ -61,12 +61,12 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // push events
     template <typename T>
-    void push(const T& d)
+    void pushEvent(const T& d)
     {
         events_.push( d );
     }
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
-    void push(T* d, const D& del = D())
+    void pushEvent(T* d, const D& del = D())
     {
         events_.push( d, del );
     }

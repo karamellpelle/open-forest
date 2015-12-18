@@ -66,6 +66,7 @@ private:
 
 
     // mem
+    // should be non-empty. 1 means it only lives through current frame
     uint frame_lifes = 1;
 
 };

@@ -110,14 +110,14 @@ private:
 class EventEaterSet
 {
 public:
-    void eat(const EventList& list)
+    void operator()(const EventList& list)
     {
-        for (auto& e : list.events_)
+        for (auto& e : list)
         {
             eat( *e );     
         }
     }
-    void eat(const Event& e)
+    void operator()(const Event& e)
     {
         //for ( const auto& i = std::begin( eaters_ ); i != std::end( eaters_ ); ++i )
         for (const auto& eater : eaters_ )

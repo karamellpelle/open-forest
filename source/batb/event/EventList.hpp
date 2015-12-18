@@ -27,7 +27,7 @@
 namespace batb
 {
 
-class EventList
+class EventList : public std::list<std::shared_ptr<EventBase>> // private inheritance?
 {
 friend class EventEaterSet;
 friend void events_step(EventList& );
@@ -37,31 +37,32 @@ public:
     template <typename T>
     void push(const T& d) // enable_if is_reference
     {
-        events_.push_back( std::make_shared<EventDataCopy<T>>( d ) );
+        push_back( std::make_shared<EventDataCopy<T>>( d ) );
     }
 
     // push new event (point to data)
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
     void push(T* d, const D& del = D())
     {
-        events_.push_back( std::make_shared<EventDataPoint<T>>( d, del ) );
+        push_back( std::make_shared<EventDataPoint<T>>( d, del ) );
     }
     
     // NOTE: it is not allowed (yet) to copy events from one EventList to another.
     //       because the function 'events_step' below will decrease frame life more
     //       than once each frame, if events_step more than once each frame.
     //       hence only use 'take'
+    //
     // push events from event list
     //void push(const EventList& es)
     //{
-    //    std::copy( es.events_.begin(), es.events_.end(), std::back_inserter( events_ ) );
+    //    std::copy( es.begin(), es.end(), std::back_inserter( );
     //}
 
     // push and clear
     void take(EventList& es)
     {
-        std::copy( es.events_.begin(), es.events_.end(), std::back_inserter( events_ ) );
-        es.events_.clear();
+        std::copy( es.begin(), es.end(), std::back_inserter( *this ) );
+        es.clear();
     }
 
 
@@ -73,19 +74,17 @@ private:
     tick_t tick_ = 0.0;
     uint frame_ = 0;
 
-    //std::list<std::unique_ptr<EventBase>> events_;
-    std::list<std::shared_ptr<EventBase>> events_; // TODO: list of Event's
 
-    static bool step_lifes(const std::shared_ptr<EventBase>& e)
+    static bool step_lifes(const std::shared_ptr<EventBase>& event)
     {
-        if ( e->frame_lifes == 0 )
-        {
-            return true;
-        }
         // we are not allowed to modify e (cppreference.com of list::remove_if)
         // but we can surely modify the object it points to!
-        --(e->frame_lifes);
-        return false;
+        auto& lifes = event->frame_lifes;
+
+        lifes = lifes == 0 ? 0 : lifes - 1; // but lifes should never be empty!
+
+        // remove iff current frame is the last frame for event
+        return lifes == 0;
     }
 };
 
@@ -96,7 +95,7 @@ inline void events_step(EventList& list)
 {
     // free mem iff frame_lifes == 0
     //events_.remove_if( [](auto e) { return e->frame_lifes == 0; } ); // c++14
-    list.events_.remove_if( EventList::step_lifes );
+    list.remove_if( EventList::step_lifes );
 
 }
 
