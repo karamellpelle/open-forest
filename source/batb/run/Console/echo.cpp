@@ -1,4 +1,4 @@
-//    open-forest: an orienteering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,22 +15,38 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_EVENT_HPP
-#define BATB_EVENT_HPP
-#include "batb/batb_include.hpp"
-#include "batb/event/EventBase.hpp"
-#include "batb/event/EventList.hpp"
-#include "batb/event/EventEater.hpp"
-#include "batb/event/Event.hpp"
+#include "batb.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/Console.hpp"
+#include "batb/run/Console/parse.hpp"
 
 
+
+  
 namespace batb
 {
 
+namespace run
+{
 
+// output string to console
+void command_echo(Console& console, std::string& in)
+{
+    // (allowed to modify 'in' directly)
+    auto str = space( in );
+
+    // TODO: remove enclosing "
+    // TODO: parse commands (-n for no newline, etc.)
+
+    // for now, print to std::cout
+    std::cout << in << std::endl;
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+} // namespace run
 
 } // namespace batb
-
-
-#endif
 

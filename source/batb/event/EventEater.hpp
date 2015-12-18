@@ -76,7 +76,6 @@ private:
 class EventEater
 {
 friend class EventEaterSet;
-friend class CaseEvent;     // TODO: remove
 
 
 public:

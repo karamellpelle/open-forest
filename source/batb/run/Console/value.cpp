@@ -16,73 +16,30 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/Console.hpp"
+#include "batb/run/Console/parse.hpp"
 
 
 
-
+  
 namespace batb
 {
-
-
 
 namespace run
 {
 
 
+// modify value::'s
+void command_value(Console& console, std::string& in)
+{
+    // (allowed to modify 'in' directly)
+    // TODO 
+}
 ////////////////////////////////////////////////////////////////////////////////
-//  Run
-
-Run::Run(BATB& b) : ModuleBATB( b ), console( b ), keyset( b ), 
-                    iterationRunMain( b ),
-                    iterationRunOld( b )
-{
-
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-// begin the non-core part of Run
-void begin(Run& run)
-{
-
-    BATB_LOG_FUNC( run.batb );
-
-
-    if ( run.init_empty() )
-    {
-        // load associated keys 
-        run.keyset.load("batb/run/KeySet.yaml");
-
-        // begin non-core iterations:
-        run::begin( run.iterationRunOld );
-        run::begin( run.iterationRunMain );
-    }
-
-    run.init( true );
-}
-
-// end the non-core part of Run
-void end(Run& run)
-{
-    BATB_LOG_FUNC( run.batb );
-
-    if ( run.init_nonempty() )
-    {
-        run.save();
-
-
-        // end non-core iterations:
-        run::end( run.iterationRunMain );
-        run::end( run.iterationRunOld );
-
-    }
-    
-    run.init( false );
-}
-
+//
 
 } // namespace run
 
 } // namespace batb
+

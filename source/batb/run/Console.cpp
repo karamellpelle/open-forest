@@ -15,63 +15,54 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_RUN_HPP
-#define BATB_RUN_RUN_HPP
-#include "batb/ModuleBATB.hpp"
+#include "batb.hpp"
+#include "batb/run/Run.hpp"
 #include "batb/run/Console.hpp"
-#include "batb/run/KeySet.hpp"
-#include "batb/run/iteration/IterationRunMain.hpp"
-#include "batb/run/iteration/IterationRunOld.hpp"
+#include "batb/run/Console/parse.hpp"
 
 
 
-
+  
 namespace batb
 {
-
-
-
 
 namespace run
 {
 
 
-
-
-class Run : public ModuleBATB
+void Console::operator()(const std::string& input)
 {
-friend void begin(Run& );
-friend void end(Run& );
+    // specific command handle functions.
+    // these are allowed to modify input. 
+    using CommandEater = void(Console& , std::string& );
+    extern CommandEater command_echo;
+    extern CommandEater command_value;
 
-public:
-    Run(BATB& );
- 
-    // text interface
-    Console console;
+    std::string in = input;
+    std::string cmd = word( in );
 
-    KeySet keyset;
+    if ( cmd == "echo" )
+    {
+        command_echo( *this, in );   
+        return;
+    }
+    if ( cmd == "value" )
+    {
+        command_value( *this, in );
+        return;
+    }
 
-    // Iteration's
-    //IterationRunIntro     iterationRunIntro;
-    IterationRunMain      iterationRunMain;
-    //IterationRunOutro     iterationRunOutro;
-    IterationRunOld       iterationRunOld; 
-
-    // the world 'this' is currently working on:
-    // (working target for GUI, ...)
-    World* world = nullptr;
-
-private:
-
-};
+    batb.log << "run::Console: command not found: " << cmd 
+             << std::endl;
+  
+}
 
 
-void begin(Run& );
-void end(Run& );
+
+////////////////////////////////////////////////////////////////////////////////
+//
 
 } // namespace run
 
 } // namespace batb
-
-#endif
 

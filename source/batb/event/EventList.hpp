@@ -30,7 +30,6 @@ namespace batb
 class EventList
 {
 friend class EventEaterSet;
-friend class CaseEvent;
 friend void step(EventList& );
 
 public:
