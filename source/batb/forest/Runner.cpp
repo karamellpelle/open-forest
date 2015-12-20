@@ -119,14 +119,14 @@ void Trace::push(const TracePoint& point1)
     points.push_back( point0 );
     point0 = point1;
 
-    std::cout << "added TracePoint: " 
-              << "( "
-              << std::setprecision( 1 )
-              << std::fixed
-              << point0.x << ", "
-              << point0.y << ", "
-              << point0.z << ") "
-              << std::endl;
+    //std::cout << "added TracePoint: " 
+    //          << "( "
+    //          << std::setprecision( 1 )
+    //          << std::fixed
+    //          << point0.x << ", "
+    //          << point0.y << ", "
+    //          << point0.z << ") "
+    //          << std::endl;
 }
 
 } // namespace forest

@@ -53,12 +53,6 @@ void IterationRunDemo::iterate_begin(World& run)
     // setup substack
     stack = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
 
-    demo->tick = run.tick;
-
-    batb.forest.keyset.reset();
-
-    // no cursor
-    batb.keys.setCursorFree( true );
 }
 
 
@@ -74,11 +68,9 @@ IterationStack IterationRunDemo::iterate_run(World& run)
     
     // iterate demo::World
     game::iterate( stack, *demo );
+
     if ( stack.empty() )
     {
-        // cursor
-        batb.keys.setCursorFree( false );
-
         return _emptylist_;
     }
     else

@@ -55,7 +55,7 @@ void begin(Value& value)
         forestProximityControl  = 16.0;
         forestProximityRunner   = 16.0;
 
-        forestTraceD =      8.0;
+        forestTraceD =      16.0;
 
         // TODO: use 'Value::yaml', override values, if defined
     }

@@ -115,7 +115,8 @@ void StepDT::operator()(World& forest, tick_t dt)
         }
 
         // update trace for Runner
-        runner_a.trace.pushIf( value::forestTraceD, TracePoint( tick_next, glm::vec3( runner_a.move.aim[ 3 ] ) ) );
+        runner_a.trace.pushIf( value::forestTraceD * value::forestTraceD, 
+                               TracePoint( tick_next, glm::vec3( runner_a.move.aim[ 3 ] ) ) );
     }
 
     // NOTE:

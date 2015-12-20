@@ -19,6 +19,7 @@
 #define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "batb/demo/iteration/IterationDemo.hpp"
 #include "batb/demo/BeginEvents.hpp"
+#include "batb/demo/Output.hpp"
 #include "batb/forest/Output.hpp"
 #include "batb/forest/BeginEvents.hpp"
 #include "batb/forest/ModifyControlCamera.hpp"
@@ -58,6 +59,7 @@ public:
     ////////////////////////////////////////
 
 private:
+    demo::Output outputDemo;
     demo::BeginEvents beginEventsDemo;
 
     forest::Output output;
@@ -65,8 +67,6 @@ private:
     forest::ModifyControlCamera modifyControlCamera;
     forest::ModifyControlRunner modifyControlRunner;
     forest::StepDT stepDT;
-
-    forest::Runner* runner_;
 
     //float_t aim_a = 0.0;  // yaw
     //float_t aim_b = 0.0;  // pitch

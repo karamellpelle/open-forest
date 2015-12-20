@@ -281,6 +281,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/Output.cpp"
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       # nanovg

@@ -15,65 +15,36 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_WORLD_HPP
-#define BATB_DEMO_WORLD_HPP
+#ifndef BATB_DEMO_OUTPUT_HPP
+#define BATB_DEMO_OUTPUT_HPP
 #include "batb/batb_include.hpp"
-#include "batb/forest.hpp"
-#include "batb/forest/World.hpp"
-#include "batb/event.hpp"
-
+#include "game/Output.hpp"
 
 namespace batb
 {
 
-namespace run
-{
-class World;
-}
+
+class BATB;
+
 
 namespace demo
 {
+class World;
 
 
-//class ControlPoint
-//{
-//public:
-//    ControlPoint(const glm::vec2& v) : point( v ) { }
-//
-//    forest::Control* control = nullptr;
-//    glm::vec2 point;
-//};
-
-
-class World
+// the default outputter (OpenGL, sound, network, ...)
+class Output : public game::Output<World>
 {
-
 public:
-    World(run::World& r) : run( r ), forest( r ) { }
+    Output(BATB& b) : batb( b )       { }
 
-    run::World& run;
-    // forest subworld
-    forest::World forest;
+    virtual void operator()(World& ) override;
 
-    EventList events;
+    // TODO: controls:
+    // ...
 
-    // tick of world
-    tick_t tick = 0.0;
-
-    
-    forest::Runner* runner = nullptr;
-
-/*
-    // 
-    ControlPoint cpoint;
-    std::forward_list<ControlPoint> cpoint_nexts;
-    std::forward_list<ControlPoint> cpoint_prevs;
-
-
-*/
-
-private:
-    
+protected:
+    BATB& batb;
 };
 
 
@@ -82,6 +53,5 @@ private:
 } // namespace batb
 
 
-
-
 #endif
+

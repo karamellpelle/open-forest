@@ -41,7 +41,7 @@ namespace demo
 
 
 IterationDemoForest::IterationDemoForest(BATB& b) : 
-    IterationDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
+    IterationDemo( b ), outputDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
     modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
 {
 
@@ -59,6 +59,12 @@ void IterationDemoForest::iterate_begin(World& demo)
     // set ticks to current run-tick
     demo.tick = run.tick;
     forest.tick = demo.tick;
+
+    // clear keys
+    batb.forest.keyset.reset();
+
+    // no cursor
+    batb.keys.setCursorFree( true );
 
     
     ////////////////////////////////////////////////////////////////////////////////
@@ -84,8 +90,8 @@ void IterationDemoForest::iterate_begin(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // add a Runner
 
-    runner_ = forest.addRunner();
-    runner_->reset( glm::vec2( 40, -120 ) );
+    demo.runner = forest.addRunner();
+    demo.runner->reset( glm::vec2( 40, -120 ) );
 
 }
 
@@ -100,6 +106,8 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
     // output forest
     output( forest );
+
+    outputDemo( demo );
 
     
 
@@ -118,7 +126,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     constexpr float_t radius = 150.0;
     float_t x, z;
     cossin( 0.5 * forest.tick, x, z );
-    auto& pos = runner_->move.aim[3];
+    auto& pos = demo.runner->move.aim[3];
     pos.x = radius * x;
     pos.z = radius * z;
 
@@ -150,6 +158,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     if ( batb.run.keyset.ogre->click() )
     {
         batb.log << "out of IterationRunDemo!!" << std::endl;
+
+        // cursor
+        batb.keys.setCursorFree( false );
+
         return _emptylist_;
     }
     else
@@ -160,6 +172,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
 
 ////////////////////////////////////////////////////////////////////////////////
 //
