@@ -35,6 +35,8 @@ extern float_t forestMoveZ;
 extern float_t forestProximityControl;
 extern float_t forestProximityRunner;
 
+extern float_t forestTraceD;
+
 
 
 

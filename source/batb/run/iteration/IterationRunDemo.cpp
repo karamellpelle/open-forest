@@ -71,7 +71,7 @@ IterationStack IterationRunDemo::iterate_run(World& run)
         cursor = !cursor;
         batb.keys.setCursorFree( cursor );
     }
-
+    
     // iterate demo::World
     game::iterate( stack, *demo );
     if ( stack.empty() )
@@ -79,7 +79,7 @@ IterationStack IterationRunDemo::iterate_run(World& run)
         // cursor
         batb.keys.setCursorFree( false );
 
-        return _;
+        return _emptylist_;
     }
     else
     {

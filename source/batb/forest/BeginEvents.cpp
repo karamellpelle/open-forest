@@ -15,45 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_DTMOVABLE_HPP
-#define BATB_FOREST_DTMOVABLE_HPP
-#include "batb/batb_include.hpp"
+#include "batb/forest/BeginEvents.hpp"
+#include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
+#include "batb.hpp"
 
 
 namespace batb
 {
 
-
 namespace forest
 {
 
-////////////////////////////////////////////////////////////////////////////////
-// this class should probably be changed to some better types for 
-// physics, but I am not a physist so I don't know !
-//
-// for education: http://physicsforgames.blogspot.no/
-//
-class DTMovable 
+void BeginEvents::operator()(World& forest)
 {
-public:
-    // TODO: dmat4 for better precision i a big world?
+    events_step( forest.events );
+
+    // move events from forest::Forest over to forest::World
+    // all events (from Forest and subclasses of IterationForest (henc
+    // there is no need for EventList's in subclasses of IterationForest))
+    // are propagated down to forest::World.
+    // 
+    // ideally, events should not be taken but instead copied.
+    // however, events can not be doubled (yet, because of current
+    // implementation of events_step). 
+    // hence only 1 forest::World will receive the events from Forest
+    // each frame. in practice this is no problem, since we will
+    // only work on 1 forest::World each frame (and always!)
     //
-    glm::mat4 aim;      // position and orientation  
-    glm::mat4 vel;      // velocity of 'aim'
-    glm::mat4 acc;      // acceleration of 'aim' (velocity of 'vel')
-    //glm::vec4 jerk;
+    //world.events.push( batb.forest.events_ ); 
+    //forest.events.take( batb.forest.events_ );
 
-
-};
-
+}
 
 } // namespace forest
 
 } // namespace batb
 
 
-
-
-
-#endif
 

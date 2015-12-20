@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,59 +15,41 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/demo/Demo.hpp" 
-#include "batb.hpp" 
+#ifndef BATB_RUN_BEGINEVENTS_HPP
+#define BATB_RUN_BEGINEVENTS_HPP
+#include "batb/batb_include.hpp"
 
 namespace batb
 {
 
 
+class BATB;
 
-namespace demo
+
+namespace run
 {
+class World;
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  Demo
-
-Demo::Demo(BATB& b) : ModuleBATB( b )
+// clean up and retrieve events
+// * clean up events
+// * move events from run::Run over to world.
+class BeginEvents
 {
+public:
+    BeginEvents(BATB& b) : batb( b ) { }
 
-}
+    void operator()(World& );
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(Demo& demo)
-{
-
-    BATB_LOG_FUNC( demo.batb );
-    
-    if ( demo.init_empty() )
-    {
-
-    }
-
-    demo.init( true );
-}
-
-void end(Demo& demo)
-{
-    BATB_LOG_FUNC( demo.batb );
-
-    if ( demo.init_nonempty() )
-    {
-        demo.save();
-
-    }
-    
-    demo.init( false );
-}
+protected:
+    BATB& batb;
+};
 
 
-} // namespace demo
+} // namespace run
 
 } // namespace batb
 
+
+#endif
 

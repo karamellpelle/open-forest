@@ -54,19 +54,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // begin frame for AL
     batb.al.frameBegin();
 
-    // move events from Run over to World
-    // all events (from Run and subclasses of IterationRun (henc
-    // there is no need for EventList's in subclasses of IterationRun)
-    // are propagated down to World.
-    //
-    // events can not be doubled. 
-    // hence only 1 run::World will receive the events from Run
-    // each frame. in practice this is no problem, since we will
-    // only work on 1 run::World
-    //world.events.push( events_ ); 
-    //
-    world.events.take( batb.run.events_ );
-
     ////////////////////////////////////////////////////////////////////////////////
     // actual iteration, implemented by subclass
 debug::gl::msg("iterate_run()");
@@ -85,11 +72,6 @@ debug::gl::msg("iterate_run()");
     batb.gui.step( world.tick );
 
     ////////////////////////////////////////////////////////////////////////////////
-    // free resources
-
-    events_step( world.events );
-
-
     ++world.frames;
 
     return ret;

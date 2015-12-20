@@ -39,7 +39,7 @@ inline std::string space(std::string& str)
 
     auto ret = std::string( b, i );
 
-    str.erase( std::begin( str ), i );
+    str.erase( std::begin( str ), b );
 
     return ret;
 }
@@ -55,7 +55,25 @@ inline std::string word(std::string& str)
     auto i = std::find_if( b, std::begin( str ), is );
     
     auto ret = std::string( b, i );
-    str.erase( std::begin( str ), i );
+    str.erase( std::begin( str ), b );
+
+    return ret;
+
+}
+
+// eat alphanumeric word
+inline std::string alphanums(std::string& str)
+{
+    // http://stackoverflow.com/questions/21578544/stdremove-if-and-stdisspace-compile-time-error
+    auto is = [](std::string::value_type c) { return std::isspace(c); };
+    auto ia = [](std::string::value_type c) { return std::isalnum(c); };
+
+    // find word (trim front from spaces)
+    auto b = std::find_if_not( std::begin( str ), std::end( str ), is );
+    auto i = std::find_if_not( b, std::begin( str ), ia );
+    
+    auto ret = std::string( b, i );
+    str.erase( std::begin( str ), b );
 
     return ret;
 

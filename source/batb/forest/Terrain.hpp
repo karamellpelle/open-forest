@@ -17,6 +17,13 @@
 //
 #ifndef BATB_FOREST_TERRAIN_HPP
 #define BATB_FOREST_TERRAIN_HPP
+#include "OgreSceneManager.h"
+#include "OgreViewport.h"
+#include "OgreTerrainGroup.h"
+#include "OgreTerrainPaging.h"
+#include "OgrePageManager.h"
+#include "OgrePagedWorld.h"
+#include "OgreTerrainPagedWorldSection.h"
 #include "batb/batb_include.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,17 +74,6 @@
 // u
 //
 
-namespace Ogre
-{
-class SceneManager;
-class Viewport;
-class TerrainGroup;
-class TerrainPaging;
-class PageManager;
-class PagedWorld;
-class TerrainPagedWorldSection;
-class TerrainGlobalOptions;
-}
 
 
 namespace batb

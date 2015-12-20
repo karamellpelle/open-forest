@@ -15,59 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/demo/Demo.hpp" 
-#include "batb.hpp" 
+#include "batb/demo/BeginEvents.hpp"
+#include "batb/demo.hpp"
+#include "batb/demo/World.hpp"
+#include "batb.hpp"
+
 
 namespace batb
 {
 
-
-
 namespace demo
 {
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  Demo
-
-Demo::Demo(BATB& b) : ModuleBATB( b )
+void BeginEvents::operator()(World& demo)
 {
+    // free old events
+    events_step( demo.events );
 
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(Demo& demo)
-{
-
-    BATB_LOG_FUNC( demo.batb );
     
-    if ( demo.init_empty() )
-    {
-
-    }
-
-    demo.init( true );
+    // move events from demo::Run over to demo::World
+    // all events (from Run and subclasses of IterationRun (henc
+    // there is no need for EventList's in subclasses of IterationRun))
+    // are propagated down to demo::World.
+    // 
+    // ideally, events should not be taken but instead copied.
+    // however, events can not be doubled (yet, because of current
+    // implementation of events_step). 
+    // hence only 1 demo::World will receive the events from Run
+    // each frame. in practice this is no problem, since we will
+    // only work on 1 demo::World each frame (and always!)
+    //
+    //world.events.push( batb.demo.events_ ); 
+    //demo.events.take( batb.demo.events_ );
 }
-
-void end(Demo& demo)
-{
-    BATB_LOG_FUNC( demo.batb );
-
-    if ( demo.init_nonempty() )
-    {
-        demo.save();
-
-    }
-    
-    demo.init( false );
-}
-
 
 } // namespace demo
 
 } // namespace batb
+
 
 

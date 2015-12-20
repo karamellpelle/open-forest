@@ -103,7 +103,7 @@ IterationStack IterationRunWork::iterate_run(World& world)
         //tb_widget_->Die();
 
         // finish this iteration
-        return _; 
+        return _emptylist_; 
     }
     
 }

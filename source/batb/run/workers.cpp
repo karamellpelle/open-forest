@@ -37,7 +37,8 @@ void LoadWorker<BATB>::operator()(Work& work)
     gl::init_state();
 
     // how many steps to be loaded
-    work.definite( 4 + 3 ); 
+    //work.definite( 4 + 3 ); 
+    work.definite( 4 ); 
 
     try
     {
@@ -62,7 +63,7 @@ void LoadWorker<BATB>::operator()(Work& work)
         work.state( "Forest" );
         forest::begin( batb.forest );
 
-
+/*
         // tmp: fake loading, to show capabilities:
         work.state( "Proxy library A" );
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
@@ -70,6 +71,7 @@ void LoadWorker<BATB>::operator()(Work& work)
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
         work.state( "Proxy library C" );
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+*/
 
     }
     catch (std::exception& e)

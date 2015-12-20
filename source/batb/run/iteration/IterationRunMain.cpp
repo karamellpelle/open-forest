@@ -53,7 +53,7 @@ void eat_uint(const uint& n)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b )
+IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b ), beginEvents( b )
 {
 
     // set event eaters for received events
@@ -117,12 +117,14 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
+    // grab and clean up events
+    beginEvents( run );
+    ////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     // 
     
-    // add events from this to world
-    //run.events.take( events_ );
-
     if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
     if ( batb.run.keyset.i->click() ) run.toggle_b = !run.toggle_b;
     if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
@@ -177,12 +179,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
     
 
-    if ( batb.run.keyset.pause->click() ) return _;
-    //{
-    //    // escaping from IterationMain finishes iteration.
-    //    //batb.log << "IterationRunMain ->" << std::endl;
-    //    //return _;
-    //}
+    if ( batb.run.keyset.pause->click() ) return _emptylist_;
     
     // run old-BATB if old-key released
     if ( batb.run.keyset.old->released() )
@@ -204,44 +201,53 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
         // general eat function
         event_eat( event );
 
-        // handle special events here
+        ////////////////////////////////////////////////////////////////////////////////
+        // uint
         if ( auto* n = eat<uint>( event ) )
         {
             std::cout << "a special event occured: " << *n << std::endl;
 
         }
-        
-    /*
+      
+        ////////////////////////////////////////////////////////////////////////////////
+        // event::DoDemo
         if ( auto* next = eat<event::DoDemo>( event ) )
         {
-            switch ( next )
+            switch ( *next )
             {
             case event::DoDemo::Forest:
+                batb.run.console( R"(echo "do forest")" );
                 //auto* demo = new demo::World( run );
                 //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
                 //         game::begin_iteration( new IterationRunDemo( batb ) ),
                 //         game::begin_iteration( new IterationRunWork( batb, UnloadWorker<demo::World>( batb, demo ) ) ),
                 //         game::begin_iteration( this )
                 //       }
-                return { game::begin_iteration( new IterationRunDemo( batb ) ), 
-                         game::begin_iteration( this ) };
+                //return { game::begin_iteration( new IterationRunDemo( batb ) ), 
+                //         game::begin_iteration( this ) };
                 
             case event::DoDemo::Turbobadger:
+                batb.run.console( R"(echo "do turbobadger")" );
                 break;
             case event::DoDemo::NanoVG:
-                run.toggle_nanovg = !run.toggle_nanovg;
+                batb.run.console( R"(echo "do nanovg")" );
+                //run.toggle_nanovg = !run.toggle_nanovg;
                 break;
             case event::DoDemo::Old:
-                return {  game::begin_iteration( batb.run.iterationRunOld ), 
-                          game::begin_iteration( *this ) };
+                batb.run.console( R"(echo "do old")" );
+                //return {  game::begin_iteration( batb.run.iterationRunOld ), 
+                //          game::begin_iteration( *this ) };
             
 
             }
+
+            ////////////////////////////////////////////////////////////////////////////////
+            //
         }
-    );
-*/
+
     }
 
+    // default: continue this iteration  
     return { this };
 }
 

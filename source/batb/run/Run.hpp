@@ -42,7 +42,7 @@ class Run : public ModuleBATB
 {
 friend void begin(Run& );
 friend void end(Run& );
-friend class IterationRun;
+friend class ModifyBegin;
 
 public:
     Run(BATB& );
@@ -63,17 +63,17 @@ public:
     template <typename T>
     void pushEvent(const T& d)
     {
-        events_.push( d );
+      events.push( d );
     }
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
     void pushEvent(T* d, const D& del = D())
     {
-        events_.push( d, del );
+        events.push( d, del );
     }
 
-private:
+
     // events to move over to world
-    EventList events_;
+    EventList events;
 
 };
 

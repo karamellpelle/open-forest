@@ -62,12 +62,12 @@ void ModifyControlCamera::operator()(World& forest)
            (move_z * value::forestMoveZ) * z_;
        
 
-    std::cout << "\r";
-    std::cout << "vel: " << vel[0] << " "<< vel[1] << " "<< vel[2] ;
-    std::cout << ", ";
-    auto& pos = camera.move.aim[ 3 ];
-    std::cout << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
-    std::cout << "move_x: " << move_x << ", move_z: " << move_z;
+    //std::cout << "\r";
+    //std::cout << "vel: " << vel[0] << " "<< vel[1] << " "<< vel[2] ;
+    //std::cout << ", ";
+    //auto& pos = camera.move.aim[ 3 ];
+    //std::cout << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
+    //std::cout << "move_x: " << move_x << ", move_z: " << move_z;
               
     
 

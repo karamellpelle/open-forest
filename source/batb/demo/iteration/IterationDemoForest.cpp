@@ -41,7 +41,8 @@ namespace demo
 
 
 IterationDemoForest::IterationDemoForest(BATB& b) : 
-    IterationDemo( b ), output( b ), modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
+    IterationDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
+    modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
 {
 
 }
@@ -83,8 +84,8 @@ void IterationDemoForest::iterate_begin(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // add a Runner
 
-    auto* runner = forest.addRunner();
-    runner->reset( glm::vec2( 40, -120 ) );
+    runner_ = forest.addRunner();
+    runner_->reset( glm::vec2( 40, -120 ) );
 
 }
 
@@ -100,11 +101,26 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // output forest
     output( forest );
 
+    
 
     ////////////////////////////////////////////////////////////////////////////////
     // STEP
     //
 
+    // clean up and retrieve events outside of World
+    beginEventsDemo( demo );     // demo::World
+    beginEvents( forest ); // forest::World
+    // run::Events ignored!
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // TMP: move runner
+    constexpr float_t radius = 150.0;
+    float_t x, z;
+    cossin( 0.5 * forest.tick, x, z );
+    auto& pos = runner_->move.aim[3];
+    pos.x = radius * x;
+    pos.z = radius * z;
 
     // control Camera
     modifyControlCamera( forest );
@@ -134,7 +150,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     if ( batb.run.keyset.ogre->click() )
     {
         batb.log << "out of IterationRunDemo!!" << std::endl;
-        return _;
+        return _emptylist_;
     }
     else
     {

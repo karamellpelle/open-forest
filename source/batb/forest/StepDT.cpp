@@ -63,7 +63,6 @@ void StepDT::operator()(World& forest, tick_t dt)
     // step camera
     // 
     Camera& camera = forest.camera;
-
     stepdt( camera.move, dt );
    
     
@@ -72,10 +71,17 @@ void StepDT::operator()(World& forest, tick_t dt)
     // 
     for (auto i = std::begin( forest.runners ); i != std::end( forest.runners ); ++i)
     {
+        const auto tick_next = forest.tick + dt;
+
         auto& runner_a = *i;
 
         // step runner
         stepdt( runner_a.move, dt );
+      
+        // ensure runner above terrain
+        auto& pos = runner_a.move.aim[3];
+        pos.y = 14 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( 
+                     Ogre::Vector3( pos.x, pos.y, pos.z ) );
 
         // collide with controls
         for (auto j = std::begin( forest.controls ); j != std::end( forest.controls ); ++j)
@@ -107,8 +113,13 @@ void StepDT::operator()(World& forest, tick_t dt)
                 forest.events.push( event::ProximityRunner( &runner_a, &runner_b, epseps ) );
             }
         }
+
+        // update trace for Runner
+        runner_a.trace.pushIf( value::forestTraceD, TracePoint( tick_next, glm::vec3( runner_a.move.aim[ 3 ] ) ) );
     }
-    // 
+
+    // NOTE:
+    // tick of forest::World is not updated here!
 }
 
 

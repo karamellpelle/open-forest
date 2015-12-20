@@ -19,8 +19,7 @@
 #define BATB_DEMO_DEMO_HPP
 #include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
-#include "batb/demo/KeySet.hpp"
-#include "batb/demo/iteration/IterationDemoDemo.hpp"
+//#include "batb/demo/KeySet.hpp"
 
 
 
@@ -46,8 +45,7 @@ friend void end(Demo& );
 public:
     Demo(BATB& b);
 
-    KeySet keyset;
-
+    //EventList events;
 private:
 
 

@@ -15,30 +15,44 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_EVENTS_HPP
-#define BATB_RUN_EVENTS_HPP
-#include "batb/batb_include.hpp"
+#include "batb/run/BeginEvents.hpp"
+#include "batb/run.hpp"
+#include "batb.hpp"
 
 
 namespace batb
 {
+
 namespace run
 {
-namespace event
-{
 
-enum class DoDemo
+void BeginEvents::operator()(World& run)
 {
-    Forest,
-    Turbobadger,
-    NanoVG,
-    Old,
-};
+    // free old events
+    events_step( run.events );
 
-} // namespace event
+    
+    // move events from run::Run over to run::World
+    // all events (from Run and subclasses of IterationRun (henc
+    // there is no need for EventList's in subclasses of IterationRun))
+    // are propagated down to run::World.
+    // 
+    // ideally, events should not be taken but instead copied.
+    // however, events can not be doubled (yet, because of current
+    // implementation of events_step). 
+    // hence only 1 run::World will receive the events from Run
+    // each frame. in practice this is no problem, since we will
+    // only work on 1 run::World each frame (and always!)
+    //
+    //world.events.push( batb.run.events ); 
+    run.events.take( batb.run.events );
+
+
+}
 
 } // namespace run
 
 } // namespace batb
 
-#endif
+
+

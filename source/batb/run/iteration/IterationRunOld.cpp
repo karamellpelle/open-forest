@@ -45,7 +45,7 @@ IterationStack IterationRunOld::iterate_run(World& world)
     if ( old::is_exit() )
     {
         old::end();
-        return _;
+        return _emptylist_;
     }
     else
     {
@@ -58,7 +58,7 @@ IterationStack IterationRunOld::iterate_run(World& world)
             batb.log << "IterationRunOld -> " << std::endl;
             old::end();
 
-            return _;
+            return _emptylist_;
         }
         else
         {

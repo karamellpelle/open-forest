@@ -62,17 +62,13 @@ public:
 class Trace
 {
 public:
-    void push(const TracePoint& point1)
-    {
-        points.push_back( point0 );
-        point0 = point1;
-    }
+    void push(const TracePoint& point1);
     void pushIf(float_t epseps, const TracePoint& point1)
     {
         float_t x = point1.x - point0.x;
         float_t y = point1.y - point0.y;
         float_t z = point1.z - point0.z;
-        if ( x * x + y * y + z * z < epseps )
+        if ( epseps <= x * x + y * y + z * z )
         {
             push( point1 );
         }

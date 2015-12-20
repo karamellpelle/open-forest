@@ -260,6 +260,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/Console.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Console/echo.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Console/value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunDemo.cpp"
@@ -269,6 +270,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/World.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Weather.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Terrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlCamera.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"
@@ -278,6 +280,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/BeginEvents.cpp"
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       # nanovg

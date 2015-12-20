@@ -15,6 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include <iomanip>
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
 #include "OgreSceneNode.h"
@@ -110,6 +111,22 @@ void Runner::punch(Control* control1)
         control1->punch( this );
         control0 = control1;
     }
+}
+
+
+void Trace::push(const TracePoint& point1)
+{
+    points.push_back( point0 );
+    point0 = point1;
+
+    std::cout << "added TracePoint: " 
+              << "( "
+              << std::setprecision( 1 )
+              << std::fixed
+              << point0.x << ", "
+              << point0.y << ", "
+              << point0.z << ") "
+              << std::endl;
 }
 
 } // namespace forest

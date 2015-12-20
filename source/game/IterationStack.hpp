@@ -44,7 +44,7 @@ using IterationStack = std::forward_list<Iteration<A>*>;
 //
 // instead, for now,
 // a dirty fix, when inside implementation of 'iterate':
-#define _ game::IterationStack<World>()
+#define _emptylist_ game::IterationStack<World>()
 
 
 

@@ -19,6 +19,7 @@
 #define BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
 #include "batb/run/iteration/IterationRun.hpp"
 #include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
+#include "batb/run/BeginEvents.hpp"
 
 // tmp
 #include "batb/forest.hpp"
@@ -58,6 +59,8 @@ public:
     ////////////////////////////////////////
 
 private:
+    BeginEvents beginEvents;
+
     RunMainTBWidget* tb_widget_ = nullptr; // TODO?: general TBWidget, and this only pushes events?
     //EventList events_;
 
