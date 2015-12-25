@@ -111,11 +111,12 @@ void UnloadWorker<BATB>::operator()(Work& work)
         //          OGRE::frameBegin is calledafter delete!
         work.state( "OGRE" );
         ogre::end( batb.ogre );
-
+/*  
         work.state( "Proxy library B" );
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
         work.state( "Proxy library A" );
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        */
     } 
     catch (std::exception& e)
     {

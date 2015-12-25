@@ -36,6 +36,46 @@ namespace gl
 //  GL
 
 
+NVGcontext* GL::nanovg_begin(const Scene& scene)
+{
+    gl::begin_nanovg();
+
+    // TODO: use Scene!!!
+    int winWidth, winHeight;
+    glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
+    int fbWidth, fbHeight;
+    glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
+    float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
+
+    auto wth = scene.wth;
+    auto hth = scene.hth;
+    nvgBeginFrame( nvg_context, wth, hth, pxRatio);
+    //nvgSave( nvg );
+
+    return nvg_context;
+}
+
+void GL::nanovg_end()
+{
+    //nvgRestore( nvg );
+    nvgEndFrame( nvg_context );
+    gl::end_nanovg();
+
+}
+
+void GL::nanovg_normalize(const Scene& scene)
+{
+    //float_t s = std::max( scene.wth, scene.hth );
+    float_t s = scene.wth; // normalize relative to width
+    nvgScale( nvg_context, s, s );
+}
+
+int GL::nanovg_font(const std::string& name, const std::string& file)
+{
+    auto h =  nvgCreateFont( nvg_context, name.c_str(), file.c_str() );
+    //nanovg_fonts_[ name ] = h;
+    return h;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
@@ -58,7 +98,7 @@ void begin(GL& gl)
 #endif
 	if ( gl.nvg_context == nullptr )
         {
-            throw std::runtime_error( "GL: could not create nanobatb.nvg_context context" );
+            throw std::runtime_error( "GL: could not create nanovg context" );
 	}
 
         
@@ -78,6 +118,12 @@ void end(GL& gl)
 
     if ( gl.init_nonempty() )
     {
+         //clear fonts
+        //for ( auto& i : gl.nanovg_fonts_ )
+        //{
+        //    // (release font not necessary (?))
+        //
+        //}
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2(gl.nvg_context);
 #endif

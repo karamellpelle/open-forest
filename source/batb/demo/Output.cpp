@@ -20,6 +20,7 @@
 #include "batb/demo.hpp"
 #include "batb/demo/World.hpp"
 #include "batb.hpp"
+#include "batb/CourseDrawer.hpp"
 
 
 namespace batb
@@ -57,75 +58,100 @@ void Output::operator()(World& demo)
         const auto& pos = demo.runner->move.aim[3];
 
     // output
-        gl::begin_nanovg();
 
-        int winWidth, winHeight;
-        glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
-        int fbWidth, fbHeight;
-        glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
-        float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
+        //gl::begin_nanovg();
+        auto* nvg = batb.gl.nanovg_begin( run.scene );
 
-        auto ctx = batb.gl.nvg_context;
+        //int winWidth, winHeight;
+        //glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
+        //int fbWidth, fbHeight;
+        //glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
+        //float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
+
+        //auto ctx = batb.gl.nvg_context;
+        //auto wth = demo.run.scene.wth;
+        //auto hth = demo.run.scene.hth;
+        //nvgBeginFrame( nvg, wth, hth, pxRatio);
+        nvgSave( nvg );
+
+        CourseDrawer course( batb );
+        course.origo( glm::vec3( 0, 0, 0 ) );
+        course.numbers( true );
+        course.scale( 1 );
+        course.size( 18 );
+
+        course.begin();
+        //glm::mat3 trans;
+        //trans[2] = glm::vec3( 60, 60, 1 );
+        //course.draw( trans, CourseDrawer::ObjectType::Normal );
+        //trans[2] = glm::vec3( 120, 120, 1 );
+        //course.draw( trans, CourseDrawer::ObjectType::Start );
+        //trans[2] = glm::vec3( 320, 400, 1 );
+        //course.draw( trans, CourseDrawer::ObjectType::Finish );
+
+        course.start( glm::vec2( 40, 40 ) );  
+        course.normal( glm::vec2( 120, 95 ) );
+        course.normal( glm::vec2( 200, 140 ) );
+        course.normal( glm::vec2( 210, 200 ) );
+        course.normal( glm::vec2( 380, 240 ) );
+        course.normal( glm::vec2( 470, 80 ) );
+        course.normal( glm::vec2( 520, 76 ) );
+        course.normal( glm::vec2( 580, 300 ) );
+        course.finish( glm::vec2( 670, 320 ) );
+        course.end();
+
+        //////////////////////////////////////////////////////////////////////////////////
+
+        // set origo in the middle
         auto wth = demo.run.scene.wth;
         auto hth = demo.run.scene.hth;
-        nvgBeginFrame( ctx, wth, hth, pxRatio);
-        nvgSave( ctx );
+        nvgTranslate( nvg, wth / 2, hth / 2 );
 
-        nvgStrokeColor(ctx, nvgRGBA(255,0,0,160));
-        nvgFillColor(ctx, nvgRGBA(255,0,0,160));
-        nvg_point( ctx, 50, 50 );
-        nvg_point( ctx, 150, 150 );
-        nvg_point( ctx, 250, 50 );
+        //float_t sx = wth / dim;
+        //float_t sy = hth / dim;
+        //nvgScale( nvg, sx, sy );
 
-        // TODO: scale!
-        // set origo in the middle
-        nvgTranslate( ctx, wth / 2, hth / 2 );
+        batb.gl.nanovg_normalize( run.scene );
 
-        constexpr float_t dim = 600.0;
-        float_t sx = wth / (dim * run.scene.shape.wth);
-        float_t sy = hth / (dim * run.scene.shape.hth);
-        nvgScale( ctx, sx, sy );
-        // (move to origo, scale (-0.0, -0.0)
+        constexpr float_t dim = 1.0 / 600.0; // terrain dimension
+        nvgScale( nvg, dim, dim );
 
-        auto moveTo = [&](const TracePoint& p) { nvgMoveTo( ctx, p.x, p.z ); };
-        auto lineTo = [&](const TracePoint& p) { nvgLineTo( ctx, p.x, p.z ); };
+        auto moveTo = [&](const TracePoint& p) { nvgMoveTo( nvg, p.x, p.z ); };
+        auto lineTo = [&](const TracePoint& p) { nvgLineTo( nvg, p.x, p.z ); };
 
+        //////////////////////////////////////////////////////////////////////////////////
 
-        nvgStrokeWidth( ctx, 4 );
-        nvgLineCap(ctx, NVG_ROUND );
-        nvgStrokeColor(ctx, nvgRGBA(0,192,255,128));
+        nvgStrokeWidth( nvg, 4 );
+        nvgLineCap(nvg, NVG_ROUND );
+        nvgStrokeColor(nvg, nvgRGBA(0,192,255,128));
 
         const auto& points = trace.points;
         if ( !points.empty() )
         {
-        nvgBeginPath(ctx);
-            moveTo( points[0] );
-            for (uint i = 1; i != points.size(); ++i)
+        nvgBeginPath(nvg);
+            constexpr uint tails = 32; 
+            uint b = tails <= points.size() ? points.size() - tails : 0;
+            uint e = points.size();
+            moveTo( points[b] );
+            for (uint i = b + 1; i != points.size(); ++i)
             {
                 lineTo( points[i] );
             }
             lineTo( trace.point0 );
-        nvgStroke(ctx);
+        nvgStroke(nvg);
             
         }
 
         // draw current position
-        nvgStrokeColor(ctx, nvgRGBA(255,0,0,255));
-        nvgFillColor(ctx, nvgRGBA(255,0,0,255));
-        nvg_point( ctx, pos.x, pos.z ); 
+        nvgStrokeColor(nvg, nvgRGBA(255,0,0,255));
+        nvgFillColor(nvg, nvgRGBA(255,0,0,255));
+        nvg_point( nvg, pos.x, pos.z ); 
         
-    std::cout << "\r pos: "
-              << "( "
-              << std::setprecision( 1 )
-              << std::fixed
-              << pos.x << ", "
-              << pos.z << ") "
-              << std::endl;
-
-        nvgRestore( ctx );
-        nvgEndFrame( ctx );
-
-        gl::end_nanovg();
+        nvgRestore( nvg );
+        //nvgEndFrame( nvg );
+        //
+        //gl::end_nanovg();
+        batb.gl.nanovg_end();
     }
 
     ////////////////////////////////////////////////////////////////////////////////

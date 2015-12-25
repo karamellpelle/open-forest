@@ -18,6 +18,7 @@
 #include "batb/value/Value.hpp"
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
+#include "batb/value/batb.hpp"
 #include "batb/BATB.hpp"
 
 
@@ -46,6 +47,7 @@ void begin(Value& value)
 
         dt =                0.02;  
         dt_max =            2.0;
+        ////////////////////////////////////////////////////////////////////////////////
 
         forestAimX =        4.0;
         forestAimY =        4.0;
@@ -56,6 +58,20 @@ void begin(Value& value)
         forestProximityRunner   = 16.0;
 
         forestTraceD =      16.0;
+        ////////////////////////////////////////////////////////////////////////////////
+        
+        coursedrawerSizeNormal    = 1.00;
+        coursedrawerSizeStart     = 1.41;
+        coursedrawerSizeFinishA   = 0.83;
+        coursedrawerSizeFinishB   = 1.17;
+        coursedrawerSizeIx        = 2.0 * 1.3;
+        coursedrawerSizeIxPad     = 2.44;
+        coursedrawerSizeLine      = 0.16;
+
+        coursedrawerColorR        = 0.51;
+        coursedrawerColorG        = 0.04;
+        coursedrawerColorB        = 0.35;
+        coursedrawerColorA        = 0.6;
 
         // TODO: use 'Value::yaml', override values, if defined
     }
@@ -100,6 +116,22 @@ float_t forestProximityRunner;
 
 float_t forestTraceD;
 
+////////////////////////////////////////////////////////////////////////////////
+//  batb.hpp
+//
+
+float_t coursedrawerSizeNormal;
+float_t coursedrawerSizeStart;
+float_t coursedrawerSizeFinishA;
+float_t coursedrawerSizeFinishB;
+float_t coursedrawerSizeIx;
+float_t coursedrawerSizeIxPad;
+float_t coursedrawerSizeLine;
+
+float_t coursedrawerColorR;
+float_t coursedrawerColorG;
+float_t coursedrawerColorB;
+float_t coursedrawerColorA;
 
 } // namespace value
 

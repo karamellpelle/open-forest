@@ -163,7 +163,8 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     demo::al::demo_iterate( batb, run );
 
     // start ogre-demo:
-    if ( batb.run.keyset.ogre->click() )
+    //if ( batb.run.keyset.ogre->click() )
+    if ( true )
     {
         // remove main widget from screen
         tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );

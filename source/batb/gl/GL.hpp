@@ -46,8 +46,13 @@ public:
 
     NVGcontext* nvg_context = nullptr;
 
+    NVGcontext* nanovg_begin(const Scene& );
+    void nanovg_end();  
+    void nanovg_normalize(const Scene& );
+    int nanovg_font(const std::string& , const std::string& );
 
 private:
+    //std::map<std::string, int> nanovg_fonts_;
     
 };
 
