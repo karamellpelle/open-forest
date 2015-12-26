@@ -19,6 +19,7 @@
 #include "batb/run/workers.hpp"
 
 
+#define LOAD_PROXY
 
   
 namespace batb
@@ -37,8 +38,11 @@ void LoadWorker<BATB>::operator()(Work& work)
     gl::init_state();
 
     // how many steps to be loaded
-    //work.definite( 4 + 3 ); 
+#ifdef LOAD_PROXY
+    work.definite( 4 + 3 ); 
+#else
     work.definite( 4 ); 
+#endif
 
     try
     {
@@ -63,15 +67,15 @@ void LoadWorker<BATB>::operator()(Work& work)
         work.state( "Forest" );
         forest::begin( batb.forest );
 
-/*
+#ifdef LOAD_PROXY
         // tmp: fake loading, to show capabilities:
         work.state( "Proxy library A" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 8 ) );
         work.state( "Proxy library B" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
         work.state( "Proxy library C" );
         std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-*/
+#endif
 
     }
     catch (std::exception& e)

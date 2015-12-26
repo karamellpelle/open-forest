@@ -57,38 +57,15 @@ void Output::operator()(World& demo)
         auto& run = demo.run;
         const auto& pos = demo.runner->move.aim[3];
 
-    // output
 
-        //gl::begin_nanovg();
         auto* nvg = batb.gl.nanovg_begin( run.scene );
-
-        //int winWidth, winHeight;
-        //glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
-        //int fbWidth, fbHeight;
-        //glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
-        //float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
-
-        //auto ctx = batb.gl.nvg_context;
-        //auto wth = demo.run.scene.wth;
-        //auto hth = demo.run.scene.hth;
-        //nvgBeginFrame( nvg, wth, hth, pxRatio);
         nvgSave( nvg );
 
         CourseDrawer course( batb );
-        course.origo( glm::vec3( 0, 0, 0 ) );
         course.numbers( true );
-        course.scale( 1 );
         course.size( 18 );
 
         course.begin();
-        //glm::mat3 trans;
-        //trans[2] = glm::vec3( 60, 60, 1 );
-        //course.draw( trans, CourseDrawer::ObjectType::Normal );
-        //trans[2] = glm::vec3( 120, 120, 1 );
-        //course.draw( trans, CourseDrawer::ObjectType::Start );
-        //trans[2] = glm::vec3( 320, 400, 1 );
-        //course.draw( trans, CourseDrawer::ObjectType::Finish );
-
         course.start( glm::vec2( 40, 40 ) );  
         course.normal( glm::vec2( 120, 95 ) );
         course.normal( glm::vec2( 200, 140 ) );
@@ -102,15 +79,10 @@ void Output::operator()(World& demo)
 
         //////////////////////////////////////////////////////////////////////////////////
 
-        // set origo in the middle
+        // set origo in the middle and normalize screen 
         auto wth = demo.run.scene.wth;
         auto hth = demo.run.scene.hth;
         nvgTranslate( nvg, wth / 2, hth / 2 );
-
-        //float_t sx = wth / dim;
-        //float_t sy = hth / dim;
-        //nvgScale( nvg, sx, sy );
-
         batb.gl.nanovg_normalize( run.scene );
 
         constexpr float_t dim = 1.0 / 600.0; // terrain dimension
@@ -148,9 +120,6 @@ void Output::operator()(World& demo)
         nvg_point( nvg, pos.x, pos.z ); 
         
         nvgRestore( nvg );
-        //nvgEndFrame( nvg );
-        //
-        //gl::end_nanovg();
         batb.gl.nanovg_end();
     }
 

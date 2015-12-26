@@ -21,6 +21,7 @@
 #include "file.hpp"
 #include "batb.hpp"
 #include "batb/run/workers.hpp" 
+#include "batb/demo/other.hpp"
 
 
 
@@ -60,6 +61,7 @@ int main(int argc, char** argv)
         // (the non-core part is created by 'iterationRunBegin')
         batb::begin( batb );
 
+        batb::demo::other_begin( batb ); // FIXME: remove
 
         using namespace batb;
           
@@ -86,6 +88,8 @@ int main(int argc, char** argv)
             // end frame for iteration
             env.frameEnd();
         }
+
+        batb::demo::other_end( batb ); // FIXME: remove
     }
     catch (std::exception& e)
     {

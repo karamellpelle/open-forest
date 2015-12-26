@@ -117,7 +117,7 @@ public:
 
 
 private:
-    void output(WorkItem* );
+    void output(run::World& );
 
     Work work_;
     WorkItem* item_ = nullptr;

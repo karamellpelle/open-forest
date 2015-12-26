@@ -30,6 +30,7 @@ using namespace tb;
 
 RunWorkTBWidget::RunWorkTBWidget(const std::string& path) : TBLayout( AXIS_Y )
 {
+/*
     // hardcode settings
     //
     SetSpacing( 0 );                                                        // space between children, override skin setting if not SPACING_FROM_SKIN
@@ -61,6 +62,7 @@ RunWorkTBWidget::RunWorkTBWidget(const std::string& path) : TBLayout( AXIS_Y )
         //    SetPosition( TBPoint( 80, 80 ) );
         SetGravity( tb::WIDGET_GRAVITY_ALL );
 	//ResizeToFitContent();
+*/
 }
 
 RunWorkTBWidget::~RunWorkTBWidget()
@@ -72,7 +74,8 @@ RunWorkTBWidget::~RunWorkTBWidget()
 
 void RunWorkTBWidget::set(float_t alpha, const std::string& text)
 {
-    tb_bar_->Set( alpha, text.c_str() );
+    //tb_bar_->Set( alpha, text.c_str() );
+    
 }
 
 } // namespace run

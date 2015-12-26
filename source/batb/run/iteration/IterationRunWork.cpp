@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/run/iteration/IterationRunWork.hpp"
 #include "batb/run/iteration/IterationRunWork/RunWorkTBWidget.hpp"
+#include "batb/demo/other.hpp"
 
 namespace batb
 {
@@ -66,7 +67,7 @@ void IterationRunWork::iterate_begin(World& world)
 IterationStack IterationRunWork::iterate_run(World& world)
 {
     // output 
-    output( item_ );
+    output( world );
 
     if ( auto* next = work_.current() )
     {
@@ -90,8 +91,9 @@ IterationStack IterationRunWork::iterate_run(World& world)
         ////////////////////////////////////////////////////////////////////////////////
         // work is now done.
         //
-
         // clean up and start next iteration
+
+
         // end background loading in thread
         work_.end();
 
@@ -108,16 +110,54 @@ IterationStack IterationRunWork::iterate_run(World& world)
     
 }
 
-void IterationRunWork::output(WorkItem* item)
+void IterationRunWork::output(run::World& run)
 {
-    if ( item )
+    // draw background
+    demo::background( batb, run );
+
+    if ( item_ )
     {
-        switch ( item->mode )
+        switch ( item_->mode )
         {
         case WorkItem::Mode::Definite:
-            // FIXME: draw a finite progressbar
-            tb_widget_->set( item->alpha, item->tag );
+        {
 
+            //tb_widget_->set( item_->alpha, item_->tag );
+            const auto& tag = item_->tag;
+            auto alpha = item_->alpha;
+
+            // draw progressbar. FIXME
+            auto nvg = batb.gl.nanovg_begin( run.scene );
+            float_t w = 512;
+            float_t h = 22;
+            float_t x = 0.5 * (run.scene.wth - w);
+            float_t y = 0.5 * run.scene.hth + 112; 
+            float_t r = 11;
+            nvgBeginPath( nvg );
+            nvgRoundedRect( nvg, x, y, w, h, r );
+            nvgFillColor( nvg, nvgRGBf( 1.0, 1.0, 1.0 ) );
+            nvgFill( nvg );
+
+            nvgBeginPath( nvg );
+            nvgRoundedRect( nvg, x, y, alpha * w, h, r );
+            nvgFillColor( nvg, nvgRGBf( 1.0, 0.22, 0.0 ) );
+            nvgFill( nvg );
+            
+            static int font = -1;
+            if ( font == -1 )
+            {
+               font = batb.gl.nanovg_font( "sans", file::static_data( "batb/Ubuntu-Title.ttf" ) );
+            }
+            nvgFontSize( nvg, 20 );
+            nvgTextAlign( nvg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE );
+            
+            nvgFontFaceId( nvg, font );
+            nvgFillColor( nvg, nvgRGBf( 0.0, 0.0, 0.0 ) );
+            //nvgFillColor( nvg, nvgRGBf( 0.11, 0.64, 0.04 ) );
+            nvgText( nvg, x + 0.5 * w, y + 0.5 * h, tag.c_str(), nullptr );
+
+            batb.gl.nanovg_end();
+        }    
         break;
         case WorkItem::Mode::Indefinite:
             // FIXME: draw a finite progressbar/spinner
@@ -125,41 +165,6 @@ void IterationRunWork::output(WorkItem* item)
         break;
         }
     } 
-
-    // tmp output
-    gl::begin_nanovg();
-
-        float t = 1.0 * batb.env.tickNow();
-        float a = (float)( t - (uint)( t ) );
-    int winWidth, winHeight;
-    glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
-    int fbWidth, fbHeight;
-    glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
-
-    auto ctx = batb.gl.nvg_context;
-
-    float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
-    nvgBeginFrame( ctx, winWidth, winHeight, pxRatio);
-
-    //nvgSave( ctx );
-    //nvgScale( ctx, (float)(forest.run.scene.wth), (float)(forest.run.scene.hth) );
-
-    // draw pulsating square
-    nvgStrokeWidth( ctx, 32 );
-    nvgLineCap(ctx, NVG_ROUND );
-    nvgStrokeColor(ctx, nvgRGBA(100,0,192,128));
-    nvgBeginPath(ctx);
-    float r = 64.0 + a * 32.0;
-    float x = fbWidth * 0.5;
-    float y = fbHeight * 0.5;
-	nvgRoundedRect(ctx, x - r, y - r, 2 * r, 2 * r, 0.5 * r );
-    nvgStroke(ctx);
-   
-    
-    //nvgRestore( ctx );
-    nvgEndFrame( ctx );
-
-    gl::end_nanovg();
 
 }
 

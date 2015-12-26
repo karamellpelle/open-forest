@@ -20,6 +20,7 @@
 #include "batb/demo/libs/nanovg.hpp"
 #include "batb/demo/libs/ogre.hpp"
 #include "batb/demo/libs/al.hpp"
+#include "batb/demo/other.hpp"
 #include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
 #include "batb/run/events.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
@@ -110,6 +111,8 @@ IterationStack IterationRunMain::iterate_run(World& run)
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
     //
+    demo::background( batb, run );
+
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     if ( run.toggle_nanovg )
     {
@@ -163,8 +166,8 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     demo::al::demo_iterate( batb, run );
 
     // start ogre-demo:
-    //if ( batb.run.keyset.ogre->click() )
-    if ( true )
+    if ( batb.run.keyset.ogre->click() )
+    //if ( true )
     {
         // remove main widget from screen
         tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );

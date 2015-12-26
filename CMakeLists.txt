@@ -295,6 +295,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/libs/al.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/other.cpp"
       
    )
 
