@@ -125,7 +125,6 @@ public:
 
     // physical state
     DTMovable move;
-    float_t speed = 0.0;
 
     // previous control
     Control* control0 = nullptr;
@@ -143,11 +142,11 @@ public:
     // TODO:  think through this. for example the possibility to have independent
     //        training and competition for different Runner's at the same time. 
 
-    // Ground* ground_;       // to something describing where standing. to be updated by StepDT.
 
     // gameplay stuff
     // * fatigue
     // ...
+    float_t intensity = 0.0;
 
     ////////////////////////////////////////////////////////////////////////////////
     // output 

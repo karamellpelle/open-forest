@@ -205,6 +205,35 @@ void Terrain::load(const YAML::Node& yaml)
 
 }
 
+
+// compute incline at position and direction, [-1, 1]
+// only z direction of 'aim' in xz plane is used, but maybe could we
+// use the structure of mat4 in a natural way here?
+float_t Terrain::incline(const glm::mat4& aim)
+{
+    // TODO: is there a function for this in OgreTerrainGroup/OgreTerrain?
+
+    // measure step
+    constexpr float_t x = 4.0; 
+
+    const auto& p = aim[3];
+    const auto& d = aim[2];
+
+    auto u = glm::normalize( glm::vec2( d.x, d.z ) );
+    auto p0 = glm::vec2( p.x, p.z );
+    auto p1 = p0 + (float)( x ) * u;
+
+    float_t z0 = ogre_terrain_group->getHeightAtWorldPosition( p0.x, 0.0, p0.y );
+    float_t z1 = ogre_terrain_group->getHeightAtWorldPosition( p1.x, 0.0, p1.y );
+    float_t z = z1 - z0;
+
+    auto v = glm::normalize( glm::vec2( x, z ) );
+
+    return v.y;
+}
+
+
+
 } // namespace forest
 
 } // namespace batb
@@ -297,5 +326,4 @@ using namespace Ogre;
     }
 
 //#endif
-
 

@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_MODIFYCONTROLRUNNER_HPP
-#define BATB_FOREST_MODIFYCONTROLRUNNER_HPP
+#ifndef BATB_FOREST_MODIFYRUNNER_HPP
+#define BATB_FOREST_MODIFYRUNNER_HPP
 #include "batb/batb_include.hpp"
 
 namespace batb
@@ -29,24 +29,29 @@ class BATB;
 namespace forest
 {
 class World;
-class ModifyRunner;
+class Runner;
 
 
-// controlling a runner fromm Keys
-class ModifyControlRunner
+// controlling a runner (used by ModifyControlRunner, AI, network (?), etc)
+class ModifyRunner
 {
 public:
-    ModifyControlRunner(BATB& b) : batb( b ) { }
+    ModifyRunner(BATB& b) : batb( b ) { }
 
     void operator()(World& );
-
-    void modifier(ModifyRunner* );
-
+   
+    void runner(Runner* );
+    void aim(const glm::vec2& );
+    void speed(float_t );
+    
     BATB& batb;
 
 private:
-    ModifyRunner* modifier_ = nullptr;
-    
+    Runner* runner_ = nullptr;
+    glm::mat4 aim_;
+    float_t speed_;
+
+
 };
 
 

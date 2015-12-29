@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/forest/ModifyControlCamera.hpp"
+#include "batb/forest/ModifyCamera.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
 #include "batb/forest/Camera.hpp"
@@ -30,6 +31,11 @@ namespace batb
 namespace forest
 {
 
+
+void ModifyControlCamera::modifier(ModifyCamera* mod)
+{
+    modifier_ = mod;
+}
 
 void ModifyControlCamera::operator()(World& forest)
 {
@@ -61,16 +67,6 @@ void ModifyControlCamera::operator()(World& forest)
     vel  = (move_x * value::forestMoveX) * x_ + 
            (move_z * value::forestMoveZ) * z_;
        
-
-    //std::cout << "\r";
-    //std::cout << "vel: " << vel[0] << " "<< vel[1] << " "<< vel[2] ;
-    //std::cout << ", ";
-    //auto& pos = camera.move.aim[ 3 ];
-    //std::cout << "pos: " << pos[0] << " "<< pos[1] << " "<< pos[2];
-    //std::cout << "move_x: " << move_x << ", move_z: " << move_z;
-              
-    
-
 }
 
 

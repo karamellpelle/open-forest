@@ -43,6 +43,7 @@ namespace demo
 
 IterationDemoForest::IterationDemoForest(BATB& b) : 
     IterationDemo( b ), outputDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
+    modifyCamera( b ), modifyRunner( b ),
     modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
 {
 
@@ -95,6 +96,9 @@ void IterationDemoForest::iterate_begin(World& demo)
     demo.runner = forest.addRunner();
     demo.runner->reset( glm::vec2( 40, -120 ) );
 
+    // control objects
+    modifyRunner.runner( demo.runner );
+    modifyControlRunner.modifier( &modifyRunner );
 }
 
 
@@ -106,9 +110,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // OUTPUT
     //
 
-    // output forest
+    // output forest::World
     output( forest );
 
+    // output demo::World
     outputDemo( demo );
 
     
@@ -118,9 +123,9 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     //
 
     // clean up and retrieve events outside of World
-    beginEventsDemo( demo );     // demo::World
-    beginEvents( forest ); // forest::World
-    // run::Events ignored!
+    beginEventsDemo( demo );      // demo::World
+    beginEvents( forest );        // forest::World
+    // we ignore run::Events
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -132,14 +137,24 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     pos.x = radius * x;
     pos.z = radius * z;
 
-    // control Camera
+    // use Keys to control objects in forest::World
     modifyControlCamera( forest );
-
-    // controlRunner
     modifyControlRunner( forest );
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //
+
+    // modify Camera
+    modifyCamera( forest );
+
+    // modify Runner
+    modifyRunner( forest );
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //
 
     tick_t tick_next = demo.tick;
+
     // prevent too many dt steps:
     forest.tick = forest.tick + value::dt_max <= tick_next ? tick_next - value::dt_max : forest.tick;
 
@@ -152,6 +167,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
         forest.tick += value::dt;
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //
 
     // set new controls
     if ( batb.demo.keyset.new_course->click() )

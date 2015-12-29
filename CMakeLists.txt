@@ -271,6 +271,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/forest/Weather.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Terrain.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyCamera.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyRunner.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlCamera.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
       "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"

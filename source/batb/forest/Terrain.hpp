@@ -106,6 +106,8 @@ public:
     //
     void load(const YAML::Node& );
 
+    float_t incline(const glm::mat4& );
+
 private:
 };
 

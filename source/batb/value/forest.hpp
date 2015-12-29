@@ -37,6 +37,7 @@ extern float_t forestProximityRunner;
 
 extern float_t forestTraceD;
 
+extern float_t forestModifyRunnerSpeed;
 
 
 

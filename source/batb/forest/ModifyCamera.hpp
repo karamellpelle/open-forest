@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_MODIFYCONTROLRUNNER_HPP
-#define BATB_FOREST_MODIFYCONTROLRUNNER_HPP
+#ifndef BATB_FOREST_MODIFYCAMERA_HPP
+#define BATB_FOREST_MODIFYCAMERA_HPP
 #include "batb/batb_include.hpp"
 
 namespace batb
@@ -28,25 +28,25 @@ class BATB;
 
 namespace forest
 {
+
+class DTMovable;
 class World;
-class ModifyRunner;
 
-
-// controlling a runner fromm Keys
-class ModifyControlRunner
+class ModifyCamera 
 {
 public:
-    ModifyControlRunner(BATB& b) : batb( b ) { }
+    ModifyCamera(BATB& b) : batb( b )    { }
 
     void operator()(World& );
 
-    void modifier(ModifyRunner* );
+    // connect to  (continuous movement)
+    //void attach(DTMovable* , tick_t = 0.0);
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //
     BATB& batb;
 
 private:
-    ModifyRunner* modifier_ = nullptr;
-    
 };
 
 

@@ -15,39 +15,28 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_MODIFYCONTROLRUNNER_HPP
-#define BATB_FOREST_MODIFYCONTROLRUNNER_HPP
-#include "batb/batb_include.hpp"
+#include "batb/forest/ModifyCamera.hpp"
+#include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
+#include "batb/forest/Camera.hpp"
+#include "batb.hpp"
+#include "batb/value/forest.hpp"
+#include "glm/gtx/euler_angles.hpp"
+
 
 namespace batb
 {
 
-
-class BATB;
-
-
 namespace forest
 {
-class World;
-class ModifyRunner;
 
 
-// controlling a runner fromm Keys
-class ModifyControlRunner
+void ModifyCamera::operator()(World& forest)
 {
-public:
-    ModifyControlRunner(BATB& b) : batb( b ) { }
+    Camera& camera = forest.camera;
 
-    void operator()(World& );
+}
 
-    void modifier(ModifyRunner* );
-
-    BATB& batb;
-
-private:
-    ModifyRunner* modifier_ = nullptr;
-    
-};
 
 
 } // namespace forest
@@ -55,5 +44,4 @@ private:
 } // namespace batb
 
 
-#endif
 

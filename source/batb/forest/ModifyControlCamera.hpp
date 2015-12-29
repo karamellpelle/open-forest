@@ -31,6 +31,7 @@ namespace forest
 
 class DTMovable;
 class World;
+class ModifyCamera;
 
 class ModifyControlCamera 
 {
@@ -38,6 +39,8 @@ public:
     ModifyControlCamera(BATB& b) : batb( b )    { }
 
     void operator()(World& );
+
+    void modifier(ModifyCamera* );
 
     // free (continuous movement)
     void free(DTMovable* , tick_t = 0.0);
@@ -51,6 +54,8 @@ public:
     BATB& batb;
 
 private:
+    ModifyCamera* modifier_ = nullptr;
+
     float_t aim_a_ = 0.0;
     float_t aim_b_ = 0.0;
     float_t aim_c_ = 0.0;

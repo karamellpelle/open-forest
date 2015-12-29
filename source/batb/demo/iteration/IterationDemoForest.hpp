@@ -22,6 +22,8 @@
 #include "batb/demo/Output.hpp"
 #include "batb/forest/Output.hpp"
 #include "batb/forest/BeginEvents.hpp"
+#include "batb/forest/ModifyCamera.hpp"
+#include "batb/forest/ModifyRunner.hpp"
 #include "batb/forest/ModifyControlCamera.hpp"
 #include "batb/forest/ModifyControlRunner.hpp"
 #include "batb/forest/StepDT.hpp"
@@ -63,6 +65,8 @@ private:
 
     forest::Output output;
     forest::BeginEvents beginEvents;
+    forest::ModifyCamera modifyCamera;
+    forest::ModifyRunner modifyRunner;
     forest::ModifyControlCamera modifyControlCamera;
     forest::ModifyControlRunner modifyControlRunner;
     forest::StepDT stepDT;

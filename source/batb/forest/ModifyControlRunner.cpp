@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/forest/ModifyControlRunner.hpp"
+#include "batb/forest/ModifyRunner.hpp"
 #include "batb/forest.hpp"
 #include "batb.hpp"
 
@@ -26,8 +27,27 @@ namespace batb
 namespace forest
 {
 
+// controlling runner of ModifyRunner
+void ModifyControlRunner::modifier(ModifyRunner* mod)
+{
+    modifier_ = mod;
+}
+
 void ModifyControlRunner::operator()(World& forest)
 {
+    if ( modifier_ )
+    {
+        // TODO
+        // here:
+        // * use aiming as we do in ModifyControlCamera
+        // * Forest::Keyset keys left, right (i.e. keyboard W and D) 
+        //   modifies aiming a to left and right (i.e. z column)
+        //   use: modifier->aim()
+        // * Forest::Keyset forward, backward (i.e. keyboard W and S)
+        //   sets speed 1 and -1
+        //   use: modifier->speed()
+        //
+    }
 
 }
 

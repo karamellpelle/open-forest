@@ -58,6 +58,9 @@ void begin(Value& value)
         forestProximityRunner   = 16.0;
 
         forestTraceD =      16.0;
+
+        forestModifyRunnerSpeed = 8.0;
+
         ////////////////////////////////////////////////////////////////////////////////
         
         coursedrawerSizeNormal    = 1.00;
@@ -115,6 +118,8 @@ float_t forestProximityControl;
 float_t forestProximityRunner;
 
 float_t forestTraceD;
+
+float_t forestModifyRunnerSpeed;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  batb.hpp
