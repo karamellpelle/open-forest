@@ -60,29 +60,68 @@ void Output::operator()(World& demo)
 
         auto* nvg = batb.gl.nanovg_begin( run.scene );
         nvgSave( nvg );
-
-        CourseDrawer course( batb );
-        course.numbers( true );
-        course.size( 18 );
-
-        course.begin();
-        course.start( glm::vec2( 40, 40 ) );  
-        course.normal( glm::vec2( 120, 95 ) );
-        course.normal( glm::vec2( 200, 140 ) );
-        course.normal( glm::vec2( 210, 200 ) );
-        course.normal( glm::vec2( 380, 240 ) );
-        course.normal( glm::vec2( 470, 80 ) );
-        course.normal( glm::vec2( 520, 76 ) );
-        course.normal( glm::vec2( 580, 300 ) );
-        course.finish( glm::vec2( 670, 320 ) );
-        course.end();
-
+        //CourseDrawer course( batb );
+        //course.numbers( true );
+        //course.size( 18 );
+        //
+        //course.begin();
+        //course.start( glm::vec2( 40, 40 ) );  
+        //course.normal( glm::vec2( 120, 95 ) );
+        //course.normal( glm::vec2( 200, 140 ) );
+        //course.normal( glm::vec2( 210, 200 ) );
+        //course.normal( glm::vec2( 380, 240 ) );
+        //course.normal( glm::vec2( 470, 80 ) );
+        //course.normal( glm::vec2( 520, 76 ) );
+        //course.normal( glm::vec2( 580, 300 ) );
+        //course.finish( glm::vec2( 670, 320 ) );
+        //course.end();
         //////////////////////////////////////////////////////////////////////////////////
 
-        // set origo in the middle and normalize screen 
+        // set origo in the middle 
         auto wth = demo.run.scene.wth;
         auto hth = demo.run.scene.hth;
         nvgTranslate( nvg, wth / 2, hth / 2 );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // draw course
+
+        if ( 2 <= demo.course.size() )
+        {
+            CourseDrawer course( batb );
+            course.numbers( true );
+            course.size( 17 );
+            uint pad = 100 <= std::min( wth, hth ) ? 100 : std::min( wth, hth );
+            course.scale( (2 * demo.course_dim) / (float_t)( std::min( wth, hth ) -  pad) );
+            auto pos = demo.course.front()->aim[3];
+            course.origo( glm::vec3(pos.x, 0, pos.z) );
+
+            course.begin();
+            for (auto i = std::begin( demo.course );  i != std::end( demo.course ); ++i)
+            {
+                forest::Control* control = *i;
+                auto& pos = control->aim[3];
+
+                switch ( control->definition.type )
+                {
+                case forest::ControlDefinition::Type::Start:
+                    course.start( glm::vec2( pos.x, pos.z ) );
+                break;
+                case forest::ControlDefinition::Type::Normal:
+                    course.normal( glm::vec2( pos.x, pos.z ) );
+                break;
+                case forest::ControlDefinition::Type::Finish:
+                    course.finish( glm::vec2( pos.x, pos.z ) );
+                break;
+                }
+
+
+            }
+            course.end();
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // normalize screen
         batb.gl.nanovg_normalize( run.scene );
 
         constexpr float_t dim = 1.0 / 600.0; // terrain dimension

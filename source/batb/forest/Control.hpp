@@ -40,11 +40,11 @@ class Runner;
 //
 // a definition especially contains a code number. 
 // 
-// additionally, a definition contains placement information, like "north-west for
-// object", size information, like "1.3m high", and other things.
+// additionally, a definition contains placement information, like "north-west of
+// object", size information, like "1.3m high", type, and other things.
 // such information must be reflected in the Terrain. so, when we create a 
-// Control in Terrain, then Terrain must write the corresponding ControlDefinition
-// into Control. ??
+// Control in World, then World must use the corresponding ControlDefinition (for 
+// example a suitable 3D model)
 class ControlDefinition
 {
 public:
@@ -57,7 +57,10 @@ public:
     float_t z = 0.0;
     Code code;
 
-    // for  placement and output
+    enum class Type { Empty, Start, Normal, Finish, /*etc*/ };
+    Type type;
+
+    // for  placement
     // N,S,W,E,NW,NE,SW,SE
     // ...
 };
@@ -81,7 +84,8 @@ public:
     Control& operator=(const Control& ) = default;
     
     ////////////////////////////////////////////////////////////////////////////////
-    void reset(const ControlDefinition& def);
+    void reset(const ControlDefinition& def); // create or replace a Control from definition in Terrain
+    void reset();                             // remove a Control from Terrain
     void punch(Runner* );
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -92,12 +96,12 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // output
 
-    Ogre::Entity* ogre_entity;
+    Ogre::Entity* ogre_entity = nullptr;
     //ALuint al_source_;
 
     ////////////////////////////////////////////////////////////////////////////////
     // statistic
-    uint stats_punches;
+    uint stats_punches = 0;
     // TODO: list of Punch (player, time, ...)
     // ...
 

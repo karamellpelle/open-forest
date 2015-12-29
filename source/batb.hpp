@@ -22,7 +22,13 @@
 namespace batb
 {
 
+//#define BATB_LOG_FUNC_ENABLE 
+
+#ifdef BATB_LOG_FUNC_ENABLE
 #define BATB_LOG_FUNC(batb) (batb.log) << DEBUG_FUNCTION_NAME << std::endl;
+#else
+#define BATB_LOG_FUNC(batb)
+#endif
 
 }
 

@@ -47,7 +47,7 @@ void begin(Forest& forest)
     if ( forest.init_empty() )
     {
         // load associated keys 
-        forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) ); // TODO: from yaml!!
+        forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) );
 
     }
 

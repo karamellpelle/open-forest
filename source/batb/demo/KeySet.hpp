@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,61 +15,40 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/demo/Demo.hpp" 
-#include "batb.hpp" 
+#ifndef BATB_DEMO_KEYSET_HPP
+#define BATB_DEMO_KEYSET_HPP
+#include "batb/batb_include.hpp"
+#include "batb/keys.hpp"
 
 namespace batb
 {
 
-
+class BATB;
 
 namespace demo
 {
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  Demo
-
-Demo::Demo(BATB& b) : ModuleBATB( b ), keyset( b )
+class KeySet : public keys::KeySet //, Module
 {
+public:
+    KeySet(BATB& b);
 
-}
+    // define 'this' from map defined by file
+    void load(const std::string& filepath);
+    void save(const std::string& filepath);
 
+    void reset();
 
+    //keys::KeyClicker* toggle_ = nullptr;
+    keys::KeyClicker* new_course = nullptr;
 
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(Demo& demo)
-{
-
-    BATB_LOG_FUNC( demo.batb );
-    
-    if ( demo.init_empty() )
-    {
-        // load associated keys 
-        demo.keyset.load( file::dynamic_data( "batb/demo/KeySet.yaml" ) );
-
-    }
-
-    demo.init( true );
-}
-
-void end(Demo& demo)
-{
-    BATB_LOG_FUNC( demo.batb );
-
-    if ( demo.init_nonempty() )
-    {
-        demo.save();
-
-    }
-    
-    demo.init( false );
-}
-
+    BATB& batb;
+};
 
 } // namespace demo
 
 } // namespace batb
 
 
+#endif

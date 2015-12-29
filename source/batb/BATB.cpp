@@ -24,7 +24,7 @@ namespace batb
 
 
 BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gl( *this ), gui( *this ), ogre( *this ), al( *this ),
-                           run( *this ), forest( *this )
+                           run( *this ), forest( *this ), demo( *this )
 {
 
     
@@ -46,6 +46,7 @@ void begin(BATB& batb)
         batb.al.config(        file::directory( batb.filepath ) + "/al/AL.yaml" );
         batb.run.config(       file::directory( batb.filepath ) + "/run/Run.yaml" );
         batb.forest.config(    file::directory( batb.filepath ) + "/forest/Forest.yaml" );
+        batb.demo.config(      file::directory( batb.filepath ) + "/demo/Demo.yaml" );
 
 
         // logging
@@ -82,14 +83,6 @@ void end(BATB& batb)
 {
     if ( batb.init_nonempty() )
     {
-/*
-        std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
-        std::chrono::system_clock::duration dtn = tp.time_since_epoch();
-
-        std::ostringstream os;
-        os << "save-tick is " << dtn.count();
-        batb.yaml[ "TestSave" ] = os.str();
-*/
         // save the configuration to file
         batb.save();
         

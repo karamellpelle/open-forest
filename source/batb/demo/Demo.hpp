@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 #define BATB_DEMO_DEMO_HPP
 #include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
-//#include "batb/demo/KeySet.hpp"
+#include "batb/demo/KeySet.hpp"
 
 
 
@@ -44,6 +44,8 @@ friend void end(Demo& );
 
 public:
     Demo(BATB& b);
+
+    KeySet keyset;
 
     //EventList events;
 private:

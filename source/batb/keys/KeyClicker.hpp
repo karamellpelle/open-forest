@@ -45,7 +45,8 @@ public:
     bool click()                      { return released_ && 1 <= click_count_; }
     bool click_double()               { return released_ && 2 == click_count_; }
     uint click_count()                { if ( released_ ) return click_count_; return 0; }
-
+    uint clicks()                     { return click_total_; }
+    bool toggle()                     { return click_total_ % 2 == 1; } // default off
     bool pressed()                    { return pressed_; }
     bool pressed(tick_t& ticks)
     {
@@ -94,6 +95,7 @@ private:
     bool pressed_ = false;
     bool released_ = false;
     uint click_count_ = 0;
+    uint click_total_ = 0;
 };
 
 

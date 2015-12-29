@@ -19,7 +19,7 @@
 #include "batb/run/workers.hpp"
 
 
-#define LOAD_PROXY
+//#define LOAD_PROXY
 
   
 namespace batb
@@ -59,13 +59,17 @@ void LoadWorker<BATB>::operator()(Work& work)
         work.state( "AL" );
         al::begin( batb.al );
 
-        // load the non-core part of run
+        // load the non-core part of Run
         work.state( "Run" );
         run::begin( batb.run );
 
-        // load forest
+        // load Forest
         work.state( "Forest" );
         forest::begin( batb.forest );
+
+        // load demo
+        work.state( "Demo" );
+        demo::begin( batb.demo );
 
 #ifdef LOAD_PROXY
         // tmp: fake loading, to show capabilities:
@@ -97,14 +101,18 @@ void UnloadWorker<BATB>::operator()(Work& work)
 
     try
     {
-        // unload the non-core part of run
-        run::end( batb.run );
+        // unload Demo
+        demo::end( batb.demo );
 
         // unload race
         //race::begin( batb.race );
 
         // unload forest
-        //forest::begin( batb.forest );
+        forest::end( batb.forest );
+
+        // unload the non-core part of run
+        run::end( batb.run );
+
 
         // unload AL
         work.state( "AL" );
@@ -115,12 +123,14 @@ void UnloadWorker<BATB>::operator()(Work& work)
         //          OGRE::frameBegin is calledafter delete!
         work.state( "OGRE" );
         ogre::end( batb.ogre );
-/*  
+
+#ifdef LOAD_PROXY
         work.state( "Proxy library B" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 2 ) );
         work.state( "Proxy library A" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-        */
+        std::this_thread::sleep_for( std::chrono::seconds( 2 ) );
+#endif
+
     } 
     catch (std::exception& e)
     {

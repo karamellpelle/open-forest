@@ -25,6 +25,7 @@
 #include "batb/run/events.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
 
+#define DEMO_FOREST_DIRECT
 
 namespace batb
 {
@@ -166,8 +167,11 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     demo::al::demo_iterate( batb, run );
 
     // start ogre-demo:
+#ifdef DEMO_FOREST_DIRECT
+    if ( true )
+#else
     if ( batb.run.keyset.ogre->click() )
-    //if ( true )
+#endif
     {
         // remove main widget from screen
         tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );

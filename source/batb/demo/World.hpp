@@ -62,6 +62,8 @@ public:
 
     
     forest::Runner* runner = nullptr;
+    std::list<forest::Control*> course;
+    float_t course_dim = 0.0;
 
 /*
     // 

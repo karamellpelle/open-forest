@@ -61,7 +61,9 @@ CourseDrawer::CourseDrawer(BATB& b) : batb( b )
 void CourseDrawer::begin()
 {
     type0 = ObjectType::Empty; 
-    p0 = glm::vec3(0.0, 0.0, 1.0);
+    p0 = glm::vec3(-1.0, 0.0, 1.0);
+    type1 = ObjectType::Empty; 
+    p1 = glm::vec3(0.0, 0.0, 1.0);
     ix_ = 0;
 
     // create translation: source -> target
@@ -132,11 +134,11 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
     if ( draw( trans, type1 ) )
     { 
         // line from object 1 to object 2
-        auto l0 = trans * glm::vec3( size( type1 ), 0, 1.0 );
-        auto l1 = trans * glm::vec3( len - size( type2 ), 0, 1.0 );
+        auto l1 = trans * glm::vec3( size( type1 ), 0, 1.0 );
+        auto l2 = trans * glm::vec3( len - size( type2 ), 0, 1.0 );
         nvgBeginPath( nvg );
-        nvgMoveTo( nvg, l0.x, l0.y );
-        nvgLineTo( nvg, l1.x, l1.y );
+        nvgMoveTo( nvg, l1.x, l1.y );
+        nvgLineTo( nvg, l2.x, l2.y );
         nvgStroke( nvg );
 
 
@@ -229,11 +231,6 @@ float_t CourseDrawer::size(ObjectType type)
 // return if something was actually drawn ( if line to next object )
 bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
 {
-    if ( type == ObjectType::Empty )
-    {
-        // draw nothing!
-        return false;
-    }
     if ( type == ObjectType::Normal )
     {
         auto a = size_normal_ * scale_size_;
@@ -243,6 +240,7 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         nvgBeginPath( nvg );
         nvgArc( nvg, x.x, x.y, a, 0, twopi, NVG_CCW );
         nvgStroke( nvg );
+        return true;
     }
     if ( type == ObjectType::Start )
     {
@@ -261,6 +259,7 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         nvgLineTo( nvg, c.x, c.y );
         nvgClosePath( nvg );
         nvgStroke( nvg );
+        return true;
     }
     if ( type == ObjectType::Finish )
     {
@@ -275,9 +274,10 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         nvgBeginPath( nvg );
         nvgArc( nvg, x.x, x.y, b, 0, twopi, NVG_CCW );
         nvgStroke( nvg );
+        return true;
     }
 
-    return true;
+    return false; // i.e. type == ObjectType::Empty
 }
 
 

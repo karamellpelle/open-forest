@@ -52,6 +52,17 @@ Control* World::addControl(const ControlDefinition& def)
     return control;
 }
 
+void World::removeControl(Control* control)
+{
+    // release data
+    control->reset();
+
+    // this invalidates 'control' !!
+    auto pred = [=](const Control& c) { return &c == control; };
+    controls.remove_if( pred ); // goes through whole list even if 'control' found
+
+}
+
 Runner* World::addRunner(run::Player* player)
 {
 

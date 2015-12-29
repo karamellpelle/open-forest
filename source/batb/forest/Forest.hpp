@@ -47,10 +47,6 @@ public:
 
     KeySet keyset;
 
-    //Output output;
-    //StepDT stepDT;
-    //ModifyBegin modifyBegin;
-
 private:
 
 

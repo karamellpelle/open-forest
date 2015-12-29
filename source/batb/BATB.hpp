@@ -26,6 +26,7 @@
 #include "batb/ogre.hpp"
 #include "batb/al.hpp"
 #include "batb/forest.hpp"
+#include "batb/demo.hpp"
 //#include "batb/race.hpp"
 #include "batb/run.hpp"
 #include "Module.hpp"
@@ -62,6 +63,7 @@ public:
     run::Run run;
     forest::Forest forest;
     //race::Race race;
+    demo::Demo demo;
 
 };
 

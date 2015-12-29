@@ -43,9 +43,6 @@ namespace demo
 //
 class IterationDemoForest : public IterationDemo
 {
-friend void begin(IterationDemoForest& );
-friend void end(IterationDemoForest& );
-
 public:
     // construct from the containing BATB
     IterationDemoForest(BATB& );
@@ -59,6 +56,8 @@ public:
     ////////////////////////////////////////
 
 private:
+    void createCourse(demo::World& );
+
     demo::Output outputDemo;
     demo::BeginEvents beginEventsDemo;
 

@@ -18,7 +18,6 @@
 #ifndef BATB_DEMO_HPP
 #define BATB_DEMO_HPP
 #include "batb/demo/Demo.hpp"
-#include "batb/demo/World.hpp"
 
 namespace batb
 {

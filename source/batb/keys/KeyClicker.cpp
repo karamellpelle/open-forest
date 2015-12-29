@@ -44,6 +44,7 @@ void KeyClicker::reset()
     pressed_ = false;
     released_ = false;
     click_count_ = 0;
+    click_total_ = 0;
 
 }
 
@@ -85,6 +86,9 @@ void KeyClicker::step(tick_t tick)
             {
                 ++click_count_;
             }
+
+            // click: total clicks
+            ++click_total_;
         }
 
         // reset count of multiple clicks, if fail

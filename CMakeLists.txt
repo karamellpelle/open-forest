@@ -282,6 +282,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/demo/Output.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/Demo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/KeySet.cpp"
       # 
       "${MAIN_SOURCE_DIR}/batb/CourseDrawer.cpp"             
       # helpers

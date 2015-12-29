@@ -30,6 +30,21 @@ namespace batb
 namespace forest
 {
 
+void Control::reset()
+{
+    if ( ogre_entity )
+    {
+        auto* node = ogre_entity->getParentSceneNode();
+        ogre_entity->detachFromParent(); // remove parent Node (SceneNode)
+
+        forest.ogre_scenemgr->destroyEntity( ogre_entity );
+        forest.ogre_scenemgr->destroySceneNode( node );
+
+
+    }
+    ogre_entity = nullptr;
+
+}
 void Control::reset(const ControlDefinition& def)
 {
     ////////////////////////////////////////////////////////////////////////////////
@@ -44,17 +59,23 @@ void Control::reset(const ControlDefinition& def)
     aim[3].z = z;
     aim[3].w = 1.0;
 
+    // ensure previous data is cleared
+    reset();
+
     ////////////////////////////////////////////////////////////////////////////////
     // create output
     //
     std::ostringstream name;
-    name << "Control_" << def.code;
+    name << "Control_" << def.code << "(" << this << ")";
 
     ogre_entity = forest.ogre_scenemgr->createEntity( name.str(), "control.mesh" );
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 16, 16, 16 ); // FIXME
     node->setPosition( aim[3].x, aim[3].y, aim[3].z );
     node->attachObject( ogre_entity );
+
+    // set definition
+    definition = def;
 }
   
 void Control::punch(Runner* runner)

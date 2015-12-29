@@ -61,7 +61,11 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     //
 
+    // Control
     Control* addControl(const ControlDefinition& );
+    void removeControl(Control* );
+
+    // Runner
     Runner* addRunner(run::Player* = nullptr);
     
 
