@@ -30,118 +30,70 @@ namespace demo
 {
 
   
-inline void nvg_point(NVGcontext* vg, float_t x, float_t y, float r = 4.0)
+inline void nvg_point(NVGcontext* vg, float_t x, float_t y, float r = 12.0)
 {
-    //context.beginPath();
-    //context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    //context.fillStyle = 'green';
-    //context.fill();
-    //context.lineWidth = 5;
-    //context.strokeStyle = '#003300';
-    //context.stroke();
-	nvgBeginPath(vg);
-        nvgArc( vg, x, y, r, 0, twopi, NVG_CCW );
-        nvgFill( vg );
-        //nvgStroke( vg );
-	//nvgRoundedRect(vg, x - r, y - r, 2 * r, 2 * r, 0.5 * r );
-	//nvgStroke
+    nvgBeginPath(vg);
+    nvgArc( vg, x, y, r, 0, twopi, NVG_CCW );
+    nvgFill( vg );
+    //nvgRoundedRect(vg, x - r, y - r, 2 * r, 2 * r, 0.5 * r );
+    //nvgStroke( vg );
 }
 
 void Output::operator()(World& demo)
 {
     using namespace forest;
+    auto& forest = demo.forest;
 
     if ( demo.runner )
     {
         const auto& trace = demo.runner->trace;
         auto& run = demo.run;
         const auto& pos = demo.runner->move.aim[3];
+        auto& course = demo.course;
 
 
+        ////////////////////////////////////////////////////////////////////////////////
+        // begin nanovg drawing
         auto* nvg = batb.gl.nanovg_begin( run.scene );
-        nvgSave( nvg );
-        //CourseDrawer course( batb );
-        //course.numbers( true );
-        //course.size( 18 );
-        //
-        //course.begin();
-        //course.start( glm::vec2( 40, 40 ) );  
-        //course.normal( glm::vec2( 120, 95 ) );
-        //course.normal( glm::vec2( 200, 140 ) );
-        //course.normal( glm::vec2( 210, 200 ) );
-        //course.normal( glm::vec2( 380, 240 ) );
-        //course.normal( glm::vec2( 470, 80 ) );
-        //course.normal( glm::vec2( 520, 76 ) );
-        //course.normal( glm::vec2( 580, 300 ) );
-        //course.finish( glm::vec2( 670, 320 ) );
-        //course.end();
-        //////////////////////////////////////////////////////////////////////////////////
 
-        // set origo in the middle 
+        nvgSave( nvg );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // setup map World space -> pixel space
+
         auto wth = demo.run.scene.wth;
         auto hth = demo.run.scene.hth;
+
+        // set origo in the middle 
         nvgTranslate( nvg, wth / 2, hth / 2 );
+        
+        // scaling
+        uint min = std::min( wth, hth );
+        uint pad = 100 <= min ? 100 : min;
+        float_t scale = (float_t)(min - pad) / (2.0 * course.dimension()); // / (float_t)( min - pad );
+        nvgScale( nvg, scale, scale );
+
+        // center at start control
+        auto start = course[0]->aim[3];
+        nvgTranslate( nvg, -start.x, -start.z );
 
         ////////////////////////////////////////////////////////////////////////////////
-        // draw course
-
-        if ( 2 <= demo.course.size() )
-        {
-            CourseDrawer course( batb );
-            course.numbers( true );
-            course.size( 17 );
-            uint pad = 100 <= std::min( wth, hth ) ? 100 : std::min( wth, hth );
-            course.scale( (2 * demo.course_dim) / (float_t)( std::min( wth, hth ) -  pad) );
-            auto pos = demo.course.front()->aim[3];
-            course.origo( glm::vec3(pos.x, 0, pos.z) );
-
-            course.begin();
-            for (auto i = std::begin( demo.course );  i != std::end( demo.course ); ++i)
-            {
-                forest::Control* control = *i;
-                auto& pos = control->aim[3];
-
-                switch ( control->definition.type )
-                {
-                case forest::ControlDefinition::Type::Start:
-                    course.start( glm::vec2( pos.x, pos.z ) );
-                break;
-                case forest::ControlDefinition::Type::Normal:
-                    course.normal( glm::vec2( pos.x, pos.z ) );
-                break;
-                case forest::ControlDefinition::Type::Finish:
-                    course.finish( glm::vec2( pos.x, pos.z ) );
-                break;
-                }
-
-
-            }
-            course.end();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        // normalize screen
-        batb.gl.nanovg_normalize( run.scene );
-
-        constexpr float_t dim = 1.0 / 600.0; // terrain dimension
-        nvgScale( nvg, dim, dim );
+        // draw trace
 
         auto moveTo = [&](const TracePoint& p) { nvgMoveTo( nvg, p.x, p.z ); };
         auto lineTo = [&](const TracePoint& p) { nvgLineTo( nvg, p.x, p.z ); };
 
-        //////////////////////////////////////////////////////////////////////////////////
-
-        nvgStrokeWidth( nvg, 4 );
+        nvgStrokeWidth( nvg, 16 );
         nvgLineCap(nvg, NVG_ROUND );
         nvgStrokeColor(nvg, nvgRGBA(0,192,255,128));
 
         const auto& points = trace.points;
         if ( !points.empty() )
         {
-        nvgBeginPath(nvg);
+            nvgBeginPath(nvg);
             constexpr uint tails = 32; 
-            uint b = tails <= points.size() ? points.size() - tails : 0;
+            //uint b = tails <= points.size() ? points.size() - tails : 0;
+            uint b = 0;
             uint e = points.size();
             moveTo( points[b] );
             for (uint i = b + 1; i != points.size(); ++i)
@@ -149,7 +101,9 @@ void Output::operator()(World& demo)
                 lineTo( points[i] );
             }
             lineTo( trace.point0 );
-        nvgStroke(nvg);
+            lineTo( TracePoint( forest.tick, glm::vec3( pos ) ) );
+
+            nvgStroke(nvg);
             
         }
 
@@ -158,6 +112,39 @@ void Output::operator()(World& demo)
         nvgFillColor(nvg, nvgRGBA(255,0,0,255));
         nvg_point( nvg, pos.x, pos.z ); 
         
+        ////////////////////////////////////////////////////////////////////////////////
+        // draw course
+
+        if ( 2 <= course.size() )
+        {
+            CourseDrawer drawer( batb );
+            drawer.numbers( true );
+            drawer.size( 64 );
+
+            drawer.begin();
+            for (uint i = 0; i != course.size(); ++i)
+            {
+                forest::Control* control = course[i];
+                auto& pos = control->aim[3];
+
+                switch ( control->definition.type )
+                {
+                case forest::ControlDefinition::Type::Start:
+                    drawer.start( glm::vec2( pos.x, pos.z ) );
+                break;
+                case forest::ControlDefinition::Type::Normal:
+                    drawer.normal( glm::vec2( pos.x, pos.z ) );
+                break;
+                case forest::ControlDefinition::Type::Finish:
+                    drawer.finish( glm::vec2( pos.x, pos.z ) );
+                break;
+                }
+
+
+            }
+            drawer.end();
+        }
+
         nvgRestore( nvg );
         batb.gl.nanovg_end();
     }

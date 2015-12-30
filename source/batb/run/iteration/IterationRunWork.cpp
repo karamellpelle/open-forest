@@ -78,7 +78,7 @@ IterationStack IterationRunWork::iterate_run(World& world)
             // print progress
             uint percent = (uint)( 100.0 * next->alpha );
             const char* tag = next->tag.c_str();
-            std::printf( "[%3u%%] Now loading: %s\n", percent, tag );
+            std::printf( "[%3u%%] Now loading: %s\n", (unsigned int)( percent ), tag );
           
             item_ = next;
         }

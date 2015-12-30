@@ -29,6 +29,17 @@ namespace batb
 namespace run
 {
 
+void Console::open()
+{
+    //tb_console_->SetVisibilility( tb::WIDGET_VISIBILITY_VISIBLE );
+    batb.log << "TODO: console open" << std::endl;
+}
+
+void Console::close()
+{
+    //tb_console->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );
+    batb.log << "TODO: console close" << std::endl;
+}
 
 void Console::operator()(const std::string& input)
 {

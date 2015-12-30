@@ -29,7 +29,6 @@ class Entity;
 namespace batb
 {
 
-class BATB;
 
 namespace run { class Player; }
 

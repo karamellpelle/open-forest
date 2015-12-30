@@ -27,7 +27,6 @@ class Light;
 namespace batb
 {
 
-class BATB;
 
 namespace forest
 {

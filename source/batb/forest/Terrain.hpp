@@ -70,16 +70,11 @@
 #define TERRAIN_SIZE 513
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-// u
-//
-
 
 
 namespace batb
 {
 
-class BATB;
 
 namespace forest
 {

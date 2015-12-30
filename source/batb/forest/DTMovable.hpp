@@ -33,6 +33,7 @@ namespace forest
 //
 // for education: http://physicsforgames.blogspot.no/
 //
+// z axis is forward
 class DTMovable 
 {
 public:

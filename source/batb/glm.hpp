@@ -15,21 +15,22 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_GLM_HPP
-#define BATB_FOREST_GLM_HPP
-#include "batb.hpp"
+#ifndef BATB_GLM_HPP
+#define BATB_GLM_HPP
+#include "batb/batb_include.hpp"
 
 namespace batb
 {
 
-template <typename GLMVec>
-bool epsilon(GLMVec::value_type eps, const GLMVec& p0, const GLMVec& p1)
-{
-    return dot(p0, p1) < eps * eps;
-}
 
+
+template <typename GLMVec>
+bool inside(const GLMVec& p, typename GLMVec::value_type r, const GLMVec& px)
+{
+    auto d = px - p;
+    return glm::dot(d, d) <= r * r;
+}
 
 } // namespace batb
 
 #endif
-

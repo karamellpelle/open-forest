@@ -23,7 +23,6 @@
 #include "batb/forest/Runner.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
-#include "batb.hpp"
 
 
 namespace batb

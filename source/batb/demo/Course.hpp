@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,42 +15,49 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_CONSOLE_HPP
-#define BATB_RUN_CONSOLE_HPP
+#ifndef BATB_DEMO_COURSE_HPP
+#define BATB_DEMO_COURSE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/forest/World.hpp"
 
 
 namespace batb
 {
 
-class BATB;
+namespace forest { class World; }
 
-namespace run
+
+namespace demo
 {
 
-class TBConsole;
-
-class Console
+class Course
 {
 public:
-    Console(BATB& b) : batb( b ) { }
-
-    void open();
-    void close();
-
-    // command to console
-    void operator()(const std::string& );
-
-    BATB& batb;
+    Course(forest::World& );
+    void clear();
+    void addControl(float_t, float_t, forest::ControlDefinition::Code, forest::ControlDefinition::Type);
+    forest::Control* operator[](uint ) const;
+   
+    uint size() const               { return controls_.size(); }
+    float_t dimension() const;
 
 private:
-    TBConsole* tb_console_ = nullptr;
+    forest::World& forest_;
+    std::vector<forest::Control*> controls_;
 
+    float_t x_min_ = 0.0;
+    float_t x_max_ = 0.0; 
+    float_t z_min_ = 0.0; 
+    float_t z_max_ = 0.0;
+    
 };
 
 
-} // namespace run
+} // namespace demo
 
 } // namespace batb
+
+
+
 
 #endif

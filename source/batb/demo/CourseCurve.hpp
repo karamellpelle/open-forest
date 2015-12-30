@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,42 +15,46 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_CONSOLE_HPP
-#define BATB_RUN_CONSOLE_HPP
+#ifndef BATB_DEMO_COURSECURVE_HPP
+#define BATB_DEMO_COURSECURVE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/forest.hpp"
+#include "batb/forest/World.hpp"
+#include "batb/event.hpp"
+#include <vector>
 
 
 namespace batb
 {
 
-class BATB;
 
-namespace run
+namespace demo
 {
 
-class TBConsole;
-
-class Console
+class CourseCurve
 {
 public:
-    Console(BATB& b) : batb( b ) { }
+    using Point = glm::vec2;
+    CourseCurve();
 
-    void open();
-    void close();
+    void create(const Point&, const Point& );
 
-    // command to console
-    void operator()(const std::string& );
-
-    BATB& batb;
+    Point operator()(float_t );
+    Point operator()(uint , uint );
 
 private:
-    TBConsole* tb_console_ = nullptr;
+    std::vector<Point> points_;
+
 
 };
 
 
-} // namespace run
+
+} // namespace demo
 
 } // namespace batb
+
+
+
 
 #endif

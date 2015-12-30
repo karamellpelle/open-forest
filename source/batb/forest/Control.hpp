@@ -28,7 +28,6 @@ class Entity;
 namespace batb
 {
 
-class BATB;
 
 namespace forest
 {
@@ -49,15 +48,16 @@ class ControlDefinition
 {
 public:
     using Code = uint;
+    enum class Type { Empty, Start, Normal, Finish, /*etc*/ };
+
     ControlDefinition() { }
-    ControlDefinition(float_t x_, float_t z_, Code c = 0) : x( x_ ), z( z_ ), code( c ) { } 
+    ControlDefinition(float_t x_, float_t z_, Code c = 0, Type t = Type::Empty) : x( x_ ), z( z_ ), code( c ), type( t ) { } 
 
 
     float_t x = 0.0;
     float_t z = 0.0;
     Code code;
 
-    enum class Type { Empty, Start, Normal, Finish, /*etc*/ };
     Type type;
 
     // for  placement

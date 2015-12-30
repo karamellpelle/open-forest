@@ -43,6 +43,7 @@ public:
 
     /////////////////////////////////////////////////
     // keys for Run to use
+    keys::KeyClicker* console = nullptr;
     // TMP:
     keys::KeyClicker* pause   = nullptr;
     keys::KeyClicker* old     = nullptr;

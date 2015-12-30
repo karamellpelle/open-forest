@@ -30,6 +30,8 @@ public:
     void save();                        // if Node was read from file, write back
     void save(const std::string& );     // save to file
 
+    bool initialized() const            { return initialized_; }
+
 protected:
     YAML::Node yaml;
     std::string filepath;

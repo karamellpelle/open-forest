@@ -51,15 +51,15 @@ void begin(Value& value)
 
         forestAimX =        4.0;
         forestAimY =        4.0;
-        forestMoveX =       45.0;
-        forestMoveZ =       45.0;
+        forestMoveX =       78.0;
+        forestMoveZ =       78.0;
 
         forestProximityControl  = 16.0;
         forestProximityRunner   = 16.0;
 
         forestTraceD =      16.0;
 
-        forestModifyRunnerSpeed = 8.0;
+        forestModifyRunnerSpeed = 35.0;
 
         ////////////////////////////////////////////////////////////////////////////////
         

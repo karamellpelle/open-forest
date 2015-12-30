@@ -60,6 +60,14 @@ debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
     ////////////////////////////////////////////////////////////////////////////////
 
+    if ( batb.run.initialized() )
+    {
+        // console always available
+        if ( batb.run.keyset.console->click() )
+        {
+            if ( batb.run.keyset.console->toggle() ) batb.run.console.open(); else batb.run.console.close();
+        }
+    }
     
     // end AL frame
     batb.al.frameEnd();

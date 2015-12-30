@@ -21,7 +21,6 @@
 #include "batb/forest/Camera.hpp"
 #include "batb/forest/Terrain.hpp"
 #include "batb/forest/Map.hpp"
-#include "batb/forest/Course.hpp"
 #include "batb/forest/Control.hpp"
 #include "batb/forest/Runner.hpp"
 #include "batb/forest/Weather.hpp"
@@ -39,10 +38,10 @@ namespace Ogre
 namespace batb
 {
 
-namespace run
-{
-class World;
-}
+class BATB;
+
+namespace run { class World; }
+
 
 namespace forest
 {

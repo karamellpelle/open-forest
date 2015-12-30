@@ -20,6 +20,7 @@
 #include "batb/batb_include.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
+#include "batb/demo/Course.hpp"
 #include "batb/event.hpp"
 
 
@@ -49,7 +50,7 @@ class World
 {
 
 public:
-    World(run::World& r) : run( r ), forest( r ) { }
+    World(run::World& r) : run( r ), forest( r ), course( forest ) { }
 
     run::World& run;
     // forest subworld
@@ -62,17 +63,8 @@ public:
 
     
     forest::Runner* runner = nullptr;
-    std::list<forest::Control*> course;
-    float_t course_dim = 0.0;
+    Course course;
 
-/*
-    // 
-    ControlPoint cpoint;
-    std::forward_list<ControlPoint> cpoint_nexts;
-    std::forward_list<ControlPoint> cpoint_prevs;
-
-
-*/
 
 private:
     

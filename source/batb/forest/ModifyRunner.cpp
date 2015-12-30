@@ -30,13 +30,13 @@ namespace forest
 // 'dir' gets normalized!
 void ModifyRunner::aim(const glm::vec2& dir)
 {
-    auto dir_ = glm::normalize( dir );
-    auto u = glm::vec4( dir_.x, 0.0, dir_.y, 0.0 );
+    auto u = glm::normalize( dir );
+
 
     // World direction in xz plane
-    aim_ = glm::mat4( u.x, 0.0, u.z, 0.0,
+    aim_ = glm::mat4( -u.y, 0.0, u.x, 0.0,
                       0.0, 1.0, 0.0, 0.0,
-                      -u.z, 0.0, u.x, 0.0,
+                      u.x, 0.0, u.y, 0.0,
                       0.0, 0.0, 0.0, 1.0 );
     
 
@@ -68,24 +68,22 @@ void ModifyRunner::operator()(World& forest)
                               aim_[1],
                               aim_[2],
                               pos
-                              );
+                            );
+
+        // set aim of runner (this is horrible; DTMovable _has_ to be changed!)
+        runner_->move.aim = aim;
 
         // set velocity, based on Terrain, 
         // TODO: later use Terrain more active, like running
         //       slow in heavy terrain
-        float_t incline = forest.terrain.incline( aim );
+        float_t incline = std::min( 0.95, forest.terrain.incline( aim ) ); // prevent standing still on walls
 
-        float_t speed = (1.0 - incline) * value::forestModifyRunnerSpeed // TODO: ensure 1.0 - 'incline' OK
+        float_t speed = (1.0 - incline) * value::forestModifyRunnerSpeed // TODO: ensure 1.0 - 'incline' is OK
                         * speed_;
 
-        // this moves runner only in xz plane!
-        runner_->move.vel = glm::mat4( 
-                            (float)(speed) * aim_[0],
-                            (float)(speed) * aim_[1],
-                            (float)(speed) * aim_[2],
-                            glm::vec4( 0, 0, 0, 1 )
-                            );
-        
+        runner_->move.vel[3] = (float)(speed) * aim[2]; // move along z-axis
+       
+
 
     }
 

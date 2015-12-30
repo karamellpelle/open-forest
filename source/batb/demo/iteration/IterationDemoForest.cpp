@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/glm.hpp"
 #include "batb/demo/iteration/IterationDemoForest.hpp"
 #include "batb/demo/World.hpp"
 #include "batb/forest/World.hpp"
@@ -71,34 +72,31 @@ void IterationDemoForest::iterate_begin(World& demo)
 
     
     ////////////////////////////////////////////////////////////////////////////////
-    // add some control's
-
-    constexpr uint n = 8;
-    constexpr float_t spread = 300.0;
-    for (uint i = 0; i != n; ++i)
-    {
-        static std::default_random_engine rand; 
-        std::uniform_int_distribution<int> gen_x( -spread, spread );
-        std::uniform_int_distribution<int> gen_y( -spread, spread );
-       
-        int x = gen_x( rand );
-        int y = gen_x( rand );
-        static forest::ControlDefinition::Code code = 50000;
-
-        forest::ControlDefinition def( x, y, code++ );
-        auto* control = forest.addControl( def );
-    }
-
-        
-    ////////////////////////////////////////////////////////////////////////////////
-    // add a Runner
-
+    // add a runner
     demo.runner = forest.addRunner();
-    demo.runner->reset( glm::vec2( 40, -120 ) );
+    demo.runner->reset( glm::vec2( 0, 0 ) );
 
-    // control objects
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // create a course for runner
+    createCourse( demo );
+    course_i = 0;
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // create a curve: control0 -> control1
+    auto* control0 = demo.course[ course_i ];
+    auto* control1 = demo.course[ course_i + 1 ];
+    curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
+                  glm::vec2( control1->aim[3].x, control1->aim[3].z ) );
+    curve_i = 0;
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // set controllers (Keys)
     modifyRunner.runner( demo.runner );
     modifyControlRunner.modifier( &modifyRunner );
+    modifyControlCamera.modifier( &modifyCamera );
+
 }
 
 
@@ -107,8 +105,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     auto& forest = demo.forest;
 
     ////////////////////////////////////////////////////////////////////////////////
-    // OUTPUT
-    //
+    // *** output ***
 
     // output forest::World
     output( forest );
@@ -119,40 +116,35 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     
 
     ////////////////////////////////////////////////////////////////////////////////
-    // STEP
-    //
+    // *** step ***
 
+    ////////////////////////////////////////////////////////////////////////////////
     // clean up and retrieve events outside of World
+    //
     beginEventsDemo( demo );      // demo::World
     beginEvents( forest );        // forest::World
     // we ignore run::Events
 
-
+    
     ////////////////////////////////////////////////////////////////////////////////
-    // TMP: move runner
-    constexpr float_t radius = 150.0;
-    float_t x, z;
-    cossin( 0.5 * forest.tick, x, z );
-    auto& pos = demo.runner->move.aim[3];
-    pos.x = radius * x;
-    pos.z = radius * z;
+    // control objects
+
+    // "AI" for demo
+    modifyRunnerDemo( demo );
 
     // use Keys to control objects in forest::World
     modifyControlCamera( forest );
     modifyControlRunner( forest );
 
+  
     ////////////////////////////////////////////////////////////////////////////////
-    //
-
-    // modify Camera
+    // movement
     modifyCamera( forest );
-
-    // modify Runner
     modifyRunner( forest );
 
+  
     ////////////////////////////////////////////////////////////////////////////////
-    //
-
+    // step physics (adds events)
     tick_t tick_next = demo.tick;
 
     // prevent too many dt steps:
@@ -170,19 +162,27 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 
     ////////////////////////////////////////////////////////////////////////////////
+    // tmp: set new controls
     //
-
-    // set new controls
     if ( batb.demo.keyset.new_course->click() )
     {
-        createCourse( demo );
-         
+        ++course_i;
+
+        if ( course_i + 1 == demo.course.size() )
+        {
+            // course complete, create new course
+            createCourse( demo );
+            
+            course_i = 0;
+        }
+
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////
-    // THINK
-    //
+    // think
     // TODO: look at demo-events!
+    //
     if ( batb.run.keyset.ogre->click() )
     {
         batb.log << "out of IterationRunDemo!!" << std::endl;
@@ -200,65 +200,107 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 }
 
+
+void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
+{
+    constexpr uint m = 8;
+
+    auto& runner = demo.runner;
+
+    if ( runner )
+    {
+        ////////////////////////////////////////////////////////////////////////////////
+        auto p = glm::vec2( runner->move.aim[3].x, runner->move.aim[3].z );
+        auto p0 = curve( m, curve_i );
+        auto p1 = curve( m, curve_i + 1 );
+
+
+        // if runner at p1, run to p2
+        constexpr float eps = 1.0;
+        if ( inside( p1, eps, p ) )
+        {
+            // next control reached
+            if ( ++curve_i == m ) // stop on last segment
+            {
+                ++course_i;
+
+                // TODO: remove from here and instead look at EventControl punch
+                if ( course_i + 1 == demo.course.size() )
+                {
+                    // course complete, create new course
+                    createCourse( demo );
+                    
+                    course_i = 0;
+                }
+
+                // control0 -> control1
+                auto* control0 = demo.course[ course_i ];
+                auto* control1 = demo.course[ course_i + 1 ];
+
+                // create curve: control0 -> control1
+                curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
+                              glm::vec2( control1->aim[3].x, control1->aim[3].z ) );
+
+                curve_i = 0;
+            }
+
+            // set next curve
+            p0 = curve( m, curve_i );
+            p1 = curve( m, curve_i + 1);
+
+        }
+
+
+        // anyway, always move p against p1
+        modifyRunner.aim( p1 - p );
+        modifyRunner.speed( 1.0 );
+
+    } 
+
+}
+
 void IterationDemoForest::createCourse(demo::World& demo)
 {
+    using ControlDefinition = forest::ControlDefinition;   
     forest::World& forest = demo.forest;
-
+    Course& course = demo.course;
 
     glm::vec4 p0;
     glm::vec4 p1;
-    if ( 2 <= demo.course.size() )
+    if ( 2 <= course.size() )
     {
+        auto size = course.size();
+
         // continue previous course 
-        auto j = std::rbegin( demo.course );
-        p1 = (*j)->aim[3];
-        
-        ++j;
-        p0 = (*j)->aim[3];
+        p0 = course[ size - 2 ]->aim[3];
+        p1 = course[ size - 1 ]->aim[3];
     }
     else
     {
         // start new course
-        p0 = glm::vec4( -1.0, 0.0, 0.0, 1.0);
+        p0 = glm::vec4( 0.0, 0.0, -1.0, 1.0);
         p1 = glm::vec4( 0.0, 0.0, 0.0, 1.0);
 
     }
 
-    float_t w_min = p1.x;
-    float_t w_max = p1.x;
-    float_t h_min = p1.z;
-    float_t h_max = p1.z;
-
-    // remove old
-    for ( auto* control : demo.course )
+    // clear course
+    // FIXME: no remove?
+    for (uint i = 0; i != course.size(); ++i)
     {
-        forest.removeControl( control );
+        forest.removeControl( course[i] );
     }
-    demo.course.clear();
+    course.clear();
 
-    using ControlDefinition = forest::ControlDefinition;   
+
     ControlDefinition::Code code = 0;
 
-    auto addControl = [&](float_t x, float_t z, ControlDefinition::Code code, ControlDefinition::Type type)
-    {
-        ControlDefinition def( x, z, code );
-        def.type = type;
-        demo.course.push_back( forest.addControl( def ) );
-
-        w_min = std::min( w_min, x );
-        w_max = std::max( w_max, x );
-        h_min = std::min( h_min, z );
-        h_max = std::max( h_max, z );
-    };
-    
-    // start
-    addControl( p1.x, p1.z, code++, ControlDefinition::Type::Start );
+    // Start
+    course.addControl( p1.x, p1.z, code++, ControlDefinition::Type::Start );
 
     static std::default_random_engine rand; 
 
     constexpr uint max_controls = 8;
-    std::uniform_int_distribution<uint> gen_m( 1, max_controls );
-    uint m = gen_m( rand );
+    uint m = std::uniform_int_distribution<uint>( 1, max_controls )( rand );
 
     for (uint i = 0; i != m; ++i)
     {
@@ -271,36 +313,32 @@ void IterationDemoForest::createCourse(demo::World& demo)
         constexpr float_t spread_x0 = 300;
         constexpr float_t spread_x1 = 600;
         constexpr float_t spread_y = 1000;
-        std::uniform_real_distribution<float_t> gen_x( spread_x0, spread_x1 );
-        std::uniform_real_distribution<float_t> gen_y( -spread_y, spread_y );
-
         constexpr float_t s = 1.0;
-        float_t x = s * gen_x( rand );
-        float_t y = s * gen_y( rand );
+        float_t x = s * std::uniform_real_distribution<float_t>( spread_x0, spread_x1 )( rand );
+        float_t y = s * std::uniform_real_distribution<float_t>( -spread_y, spread_y )( rand );
         
         auto p2 = trans * glm::vec4( x, 0.0, y, 1.0 );
 
         if ( i + 1 == m )
         {
+            // Finish
             code = std::max( (uint)(500), (uint)(code + 32) );
-            addControl( p2.x, p2.z, code, ControlDefinition::Type::Finish );
+            course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Finish );
         }
         else
         {
-            // add a random code number
-            constexpr uint delta = 23;
-            uint code_d = std::uniform_int_distribution<uint>( 1, delta )( rand );
+            // random code number
+            uint code_d = std::uniform_int_distribution<uint>( 1, 23 )( rand );
             code += code_d;
-        
-            addControl( p2.x, p2.z, code, ControlDefinition::Type::Normal );
+            
+            // Normal
+            course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Normal );
         }
 
 
         p0 = p1;
         p1 = p2;
     }
-
-    demo.course_dim = std::max( w_max - w_min, h_max - h_min );
 
 }
 

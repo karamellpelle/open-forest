@@ -20,6 +20,7 @@
 #include "batb/demo/iteration/IterationDemo.hpp"
 #include "batb/demo/BeginEvents.hpp"
 #include "batb/demo/Output.hpp"
+#include "batb/demo/CourseCurve.hpp"
 #include "batb/forest/Output.hpp"
 #include "batb/forest/BeginEvents.hpp"
 #include "batb/forest/ModifyCamera.hpp"
@@ -59,6 +60,7 @@ public:
 
 private:
     void createCourse(demo::World& );
+    void modifyRunnerDemo(demo::World& );
 
     demo::Output outputDemo;
     demo::BeginEvents beginEventsDemo;
@@ -71,24 +73,13 @@ private:
     forest::ModifyControlRunner modifyControlRunner;
     forest::StepDT stepDT;
 
-    //float_t aim_a = 0.0;  // yaw
-    //float_t aim_b = 0.0;  // pitch
-    //float_t aim_c = 0.0;  // roll
+    // current control
+    uint course_i = 0;
 
-    //Runner* aiming = nullptr;
+    // movement of demo runner
+    CourseCurve curve;
+    uint curve_i = 0;
 
-    //float_t map_scale_0_ = 0;
-    //float_t map_scale_1_ = 0;
-    //glm::vec2 map_pos_1_;
-    //glm::vec2 map_dir_0_;
- 
-    //using BezierPoints = std::vector<glm::vec2>;
-
-    //BezierPoints beziers_;
-    //BezierPoints random(const glm::vec2& , const glm::vec2& );
-    //void tmp_show_bezier(World& );
-    //glm::vec2 p0;
-    //glm::vec2 p1;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

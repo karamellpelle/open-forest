@@ -40,6 +40,7 @@ void KeySet::load(const std::string& path)
     // TODO: parse keys from definition in file
 
     // for now, hardcode:
+    console = createKeyClicker( createKeyButton( GLFW_KEY_TAB ) );
     pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
     old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
     u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
