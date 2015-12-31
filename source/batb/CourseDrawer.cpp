@@ -66,17 +66,8 @@ void CourseDrawer::begin()
     p1 = glm::vec3(0.0, 0.0, 1.0);
     ix_ = 0;
 
-    // create translation: source -> target
-    auto s = 1.0 / scale_;
-    trans_[0] = glm::vec3( s, 0.0, 0.0 );
-    trans_[1] = glm::vec3( 0.0, s, 0.0 );
-    trans_[2] = glm::vec3( (-s) * origo_.x, (-s) * origo_.z, 1.0 );
-
-    // push NV
-    //nvgSave( nvg ); 
-
     // convert line width to pixels
-    float_t w = scale_pixel_ * scale_size_ * size_line_;
+    float_t w = scale_size_ * size_line_;
     nvgStrokeWidth( nvg, w );
 
 
@@ -85,7 +76,7 @@ void CourseDrawer::begin()
     nvgLineJoin( nvg, NVG_ROUND );
 
     // size of index text
-    nvgFontSize( nvg, scale_pixel_ * scale_size_ * size_ix_ );
+    nvgFontSize( nvg, scale_size_ * size_ix_ );
     nvgTextAlign( nvg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE );
 
     // set color's
@@ -108,9 +99,6 @@ void CourseDrawer::end()
 
     draw( trans, type1 );
 
-    // pop NV
-    //nvgRestore( nvg );
-    
 }
 
 void CourseDrawer::color(float_t r, float_t g, float_t b, float_t a)
@@ -200,17 +188,17 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
 
 void CourseDrawer::normal(const glm::vec2& p2)
 {
-    push_draw( trans_ * glm::vec3( p2, 1.0 ), ObjectType::Normal );  
+    push_draw( glm::vec3( p2, 1.0 ), ObjectType::Normal );  
 }
 
 void CourseDrawer::start(const glm::vec2& p2)
 {
-    push_draw( trans_ * glm::vec3( p2, 1.0 ), ObjectType::Start );  
+    push_draw( glm::vec3( p2, 1.0 ), ObjectType::Start );  
 }
 
 void CourseDrawer::finish(const glm::vec2& p2)
 {
-    push_draw( trans_ * glm::vec3( p2, 1.0 ), ObjectType::Finish );  
+    push_draw( glm::vec3( p2, 1.0 ), ObjectType::Finish );  
 
     // TODO: reset ix_, set Empty?
 }
@@ -228,7 +216,7 @@ float_t CourseDrawer::size(ObjectType type)
 }
 
 // draw type at given point and direction 
-// return if something was actually drawn ( if line to next object )
+// return true iff something was actually drawn ( if line to next object )
 bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
 {
     if ( type == ObjectType::Normal )

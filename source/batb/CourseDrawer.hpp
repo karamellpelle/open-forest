@@ -24,7 +24,7 @@ namespace batb
 
 class BATB;
 
-// render course defined in world points to nanovg target
+// render course using World coordinates
 class CourseDrawer
 {
 public:
@@ -33,16 +33,8 @@ public:
     enum class ObjectType { Empty, Normal, Start, Finish, };
    
 
-    // draw relative to world position
-    void origo(const glm::vec3& o)  { origo_ = o; }
-    // set world value of 1 target unit (map scale 1 : value)
-    void scale(float_t s)           { scale_ = s; } 
-
-
-    // relative to 1 target unit
+    // unit size (radius of Normal) defined in World units
     void size(float_t r)            { scale_size_ = r; }
-    // set pixel size of 1 target unit. FIXME: could this be removed?
-    void pixels(float_t r)          { scale_pixel_ = r; }
 
     // draw indices?
     void numbers(bool i)            { indices_ = i; }
@@ -70,11 +62,12 @@ public:
 private:
     BATB& batb;
 
-    NVGcontext* nvg = nullptr;
 public:
     bool draw(const glm::mat3& , ObjectType );        // draw only this
     void push_draw(const glm::vec3& p, ObjectType );  // draw previuos, this next
     float_t size(ObjectType );
+
+    NVGcontext* nvg = nullptr;
     
     glm::vec3 p0; // previous point - 1
     glm::vec3 p1; // previous point 
@@ -86,23 +79,15 @@ public:
     NVGcolor nanovg_color_next_;
     bool color_next_ = false;
     
-    // source -> destination
-    float_t scale_ = 1.0;
-    glm::vec3 origo_;
-    glm::mat3 trans_;
 
-    // scales
     float_t scale_size_ = 1.0;
-    float_t scale_pixel_ = 1.0;
-
-
 
     // numbering
     bool indices_ = true;
     uint ix_;
     int nanovg_font_ = -1;
 
-    // sizes (radius)
+    // sizes (size_normal_ should be reference (i.e. 1))
     float_t size_normal_;   
     float_t size_start_;
     float_t size_finish_a_;

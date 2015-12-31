@@ -1,10 +1,12 @@
 
 TBLayout
 	# downwards
-	axis y
+	axis x
 
 	# set font for this and children
-	font: name: Neon
+	font: 
+		name: Segoe
+		size: 28
 	
 	# let this layout have this gravity
 	gravity all
@@ -24,7 +26,7 @@ TBLayout
 	##################################################
 	# children
 
-	TBButton: id: run-old, text: old-BATB, skin: "TBButton.flat"
-	TBButton: id: run-nanovg, text: nanovg, skin: "TBButton.flat"
-	TBButton: id: exit, text: Exit, skin: "TBButton.flat"
+	TBButton: id: do-old, text: old-BATB, skin: "TBButton.flat"
+	TBButton: id: do-nanovg, text: nanovg, skin: "TBButton.flat"
+	TBButton: id: do-forest, text: forest, skin: "TBButton.flat"
 
