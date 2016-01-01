@@ -40,7 +40,7 @@ void CourseCurve::create(const Point& p0, const Point& p1)
 
     // number of control points
     constexpr uint between_max = 8;
-    uint between = std::uniform_int_distribution<uint>( 0, between_max )( rand );
+    uint between = std::uniform_int_distribution<uint>( 3, between_max )( rand );
 
     points_.clear();
 

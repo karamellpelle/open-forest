@@ -73,9 +73,6 @@ private:
     forest::ModifyControlRunner modifyControlRunner;
     forest::StepDT stepDT;
 
-    // current control
-    uint course_i = 0;
-
     // movement of demo runner
     CourseCurve curve;
     uint curve_i = 0;

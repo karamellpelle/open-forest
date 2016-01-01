@@ -80,12 +80,12 @@ void IterationDemoForest::iterate_begin(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // create a course for runner
     createCourse( demo );
-    course_i = 0;
+    demo.course_i = 0;
 
     ////////////////////////////////////////////////////////////////////////////////
     // create a curve: control0 -> control1
-    auto* control0 = demo.course[ course_i ];
-    auto* control1 = demo.course[ course_i + 1 ];
+    auto* control0 = demo.course[ demo.course_i ];
+    auto* control1 = demo.course[ demo.course_i + 1 ];
     curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
                   glm::vec2( control1->aim[3].x, control1->aim[3].z ) );
     curve_i = 0;
@@ -166,14 +166,14 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     //
     if ( batb.demo.keyset.new_course->click() )
     {
-        ++course_i;
+        ++demo.course_i;
 
-        if ( course_i + 1 == demo.course.size() )
+        if ( demo.course_i + 1 == demo.course.size() )
         {
             // course complete, create new course
             createCourse( demo );
             
-            course_i = 0;
+            demo.course_i = 0;
         }
 
     }
@@ -222,20 +222,20 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
             // next control reached
             if ( ++curve_i == m ) // stop on last segment
             {
-                ++course_i;
+                ++demo.course_i;
 
                 // TODO: remove from here and instead look at EventControl punch
-                if ( course_i + 1 == demo.course.size() )
+                if ( demo.course_i + 1 == demo.course.size() )
                 {
                     // course complete, create new course
                     createCourse( demo );
                     
-                    course_i = 0;
+                    demo.course_i = 0;
                 }
 
                 // control0 -> control1
-                auto* control0 = demo.course[ course_i ];
-                auto* control1 = demo.course[ course_i + 1 ];
+                auto* control0 = demo.course[ demo.course_i ];
+                auto* control1 = demo.course[ demo.course_i + 1 ];
 
                 // create curve: control0 -> control1
                 curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
@@ -299,7 +299,7 @@ void IterationDemoForest::createCourse(demo::World& demo)
 
     static std::default_random_engine rand; 
 
-    constexpr uint max_controls = 8;
+    constexpr uint max_controls = 16;
     uint m = std::uniform_int_distribution<uint>( 1, max_controls )( rand );
 
     for (uint i = 0; i != m; ++i)

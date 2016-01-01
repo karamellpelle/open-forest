@@ -60,6 +60,7 @@ void begin(Value& value)
         forestTraceD =      16.0;
 
         forestModifyRunnerSpeed = 35.0;
+        //forestModifyRunnerSpeed = 200.0;
 
         ////////////////////////////////////////////////////////////////////////////////
         

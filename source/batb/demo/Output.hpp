@@ -36,7 +36,7 @@ class World;
 class Output : public game::Output<World>
 {
 public:
-    Output(BATB& b) : batb( b )       { }
+    Output(BATB& b);
 
     virtual void operator()(World& ) override;
 
@@ -44,7 +44,23 @@ public:
     // ...
 
 protected:
+    void update(World& );
+    void aim(World& );
+
     BATB& batb;
+
+    bool updated_ = false;
+    uint course_i_ = 0;
+    tick_t course_tick_ = 0.0;
+    glm::vec2 course_u0_;
+    glm::vec2 course_u1_;
+    glm::vec2 course_p0_;
+    glm::vec2 course_p1_;
+    tick_t course_tick_d_ = 0.0;
+    float_t course_d0_ = 1.0;
+    float_t course_d1_ = 1.0;
+
+    float_t course_size_ = 1.0; 
 };
 
 

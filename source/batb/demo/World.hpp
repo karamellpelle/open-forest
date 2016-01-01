@@ -64,6 +64,8 @@ public:
     
     forest::Runner* runner = nullptr;
     Course course;
+    uint course_i = 0; // current control
+
 
 
 private:
