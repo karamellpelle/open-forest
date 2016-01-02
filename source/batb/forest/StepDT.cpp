@@ -33,22 +33,20 @@ namespace forest
 void stepdt(DTMovable& move, tick_t dt)
 {
     // currently, only the position part (mat4x4[ 3 ]) is updated
-    auto& pos = move.aim[ 3 ];
-    auto& vel = move.vel[ 3 ];
-    auto& acc = move.acc[ 3 ];
     
-    acc[3] = 1.0;
+    move.acc[3] = 1.0;
 
-    vel += (float)( dt ) * acc;
-    vel[3] = 1.0;
+    move.vel += (float)( dt ) * move.acc;
+    move.vel[3] = 1.0;
 
-    pos += (float)( dt ) * vel;
-    pos[3] = 1.0;
+    move.pos += (float)( dt ) * move.vel;
+    move.pos[3] = 1.0;
 
-    //move.aim[3] = pos;
+    //move.pos = pos;
     //move.vel[3] = vel;
     //move.acc[3] = acc;
-
+    
+    move.computed = false;
 }
 
 
@@ -79,9 +77,9 @@ void StepDT::operator()(World& forest, tick_t dt)
         stepdt( runner_a.move, dt );
       
         // ensure runner above terrain
-        auto& pos = runner_a.move.aim[3];
-        pos.y = 14 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( 
-                     Ogre::Vector3( pos.x, pos.y, pos.z ) );
+        auto pos = runner_a.move.pos;
+        runner_a.move.pos.y = 14 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( 
+                                   Ogre::Vector3( pos.x, pos.y, pos.z ) );
 
         // collide with controls
         for (auto j = std::begin( forest.controls ); j != std::end( forest.controls ); ++j)
@@ -89,7 +87,7 @@ void StepDT::operator()(World& forest, tick_t dt)
             auto& control = *j;
 
             // see if runner is close to control
-            auto diff = runner_a.move.aim[3] - control.aim[3];
+            auto diff = runner_a.move.pos - control.aim.pos;
             float_t epseps = glm::dot( diff, diff );
             if ( epseps < value::forestProximityControl )
             {
@@ -105,7 +103,7 @@ void StepDT::operator()(World& forest, tick_t dt)
             auto& runner_b = *j;
 
             // see if runner is close to control
-            auto diff = runner_a.move.aim[3] - runner_b.move.aim[3];
+            auto diff = runner_a.move.pos - runner_b.move.pos;
             float_t epseps = glm::dot( diff, diff );
             if ( epseps < value::forestProximityRunner )
             {

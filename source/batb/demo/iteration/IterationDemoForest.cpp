@@ -86,8 +86,15 @@ void IterationDemoForest::iterate_begin(World& demo)
     // create a curve: control0 -> control1
     auto* control0 = demo.course[ demo.course_i ];
     auto* control1 = demo.course[ demo.course_i + 1 ];
-    curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
-                  glm::vec2( control1->aim[3].x, control1->aim[3].z ) );
+    //control0->aim[3] = glm::vec4( 2, 4, 6, 8 );
+    //std::cout << control0->pos.x << " "
+    //          << control0->pos.y << " "
+    //          << control0->pos.z << " "
+    //          << control0->pos.w << " "
+    //          << std::endl;
+    
+    curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
+                  glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
     curve_i = 0;
 
 
@@ -166,6 +173,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // TODO: look at demo-events!
     //
     if ( batb.run.keyset.escape->click() )
+    //if ( true )
     {
         batb.log << "out of IterationRunDemo!!" << std::endl;
 
@@ -192,7 +200,7 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
     if ( runner )
     {
         ////////////////////////////////////////////////////////////////////////////////
-        auto p = glm::vec2( runner->move.aim[3].x, runner->move.aim[3].z );
+        auto p = glm::vec2( runner->move.pos.x, runner->move.pos.z );
         auto p0 = curve( m, curve_i );
         auto p1 = curve( m, curve_i + 1 );
 
@@ -220,8 +228,8 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
                 auto* control1 = demo.course[ demo.course_i + 1 ];
 
                 // create curve: control0 -> control1
-                curve.create( glm::vec2( control0->aim[3].x, control0->aim[3].z ),
-                              glm::vec2( control1->aim[3].x, control1->aim[3].z ) );
+                curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
+                              glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
 
                 curve_i = 0;
             }
@@ -254,8 +262,8 @@ void IterationDemoForest::createCourse(demo::World& demo)
         auto size = course.size();
 
         // continue previous course 
-        p0 = course[ size - 2 ]->aim[3];
-        p1 = course[ size - 1 ]->aim[3];
+        p0 = course[ size - 2 ]->aim.pos;
+        p1 = course[ size - 1 ]->aim.pos;
     }
     else
     {

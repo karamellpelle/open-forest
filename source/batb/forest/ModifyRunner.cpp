@@ -58,30 +58,22 @@ void ModifyRunner::operator()(World& forest)
 {
     if ( runner_ )
     {
-        const auto& pos = runner_->move.aim[3];
-
         // set intensity
         runner_->intensity = std::abs( speed_ );
         
-        // direstion and position
-        auto aim = glm::mat4( aim_[0],
-                              aim_[1],
-                              aim_[2],
-                              pos
-                            );
-
-        // set aim of runner (this is horrible; DTMovable _has_ to be changed!)
-        runner_->move.aim = aim;
+        // set direction of runner
+        runner_->move.aim[0] = aim_[0];
+        runner_->move.aim[1] = aim_[1];
+        runner_->move.aim[2] = aim_[2];
 
         // set velocity, based on Terrain, 
         // TODO: later use Terrain more active, like running
         //       slow in heavy terrain
-        float_t incline = std::min( 0.95, forest.terrain.incline( aim ) ); // prevent standing still on walls
+        float_t incline = std::min( 0.95 /* prevent standing still */, forest.terrain.incline( runner_->move.aim ) );
+        float_t speed = (1.0 - incline) * speed_            // TODO: ensure 1.0 - 'incline' is OK
+                        * value::forestModifyRunnerSpeed;
 
-        float_t speed = (1.0 - incline) * value::forestModifyRunnerSpeed // TODO: ensure 1.0 - 'incline' is OK
-                        * speed_;
-
-        runner_->move.vel[3] = (float)(speed) * aim[2]; // move along z-axis
+        runner_->move.vel = (float)(speed) * runner_->move.aim[2]; // move along z-axis
        
 
 

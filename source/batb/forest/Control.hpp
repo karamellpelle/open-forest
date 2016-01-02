@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_CONTROL_HPP
 #define BATB_FOREST_CONTROL_HPP
 #include "batb/batb_include.hpp"
+#include "batb/forest/Aim.hpp"
 
 namespace Ogre
 {
@@ -77,7 +78,7 @@ public:
 class Control
 {
 public:
-    Control(World& w) : forest( w ) { }
+    Control(World& w) : forest( w )   { }
 
     // assignment/copy allowed, if object copy, create 'clone()'
     Control(const Control& ) = default;
@@ -91,7 +92,9 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     World& forest;
     ControlDefinition definition;
-    glm::mat4 aim; // position and aim. TODO: glm::dvec4?
+
+    // placement in World
+    Aim aim;
 
     ////////////////////////////////////////////////////////////////////////////////
     // output

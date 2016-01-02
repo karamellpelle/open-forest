@@ -53,7 +53,7 @@ IterationStack IterationRunOld::iterate_run(World& world)
         old::iterate();
 
         // think
-        if ( batb.run.keyset.old->released() )
+        if ( batb.run.keyset.escape->released() )
         {
             batb.log << "IterationRunOld -> " << std::endl;
             old::end();

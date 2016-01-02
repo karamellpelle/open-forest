@@ -39,6 +39,13 @@ public:
     forest::Control* operator[](uint ) const;
    
     uint size() const               { return controls_.size(); }
+
+    // dimensions
+    float_t radius(float_t , float_t ) const;
+    float_t width() const;
+    float_t width(float_t ) const;
+    float_t height() const;
+    float_t height(float_t ) const;
     float_t dimension() const;
     float_t dimension(float_t, float_t ) const;
     glm::vec2 center() const;

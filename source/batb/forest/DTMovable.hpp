@@ -17,7 +17,7 @@
 //
 #ifndef BATB_FOREST_DTMOVABLE_HPP
 #define BATB_FOREST_DTMOVABLE_HPP
-#include "batb/batb_include.hpp"
+#include "batb/forest/Aim.hpp"
 
 
 namespace batb
@@ -31,19 +31,41 @@ namespace forest
 // this class should probably be changed to some better types for 
 // physics, but I am not a physist so I don't know !
 //
-// for education: http://physicsforgames.blogspot.no/
-//
 // z axis is forward
-class DTMovable 
+//
+// TODO: dmat4 for better precision i a big world?
+
+class DTMovable : public Aim
 {
 public:
-    // TODO: dmat4 for better precision i a big world?
-    //
-    glm::mat4 aim;      // position and orientation  
-    glm::mat4 vel;      // velocity of 'aim'
-    glm::mat4 acc;      // acceleration of 'aim' (velocity of 'vel')
-    //glm::vec4 jerk;
+    DTMovable() : Aim() { }
 
+    //   should the 3x3 part of Aim be computed from quat_pos?
+    //   like a function 'void compute()' updating all data (normalize)
+    //   see: http://physicsforgames.blogspot.no/
+    //
+    //glm::quaternion quat_pos;
+    //glm::quaternion quat_vel;
+    //glm::quaternion quat_acc;
+
+    glm::vec4  vel;      // velocity of 'Aim::Pos'
+    glm::vec4  acc;      // acceleration of 'Aim::Pos'
+    //glm::vec4 jerk;
+   
+    float_t speed = 0.0;
+
+    // normalize all data
+    void compute()
+    {
+        if ( !computed )
+        {
+            speed = glm::length( glm::vec3( vel ) );
+            //aim = f( quat_pos );
+            computed = true;
+        }
+    }
+
+    bool computed = false;
 
 };
 

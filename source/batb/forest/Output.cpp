@@ -37,13 +37,13 @@ void Output::operator()(World& forest)
     ////////////////////////////////////////////////////////////////////////////////
     // setup output
 
-    // place Ogre::Node's relative to position
+    // set respective Ogre based on Aim
     for (auto i = std::begin( forest.runners ); i != std::end( forest.runners ); ++i)
     {
         auto& runner = *i;
         auto* node = runner.ogre_entity->getParentNode();
-        const auto& xyz = runner.move.aim[3];
-        node->setPosition( xyz.x, xyz.y, xyz.z );
+        auto pos = runner.move.pos;
+        node->setPosition( pos.x, pos.y, pos.z );
     }
 
   

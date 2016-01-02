@@ -71,9 +71,44 @@ void Course::clear()
     // (added controls are not removed)
 }
 
+
+float_t Course::radius(float_t x, float_t z) const
+{
+    auto p0 = glm::vec2( x, z );
+
+    float rr = 0.0;
+    for (auto c : controls_)
+    {
+        auto p1 = glm::vec2( c->aim.pos.x, c->aim.pos.z );
+        rr = std::max( rr, glm::dot( p1 - p0, p1 - p0 ) );
+    }
+
+    return std::sqrt( rr );
+}
+
+float_t Course::width() const
+{
+    return x_max_ - x_min_;
+}
+
+float_t Course::width(float_t x) const
+{
+    return 2.0 * std::max( std::abs( x_max_ - x ), std::abs( x_min_ - x ) );
+}
+
+float_t Course::height() const
+{
+    return z_max_ - z_min_;
+}
+
+float_t Course::height(float_t z) const
+{
+    return 2.0 * std::max( std::abs( z_max_ - z ), std::abs( z_min_ - z ) );
+}
+
 float_t Course::dimension() const
 {
-    return std::max( x_max_ - x_min_, z_max_ - z_min_ );
+    return std::max( width(), height() );
 }
 
 float_t Course::dimension(float_t x, float_t z) const
@@ -81,7 +116,7 @@ float_t Course::dimension(float_t x, float_t z) const
     auto xm = 2.0 * std::max( std::abs( x_max_ - x ), std::abs( x_min_ - x ) );
     auto zm = 2.0 * std::max( std::abs( z_max_ - z ), std::abs( z_min_ - z ) );
     
-    return std::max( xm, zm );
+    return std::max( width( x ), height( z ) );
 }
 
 glm::vec2 Course::center() const

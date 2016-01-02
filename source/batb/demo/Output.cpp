@@ -61,7 +61,7 @@ void Output::operator()(World& demo)
     {
         const auto& trace = demo.runner->trace;
         auto& run = demo.run;
-        const auto& pos = demo.runner->move.aim[3];
+        auto pos = demo.runner->move.pos;
         auto& course = demo.course;
 
         // update view according to World
@@ -90,9 +90,7 @@ void Output::operator()(World& demo)
 
         float_t alpha = course_tick_ + smooth_ticks <= demo.tick ? 1.0 : (demo.tick - course_tick_) / smooth_ticks;
         float_t alpha_d = course_tick_d_ + smooth_ticks_d <= demo.tick ? 1.0 : (demo.tick - course_tick_d_) / smooth_ticks_d;
-std::cout << std::setprecision( 2 ) << std::fixed
-          << "\ralpha_d: " << alpha_d << "                 "
-          << std::endl;
+
         auto p = glm::mix( course_p0_, course_p1_, alpha );
         auto v = glm::mix( course_u0_, course_u1_, alpha );
         auto u = glm::length( v ) == 0 ? v : glm::normalize( v );
@@ -158,7 +156,7 @@ std::cout << std::setprecision( 2 ) << std::fixed
             for (uint i = 0; i != course.size(); ++i)
             {
                 forest::Control* control = course[i];
-                auto& pos = control->aim[3];
+                auto pos = control->aim.pos;
 
                 switch ( control->definition.type )
                 {
@@ -193,15 +191,17 @@ std::cout << std::setprecision( 2 ) << std::fixed
 
 void Output::update(World& demo)
 {
+    ////////////////////////////////////////////////////////////////////////////////
     if ( !updated_ )
     {
         aim( demo );
         updated_ = true;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
     forest::Control* control = demo.course[ demo.course_i ];
     auto p0 = course_p0_;
-    auto p1 = glm::vec2( control->aim[3].x, control->aim[3].z );
+    auto p1 = glm::vec2( control->aim.pos.x, control->aim.pos.z );
   
     // set new aim, if changed
     if ( p0 != p1 )
@@ -220,9 +220,13 @@ void Output::update(World& demo)
         // set 0
         float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
         course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
+        //std::cout << std::setprecision( 2 ) << std::fixed
+        //          << "press: alpha_d " << alpha_d << " course_d0_ " << course_d0_ << std::endl;
 
         // set 1
-        course_d1_ = demo.course.dimension( course_p1_.x, course_p1_.y );
+        auto w = demo.course.width( course_p1_.x ) * demo.run.scene.shape.hth;
+        auto h = demo.course.height( course_p1_.y );
+        course_d1_ = std::max( course_d1_, 0.5 * std::max( w, h ) );
 
         course_tick_d_ = demo.tick;
 
@@ -232,16 +236,19 @@ void Output::update(World& demo)
         // set 0
         float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
         course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
+        //std::cout << std::setprecision( 2 ) << std::fixed
+        //          << "release: alpha_d " << alpha_d << " course_d0_ " << course_d0_ << std::endl << std::endl;
 
         // set 1
         forest::Control* control0 = demo.course[ demo.course_i ];
         forest::Control* control1 = demo.course[ demo.course_i + 1 ];
-        auto p0 = glm::vec2( control0->aim[3].x, control0->aim[3].z ); 
-        auto p1 = glm::vec2( control1->aim[3].x, control1->aim[3].z ); 
+        auto p0 = glm::vec2( control0->aim.pos.x, control0->aim.pos.z ); 
+        auto p1 = glm::vec2( control1->aim.pos.x, control1->aim.pos.z ); 
         course_d1_ = glm::distance( p0, p1 );
 
         course_tick_d_ = demo.tick;
     }
+
 
 }
 
@@ -262,8 +269,8 @@ void Output::aim(World& demo)
     // set 1
     forest::Control* control0 = demo.course[ demo.course_i ];
     forest::Control* control1 = demo.course[ demo.course_i + 1 ];
-    auto p0 = glm::vec2( control0->aim[3].x, control0->aim[3].z ); 
-    auto p1 = glm::vec2( control1->aim[3].x, control1->aim[3].z ); 
+    auto p0 = glm::vec2( control0->aim.pos.x, control0->aim.pos.z ); 
+    auto p1 = glm::vec2( control1->aim.pos.x, control1->aim.pos.z ); 
     course_p1_ = 0.5f * (p0 + p1);
     course_u1_ = glm::normalize( p1 - p0 );
     if ( !map_view ) course_d1_ = glm::distance( p0, p1 ); // do not change if zooming out

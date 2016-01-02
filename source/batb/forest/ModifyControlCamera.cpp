@@ -61,7 +61,7 @@ void ModifyControlCamera::operator()(World& forest)
                      (batb.forest.keyset.right->press() ? (-1.0) : (0.0));
     float_t move_z = (batb.forest.keyset.forward->press()  ? (1.0)  : (0.0)) +
                      (batb.forest.keyset.backward->press() ? (-1.0) : (0.0));
-    auto& vel = camera.move.vel[ 3 ];
+    auto& vel = camera.move.vel;
     auto& x_ = aim[0];
     auto& z_ = aim[2];
     vel  = (move_x * value::forestMoveX) * x_ + 

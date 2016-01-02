@@ -87,7 +87,7 @@ void Runner::reset(const glm::vec2& xz)
                 Ogre::Vector3( x, 0.0, z ) );
 
     // 
-    reset( glm::vec3( x, y + 14, z ) ); // TMP
+    reset( glm::vec3( x, y + 15, z ) ); // TMP
 
 }
 
@@ -96,10 +96,10 @@ void Runner::reset(const glm::vec3& xyz)
     control0 = nullptr;
     // fatigue, etc.
 
-    move.aim[3].x = xyz.x; 
-    move.aim[3].y = xyz.y; 
-    move.aim[3].z = xyz.z; 
-    move.aim[3].w = 1.0; 
+    move.pos.x = xyz.x; 
+    move.pos.y = xyz.y; 
+    move.pos.z = xyz.z; 
+    move.pos.w = 1.0; 
     trace.reset( TracePoint( forest.tick, glm::vec3( xyz.x, xyz.y, xyz.z ) ) );
 }
 

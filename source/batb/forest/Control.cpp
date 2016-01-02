@@ -49,15 +49,11 @@ void Control::reset(const ControlDefinition& def)
 {
     ////////////////////////////////////////////////////////////////////////////////
     // set correct height from terrain
-    float_t x = def.x;
-    float_t z = def.z;
-    float_t y = forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( 
-                Ogre::Vector3( x, 0.0, z ) );
-
-    aim[3].x = x;
-    aim[3].y = y;
-    aim[3].z = z;
-    aim[3].w = 1.0;
+    aim.pos.x = def.x;
+    aim.pos.z = def.z;
+    aim.pos.y = forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( 
+                Ogre::Vector3( aim.pos.x, 0.0, aim.pos.z ) );
+    aim.pos.w = 1.0;
 
     // ensure previous data is cleared
     reset();
@@ -71,7 +67,7 @@ void Control::reset(const ControlDefinition& def)
     ogre_entity = forest.ogre_scenemgr->createEntity( name.str(), "control.mesh" );
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 16, 16, 16 ); // FIXME
-    node->setPosition( aim[3].x, aim[3].y, aim[3].z );
+    node->setPosition( aim.pos.x, aim.pos.y, aim.pos.z );
     node->attachObject( ogre_entity );
 
     // set definition

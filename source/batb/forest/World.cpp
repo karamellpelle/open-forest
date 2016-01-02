@@ -190,7 +190,7 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     
     // place camera
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
-    forest.camera.move.aim[3] = glm::vec4( 0, height, 0, 1 );
+    forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 
     gl::end_ogre();
 }
