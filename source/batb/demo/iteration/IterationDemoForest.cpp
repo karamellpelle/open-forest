@@ -162,28 +162,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    // tmp: set new controls
-    //
-    if ( batb.demo.keyset.new_course->click() )
-    {
-        ++demo.course_i;
-
-        if ( demo.course_i + 1 == demo.course.size() )
-        {
-            // course complete, create new course
-            createCourse( demo );
-            
-            demo.course_i = 0;
-        }
-
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////
     // think
     // TODO: look at demo-events!
     //
-    if ( batb.run.keyset.ogre->click() )
+    if ( batb.run.keyset.escape->click() )
     {
         batb.log << "out of IterationRunDemo!!" << std::endl;
 

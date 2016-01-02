@@ -76,6 +76,19 @@ float_t Course::dimension() const
     return std::max( x_max_ - x_min_, z_max_ - z_min_ );
 }
 
+float_t Course::dimension(float_t x, float_t z) const
+{
+    auto xm = 2.0 * std::max( std::abs( x_max_ - x ), std::abs( x_min_ - x ) );
+    auto zm = 2.0 * std::max( std::abs( z_max_ - z ), std::abs( z_min_ - z ) );
+    
+    return std::max( xm, zm );
+}
+
+glm::vec2 Course::center() const
+{
+    return glm::vec2( 0.5 * (x_max_ + x_min_), 0.5 * (z_max_ + z_min_) );
+}
+
 } // namespace demo
 
 } // namespace batb

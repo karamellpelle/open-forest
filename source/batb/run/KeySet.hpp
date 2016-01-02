@@ -44,8 +44,8 @@ public:
     /////////////////////////////////////////////////
     // keys for Run to use
     keys::KeyClicker* console = nullptr;
+    keys::KeyClicker* escape  = nullptr;
     // TMP:
-    keys::KeyClicker* pause   = nullptr;
     keys::KeyClicker* old     = nullptr;
     keys::KeyClicker* u       = nullptr; 
     keys::KeyClicker* i       = nullptr;

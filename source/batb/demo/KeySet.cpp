@@ -41,12 +41,12 @@ void KeySet::load(const std::string& path)
     // TODO: parse keys from definition in file
 
     // for now, hardcode:
-    new_course = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::right ) );
+    map_view_full = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::right ) );
 }
 
 void KeySet::reset()
 {
-    new_course->reset();
+    map_view_full->reset();
 }
 
 } // namespace demo

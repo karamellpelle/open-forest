@@ -40,8 +40,8 @@ public:
 
     void reset();
 
-    //keys::KeyClicker* toggle_ = nullptr;
-    keys::KeyClicker* new_course = nullptr;
+    keys::KeyClicker* map_view_full = nullptr;
+
 
     BATB& batb;
 };

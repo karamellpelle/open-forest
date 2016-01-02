@@ -187,7 +187,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     }
     
 
-    if ( batb.run.keyset.pause->click() ) return _emptylist_;
+    if ( batb.run.keyset.escape->click() ) return _emptylist_;
     
     // run old-BATB if old-key released
     if ( batb.run.keyset.old->released() )

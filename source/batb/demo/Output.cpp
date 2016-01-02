@@ -32,6 +32,7 @@ namespace demo
 
   
 constexpr tick_t smooth_ticks = 1.5;
+constexpr tick_t smooth_ticks_d = 0.8;
 
 inline void nvg_point(NVGcontext* vg, float_t x, float_t y, float r = 14.0)
 {
@@ -88,8 +89,10 @@ void Output::operator()(World& demo)
         // set draw transfomation
 
         float_t alpha = course_tick_ + smooth_ticks <= demo.tick ? 1.0 : (demo.tick - course_tick_) / smooth_ticks;
-        float_t alpha_d = course_tick_d_ + smooth_ticks <= demo.tick ? 1.0 : (demo.tick - course_tick_d_) / smooth_ticks;
-
+        float_t alpha_d = course_tick_d_ + smooth_ticks_d <= demo.tick ? 1.0 : (demo.tick - course_tick_d_) / smooth_ticks_d;
+std::cout << std::setprecision( 2 ) << std::fixed
+          << "\ralpha_d: " << alpha_d << "                 "
+          << std::endl;
         auto p = glm::mix( course_p0_, course_p1_, alpha );
         auto v = glm::mix( course_u0_, course_u1_, alpha );
         auto u = glm::length( v ) == 0 ? v : glm::normalize( v );
@@ -208,19 +211,53 @@ void Output::update(World& demo)
         course_i_ = demo.course_i;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // change view if we want view whole map
+
+    
+    if ( batb.demo.keyset.map_view_full->pressed() )
+    {
+        // set 0
+        float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
+        course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
+
+        // set 1
+        course_d1_ = demo.course.dimension( course_p1_.x, course_p1_.y );
+
+        course_tick_d_ = demo.tick;
+
+    }
+    if ( batb.demo.keyset.map_view_full->released() )
+    {
+        // set 0
+        float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
+        course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
+
+        // set 1
+        forest::Control* control0 = demo.course[ demo.course_i ];
+        forest::Control* control1 = demo.course[ demo.course_i + 1 ];
+        auto p0 = glm::vec2( control0->aim[3].x, control0->aim[3].z ); 
+        auto p1 = glm::vec2( control1->aim[3].x, control1->aim[3].z ); 
+        course_d1_ = glm::distance( p0, p1 );
+
+        course_tick_d_ = demo.tick;
+    }
+
 }
 
 
 void Output::aim(World& demo)
 {
+    bool map_view = batb.demo.keyset.map_view_full->press();
+
     float_t alpha = keep_inside( 0.0, 1.0, (demo.tick - course_tick_) / smooth_ticks );
-    float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks );
+    float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks ); // here: use 'smooth_ticks', not 'smooth_ticks_d'
 
     // set 0
     course_p0_ = glm::mix( course_p0_, course_p1_, alpha );
     auto v = glm::mix( course_u0_, course_u1_, alpha );
     course_u0_ = glm::length( v ) == 0 ? v : glm::normalize( v );
-    course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
+    if ( !map_view ) course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
 
     // set 1
     forest::Control* control0 = demo.course[ demo.course_i ];
@@ -229,18 +266,18 @@ void Output::aim(World& demo)
     auto p1 = glm::vec2( control1->aim[3].x, control1->aim[3].z ); 
     course_p1_ = 0.5f * (p0 + p1);
     course_u1_ = glm::normalize( p1 - p0 );
-    course_d1_ = glm::distance( p0, p1 );
+    if ( !map_view ) course_d1_ = glm::distance( p0, p1 ); // do not change if zooming out
 
     // if starting a new course, set at once
     if ( demo.course_i == 0 )
     {
         course_u0_ = course_u1_;
         course_p0_ = course_p1_;
-        course_d0_ = course_d1_;
+        if ( !map_view ) course_d0_ = course_d1_;
     }
 
     course_tick_ = demo.tick;
-    course_tick_d_ = demo.tick;
+    if ( !map_view ) course_tick_d_ = demo.tick;
 
 
 

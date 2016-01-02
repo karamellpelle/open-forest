@@ -41,7 +41,7 @@ void KeySet::load(const std::string& path)
 
     // for now, hardcode:
     console = createKeyClicker( createKeyButton( GLFW_KEY_TAB ) );
-    pause = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
+    escape = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
     old = createKeyClicker( createKeyButton( GLFW_KEY_INSERT ) );
     u = createKeyClicker( createKeyButton( GLFW_KEY_U      ) );
     i = createKeyClicker( createKeyButton( GLFW_KEY_I      ) );
@@ -53,7 +53,8 @@ void KeySet::load(const std::string& path)
 
 void KeySet::reset()
 {
-    pause->reset();
+    console->reset();
+    escape->reset();
     old->reset();
     u->reset();
     i->reset();

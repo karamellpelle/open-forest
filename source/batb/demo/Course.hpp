@@ -40,6 +40,8 @@ public:
    
     uint size() const               { return controls_.size(); }
     float_t dimension() const;
+    float_t dimension(float_t, float_t ) const;
+    glm::vec2 center() const;
 
 private:
     forest::World& forest_;

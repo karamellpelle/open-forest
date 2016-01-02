@@ -53,7 +53,7 @@ constexpr float_t twopi = 6.2831853071795864769252867665590057683943387987502116
 template <typename Linear, typename Scalar>
 Linear smooth(Linear a, Linear b, Scalar alpha)
 {
-    return (1.0 - alpha) * a + alpha * b;
+    return ((Scalar)( 1.0 ) - alpha) * a + alpha * b;
 }
 
 
