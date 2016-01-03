@@ -84,7 +84,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     {
         batb.gui.addWidget( tb_widget_ );
     }
-    tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_VISIBLE ); // lililili :)
+    tb_widget_->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
     // Ogre demo
     //demo::ogre::demo_begin( batb );
@@ -174,7 +174,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 #endif
     {
         // remove main widget from screen
-        tb_widget_->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );
+        tb_widget_->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
         //auto* demo = new demo::World( run );
         //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),

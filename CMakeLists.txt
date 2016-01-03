@@ -92,7 +92,11 @@ add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/tinyxml2" )
 
 ################################################################################
 # build library 'my-turbobadger'. this exports the necessary include directories
+# NOTE my-turbobadger -> TurboBadgerLib
 add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/turbobadger" )
+## build library TurboBadgerLib
+#set( TB_BUILD_DEMO OFF)
+#add_subdirectory( ${LIBS_SOURCE_DIR}/turbobadger )
 
 ################################################################################
 # build library 'yaml-cpp'.
