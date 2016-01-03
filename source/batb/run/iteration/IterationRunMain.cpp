@@ -25,7 +25,7 @@
 #include "batb/run/events.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
 
-#define DEMO_FOREST_DIRECT
+//#define DEMO_FOREST_DIRECT
 
 namespace batb
 {

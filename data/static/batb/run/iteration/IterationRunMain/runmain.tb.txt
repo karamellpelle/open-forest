@@ -4,9 +4,7 @@ TBLayout
 	axis x
 
 	# set font for this and children
-	font: 
-		name: Segoe
-		size: 28
+	font: size: 28px
 	
 	# let this layout have this gravity
 	gravity all

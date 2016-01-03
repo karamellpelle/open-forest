@@ -21,6 +21,7 @@
 #include "batb/forest/Output.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
+#include "batb/ogre/helpers.hpp"
 #include "batb.hpp"
 
 
@@ -38,12 +39,17 @@ void Output::operator()(World& forest)
     // setup output
 
     // set respective Ogre based on Aim
-    for (auto i = std::begin( forest.runners ); i != std::end( forest.runners ); ++i)
+    for (auto& runner : forest.runners )
     {
-        auto& runner = *i;
-        auto* node = runner.ogre_entity->getParentNode();
+        auto node = runner.ogre_entity->getParentNode();
+
+        // update position of runner
         auto pos = runner.move.pos;
         node->setPosition( pos.x, pos.y, pos.z );
+
+        // update orientation of runner
+        auto quat = glm::quat_cast( runner.move.aim );
+        node->setOrientation( ogre::cast( quat ) );
     }
 
   
@@ -51,18 +57,10 @@ void Output::operator()(World& forest)
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     forest.camera.ogre_camera->setAspectRatio( aspect );
 
-/*
-    ////////////////////////////////////////////////////////////////////////////////
-    // turn camera automatically 
-    forest.camera.ogre_camera->setPosition( Ogre::Vector3( 0, 320, 0 ) );
-    float_t x,z;
-    cossin( 0.25 * forest.tick, x, z );
-    forest.camera.ogre_camera->setDirection( Ogre::Vector3( x, -0.18, z ) );
-    ////////////////////////////////////////////////////////////////////////////////
-*/
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
+    //auto dir = glm::vec3( forest.camera.move.aim[ 2 ] );
     const auto& dir = forest.camera.move.aim[ 2 ];
     const auto& pos = forest.camera.move.aim[ 3 ];
     

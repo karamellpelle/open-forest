@@ -43,7 +43,10 @@ void AL::frameBegin()
 {
     if ( init_nonempty() )
     { 
+        if ( enabled_ )
+        {
 
+        }
     }
 
 }
@@ -52,7 +55,10 @@ void AL::frameEnd()
 {
     if ( init_nonempty() )
     { 
-        alure_context->update();
+        if ( enabled_ )
+        {
+            alure_context->update();
+        }
     }
 
 }

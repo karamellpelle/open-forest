@@ -43,6 +43,9 @@ friend void end(AL& );
 public:
     AL(BATB& b) : ModuleBATB( b ) { }
 
+    // should AL be ignored each frame?
+    void enabled(bool e) { enabled_ = e; }
+
     // render to Scene
     //void output(const Scene& );
     void frameBegin();
@@ -54,6 +57,7 @@ public:
 
 
 private:
+    bool enabled_ = true;
     
 };
 

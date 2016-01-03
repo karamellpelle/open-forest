@@ -53,6 +53,11 @@ void IterationRunWork::iterate_begin(World& world)
     // must work on disjoint memory as usual, but this should not be a problem, since
     // this thread is not interrested in BATB/run::World.
 
+    // ensure Ogre is only touched in work-thread
+    batb.ogre.enabled( false );
+    // ensure AL is only touched in work-thread
+    batb.al.enabled( false );
+
     // create widget
     tb_widget_ = new RunWorkTBWidget();
     batb.gui.addWidget( tb_widget_ );
@@ -104,8 +109,16 @@ IterationStack IterationRunWork::iterate_run(World& world)
         batb.gui.removeWidget( tb_widget_ ); // FIXME
         //tb_widget_->Die();
 
+
+        // set back AL
+        batb.al.enabled( true );
+        // set back Ogre
+        batb.ogre.enabled( true );
+
+
         // finish this iteration
         return _emptylist_; 
+
     }
     
 }

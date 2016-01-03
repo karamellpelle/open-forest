@@ -57,6 +57,9 @@ public:
     // Scene rendering
     //
 
+    // should Ogre be ignored each frame?
+    void enabled(bool e) { enabled_ = e; }
+
     // start/end frame (each iteration, i.e. inside IterationRun::iterate)
     void frameBegin();
     void frameEnd();
@@ -96,6 +99,8 @@ private:
     // FIXME: differate between GL an GL3Plus
     GLContextGLFW glcontextglfw_;
     void set_glfwcontext_();
+
+    bool enabled_ = true;
 };
 
 

@@ -242,8 +242,11 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
 
 
         // anyway, always move p against p1
-        modifyRunner.aim( p1 - p );
-        modifyRunner.speed( 1.0 );
+        if ( p1 != p )
+        {
+            modifyRunner.aim( p1 - p );
+            modifyRunner.speed( 1.0 );
+        }
 
     } 
 

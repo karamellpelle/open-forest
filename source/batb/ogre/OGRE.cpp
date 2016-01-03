@@ -48,18 +48,22 @@ void OGRE::frameBegin()
     
     if ( init_nonempty() )
     {
-        gl::begin_ogre();
-        ////////////////////////////////////////////////////////////////////////////////
-        // look at definition of OgreRoot::renderOneFrame() !!
+        // ensure we can touch Ogre
+        if ( enabled_ )
+        {
+            gl::begin_ogre();
+            ////////////////////////////////////////////////////////////////////////////////
+            // look at definition of OgreRoot::renderOneFrame() !!
 
-        // ( bool Root::renderOneFrame(void) )
-        ogre_root->_fireFrameStarted();
-        
-        // void RenderTarget::updateImpl(void)
-        ogre_rendertarget->_beginUpdate();
+            // ( bool Root::renderOneFrame(void) )
+            ogre_root->_fireFrameStarted();
+            
+            // void RenderTarget::updateImpl(void)
+            ogre_rendertarget->_beginUpdate();
 
-        ////////////////////////////////////////////////////////////////////////////////
-        gl::end_ogre();
+            ////////////////////////////////////////////////////////////////////////////////
+            gl::end_ogre();
+        }
     } 
 
 }
@@ -70,23 +74,26 @@ void OGRE::frameEnd()
     
     if ( init_nonempty() )
     {
-        gl::begin_ogre();
-        ////////////////////////////////////////////////////////////////////////////////
-        // look at definition of OgreRoot::renderOneFrame() !!
+        if ( enabled_ )
+        {
+            gl::begin_ogre();
+            ////////////////////////////////////////////////////////////////////////////////
+            // look at definition of OgreRoot::renderOneFrame() !!
 
-        // void RenderTarget::updateImpl(void)
-        ogre_rendertarget->_endUpdate();
+            // void RenderTarget::updateImpl(void)
+            ogre_rendertarget->_endUpdate();
 
-        // bool Root::_updateAllRenderTargets(void)
-        ogre_root->_fireFrameRenderingQueued();
-        ogre_rendersystem->_swapAllRenderTargetBuffers();
-        for (SceneManagerEnumerator::SceneManagerIterator it = ogre_root->getSceneManagerIterator(); it.hasMoreElements(); it.moveNext()) 
-            it.peekNextValue()->_handleLodEvents();
+            // bool Root::_updateAllRenderTargets(void)
+            ogre_root->_fireFrameRenderingQueued();
+            ogre_rendersystem->_swapAllRenderTargetBuffers();
+            for (SceneManagerEnumerator::SceneManagerIterator it = ogre_root->getSceneManagerIterator(); it.hasMoreElements(); it.moveNext()) 
+                it.peekNextValue()->_handleLodEvents();
 
-        // bool Root::renderOneFrame(void)
-        ogre_root->_fireFrameEnded();
-        ////////////////////////////////////////////////////////////////////////////////
-        gl::end_ogre();
+            // bool Root::renderOneFrame(void)
+            ogre_root->_fireFrameEnded();
+            ////////////////////////////////////////////////////////////////////////////////
+            gl::end_ogre();
+        }
     }
 }
 
