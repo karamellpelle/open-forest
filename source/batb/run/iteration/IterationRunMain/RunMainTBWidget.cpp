@@ -34,7 +34,7 @@ RunMainTBWidget::RunMainTBWidget(IterationRunMain& i) : iteration( i )
     //if ( node.ReadFile( file::static_data( "batb/run/gui/main.tb.txt" ).c_str() ) )
     //if ( node.ReadFile( "Demo/demo01/ui_resources/test_connections.tb.txt" ) )
     //static const char* path =  "batb/gui/Demo/demo01/ui_resources/test_connections.tb.txt";
-    static const char* path = "batb/run/iteration/IterationRunMain/runmain.tb.txt"; 
+    static const char* path = "batb/run/IterationRunMain/runmain.tb.txt"; 
     if ( node.ReadFile( file::static_data( path ).c_str() ) )
     {
         // let TB populate this TBWindow from file
@@ -60,12 +60,13 @@ RunMainTBWidget::RunMainTBWidget(IterationRunMain& i) : iteration( i )
 
     // set TB window settings:
     SetSettings( tb::WINDOW_SETTINGS_TITLEBAR | tb::WINDOW_SETTINGS_RESIZABLE | tb::WINDOW_SETTINGS_CAN_ACTIVATE );
-    SetSize( 360, 360  );
-    SetPosition( TBPoint( 30, 30 ) );
+    SetSize( 700, 200  );
+    SetPosition( TBPoint( 0, 0 ) );
     SetText( "RunMainTBWidget" );
-    SetOpacity(0.50f);
+    //SetOpacity(0.50f);
     //SetGravity( tb::WIDGET_GRAVITY_ALL );
     //ResizeToFitContent();
+    Invalidate();
     EnsureFocus();
 }
 

@@ -17,7 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/gui/GUI.hpp"
-#include "batb/gui/tb_system.hpp"
+#include "batb/gui/tb_system_batb.hpp"
 #include "batb/log.hpp"
 #include "batb/keys.hpp"
 
@@ -38,11 +38,6 @@
 #include "tb/renderers/tb_renderer_gl.h"
 #include "tb/animation/tb_animation.h"
 
-
-// 
-void register_tbbf_font_renderer();
-void register_stb_font_renderer();
-void register_freetype_font_renderer();
 
 
 namespace batb
@@ -177,6 +172,9 @@ void begin(GUI& gui)
         tb::g_tb_skin->Load( file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt" ).c_str() );
 
         // Register font renderers.
+        // these are buildt by turbobadger iff defined, and
+        // the corresponding functions, used below, are 
+        // declared in batb/gui/tb_system.hpp 
 #ifdef TB_FONT_RENDERER_TBBF
         register_tbbf_font_renderer();
 #endif

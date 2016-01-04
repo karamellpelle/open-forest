@@ -16,13 +16,13 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/batb_include.hpp"
+#include "batb/gui/tb_system_batb.hpp"
 
 #include "tb/tb_core.h"
 #include "tb/renderers/tb_renderer_gl.h"
 #include "tb/tb_font_renderer.h"
 #include "tb/animation/tb_animation.h"
 #include "tb/animation/tb_widget_animation.h"
-#include "tb/tb_system.h"
 
 #include <stdio.h>
 
@@ -42,11 +42,11 @@ static double tbsystem_time = 0.0;
 // set time for TBSystem:
 void tbsystem_ms(double t)
 {
+    // TODO: connect to BATB and use time there
     tbsystem_time = t;   
 
 }
 
-// TODO: inteface for DPI, ...
 
 
 } // namespace gui
@@ -81,11 +81,8 @@ void TBSystem::RescheduleTimer(double fire_time)
 
 double TBSystem::GetTimeMS()
 {
-/*
-	struct timeval now;
-	gettimeofday( &now, NULL );
-	return now.tv_usec/1000 + now.tv_sec*1000;
-*/
+    // TODO: connect to BATB and use time there
+
     return batb::gui::tbsystem_time;
 }
 
@@ -120,54 +117,6 @@ int TBSystem::GetDPI()
 	return 96;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//  TBFile
-
-/*
-// this implementation seems to be boundn to standard C library, 
-// not Linux...
-class TBLinuxFile : public TBFile
-{
-public:
-	TBLinuxFile(FILE *f) : file(f) {}
-	virtual ~TBLinuxFile() { fclose(file); }
-
-	virtual long Size()
-	{
-		long oldpos = ftell(file);
-		fseek(file, 0, SEEK_END);
-		long num_bytes = ftell(file);
-		fseek(file, oldpos, SEEK_SET);
-		return num_bytes;
-	}
-	virtual size_t Read(void *buf, size_t elemSize, size_t count)
-	{
-		return fread(buf, elemSize, count, file);
-	}
-private:
-	FILE *file;
-};
-
-TBFile* TBFile::Open(const char *filename, TBFileMode mode)
-{
-	FILE *f = nullptr;
-	switch (mode)
-	{
-	case MODE_READ:
-		f = fopen(filename, "rb");
-		break;
-	default:
-		break;
-	}
-	if (!f)
-		return nullptr;
-	TBLinuxFile *tbf = new TBLinuxFile(f);
-	if (!tbf)
-		fclose(f);
-	return tbf;
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //  clipboard (empty)

@@ -1,0 +1,33 @@
+
+TBLayout
+	axis x
+
+	# let this layout have this gravity
+	gravity all
+
+	# size of children in opposite axis (ie. x)
+	# (size depends on children (gravity) or itself (available))
+	size available
+
+	# distribute the space for children either by available space, 
+	# or by each child's gravity
+	# (distribution depends on children (gravity) or itself (available))
+	#distribution available
+	distribution gravity
+
+	# pull the layout in this direction
+	distribution-position top
+
+
+	# set font for this and children
+	#font: size: 28px
+		
+	TBImageWidget: id: do-nanovg, filename: "static://batb/run/IterationRunMain/trollveggen128.png" skin: ImageFrame
+		TBTextField: skin: "ImageCaption", text: "trollveggen", gravity: bottom left right
+	TBImageWidget: id: do-nanovg, filename: "static://batb/run/IterationRunMain/trollveggen128.png" skin: ImageFrame
+		TBTextField: skin: "ImageCaption", text: "trollveggen again", gravity: bottom left right
+	TBImageWidget: id: do-old, filename: "static://batb/run/IterationRunMain/haskell128.png" skin: ImageFrame
+		TBTextField: skin: "ImageCaption", text: "haskell", gravity: bottom left right
+
+
+

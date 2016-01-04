@@ -19,7 +19,7 @@
 #include "batb/run/workers.hpp"
 
 
-#define LOAD_PROXY
+//#define LOAD_PROXY
 
   
 namespace batb

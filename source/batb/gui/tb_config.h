@@ -1,12 +1,12 @@
-// ================================================================================
-// ==      This file is a part of Turbo Badger. (C) 2011-2014, Emil Segerås      ==
-// ==                     See tb_core.h for more information.                    ==
-// ================================================================================
+// 
+// this file overrides turbobadger tb_config.h
+// 
+// here, we configure turbobadger according to BATB needs
 //
-// This file contains defines for the default configuration of Turbo Badger.
-// You may change these here, but to make upgrades easier it's better to create a
-// copy of this file in a include path that is searched before Turbo Badger during
-// build (F.ex the solution directory for Visual Studio).
+// 
+// 
+// 
+// 
 
 #ifndef TB_CONFIG_H
 #define TB_CONFIG_H
@@ -75,15 +75,14 @@
 
 // == Additional configuration of platform implementations ========================
 
-/** Define for posix implementation of TBFile. */
-//#define TB_FILE_POSIX
-
 /** Defines for implementations of TBClipboard. */
+// in BATB, there is currently no clipboard
 //#define TB_CLIPBOARD_DUMMY // Cross platform. Not integrating with the OS.
 //#define TB_CLIPBOARD_GLFW // Cross platform using glfw API.
 //#define TB_CLIPBOARD_WINDOWS
 
 /** Defines for implementations of TBSystem. */
+// in BATB, we have our own implementation of TBSystem!
 //#define TB_SYSTEM_LINUX
 //#define TB_SYSTEM_WINDOWS
 //#define TB_SYSTEM_ANDROID
@@ -95,27 +94,24 @@
 //#define TB_TARGET_LINUX
 
 // == Setting some defaults for platform implementations ==========================
-
-// FIXME: use TB_CLIPBOARD_GLFW or TB_CLIPBOARD_DUMMY or
-//        custom defined in batb/gui/tb_system.cpp as below
-//#define TB_CLIPBOARD_GLFW // 
+// in BATB, no platform implementations are used (we have our own!)
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
-#define TB_FILE_POSIX
+//#define TB_FILE_POSIX
 //#define TB_TARGET_WINDOWS
 //#define TB_CLIPBOARD_WINDOWS
 //#define TB_SYSTEM_WINDOWS
 #endif
 
 #if defined(__linux) || defined(__linux__)
-#define TB_FILE_POSIX
+//#define TB_FILE_POSIX
 //#define TB_TARGET_LINUX
 //#define TB_SYSTEM_LINUX
 //#define TB_CLIPBOARD_GLFW
 #endif
 
 #ifdef MACOSX
-#define TB_FILE_POSIX
+//#define TB_FILE_POSIX
 //#define TB_TARGET_MACOSX
 //#define TB_SYSTEM_LINUX
 //#define TB_CLIPBOARD_GLFW
@@ -123,7 +119,7 @@
 
 #if defined(ANDROID) || defined(__ANDROID__)
 //#define TB_SYSTEM_ANDROID
-#define TB_CLIPBOARD_DUMMY
+//#define TB_CLIPBOARD_DUMMY
 #endif
 
 #endif // TB_CONFIG_H
