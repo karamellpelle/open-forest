@@ -104,6 +104,9 @@ void IterationDemoForest::iterate_begin(World& demo)
     modifyControlRunner.modifier( &modifyRunner );
     modifyControlCamera.modifier( &modifyCamera );
 
+    // ensure we can use Key's
+    batb.gui.lockKeys( false );
+
 }
 
 

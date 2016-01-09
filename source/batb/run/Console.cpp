@@ -16,9 +16,13 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
-#include "batb/run/Run.hpp"
+#include "batb/run.hpp"
+#include "batb/run/World.hpp"
 #include "batb/run/Console.hpp"
+#include "batb/run/Console/TBConsole.hpp"
 #include "batb/run/Console/parse.hpp"
+#include "batb/value/run.hpp"
+#include "tb/animation/tb_widget_animation.h"
 
 
 
@@ -29,49 +33,166 @@ namespace batb
 namespace run
 {
 
-void Console::open()
+void Console::step(World& run)
 {
-    //tb_console_->SetVisibilility( tb::WIDGET_VISIBILITY_VISIBLE );
-    batb.log << "TODO: console open" << std::endl;
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+    auto rect = tb_console->GetRect();
+
+    // fasten console widget (height preserved)
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = wth;
+    tb_console->SetRect( rect );
+
+    // always on top
+    tb_console->SetZ( tb::WIDGET_Z_TOP ); // at top of all others
+
+    // possible to change during run. TODO: use skin instead (solid characters)
+    tb_console->SetOpacity( value::runConsoleOpacity );
+
+
+    // for now, set PS1 here
+    std::ostringstream os;
+    os << run.player.name << "> ",
+    ps1_ = os.str(); 
 }
 
-void Console::close()
+void Console::open(World& run)
 {
-    //tb_console->SetVisibilility( tb::WIDGET_VISIBILITY_INVISIBLE );
-    batb.log << "TODO: console close" << std::endl;
+
+    tb_console->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE );
+
+
+    // remove current animation
+    // this deletes the running animation (see source)
+    tb::TBWidgetsAnimationManager::AbortAnimations( tb_console );
+
+    // Start move animation
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+    tb::TBRect rect0 = tb_console->GetRect();
+    tb::TBRect rect1( 0, 0, wth, hth ); // 'step' above will correct wth (however, not hth)
+    if ( auto anim = new tb::TBWidgetAnimationRect( tb_console, rect0, rect1 ) )
+            tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+
+    // set focus 
+    tb_console->SetIsFocusable( true );
+    tb_console->SetFocus( tb::WIDGET_FOCUS_REASON_UNKNOWN );
+
+    // ensure we can write without interfere with KeySet's
+    batb.gui.lockKeys( true );
+    
 }
 
-void Console::operator()(const std::string& input)
+void Console::close(World& run)
+{
+
+    // remove current animation
+    // this deletes the running animation (see source)
+    tb::TBWidgetsAnimationManager::AbortAnimations( tb_console );
+
+    // Start move animation
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+    tb::TBRect rect0 = tb_console->GetRect();
+    tb::TBRect rect1( 0, 0, wth, 0 ); // 'step' above corrects wth
+    if ( auto anim = new tb::TBWidgetAnimationRect( tb_console, rect0, rect1 ) )
+            tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+
+    // unfocus input field
+    tb::TBWidget::focused_widget = nullptr;
+    tb_console->SetIsFocusable( false );
+    
+    // enable KeySet's
+    batb.gui.lockKeys( false );
+}
+
+bool Console::operator()(const std::string& input)
 {
     // specific command handle functions.
     // these are allowed to modify input. 
-    using CommandEater = void(Console& , std::string& );
-    extern CommandEater command_echo;
-    extern CommandEater command_value;
+    using CommandEater = bool(Console& , std::string& );
+    extern CommandEater cmd_echo;
+    extern CommandEater cmd_value;
+    extern CommandEater cmd_easteregg;
 
     std::string in = input;
-    std::string cmd = word( in );
+    std::string cmd = alphanums( in );
+    
+    // output PS1 + typed command
+    *this << getPS1() << cmd << "\n";
 
-    if ( cmd == "echo" )
-    {
-        command_echo( *this, in );   
-        return;
-    }
-    if ( cmd == "value" )
-    {
-        command_value( *this, in );
-        return;
-    }
+    // handle command
+    if ( cmd == "" )          return true;                    // empty command is OK
+    if ( cmd == "echo" )      return cmd_echo( *this, in );   
+    if ( cmd == "value" )     return cmd_value( *this, in );
 
-    batb.log << "run::Console: command not found: " << cmd 
-             << std::endl;
+    // easteregg command typed?
+    if ( cmd_easteregg( *this, in ) ) return true;
+
+
+    *this << "Console: command not found: " << cmd << std::endl;
+    return false;
   
 }
 
+std::string Console::getPS1()
+{
+    return ps1_;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+
+void begin(Console& console)
+{
+    BATB& batb = console.batb;
+
+    console.tb_console = new TBConsole( batb );
+
+    // add to screen
+    batb.gui.addWidget( console.tb_console );
+
+
+}
+
+void end(Console& console)
+{
+    BATB& batb = console.batb;
+    
+    batb.gui.removeWidget( console.tb_console );
+
+    delete console.tb_console;
+    console.tb_console = nullptr;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ConsoleStreambuf
+//
+
+std::streamsize ConsoleStreambuf::xsputn(const char* s, std::streamsize n)
+{
+    auto style = console_.tb_console->tb_output_->GetStyleEdit();
+
+    style->AppendText( s, n );
+    style->ScrollIfNeeded();
+
+    return n;
+}
+
+int ConsoleStreambuf::overflow(int c)
+{
+    auto style = console_.tb_console->tb_output_->GetStyleEdit();
+
+    char c_ = (char)( c ); 
+    // FIXME: handle EOF?
+    // FIXME: find out it this is correct:
+    style->AppendText( &c_, 1 );
+   
+    return (int)( c_ );
+}
 
 } // namespace run
 

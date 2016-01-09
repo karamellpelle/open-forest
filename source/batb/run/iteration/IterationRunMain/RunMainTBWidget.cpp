@@ -34,7 +34,7 @@ RunMainTBWidget::RunMainTBWidget(IterationRunMain& i) : iteration( i )
     //if ( node.ReadFile( file::static_data( "batb/run/gui/main.tb.txt" ).c_str() ) )
     //if ( node.ReadFile( "Demo/demo01/ui_resources/test_connections.tb.txt" ) )
     //static const char* path =  "batb/gui/Demo/demo01/ui_resources/test_connections.tb.txt";
-    static const char* path = "batb/run/IterationRunMain/runmain.tb.txt"; 
+    static const char* path = "batb/run/main.tb.txt"; 
     if ( node.ReadFile( file::static_data( path ).c_str() ) )
     {
         // let TB populate this TBWindow from file

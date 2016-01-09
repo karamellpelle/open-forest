@@ -34,7 +34,7 @@ class KeyPointer : public Key
 {
 
 public:
-    KeyPointer(Keys& keys, Key* x, Key* y, Key* l, Key* r) : Key( typeid( this ), keys )
+    KeyPointer(Keys& keys, Key* x, Key* y, Key* l, Key* r) : Key( keys )
     {
         axis_x_ = x;
         axis_y_ = y;
@@ -55,6 +55,14 @@ public:
     {
         // TODO: implement something based on a mouse
         return 0.5;
+    }
+    virtual void canDisable(bool b) override 
+    {
+        // all called; is this correct behaviour?
+        axis_x_->canDisable( b );
+        axis_y_->canDisable( b );
+        clicker_left_->canDisable( b );
+        clicker_right_->canDisable( b );
     }
 
 

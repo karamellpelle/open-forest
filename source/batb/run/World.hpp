@@ -20,9 +20,7 @@
 #include "batb/batb_include.hpp"
 #include "batb/Scene.hpp"
 #include "batb/event.hpp"
-//#include "BATB/Run/Player.hpp"
-//#include "BATB/Forest.hpp"
-//#include "BATB/Race.hpp"
+#include "batb/run/Player.hpp"
 
 
 namespace batb
@@ -58,10 +56,10 @@ public:
     // rendering target:
     Scene scene;
 
-    //RaceWorld race; FIXME: into own IterationRun
-    //IterationStackRaceWorld race_stack;
-
-    // RunNetwork network;
+    //run::Network network;
+    
+    // current player (of open-forest program)
+    Player player;
 
     // events
     EventList events;

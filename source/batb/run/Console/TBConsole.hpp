@@ -15,38 +15,60 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PLAYER_HPP
-#define BATB_RUN_PLAYER_HPP
+#ifndef BATB_RUN_CCNSOLE_TBCONSOLE_HPP
+#define BATB_RUN_CCNSOLE_TBCONSOLE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/gui.hpp"
+#include "batb/tb.hpp"
+
+
+namespace tb { class TBEditField; }
+namespace tb { class TBEditFieldEnter; }
 
 
 namespace batb
 {
 class BATB;
 
-
 namespace run
 {
+class Console;
 
 
-// define a user that runs this program
-class Player
+
+class TBConsole : public tb::TBWindow           // or TBWidget?
+                  //,public tb::TBMessageHandler
 {
+friend class ConsoleStreambuf;
+
 public:
+    TBOBJECT_SUBCLASS( TBConsole, tb::TBWindow );
 
-    std::string name;
+    TBConsole(BATB& );
+
+    virtual void OnVisibilityChanged() override; // fix for a current bug in TB
+    virtual void OnFocusChanged(bool focus) override;
+    virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
+    //virtual void OnMessageReceived(tb::TBMessage *msg) override;      // TBMessageHandler
   
-    // network address, etc.
+    // output
+    void output(const std::string& );
+    void clear();
+
+    BATB& batb;
+
+private:
+    tb::TBEditFieldEnter* tb_input_ = nullptr;
+    tb::TBEditField* tb_output_ = nullptr;
+
 };
-
-
-
-// get player from current user
-Player local_player();
 
 
 } // namespace run
 
 } // namespace batb
 
+
 #endif
+
+

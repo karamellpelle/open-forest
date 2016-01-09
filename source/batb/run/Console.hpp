@@ -22,31 +22,69 @@
 
 namespace batb
 {
-
 class BATB;
 
 namespace run
 {
-
+class World;
+class Console;
 class TBConsole;
 
-class Console
+
+// http://www.angelikalanger.com/Articles/C++Report/IOStreamsDerivation/IOStreamsDerivation.html
+class ConsoleStreambuf : public std::streambuf
 {
 public:
-    Console(BATB& b) : batb( b ) { }
+    ConsoleStreambuf(Console& c) : console_( c )    { }
 
-    void open();
-    void close();
+    virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
+    virtual int overflow (int c) override;
+
+private:
+    Console& console_;
+
+};
+
+
+class Console : public std::ostream
+{
+friend void begin(Console& );
+friend void end(Console& );
+friend class ConsoleStreambuf;
+
+public:
+    Console(BATB& b) : std::ostream( &streambuf_ ), batb( b ), streambuf_( *this ) { }
+
+    void step(World& );
+
+    // show and hide
+    void open(World& );
+    void close(World& );
+
+    std::string getPS1();
 
     // command to console
-    void operator()(const std::string& );
+    bool operator()(const std::string& );
 
     BATB& batb;
 
+
+    TBConsole* tb_console = nullptr;
+
 private:
-    TBConsole* tb_console_ = nullptr;
+    ConsoleStreambuf streambuf_;
+    std::string ps1_;
 
 };
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+void begin(Console& );
+
+void end(Console& );
+
+////////////////////////////////////////////////////////////////////////////////
 
 
 } // namespace run

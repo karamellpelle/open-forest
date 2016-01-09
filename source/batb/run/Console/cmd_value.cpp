@@ -24,7 +24,6 @@
 #include "batb/value/run.hpp"
 #include "batb/value/forest.hpp"
 
-//#define TRY_SET(name)
  
 
 
@@ -35,29 +34,11 @@ namespace run
 {
 
 
-bool set_value(const std::string& name, const std::string& value)
-{
-    // TODO: use BATB::Value!
-    
-    return false;
-
-}
-
 // modify value::'s
-void command_value(Console& console, std::string& in)
+bool cmd_value(Console& console, std::string& in)
 {
     // (allowed to modify 'in' directly)
-    // TODO 
-    if ( word( "set", in ) )
-    {
-        auto name = word( in );
-        auto value = word( in );
-
-        if ( !set_value( name, value ) )
-        {
-            console.batb.log << "run::Console: could not set value '" << name << "'";
-        }
-    }
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //

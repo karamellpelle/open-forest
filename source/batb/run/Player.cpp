@@ -15,38 +15,27 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PLAYER_HPP
-#define BATB_RUN_PLAYER_HPP
-#include "batb/batb_include.hpp"
+#include "batb/run/Player.hpp"
 
 
 namespace batb
 {
-class BATB;
 
 
 namespace run
 {
 
 
-// define a user that runs this program
-class Player
+Player local_player()
 {
-public:
+    Player ret;
+    ret.name = "openforest-user"; // TODO: gethostname unistd.h
 
-    std::string name;
-  
-    // network address, etc.
-};
-
-
-
-// get player from current user
-Player local_player();
+    return ret;
+}
 
 
 } // namespace run
 
 } // namespace batb
 
-#endif

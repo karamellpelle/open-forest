@@ -22,11 +22,11 @@ TBLayout
 	# set font for this and children
 	#font: size: 28px
 		
-	TBImageWidget: id: do-nanovg, filename: "static://batb/run/IterationRunMain/trollveggen128.png" skin: ImageFrame
+	TBImageWidget: id: do-nanovg, filename: "static://batb/run/trollveggen128.png" skin: ImageFrame
 		TBTextField: skin: "ImageCaption", text: "trollveggen", gravity: bottom left right
-	TBImageWidget: id: do-nanovg, filename: "static://batb/run/IterationRunMain/trollveggen128.png" skin: ImageFrame
+	TBImageWidget: id: do-nanovg, filename: "static://batb/run/trollveggen128.png" skin: ImageFrame
 		TBTextField: skin: "ImageCaption", text: "trollveggen again", gravity: bottom left right
-	TBImageWidget: id: do-old, filename: "static://batb/run/IterationRunMain/haskell128.png" skin: ImageFrame
+	TBImageWidget: id: do-old, filename: "static://batb/run/haskell128.png" skin: ImageFrame
 		TBTextField: skin: "ImageCaption", text: "haskell", gravity: bottom left right
 
 

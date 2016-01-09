@@ -64,9 +64,12 @@ int main(int argc, char** argv)
         batb::demo::other_begin( batb ); // FIXME: remove
 
         using namespace batb;
-          
-        // 'main' is iterating run::World
+        
+        // application world
         run::World run;
+        run.player = batb::run::local_player();
+        
+
         auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
         auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
         run::IterationStack stack =
@@ -76,6 +79,8 @@ int main(int argc, char** argv)
               game::begin_iteration( unloadBATB )                     // destroy game data at end
         };
 
+  
+  
         // "main loop"
         while ( !stack.empty() )
         {

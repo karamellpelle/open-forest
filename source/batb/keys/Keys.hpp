@@ -52,28 +52,13 @@ public:
     void reset();
     void step(tick_t t);
 
-    // get cursor pos, in pixels
-    void getCursorPos(uint& x, uint& y)
-    {
-        // TODO: use env instead of GLFW?
-        double x_, y_;
-        glfwGetCursorPos( window_, &x_, &y_ );
-        x = (uint)( x_ );
-        y = (uint)( y_ );
-    }
-    // get cursor pos, relative to screen shape 
-    void getCursorPos(double& x, double& y)
-    {
-        // TODO: use env instead of GLFW?
-        int wth; int hth;
-        glfwGetFramebufferSize( window_, &wth, &hth );
-        float_t scale = 1.0 / (float_t)( std::max( wth, hth ) );
+    void keyEnable(bool b);
 
-        double x_, y_;
-        glfwGetCursorPos( window_, &x_, &y_ );
-        x = (float_t)( x_ ) * scale;
-        y = (float_t)( y_ ) * scale;
-    }
+    // get cursor pos, in pixels
+    void getCursorPos(uint& x, uint& y);
+    // get cursor pos, relative to screen shape 
+    void getCursorPos(double& x, double& y);
+    // can cursor move outside of window?
     void setCursorFree(bool ); // default false
 
     int getKey(int k)
@@ -109,8 +94,20 @@ public:
     Key* createKey(const YAML::Node& );
 
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // these are to be used by Key's (checks if Key's disabled or not)
+    void getCursorPos_(uint& x, uint& y);
+    void getCursorPos_(double& x, double& y);
+    int getKey_(int k)                          { if ( key_enable_ ) return getKey( k ); else return GLFW_RELEASE;  }  
+    int getMouseButton_(int k)                  { if ( key_enable_ ) return getMouseButton( k ); else return GLFW_RELEASE; }
+
 private:
     GLFWwindow* window_ = nullptr;
+
+    bool key_enable_ = true;
+    // previous cursor
+    double cursor_enable_x0_ = 0;
+    double cursor_enable_y0_ = 0;
 
     // previous cursor
     bool cursor_free_ = false;
@@ -123,6 +120,8 @@ private:
     using KeyContainer = std::vector<Key*>; // TODO: class Key { std::shared_pointer<KeyImpl> } ?
     KeyContainer keys_;
 
+    // add a Key. two different Key's with same implementation can be added,
+    // since they may have different settings (fex. canDisable)
     template <typename KeyT>
     KeyT* push(KeyT* k);
 

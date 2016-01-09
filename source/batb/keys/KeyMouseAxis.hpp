@@ -31,16 +31,20 @@ class KeyMouseAxisX : public Key
 {
 
 public:
-    void reset() override             { }
-    void step(tick_t ) override     { }
+    KeyMouseAxisX(Keys& keys) : Key( keys ) { }
+
+    void reset() override                   { }
+    void step(tick_t ) override             { }
     float_t alpha() override
     {
         double x, y;
-        keys_.getCursorPos( x, y );
+        if ( can_disable )
+            keys_.getCursorPos_( x, y );
+        else
+            keys_.getCursorPos( x, y ); 
         return x;
     }
 
-    KeyMouseAxisX(Keys& keys) : Key( typeid( this ), keys ) { }
 
 };
 
@@ -48,16 +52,20 @@ class KeyMouseAxisY: public Key
 {
 
 public:
+    KeyMouseAxisY(Keys& keys) : Key( keys ) { }
+
     void reset() override             { }
-    void step(tick_t ) override     { }
+    void step(tick_t ) override       { }
     float_t alpha() override
     {
         double x, y;
-        keys_.getCursorPos( x, y );
+        if ( can_disable )
+            keys_.getCursorPos_( x, y );
+        else
+            keys_.getCursorPos( x, y ); 
         return y;
     }
 
-    KeyMouseAxisY(Keys& keys) : Key( typeid( this ), keys ) { }
 
 };
 

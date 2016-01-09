@@ -47,6 +47,9 @@ void begin(Value& value)
 
         dt =                0.02;  
         dt_max =            2.0;
+
+        runConsoleOpenTicks       = 0.3;
+        runConsoleOpacity         = 0.55;
         ////////////////////////////////////////////////////////////////////////////////
 
         forestAimX =        4.0;
@@ -106,6 +109,9 @@ float_t proj3DFOVY;
 
 tick_t dt;
 tick_t dt_max;
+
+float_t runConsoleOpenTicks;
+float_t runConsoleOpacity;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  forest.hpp

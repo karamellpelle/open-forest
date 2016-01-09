@@ -60,14 +60,6 @@ debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
     ////////////////////////////////////////////////////////////////////////////////
 
-    if ( batb.run.initialized() )
-    {
-        // console always available
-        if ( batb.run.keyset.console->click() )
-        {
-            if ( batb.run.keyset.console->toggle() ) batb.run.console.open(); else batb.run.console.close();
-        }
-    }
     
     // end AL frame
     batb.al.frameEnd();
@@ -78,6 +70,21 @@ debug::gl::msg("iterate_run()");
     // output and step GUI (_every_ frame!)
     batb.gui.output( world.scene );
     batb.gui.step( world.tick );
+
+
+    if ( batb.run.initialized() )
+    {
+        // console always available
+
+        if ( batb.run.keyset.console->click() )
+        {
+            // note that 'keyset.console' can not be disabled
+            if ( batb.run.keyset.console->toggle() ) batb.run.console.open( world ); else batb.run.console.close( world );
+        }
+
+        // update Console
+        batb.run.console.step( world );
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     ++world.frames;

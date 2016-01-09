@@ -39,7 +39,7 @@ inline std::string space(std::string& str)
 
     auto ret = std::string( b, i );
 
-    str.erase( std::begin( str ), b );
+    str.erase( std::begin( str ), i );
 
     return ret;
 }
@@ -52,10 +52,11 @@ inline std::string word(std::string& str)
 
     // find word (trim front from spaces)
     auto b = std::find_if_not( std::begin( str ), std::end( str ), is );
-    auto i = std::find_if( b, std::begin( str ), is );
+    auto e = std::end( str );
+    auto i = std::find_if( b, e, is );
     
     auto ret = std::string( b, i );
-    str.erase( std::begin( str ), b );
+    str.erase( std::begin( str ), i );
 
     return ret;
 
@@ -70,10 +71,11 @@ inline std::string alphanums(std::string& str)
 
     // find word (trim front from spaces)
     auto b = std::find_if_not( std::begin( str ), std::end( str ), is );
-    auto i = std::find_if_not( b, std::begin( str ), ia );
+    auto e = std::end( str );
+    auto i = std::find_if_not( b, e, ia );
     
     auto ret = std::string( b, i );
-    str.erase( std::begin( str ), b );
+    str.erase( std::begin( str ), i );
 
     return ret;
 
@@ -87,11 +89,10 @@ inline bool word(const std::string& ref, std::string& str)
 
     // find word (trim front from spaces)
     auto b = std::find_if_not( std::begin( str ), std::end( str ), is );
-    auto i = std::find_if( b, std::begin( str ), is );
+    auto e = std::end( str );
+    auto i = std::find_if( b, e, is );
    
-    auto word = std::string( b, i );
-
-    if ( word == ref )
+    if ( std::string( b, i ) == ref )
     {
         str.erase( std::begin( str ), i );
         return true;
@@ -99,6 +100,53 @@ inline bool word(const std::string& ref, std::string& str)
     return false;
 }
 
+
+inline bool stringliteral(std::string& out, std::string& in)
+{
+    // trim front
+    space( in );
+
+    const auto b = std::begin( in );
+    const auto e = std::end( in );
+    auto i = std::find( b, e, '"' );
+
+    if ( i == e ) return false;
+    ++i;
+
+    if ( *i != '"' ) return false; 
+    ++i;
+
+    out.clear();
+
+    while ( i != e )
+    {
+        // literal complete
+        if ( *i == '"' )
+        {
+            ++i;
+            in.erase( b, i );
+            return true; 
+        }
+
+        // escape character
+        if ( *i == '\\'  )
+        {
+            ++i;
+            if ( i == e ) return false;
+            if ( *i == 'n' )  out.push_back( '\n' );
+            if ( *i == 't' )  out.push_back( '\t' );
+            if ( *i == '\\' ) out.push_back( '\\' );
+            if ( *i == '"' )  out.push_back( '"' );
+
+            // no special character is error:
+            return false;
+        }
+
+        ++i;
+    }
+
+    return false;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 

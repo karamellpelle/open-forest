@@ -30,7 +30,7 @@ namespace run
 {
 
 // output string to console
-void command_echo(Console& console, std::string& in)
+bool cmd_echo(Console& console, std::string& in)
 {
     // (allowed to modify 'in' directly)
     auto str = space( in );
@@ -39,7 +39,9 @@ void command_echo(Console& console, std::string& in)
     // TODO: parse commands (-n for no newline, etc.)
 
     // for now, print to std::cout
-    std::cout << in << std::endl;
+    //std::cout << in << std::endl;
+    console << in << std::endl;
+    return true;
     
 }
 

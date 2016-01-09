@@ -36,7 +36,9 @@ public:
 
     void reset() override;
     void step(tick_t ) override;
-    float_t alpha()      override     { return key_->alpha(); }
+    float_t alpha()    override       { return key_->alpha(); }
+
+    void canDisable(bool b) override  { key_->canDisable( b ); }
 
     ////////////////////////////////////////////////////////////////////////////////
     // substructure:

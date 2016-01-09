@@ -57,6 +57,9 @@ public:
     // bind keys to this GUI object
     void bind(keys::Keys& );
 
+    // ensure input only for GUI (except non-disable keys)
+    void lockKeys(bool );
+
     // root TB widget
     tb::TBWidget root;
 

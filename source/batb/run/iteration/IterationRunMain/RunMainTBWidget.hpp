@@ -34,6 +34,8 @@ class RunMainTBWidget : public tb::TBWindow,
                         public tb::TBMessageHandler
 {
 public:
+    TBOBJECT_SUBCLASS( RunMainTBWidget, tb::TBWindow );
+
     RunMainTBWidget(IterationRunMain& );
 
     virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget

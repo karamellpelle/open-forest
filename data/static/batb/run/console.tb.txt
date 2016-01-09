@@ -1,0 +1,15 @@
+TBLayout
+	
+	distribution available
+	axis y
+
+	TBEditField: id: "output"
+		gravity all
+		multiline 1
+		readonly 1
+	TBEditFieldEnter
+		id: "input"
+		gravity all
+		adapt-to-content 1
+
+

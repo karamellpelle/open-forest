@@ -261,10 +261,13 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
       "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Player.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Console.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/Console/echo.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/Console/value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Console/TBConsole.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_echo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_easteregg.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
@@ -297,6 +300,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/CourseDrawer.cpp"             
       # helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
+      "${MAIN_SOURCE_DIR}/batb/tb.cpp"             
       # nanovg
       "${CMAKE_SOURCE_DIR}/libs/nanovg/src/nanovg.c"
       # demo:

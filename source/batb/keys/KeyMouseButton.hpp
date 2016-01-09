@@ -30,12 +30,12 @@ namespace keys
 class KeyMouseButton : public Key
 {
 public:
-    KeyMouseButton(Keys& keys, int c) : Key( typeid( this ), keys ), code_( c )   { } 
+    KeyMouseButton(Keys& keys, int c) : Key( keys ), code_( c )   { } 
 
     void reset() override                 { }
     void step(tick_t ) override           { }
-    float_t alpha() override              { return keys_.getMouseButton( code_ ) ? 1.0 : 0.0; }
-
+    float_t alpha() override              { if ( can_disable ) return (keys_.getMouseButton_( code_ ) ? 1.0 : 0.0);
+                                                          else return (keys_.getMouseButton( code_ )  ? 1.0 : 0.0); } 
     
     static constexpr int left   = GLFW_MOUSE_BUTTON_LEFT;
     static constexpr int right  = GLFW_MOUSE_BUTTON_RIGHT;

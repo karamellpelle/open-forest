@@ -15,38 +15,37 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PLAYER_HPP
-#define BATB_RUN_PLAYER_HPP
+#ifndef BATB_TB_HPP
+#define BATB_TB_HPP
 #include "batb/batb_include.hpp"
+#include "tb/tb_editfield.h"
 
 
-namespace batb
-{
-class BATB;
-
-
-namespace run
+namespace tb
 {
 
-
-// define a user that runs this program
-class Player
+// ignores enter and returns false (hence parent can receive enter)
+class TBEditFieldEnter : public TBEditField
 {
-public:
+    TBOBJECT_SUBCLASS( TBEditFieldEnter, TBEditField );
 
-    std::string name;
-  
-    // network address, etc.
+    virtual bool OnEvent(const tb::TBWidgetEvent& event) override
+    {
+        if ( event.special_key == TB_KEY_ENTER )
+        {
+            // TBEditField only uses EVENT_TYPE_KEY_DOWN for input.
+            // hence return true to dismiss key up, and false
+            // for key down (so parent can handle enter event)
+            return event.type == EVENT_TYPE_KEY_DOWN;
+        }
+
+        return TBEditField::OnEvent( event );
+    }
+    
 };
 
 
 
-// get player from current user
-Player local_player();
-
-
-} // namespace run
-
-} // namespace batb
+} // namespace tb
 
 #endif

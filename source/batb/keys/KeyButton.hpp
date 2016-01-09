@@ -30,11 +30,12 @@ namespace keys
 class KeyButton : public Key
 {
 public:
-    KeyButton(Keys& keys, int c) : Key( typeid( this ), keys ), code_( c )    { } 
+    KeyButton(Keys& keys, int c) : Key( keys ), code_( c )     { } 
 
-    void reset() override             { }
-    void step(tick_t ) override       { }
-    float_t alpha() override          { return keys_.getKey( code_ ) ? 1.0 : 0.0; } 
+    void reset() override         { }
+    void step(tick_t ) override   { }
+    float_t alpha() override      { if ( can_disable ) return (keys_.getKey_( code_ ) ? 1.0 : 0.0);
+                                                  else return (keys_.getKey( code_ )  ? 1.0 : 0.0); } 
 
 
 private:

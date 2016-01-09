@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-forest: an orienteering game.
 //    Copyright (C) 2014  carljsv@student.matnat.uio.no
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,38 +15,19 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_PLAYER_HPP
-#define BATB_RUN_PLAYER_HPP
-#include "batb/batb_include.hpp"
+#include "batb/tb.hpp"
+#include "tb/tb_widgets_reader.h"
 
 
-namespace batb
-{
-class BATB;
-
-
-namespace run
+namespace tb
 {
 
+// copied from TBEditFieldEnter:
+TB_WIDGET_FACTORY(TBEditFieldEnter, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
+// (we keep OnInflate from TBEditField; our subclass only overrides one function)
 
-// define a user that runs this program
-class Player
-{
-public:
 
-    std::string name;
-  
-    // network address, etc.
-};
+} // namespace tb
 
 
 
-// get player from current user
-Player local_player();
-
-
-} // namespace run
-
-} // namespace batb
-
-#endif

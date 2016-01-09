@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
-
+#include "batb/run/Console.hpp"
 
 
 
@@ -54,6 +54,11 @@ void begin(Run& run)
     {
         // load associated keys 
         run.keyset.load("batb/run/KeySet.yaml");
+        // console key should not be disabled
+        run.keyset.console->canDisable( false );
+
+        // setup Console
+        run::begin( run.console );
 
         // begin non-core iterations:
         run::begin( run.iterationRunOld );
@@ -76,6 +81,9 @@ void end(Run& run)
         // end non-core iterations:
         run::end( run.iterationRunMain );
         run::end( run.iterationRunOld );
+
+        // end Console
+        run::end( run.console );
 
     }
     

@@ -35,6 +35,9 @@ extern float_t proj3DFOVY;
 extern tick_t dt;
 extern tick_t dt_max;
 
+extern float_t runConsoleOpenTicks;
+extern float_t runConsoleOpacity;
+
 
 
 } // namespace value

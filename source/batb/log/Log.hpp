@@ -58,7 +58,7 @@ public:
     //std::ostream& operator<<(std::ostream&) { return std::cout; }
 
 private:
-    class LogStreamBuf streambuf_;
+    LogStreamBuf streambuf_;
 
     // TODO:
     //std::ostream* os_; // from definition.

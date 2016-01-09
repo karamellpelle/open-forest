@@ -134,6 +134,12 @@ void GUI::bind(keys::Keys& keys)
 }
 
 
+void GUI::lockKeys(bool lock)
+{
+    batb.keys.keyEnable( !lock );
+    // (cursor not touched)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
@@ -227,68 +233,12 @@ void begin(GUI& gui)
         { tb::TBAnimationBlocker anim_blocker; }
 
         // (demo is now set up)
+        ////////////////////////////////////////////////////////////////////////////////
+        
+        // set name of root widget
+        gui.root.SetText( "GUI::root" );
 
-/*
-        // init the core of TB
-        tb::tb_core_init( gui.tb_renderer_, file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
 
-        // Load the default skin, and override skin that contains the graphics specific to the demo.
-        tb::g_tb_skin->Load(  file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str(), 
-                              file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt").c_str() );
-
-        // Register font renderers.
-        // for some reason, these are not part of namespace tb...
-        // declared in top of this file.
-#ifdef TB_FONT_RENDERER_TBBF
-        register_tbbf_font_renderer();
-#endif
-#ifdef TB_FONT_RENDERER_STB
-        register_stb_font_renderer();
-#endif
-#ifdef TB_FONT_RENDERER_FREETYPE
-        register_freetype_font_renderer();
-#endif
-
-        // Add fonts we can use to the font manager.
-#if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/vera.ttf" ).c_str(),                                      "Vera");
-#endif
-#ifdef TB_FONT_RENDERER_TBBF
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str() ,  "Segoe");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(),                                  "Neon" );
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(),                            "Orangutang" );
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(),                                "Orange" );
-#endif
-
-        // Set the default font description for widgets to one of the fonts we just added
-        tb::TBFontDescription fd;
-#ifdef TB_FONT_RENDERER_TBBF
-        fd.SetID( tb::TBIDC("Segoe"));
-#else
-        fd.SetID( tb::TBIDC("Vera"));
-#endif
-        fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx( 20 ));
-        tb::g_font_manager->SetDefaultFontDescription(fd);
-
-        // Create the font now.
-        tb::TBFontFace *font = tb::g_font_manager->CreateFontFace( tb::g_font_manager->GetDefaultFontDescription());
-
-        // Render some glyphs in one go now since we know we are going to use them. It would work fine
-        // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
-        if ( font )
-        {
-            font->RenderGlyphs( " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-                                "â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ€â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸Â¡Â¢Â£Â¤Â¥Â¦Â§Â¨Â©ÂªÂ«Â¬Â®"
-                                "Â¯Â°Â±Â²Â³Â´ÂµÂ¶Â·Â¸Â¹ÂºÂ»Â¼Â½Â¾Â¿Ã€ÃÃ‚ÃƒÃ„Ã…Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃŽÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃÃžÃŸÃ Ã"
-                                "¡Ã¢Ã£Ã¤Ã¥Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿"
-            );
-        }
-
-        // Give the root widget a background skin
-        //root.SetSkinBg(TBIDC("background"));
-
-        tb::TBWidgetsAnimationManager::Init();
-*/
     }
 
     gui.init( true );
@@ -462,7 +412,7 @@ void GUI::glfw_callback_key(GLFWwindow *window, int key, int scancode, int actio
         case GLFW_KEY_HOME:                     InvokeKey( callback_widget, window, 0, tb::TB_KEY_HOME, modifier, down); break;
         case GLFW_KEY_END:                      InvokeKey( callback_widget, window, 0, tb::TB_KEY_END, modifier, down); break;
         case GLFW_KEY_INSERT:                   InvokeKey( callback_widget, window, 0, tb::TB_KEY_INSERT, modifier, down); break;
-        case GLFW_KEY_TAB:                      InvokeKey( callback_widget, window, 0, tb::TB_KEY_TAB, modifier, down); break;
+        //case GLFW_KEY_TAB:                      InvokeKey( callback_widget, window, 0, tb::TB_KEY_TAB, modifier, down); break; // remove for now; bug in turbobadger when no widget handles focus
         case GLFW_KEY_DELETE:                   InvokeKey( callback_widget, window, 0, tb::TB_KEY_DELETE, modifier, down); break;
         case GLFW_KEY_BACKSPACE:                InvokeKey( callback_widget, window, 0, tb::TB_KEY_BACKSPACE, modifier, down); break;
         case GLFW_KEY_ENTER:                    InvokeKey( callback_widget, window, 0, tb::TB_KEY_ENTER, modifier, down); break;
@@ -491,6 +441,17 @@ void GUI::glfw_callback_key(GLFWwindow *window, int key, int scancode, int actio
         case GLFW_KEY_RIGHT_SUPER:
                 key_super = down;
                 break;
+/* did not work since TBEditField eat up KEY_DOWN event :(
+        // a hack to prevent space as a button for ClickByKey (i.e. only enter send an
+        // EVENT_TYPE_CLICK if focused widget has ClickByKey enabled, see implemetation
+        // of TBWidget::InvokeKey).
+        // this goes before 'default' below (space == 32)
+        case GLFW_KEY_SPACE:
+                //if (key_ctrl && !key_alt ) // a check as below
+                        InvokeKey( callback_widget, window, key, tb::TB_KEY_UNDEFINED, 
+                                   (tb::MODIFIER_KEYS)(0xffff0000 | modifier), down); // modifier non-zero, bitfields preserved
+                break;
+*/
         default:
                 // glfw calls key_callback instead of char_callback
                 // when pressing a character while ctrl is also pressed.

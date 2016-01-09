@@ -38,45 +38,34 @@ class Key
 friend class Keys;
 
 public:
-    Key(const std::type_index& ix, Keys& k) : keys_( k ), type_( ix ) { }
-    virtual ~Key()                                                    { }
+    Key(Keys& k) : keys_( k )       { /*++refs_;*/ }
+    virtual ~Key()                  { }
 
-    // TODO: if using shared_ptr's, set these to default:
+    // TODO: if later using shared_ptr's, set these to default:
     Key(const Key& k)             = delete;
     Key& operator=(const Key& k)  = delete;
     Key(Key&& k)                  = delete;
 
+    // can this key be disabled by Keys? (default is true)
+    virtual void canDisable(bool b) { can_disable = b; }
     // this implements the empty key
-    virtual void reset() { }
-    virtual void step(tick_t ) { }
-    virtual float_t alpha() { return 0.0; }
+    virtual void reset()            { }
+    virtual void step(tick_t )      { }
+    virtual float_t alpha()         { return 0.0; }
 
     //////////////////////////////////////////////////////////////////
     //      helpers
     //
-    float_t alpha(float_t b, float_t e)
-    {
-        float_t a  = alpha();
-        return (1.0 - a) * b + a * e;
-    }
-    bool zero()
-    {
-        return alpha() == 0.0;
-    }
-    bool one()
-    {
-        return alpha() == 1.0;
-    }
-    bool is_down()
-    {
-        return 0.5 < alpha(); // NOTE: strict larger than
-    }
+    float_t alpha(float_t b, float_t e) { float_t a  = alpha(); return (1.0 - a) * b + a * e; }
+    bool zero()                         { return alpha() == 0.0; }
+    bool one()                          { return alpha() == 1.0; }
+    bool is_down()                      { return 0.5 < alpha();  } // NOTE: strictly larger
 
 
 protected:
-
     Keys& keys_;
-    std::type_index type_;
+    //uint refs_ = 0;
+    bool can_disable = true;  // all Key's should in general be disabled if requested by Keys
 };
 
 } // namespace keys

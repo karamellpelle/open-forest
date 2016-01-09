@@ -60,6 +60,95 @@ void Keys::step(tick_t t)
 ////////////////////////////////////////////////////////////////////////////////
 //
 
+void Keys::keyEnable(bool enable)
+{
+    if ( key_enable_ != enable )
+    {
+        if ( enable )
+        {
+            glfwSetCursorPos( window_, cursor_enable_x0_, cursor_enable_y0_ );
+        }
+        else
+        {
+            // save current state (i.e. cursor pos)
+            double x1, y1;
+            glfwGetCursorPos( window_, &x1, &y1 );
+
+            cursor_enable_x0_ = x1;
+            cursor_enable_y0_ = y1;
+
+            // also previous cursor pos
+            cursor_x0_ = x1;
+            cursor_y0_ = y1;
+        }
+    }
+
+    key_enable_ = enable;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+
+// get cursor pos, in pixels
+void Keys::getCursorPos(uint& x, uint& y)
+{
+    // TODO: use env instead of GLFW?
+    double x_, y_;
+    glfwGetCursorPos( window_, &x_, &y_ );
+    x = (uint)( x_ );
+    y = (uint)( y_ );
+}
+
+// get cursor pos, relative to screen shape 
+void Keys::getCursorPos(double& x, double& y)
+{
+    // TODO: use env instead of GLFW?
+    int wth; int hth;
+    glfwGetFramebufferSize( window_, &wth, &hth );
+    float_t scale = 1.0 / (float_t)( std::max( wth, hth ) );
+
+    double x_, y_;
+    glfwGetCursorPos( window_, &x_, &y_ );
+    x = (float_t)( x_ ) * scale;
+    y = (float_t)( y_ ) * scale;
+}
+
+
+void Keys::getCursorPos_(uint& x, uint& y)
+{
+    if ( key_enable_ )
+    {
+        getCursorPos( x, y );
+    }
+    else
+    {
+        x = (uint)( cursor_enable_x0_ );
+        y = (uint)( cursor_enable_y0_ );
+    }
+}
+
+void Keys::getCursorPos_(double& x, double& y)
+{
+    if ( key_enable_ )
+    {
+        glfwGetCursorPos( window_, &x, &y );
+    }
+    else
+    {
+        x = cursor_enable_x0_;
+        y = cursor_enable_y0_;
+    }
+
+    int wth; int hth;
+    glfwGetFramebufferSize( window_, &wth, &hth );
+    double scale = 1.0 / (double)( std::max( wth, hth ) );
+    x *=  scale;
+    y *=  scale;
+}
+
+
 void Keys::setCursorFree(bool free)
 {
     if ( cursor_free_ != free )
@@ -113,6 +202,7 @@ void Keys::scrollCalling(GLFWscrollfun f)
 ////////////////////////////////////////////////////////////////////////////////
 // create Key's
 // 
+// TODO: look see the same exist!
 
 KeyButton* Keys::createKeyButton(int code)
 {
