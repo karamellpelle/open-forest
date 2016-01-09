@@ -73,13 +73,7 @@ TBConsole::TBConsole(BATB& b) : batb( b )
     // settings:
     SetSettings( /*tb::WINDOW_SETTINGS_TITLEBAR |*/  tb::WINDOW_SETTINGS_RESIZABLE /*| tb::WINDOW_SETTINGS_CAN_ACTIVATE*/ );
     SetText( "TBConsole" );
-    Invalidate();
-}
-
-
-void TBConsole::OnVisibilityChanged()
-{
-
+    //Invalidate();
 }
 
 
@@ -113,15 +107,6 @@ bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
     return tb::TBWindow::OnEvent( event );
 }
 
-//void TBConsole::OnMessageReceived(tb::TBMessage* msg)
-//{
-//    using namespace tb;
-//
-//    //TBID id = msg->message;
-//    //TBMessageData* data = msg->data;
-//
-//    // handle data from id...
-//}
 
 void TBConsole::output(const std::string& str)
 {

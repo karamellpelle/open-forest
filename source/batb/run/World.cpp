@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/run/World.hpp"
+#include "batb/BATB.hpp"
 
 
 namespace batb
@@ -26,10 +27,6 @@ namespace run
 {
 
 
-World::World()
-{
-    toggle_tb = true;
-}
 
 
 } // namespace run

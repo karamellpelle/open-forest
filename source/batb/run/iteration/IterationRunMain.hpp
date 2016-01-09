@@ -18,57 +18,39 @@
 #ifndef BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
 #define BATB_RUN_ITERATION_ITERATION_RUN_MAIN_HPP
 #include "batb/run/iteration/IterationRun.hpp"
-#include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
 #include "batb/run/BeginEvents.hpp"
 
-// tmp
-#include "batb/forest.hpp"
 
 namespace batb
 {
-
-
 class BATB;
+
 
 namespace run
 {
+class TBMain;
 
 
 
-
-// IterationRunMain:
-//    application is loaded, up and running. present the main screen,
-//    after IterationRunIntro (?). here the user starts to use our 
-//    application, this is the "main menu".
-//
+// the "main menu" (application is up and running)
 class IterationRunMain : public IterationRun
 {
 friend void begin(IterationRunMain& );
 friend void end(IterationRunMain& );
 
 public:
-    // construct from the containing BATB
     IterationRunMain(BATB& );
 
-    // iterate
     IterationStack iterate_run(World& world) override;
 
-    // setup before iteration
     void iterate_begin(World& );
 
-    ////////////////////////////////////////
+
+    TBMain* tb_main = nullptr; 
 
 private:
     BeginEvents beginEvents;
 
-    RunMainTBWidget* tb_widget_ = nullptr; // TODO?: general TBWidget, and this only pushes events?
-    //EventList events_;
-
-    EventEaterSet event_eat;
-    void eat_number(const uint& n)
-    {
-        std::cout << "IterationRunMain eating number: " << n << std::endl;
-    }
 
 };
 

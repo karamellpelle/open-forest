@@ -15,13 +15,15 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_RUN_ITERATION_ITERATIONRUNMAIN_RUNMAINTBWIDGET_HPP
-#define BATB_RUN_RUN_ITERATION_ITERATIONRUNMAIN_RUNMAINTBWIDGET_HPP
+#ifndef BATB_RUN_TBMAIN_HPP
+#define BATB_RUN_TBMAIN_HPP
 #include "batb/batb_include.hpp"
 #include "batb/gui.hpp"
 
 namespace batb
 {
+class BATB;
+
 
 namespace run
 {
@@ -29,23 +31,19 @@ namespace run
 class IterationRunMain;
 
 
-// modify IterationRunMain, the "main menu"
-class RunMainTBWidget : public tb::TBWindow, 
-                        public tb::TBMessageHandler
+// the "main menu" widget
+class TBMain : public tb::TBWindow
 {
 public:
-    TBOBJECT_SUBCLASS( RunMainTBWidget, tb::TBWindow );
+    TBOBJECT_SUBCLASS( TBMain, tb::TBWindow );
 
-    RunMainTBWidget(IterationRunMain& );
+    TBMain(BATB& );
 
-    virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
-    virtual void OnMessageReceived(tb::TBMessage *msg) override;      // TBMessageHandler
+    virtual bool OnEvent(const tb::TBWidgetEvent& ev) override;
 
 
-    IterationRunMain& iteration;
+    BATB& batb;
 
-private:
-    //tb::TBWidget* widget_a_;
 };
 
 

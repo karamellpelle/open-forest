@@ -27,13 +27,14 @@ namespace run
 namespace event
 {
 
-enum class DoDemo
+enum class Do
 {
-    Forest,
-    Turbobadger,
+    DemoForest,
     NanoVG,
     Old,
+    Exit,
 };
+
 
 } // namespace event
 

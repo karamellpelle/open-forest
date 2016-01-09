@@ -23,11 +23,13 @@ TBLayout
 	#font: size: 28px
 		
 	TBImageWidget: id: do-nanovg, filename: "static://batb/run/trollveggen128.png" skin: ImageFrame
-		TBTextField: skin: "ImageCaption", text: "trollveggen", gravity: bottom left right
-	TBImageWidget: id: do-nanovg, filename: "static://batb/run/trollveggen128.png" skin: ImageFrame
-		TBTextField: skin: "ImageCaption", text: "trollveggen again", gravity: bottom left right
+		TBTextField: skin: "ImageCaption", text: "nanovg", gravity: bottom left right
+	TBImageWidget: id: do-demo-forest, filename: "static://batb/run/trollveggen128.png" skin: ImageFrame
+		TBTextField: skin: "ImageCaption", text: "demo-forest", gravity: bottom left right
 	TBImageWidget: id: do-old, filename: "static://batb/run/haskell128.png" skin: ImageFrame
-		TBTextField: skin: "ImageCaption", text: "haskell", gravity: bottom left right
+		TBTextField: skin: "ImageCaption", text: "old", gravity: bottom left right
+	TBImageWidget: id: do-exit, filename: "static://batb/run/haskell128.png" skin: ImageFrame
+		TBTextField: skin: "ImageCaption", text: "exit", gravity: bottom left right
 
 
 

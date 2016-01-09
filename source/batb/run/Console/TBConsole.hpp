@@ -37,7 +37,6 @@ class Console;
 
 
 class TBConsole : public tb::TBWindow           // or TBWidget?
-                  //,public tb::TBMessageHandler
 {
 friend class ConsoleStreambuf;
 
@@ -46,10 +45,8 @@ public:
 
     TBConsole(BATB& );
 
-    virtual void OnVisibilityChanged() override; // fix for a current bug in TB
     virtual void OnFocusChanged(bool focus) override;
     virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
-    //virtual void OnMessageReceived(tb::TBMessage *msg) override;      // TBMessageHandler
   
     // output
     void output(const std::string& );

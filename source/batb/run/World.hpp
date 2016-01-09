@@ -30,29 +30,9 @@ namespace batb
 namespace run
 {
 
-class EventA
-{
-public:
-    EventA(const std::string& s) : name( s ) { }
-    std::string name;
-    
-};
-
-class EventB
-{
-public:
-    EventB(uint x_, uint y_) : x( x_ ), y( y_ ) { }
-    uint x;
-    uint y;
-
-};
-
-
 class World
 {
 public:
-    World();
-
     // rendering target:
     Scene scene;
 
@@ -66,14 +46,6 @@ public:
 
     // tick of world
     tick_t tick;
-
-    // tmp
-    bool toggle_a = false;
-    bool toggle_b = true;
-    bool toggle_ogre = false;
-    bool toggle_nanovg = false;
-    bool toggle_tb = false;
-
 
     // number of frames iterated (by IterationRun...)
     uint frames = 0;

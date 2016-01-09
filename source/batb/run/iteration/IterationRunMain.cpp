@@ -21,11 +21,12 @@
 #include "batb/demo/libs/ogre.hpp"
 #include "batb/demo/libs/al.hpp"
 #include "batb/demo/other.hpp"
-#include "batb/run/iteration/IterationRunMain/RunMainTBWidget.hpp"
+#include "batb/run/iteration/IterationRunMain/TBMain.hpp"
 #include "batb/run/events.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
 
 //#define DEMO_FOREST_DIRECT
+
 
 namespace batb
 {
@@ -33,21 +34,6 @@ namespace batb
 namespace run
 {
 
-
-void eat_a(const EventA& a)
-{
-    std::cout << "eating event EventA: " << a.name <<  std::endl;
-}
-void eat_b(const EventB& b)
-{
-    std::cout << "eating event EventB: " << b.x << "*" << b.y << std::endl;
-}
-void eat_uint(const uint& n)
-{
-    std::cout << "eating event uint: " << n << std::endl;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -58,19 +44,12 @@ void eat_uint(const uint& n)
 IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b ), beginEvents( b )
 {
 
-    // set event eaters for received events
-    event_eat.push( eat_a );
-    event_eat.push( eat_b );
-    event_eat.push( eat_uint );
-    event_eat.push( &IterationRunMain::eat_number, this );
 }
 
 
 
 void IterationRunMain::iterate_begin(World& run)
 {
-    BATB_LOG_FUNC( batb );
-
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // we want clean state for our Key's, no garbage:
@@ -78,13 +57,6 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // point Keys to GUI 
     batb.gui.bind( batb.keys );
-
-    // add main widget
-    if ( tb_widget_->GetParent() == nullptr )
-    {
-        batb.gui.addWidget( tb_widget_ );
-    }
-    tb_widget_->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
     // Ogre demo
     //demo::ogre::demo_begin( batb );
@@ -94,6 +66,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // ALURE demo
     demo::al::demo_begin( batb );
+
+    // TODO: use TBLayout
+    tb_main->SetSize( 800, 200  );
+    tb_main->SetPosition( tb::TBPoint( 0, 100 ) );
+    tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
+    tb_main->EnsureFocus();
+
 
     std::cout << std::endl;
     std::cout << "click ESC to exit from main..." << std::endl;
@@ -109,16 +88,17 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 IterationStack IterationRunMain::iterate_run(World& run)
 {
+debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
     //
+
+    // draw background
     demo::background( batb, run );
 
-debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
-    if ( run.toggle_nanovg )
-    {
-        demo::nanovg::demo_iterate( batb, false, false );
-    }
+    // nanovg demo
+    if ( batb.run.keyset.nanovg->toggle() ) demo::nanovg::demo_iterate( batb, false, false );
 
     ////////////////////////////////////////////////////////////////////////////////
     // grab and clean up events
@@ -127,46 +107,11 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
-    // 
     
-    if ( batb.run.keyset.u->click() ) run.toggle_a = !run.toggle_a;
-    if ( batb.run.keyset.i->click() ) run.toggle_b = !run.toggle_b;
-    if ( batb.run.keyset.ogre->click() ) run.toggle_ogre = !run.toggle_ogre;
-    if ( batb.run.keyset.nanovg->click() ) run.toggle_nanovg = !run.toggle_nanovg;
-    if ( batb.run.keyset.tb->click() ) run.toggle_tb = !run.toggle_tb;
-
-    // print frames per second
-    if ( batb.run.keyset.u->click() ) std::cout << "fps: " << batb.env.frameFPS() << std::endl;
-
-    // push event on click i
-    if ( batb.run.keyset.i->click() )
-    {
-        // push event
-        static uint ix = 0;
-        if ( ix == 0 ) 
-        {
-            std::ostringstream os;
-            os << "fps: " << batb.env.frameFPS();
-            batb.run.pushEvent( EventA( os.str() ) );
-        }
-        if ( ix == 1 )
-        {
-            uint x, y;
-            batb.keys.getCursorPos( x, y );
-            batb.run.pushEvent( new EventB( x, y ) );
-        }
-        if ( ix == 2 )
-        {
-            static uint m = 0;
-            batb.run.pushEvent( m++ );
-        }
-        ix = (ix + 1) % 3;
-    }
-
     // ALURE demo:
     demo::al::demo_iterate( batb, run );
 
-    // start ogre-demo:
+    // start forest-demo:
 #ifdef DEMO_FOREST_DIRECT
     if ( true )
 #else
@@ -174,7 +119,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 #endif
     {
         // remove main widget from screen
-        tb_widget_->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
+        tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
         //auto* demo = new demo::World( run );
         //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
@@ -189,16 +134,11 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     if ( batb.run.keyset.escape->click() ) return _emptylist_;
     
-    // run old-BATB if old-key released
-    if ( batb.run.keyset.old->released() )
+    // old-BATB
+    if ( batb.run.keyset.old->click() )
     {
-        // remove widget from screen
-        if ( tb_widget_->GetParent() != nullptr )
-        {
-            batb.gui.removeWidget( tb_widget_ );
-        }
+        tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
-        //batb.log << "IterationRunMain -> IterationRunOld" << std::endl;
         return {  game::begin_iteration( batb.run.iterationRunOld ), 
                   game::begin_iteration( *this ) };
     }
@@ -206,25 +146,14 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     for ( auto& event : run.events )
     {
-        // general eat function
-        event_eat( event );
-
         ////////////////////////////////////////////////////////////////////////////////
-        // uint
-        if ( auto* n = eat<uint>( event ) )
-        {
-            std::cout << "a special event occured: " << *n << std::endl;
-
-        }
-      
-        ////////////////////////////////////////////////////////////////////////////////
-        // event::DoDemo
-        if ( auto* next = eat<event::DoDemo>( event ) )
+        // event::Do
+        if ( auto* next = eat<event::Do>( event ) )
         {
             switch ( *next )
             {
-            case event::DoDemo::Forest:
-                batb.run.console( R"(echo "do forest")" );
+            case event::Do::DemoForest:
+                batb.run.console( R"(echo "event: do-demo-forest")" );
                 //auto* demo = new demo::World( run );
                 //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
                 //         game::begin_iteration( new IterationRunDemo( batb ) ),
@@ -234,24 +163,25 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
                 //return { game::begin_iteration( new IterationRunDemo( batb ) ), 
                 //         game::begin_iteration( this ) };
                 
-            case event::DoDemo::Turbobadger:
-                batb.run.console( R"(echo "do turbobadger")" );
-                break;
-            case event::DoDemo::NanoVG:
-                batb.run.console( R"(echo "do nanovg")" );
+            case event::Do::NanoVG:
+                batb.run.console( R"(echo "do-nanovg")" );
                 //run.toggle_nanovg = !run.toggle_nanovg;
                 break;
-            case event::DoDemo::Old:
-                batb.run.console( R"(echo "do old")" );
+
+            case event::Do::Old:
+                batb.run.console( R"(echo "do-old")" );
                 //return {  game::begin_iteration( batb.run.iterationRunOld ), 
                 //          game::begin_iteration( *this ) };
-            
+
+            case event::Do::Exit:
+                batb.run.console( R"(echo "do-exit")" );
+                break;
 
             }
-
-            ////////////////////////////////////////////////////////////////////////////////
-            //
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // 
 
     }
 
@@ -265,22 +195,28 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 //
 void begin(IterationRunMain& iter)
 {
-    BATB_LOG_FUNC( iter.batb );
+    BATB& batb = iter.batb;
+
 
     // set up GUI's
     // FIXME: memory leak, according to valgring
-    iter.tb_widget_ = new RunMainTBWidget( iter );
+    iter.tb_main = new TBMain( batb );
 
+
+    // add to screen
+    // TODO: use layout
+    batb.gui.addWidget( iter.tb_main );
 
 }
 
 void end(IterationRunMain& iter)
 {
-    BATB_LOG_FUNC( iter.batb );
+    BATB& batb = iter.batb;
 
-    iter.batb.gui.removeWidget( iter.tb_widget_ );
-    delete iter.tb_widget_;
-    iter.tb_widget_ = nullptr;
+    batb.gui.removeWidget( iter.tb_main );
+
+    delete iter.tb_main;
+    iter.tb_main = nullptr;
 }
 
 
