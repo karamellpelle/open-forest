@@ -112,25 +112,25 @@ bool Console::operator()(const std::string& input)
 {
     // specific command handle functions.
     // these are allowed to modify input. 
-    using CommandEater = bool(Console& , std::string& );
+    using CommandEater = bool(BATB& , std::string& );
     extern CommandEater cmd_echo;
     extern CommandEater cmd_value;
     extern CommandEater cmd_easteregg;
 
     std::string in = input;
-    std::string cmd = alphanums( in );
+    std::string cmd = word( in );
     
     // output PS1 + typed command
     *this << getPS1() << cmd << "\n";
 
     // handle command
     if ( cmd == "" )          return true;                    // empty command is OK
-    if ( cmd == "echo" )      return cmd_echo( *this, in );   
-    if ( cmd == "value" )     return cmd_value( *this, in );
+    if ( cmd == "echo" )      return cmd_echo( batb, in );   
+    if ( cmd == "value" )     return cmd_value( batb, in );
 
     // easteregg command typed?
-    if ( cmd_easteregg( *this, in ) ) return true;
-
+    std::string input_ = input;
+    if ( cmd_easteregg( batb, input_ ) ) return true;
 
     *this << "Console: command not found: " << cmd << std::endl;
     return false;

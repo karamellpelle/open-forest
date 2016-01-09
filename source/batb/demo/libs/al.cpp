@@ -45,28 +45,34 @@ void demo_begin(BATB& batb)
 
     if ( tmp_empty )
     {
-        //std::string path = file::static_data( "demo/libs/al/demo00.mp3" );
-        std::string path = file::static_data( "demo/libs/al/demo01.mp3" );
-
-        decoder = batb.al.alure_context->createDecoder( path );
-        source = batb.al.alure_context->getSource();
-        source->play( decoder, 32768, 4);
-
-        std::cout << "demo::al: playing " << path 
-                  << " ("<< alure::GetSampleTypeName(decoder->getSampleType())<< ", "
-                  << alure::GetSampleConfigName(decoder->getSampleConfig()) << ", "
-                  << decoder->getFrequency() << "hz)" 
-                  << std::endl;
-
 
     }
     tmp_empty = false;
 }
 
+void demo_play(BATB& batb, const std::string& path)
+{
+    decoder = batb.al.alure_context->createDecoder( path );
+    if ( decoder == nullptr ) return;
+
+    source = batb.al.alure_context->getSource();
+    source->play( decoder, 32768, 4);
+/*
+    std::cout << "demo::al: " << path 
+              << " ("
+              << alure::GetSampleTypeName(decoder->getSampleType())<< ", "
+              << alure::GetSampleConfigName(decoder->getSampleConfig()) 
+              << ", "
+              << decoder->getFrequency() << "hz"
+              << ")" 
+              << std::endl;
+*/
+}
+
 void demo_iterate(BATB& batb, run::World& world)
 {
     // TODO: create media player with nanovg
-
+/*
     if ( source->isPlaying() )
     {
         // ...
@@ -87,7 +93,7 @@ void demo_iterate(BATB& batb, run::World& world)
 
         // TODO: load new
     }
-
+*/
 }
 
 

@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
 #include "batb/run/Console.hpp"
 #include "batb/run/Console/parse.hpp"
@@ -30,7 +31,7 @@ namespace run
 {
 
 // output string to console
-bool cmd_echo(Console& console, std::string& in)
+bool cmd_echo(BATB& batb, std::string& in)
 {
     // (allowed to modify 'in' directly)
     // TODO: parse commands (-n for no newline, etc.)
@@ -39,12 +40,12 @@ bool cmd_echo(Console& console, std::string& in)
     std::string str;
     if ( stringliteral( str, in ) ) 
     {
-        console << str << std::endl;
+        batb.run.console << str << std::endl;
         return true;
     }
 
     // else just output whatever on the line
-    console << in << std::endl;
+    batb.run.console << in << std::endl;
 
     return false;
     

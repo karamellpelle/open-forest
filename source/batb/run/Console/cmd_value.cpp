@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
 #include "batb/run/Console.hpp"
 #include "batb/run/Console/parse.hpp"
@@ -35,7 +36,7 @@ namespace run
 
 
 // modify value::'s
-bool cmd_value(Console& console, std::string& in)
+bool cmd_value(BATB& batb, std::string& in)
 {
     // (allowed to modify 'in' directly)
     return true;

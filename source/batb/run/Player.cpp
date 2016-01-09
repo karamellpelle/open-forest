@@ -17,6 +17,10 @@
 //
 #include "batb/run/Player.hpp"
 
+#ifdef __unix__
+#include <unistd.h>
+#endif
+
 
 namespace batb
 {
@@ -29,7 +33,15 @@ namespace run
 Player local_player()
 {
     Player ret;
-    ret.name = "openforest-user"; // TODO: gethostname unistd.h
+    
+#ifdef __unix__
+    if ( auto name = ::getlogin() )
+    {
+        ret.name = std::string( name );
+    }
+    else
+#endif
+    ret.name = "openforest";
 
     return ret;
 }

@@ -16,9 +16,11 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
 #include "batb/run/Console.hpp"
 #include "batb/run/Console/parse.hpp"
+#include "batb/demo/libs/al.hpp"
 
 
 
@@ -30,13 +32,34 @@ namespace run
 {
 
 // output string to console
-bool cmd_easteregg(Console& console, std::string& in)
+bool cmd_easteregg(BATB& batb, std::string& in)
 {
-    // (allowed to modify 'in' directly)
+  
     // if correct command typed, do easter egg
-    if ( false )
+    // eater egg is PS1|reverse(PS1)
+    
+    if ( in.empty() )         return false;
+    if ( in.front() != '|' )  return false;
+    auto right = in.substr( 1 );
+    std::reverse( std::begin( right ), std::end( right ) );
+    for (auto i = std::begin( right ); i != std::end( right ); ++i)
     {
-        // TODO: play song
+        if ( *i == '<' ) { *i = '>'; continue; }
+        if ( *i == '>' ) { *i = '<'; continue; }
+        if ( *i == '(' ) { *i = ')'; continue; }
+        if ( *i == ')' ) { *i = '('; continue; }
+        if ( *i == '[' ) { *i = ']'; continue; }
+        if ( *i == ']' ) { *i = '['; continue; }
+        if ( *i == '{' ) { *i = '}'; continue; }
+        if ( *i == '}' ) { *i = '{'; continue; }
+    }
+
+    auto left   = batb.run.console.getPS1();
+    
+    if ( left == right )
+    {
+        demo::al::demo_play( batb, file::static_data( "easteregg.mp3" ) );
+
         return true;
     }
     return false;
