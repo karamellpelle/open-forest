@@ -108,11 +108,9 @@ inline bool stringliteral(std::string& out, std::string& in)
 
     const auto b = std::begin( in );
     const auto e = std::end( in );
-    auto i = std::find( b, e, '"' );
+    auto i = b;
 
     if ( i == e ) return false;
-    ++i;
-
     if ( *i != '"' ) return false; 
     ++i;
 
@@ -133,15 +131,16 @@ inline bool stringliteral(std::string& out, std::string& in)
         {
             ++i;
             if ( i == e ) return false;
-            if ( *i == 'n' )  out.push_back( '\n' );
-            if ( *i == 't' )  out.push_back( '\t' );
-            if ( *i == '\\' ) out.push_back( '\\' );
-            if ( *i == '"' )  out.push_back( '"' );
-
+            if ( *i == 'n' )  { out.push_back( '\n' );  ++i; continue; }
+            if ( *i == 't' )  { out.push_back( '\t' );  ++i; continue; }
+            if ( *i == '\\' ) { out.push_back( '\\' );  ++i; continue; }
+            if ( *i == '"' )  { out.push_back( '"' );   ++i; continue; }
+            
             // no special character is error:
             return false;
         }
-
+        
+        out.push_back( *i );
         ++i;
     }
 

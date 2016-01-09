@@ -33,15 +33,20 @@ namespace run
 bool cmd_echo(Console& console, std::string& in)
 {
     // (allowed to modify 'in' directly)
-    auto str = space( in );
-
-    // TODO: remove enclosing "
     // TODO: parse commands (-n for no newline, etc.)
 
-    // for now, print to std::cout
-    //std::cout << in << std::endl;
+    // eat string literal
+    std::string str;
+    if ( stringliteral( str, in ) ) 
+    {
+        console << str << std::endl;
+        return true;
+    }
+
+    // else just output whatever on the line
     console << in << std::endl;
-    return true;
+
+    return false;
     
 }
 
