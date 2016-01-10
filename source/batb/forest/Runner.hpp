@@ -81,10 +81,12 @@ public:
         points.clear();
         point0 = p;
     }
-    std::vector<TracePoint>::size_type size() const { return points.size(); }
 
+    using TracePoints = std::vector<TracePoint>;
+    uint size() const { return points.size(); }
+
+    TracePoints points;
     TracePoint point0;
-    std::vector<TracePoint> points;
 
 private:
 };
@@ -105,10 +107,14 @@ public:
     Runner& operator=(const Runner& ) = default;
 
     ////////////////////////////////////////////////////////////////////////////////
-    // 
     void reset(const YAML::Node& );
     void reset(const glm::vec2& );
     void reset(const glm::vec3& );
+
+    // update position and output-state
+    void step();
+
+    // punch a control
     void punch(Control* );
 
     // inside world

@@ -58,15 +58,7 @@ void IterationRunDemo::iterate_begin(World& run)
 
 IterationStack IterationRunDemo::iterate_run(World& run)
 {
-    // toogle free cursor (make debugging possible!)
-    static bool cursor = false;
-    if ( batb.forest.keyset.tmp0->click() )
-    {
-        cursor = !cursor;
-        batb.keys.setCursorFree( cursor );
-    }
-    
-    // iterate demo::World
+    // wrap IterationDemo's inside IterationRun
     game::iterate( stack, *demo );
 
     if ( stack.empty() )

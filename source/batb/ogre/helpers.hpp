@@ -30,10 +30,20 @@ namespace batb
 namespace ogre
 {
 
+////////////////////////////////////////////////////////////////////////////////
+// quaternion
+
 inline Ogre::Quaternion cast(const glm::quat& quat)
 {
     return Ogre::Quaternion( quat.w, quat.x, quat.y, quat.z ); 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// matrices
+// NOTE: Ogre saves the data in an array[x][y] where y is row
+//       glm saves columns in an array[] (the opposite)
+
 
 inline Ogre::Matrix4 cast(const glm::mat4& mat)
 {
@@ -41,10 +51,10 @@ inline Ogre::Matrix4 cast(const glm::mat4& mat)
     const auto& b = mat[1];
     const auto& c = mat[2];
     const auto& d = mat[3];
-    return Ogre::Matrix4( a.x, a.y, a.z, a.w,
-                          b.x, b.y, b.z, b.w,
-                          c.x, c.y, c.z, c.w,
-                          d.x, d.y, d.z, d.w
+    return Ogre::Matrix4( a.x, b.x, c.x, d.x,
+                          a.y, b.y, c.y, d.y,
+                          a.z, b.z, c.z, d.z,
+                          a.w, b.w, c.w, d.w
                         );
 }
 
@@ -53,12 +63,39 @@ inline Ogre::Matrix3 cast(const glm::mat3& mat)
     const auto& a = mat[0];
     const auto& b = mat[1];
     const auto& c = mat[2];
-    return Ogre::Matrix3( a.x, a.y, a.z,
-                          b.x, b.y, b.z,
-                          c.x, c.y, c.z
+    return Ogre::Matrix3( a.x, b.x, c.x,
+                          a.y, b.y, c.y,
+                          a.z, b.z, c.z
                         );
 }
 
+inline Ogre::Matrix3 cast_(const glm::mat4& mat)
+{
+    const auto& a = mat[0];
+    const auto& b = mat[1];
+    const auto& c = mat[2];
+    return Ogre::Matrix3( a.x, b.x, c.x,
+                          a.y, b.y, c.y,
+                          a.z, b.z, c.z
+                        );
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// vectors
+
+inline Ogre::Vector4 cast(const glm::vec4& vec)
+{
+    return Ogre::Vector4( vec.x, vec.y, vec.z, vec.w );
+}
+
+inline Ogre::Vector3 cast_(const glm::vec4& vec)
+{
+    return Ogre::Vector3( vec.x, vec.y, vec.z );
+}
+
+  
 } // namespace ogre
 
 } // namespace batb

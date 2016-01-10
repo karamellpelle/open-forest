@@ -23,6 +23,8 @@
 #include "batb/forest/Runner.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
+#include "batb/ogre/helpers.hpp"
+#include "batb/glm.hpp"
 
 
 namespace batb
@@ -51,29 +53,6 @@ void Runner::reset(const YAML::Node& yaml)
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 3, 3, 3 ); // FIXME
     node->attachObject( ogre_entity );
-        //
-        // this is very important due to the nature of the exported animations
-        //bodyEnt->getSkeleton()->setBlendMode(ANIMBLEND_CUMULATIVE);
-        //String animNames[] =
-        //{"IdleBase", "IdleTop", "RunBase", "RunTop", "HandsClosed", "HandsRelaxed", "DrawSwords",
-        //"SliceVertical", "SliceHorizontal", "Dance", "JumpStart", "JumpLoop", "JumpEnd"};
-        //
-        //// populate our animation list
-        //for (int i = 0; i < NUM_ANIMS; i++)
-        //{
-        //    mAnims[i] = mBodyEnt->getAnimationState(animNames[i]);
-        //    mAnims[i]->setLoop(true);
-        //    mFadingIn[i] = false;
-        //    mFadingOut[i] = false;
-        //}
-        //
-        //// start off in the idle state (top and bottom together)
-        //setBaseAnimation(ANIM_IDLE_BASE);
-        //setTopAnimation(ANIM_IDLE_TOP);
-        //
-        //// relax the hands since we're not holding anything
-        //mAnims[ANIM_HANDS_RELAXED]->setEnabled(true);
-
 }
 
   
@@ -113,20 +92,51 @@ void Runner::punch(Control* control1)
 }
 
 
+void Runner::step()
+{
+    move.compute();
+    auto node = ogre_entity->getParentNode();
+
+    // update position of runner
+    node->setPosition( ogre::cast_( move.pos ) );
+
+    // update orientation of runner
+    auto quat = glm::quat_cast( move.aim );
+    node->setOrientation( ogre::cast( quat ) );
+
+    // TODO: update animation
+    // this is very important due to the nature of the exported animations
+    //bodyEnt->getSkeleton()->setBlendMode(ANIMBLEND_CUMULATIVE);
+    //String animNames[] =
+    //{"IdleBase", "IdleTop", "RunBase", "RunTop", "HandsClosed", "HandsRelaxed", "DrawSwords",
+    //"SliceVertical", "SliceHorizontal", "Dance", "JumpStart", "JumpLoop", "JumpEnd"};
+    //
+    //// populate our animation list
+    //for (int i = 0; i < NUM_ANIMS; i++)
+    //{
+    //    mAnims[i] = mBodyEnt->getAnimationState(animNames[i]);
+    //    mAnims[i]->setLoop(true);
+    //    mFadingIn[i] = false;
+    //    mFadingOut[i] = false;
+    //}
+    //
+    //// start off in the idle state (top and bottom together)
+    //setBaseAnimation(ANIM_IDLE_BASE);
+    //setTopAnimation(ANIM_IDLE_TOP);
+    //
+    //// relax the hands since we're not holding anything
+    //mAnims[ANIM_HANDS_RELAXED]->setEnabled(true);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void Trace::push(const TracePoint& point1)
 {
     points.push_back( point0 );
     point0 = point1;
 
-    //std::cout << "added TracePoint: " 
-    //          << "( "
-    //          << std::setprecision( 1 )
-    //          << std::fixed
-    //          << point0.x << ", "
-    //          << point0.y << ", "
-    //          << point0.z << ") "
-    //          << std::endl;
 }
+
 
 } // namespace forest
 

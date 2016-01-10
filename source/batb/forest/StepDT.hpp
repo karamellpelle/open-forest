@@ -38,11 +38,13 @@ class StepDT : public game::StepDT<World, tick_t>
 public:
     StepDT(BATB& b) : batb( b )       { }
 
+    // dt-step
     // tick of world is not updated!
     virtual void operator()(World& , tick_t ) override;
 
-    // TODO: controls:
-    // ...
+    // after
+    void operator()(World& );
+
 
 protected:
     BATB& batb;

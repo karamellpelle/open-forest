@@ -45,13 +45,6 @@ public:
     // keys for Run to use
     keys::KeyClicker* console = nullptr;
     keys::KeyClicker* escape  = nullptr;
-    // TMP:
-    keys::KeyClicker* old     = nullptr;
-    keys::KeyClicker* u       = nullptr; 
-    keys::KeyClicker* i       = nullptr;
-    keys::KeyClicker* ogre    = nullptr;
-    keys::KeyClicker* nanovg  = nullptr;
-    keys::KeyClicker* tb      = nullptr;
 
     BATB& batb;
 };

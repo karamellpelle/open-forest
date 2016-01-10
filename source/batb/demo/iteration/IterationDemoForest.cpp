@@ -24,7 +24,7 @@
 #include "batb/value/run.hpp"
 #include <random>
 #include <iomanip>
-//#include "helpers/bezier.hpp"
+
 
 namespace batb
 {
@@ -86,12 +86,6 @@ void IterationDemoForest::iterate_begin(World& demo)
     // create a curve: control0 -> control1
     auto* control0 = demo.course[ demo.course_i ];
     auto* control1 = demo.course[ demo.course_i + 1 ];
-    //control0->aim[3] = glm::vec4( 2, 4, 6, 8 );
-    //std::cout << control0->pos.x << " "
-    //          << control0->pos.y << " "
-    //          << control0->pos.z << " "
-    //          << control0->pos.w << " "
-    //          << std::endl;
     
     curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
                   glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
@@ -133,7 +127,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     //
     beginEventsDemo( demo );      // demo::World
     beginEvents( forest );        // forest::World
-    // we ignore run::Events
+    // (we ignore run::Events in IterationDemoForest)
 
     
     ////////////////////////////////////////////////////////////////////////////////
@@ -155,32 +149,27 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
   
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
-    tick_t tick_next = demo.tick;
 
-    // prevent too many dt steps:
-    forest.tick = forest.tick + value::dt_max <= tick_next ? tick_next - value::dt_max : forest.tick;
+    tick_t tick_next = demo.tick;
+    forest.tick = forest.tick + value::dt_max <= tick_next ? // prevent too many dt steps
+                  tick_next - value::dt_max : forest.tick;
 
     // make a dt-step of forest::World
     while ( forest.tick + value::dt <= tick_next )
     {
-      
         // step World
         stepDT( forest, value::dt );
 
         forest.tick += value::dt;
     }
+    // update after dt
+    stepDT( forest );
 
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // think
     // TODO: look at demo-events!
-    //
     if ( batb.run.keyset.escape->click() )
-    //if ( true )
     {
-        batb.log << "out of IterationRunDemo!!" << std::endl;
-
-        // cursor
+        // set back cursor
         batb.keys.setCursorFree( false );
 
         return _emptylist_;

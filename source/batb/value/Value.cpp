@@ -30,9 +30,6 @@ namespace value
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Value
-
-////////////////////////////////////////////////////////////////////////////////
 //  
 
 void begin(Value& value)
@@ -60,7 +57,7 @@ void begin(Value& value)
         forestProximityControl  = 16.0;
         forestProximityRunner   = 16.0;
 
-        forestTraceD =      16.0;
+        forestTraceD =      4.0;
 
         forestModifyRunnerSpeed = 35.0;
         //forestModifyRunnerSpeed = 200.0;
@@ -144,6 +141,52 @@ float_t coursedrawerColorR;
 float_t coursedrawerColorG;
 float_t coursedrawerColorB;
 float_t coursedrawerColorA;
+
+////////////////////////////////////////////////////////////////////////////////
+//  Value
+/*
+#define TRY_SET_VALUE( variable ) if ( name == #variable ) return is >> variable
+bool Value::set(const std::string& name, const std::string& v)
+{
+    std::istringstream is( v ); 
+
+    TRY_SET_VALUE( dt );
+    TRY_SET_VALUE( dt_max );
+    TRY_SET_VALUE( runConsoleOpenTicks );
+    TRY_SET_VALUE( runConsoleOpacity );
+    TRY_SET_VALUE( forestAimX );
+    TRY_SET_VALUE( forestAimY );
+    TRY_SET_VALUE( forestMoveX );
+    TRY_SET_VALUE( forestMoveZ );
+    TRY_SET_VALUE( forestProximityControl );
+    TRY_SET_VALUE( forestProximityRunner );
+    TRY_SET_VALUE( forestTraceD );
+    TRY_SET_VALUE( forestModifyRunnerSpeed );
+    
+
+    batb.log << "Value: could not set variable '" << name << "' to " << v << std::endl;
+    return false;
+}
+
+#define TRY_GET_VALUE( variable ) if ( name == #variable ) return os >> v
+bool Value::get(const std::string& name, std::string& v)
+{
+    std::ostringstream os;
+    TRY_GET_VALUE( dt );
+    TRY_GET_VALUE( dt_max );
+    TRY_GET_VALUE( runConsoleOpenTicks );
+    TRY_GET_VALUE( runConsoleOpacity );
+    TRY_GET_VALUE( forestAimX );
+    TRY_GET_VALUE( forestAimY );
+    TRY_GET_VALUE( forestMoveX );
+    TRY_GET_VALUE( forestMoveZ );
+    TRY_GET_VALUE( forestProximityControl );
+    TRY_GET_VALUE( forestProximityRunner );
+    TRY_GET_VALUE( forestTraceD );
+    TRY_GET_VALUE( forestModifyRunnerSpeed );
+}
+*/
+
 
 } // namespace value
 

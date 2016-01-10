@@ -66,14 +66,10 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
     tb_main->EnsureFocus();
 
-
-    std::cout << std::endl;
-    std::cout << "click ESC to exit from main..." << std::endl;
-    std::cout << "toggle nanovg demo with the N key..." << std::endl;
-    std::cout << "toggle turbobadger demo with the T key..." << std::endl;
-    std::cout << "toggle old-BATB with the INSERT key..." << std::endl; 
-    std::cout << "start DemoForest with the O key..." << std::endl;
-    std::cout << std::endl;
+    std::cout << std::endl
+              << "escape:   exit" << std::endl
+              << "tab:      toggle console" << std::endl
+              << std::endl;
 
 
 }
@@ -84,7 +80,7 @@ IterationStack IterationRunMain::iterate_run(World& run)
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
-    //  OUTPUT
+    // *** output ***
 
     // draw background
     demo::background( batb, run );
@@ -97,25 +93,19 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    //  STEP
+    // *** step ***
     
 
     demo::al::demo_iterate( batb, run );
     demo::nanovg::demo_iterate( batb, false, false );
 
 
-#ifdef DEMO_FOREST_DIRECT
-    if ( true )
-#else
-    if ( batb.run.keyset.ogre->click() )
-#endif
-    {
-        run.events.push( event::Do::DemoForest );
-    }
+    // escape quits main (exit)
     if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
-    if ( batb.run.keyset.nanovg->click() )  run.events.push( event::Do::NanoVG );
-    if ( batb.run.keyset.old->click() )     run.events.push( event::Do::Old );
 
+#ifdef DEMO_FOREST_DIRECT
+    run.events.push( event::Do::DemoForest );
+#endif
 
     // think: look at events and handle thereafter
     for ( auto& event : run.events )

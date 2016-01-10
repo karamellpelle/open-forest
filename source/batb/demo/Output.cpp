@@ -90,6 +90,13 @@ void Output::operator()(World& demo)
 
         float_t alpha = course_tick_ + smooth_ticks <= run.tick ? 1.0 : (run.tick - course_tick_) / smooth_ticks;
         float_t alpha_d = course_tick_d_ + smooth_ticks_d <= run.tick ? 1.0 : (run.tick - course_tick_d_) / smooth_ticks_d;
+/*
+        std::cout << std::setprecision( 2 ) << std::fixed << "\r"
+                  << "course_tick_d_: " << course_tick_d_ << ", "
+                  << "run.tick: " << run.tick << ", "
+                  << "alpha_d: " << alpha_d
+                  ;
+*/
 
         auto p = glm::mix( course_p0_, course_p1_, alpha );
         auto v = glm::mix( course_u0_, course_u1_, alpha );
@@ -231,6 +238,8 @@ void Output::update(World& demo)
 
         course_tick_d_ = run.tick;
 
+        //std::cout << ". full pressed\n";
+
     }
     if ( batb.demo.keyset.map_view_full->released() )
     {
@@ -248,6 +257,9 @@ void Output::update(World& demo)
         course_d1_ = glm::distance( p0, p1 );
 
         course_tick_d_ = run.tick;
+
+        //std::cout << ". full released\n";
+
     }
 
 

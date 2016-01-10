@@ -15,9 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb.hpp"
+#include "batb/glm.hpp"
 #include "batb/forest/ModifyRunner.hpp"
 #include "batb/forest/World.hpp"
-#include "batb.hpp"
 #include "batb/value/forest.hpp"
 
 
@@ -27,6 +28,7 @@ namespace batb
 namespace forest
 {
 
+// z is forward
 // 'dir' gets normalized!
 void ModifyRunner::aim(const glm::vec2& dir)
 {
@@ -34,11 +36,10 @@ void ModifyRunner::aim(const glm::vec2& dir)
 
 
     // World direction in xz plane
-    aim_ = glm::mat4( -u.y, 0.0, u.x, 0.0,
+    aim_ = glm::mat4( u.y, 0.0, -u.x, 0.0,
                       0.0, 1.0, 0.0, 0.0,
                       u.x, 0.0, u.y, 0.0,
                       0.0, 0.0, 0.0, 1.0 );
-    
 
 }
 
@@ -66,6 +67,7 @@ void ModifyRunner::operator()(World& forest)
         runner_->move.aim[1] = aim_[1];
         runner_->move.aim[2] = aim_[2];
 
+
         // set velocity, based on Terrain, 
         // TODO: later use Terrain more active, like running
         //       slow in heavy terrain
@@ -74,9 +76,8 @@ void ModifyRunner::operator()(World& forest)
                         * value::forestModifyRunnerSpeed;
 
         runner_->move.vel = (float)(speed) * runner_->move.aim[2]; // move along z-axis
+        
        
-
-
     }
 
     // clear aim_ and speed_ here?

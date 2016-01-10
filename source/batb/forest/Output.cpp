@@ -35,23 +35,6 @@ void Output::operator()(World& forest)
 {
     run::World& run = forest.run;
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // setup output
-
-    // set respective Ogre based on Aim
-    for (auto& runner : forest.runners )
-    {
-        auto node = runner.ogre_entity->getParentNode();
-
-        // update position of runner
-        auto pos = runner.move.pos;
-        node->setPosition( pos.x, pos.y, pos.z );
-
-        // update orientation of runner
-        auto quat = glm::quat_cast( runner.move.aim );
-        node->setOrientation( ogre::cast( quat ) );
-    }
-
   
     // TODO: instead for below, use Scene: camera->setProjection( run.scene.proj3D );
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
@@ -60,18 +43,12 @@ void Output::operator()(World& forest)
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
-    //auto dir = glm::vec3( forest.camera.move.aim[ 2 ] );
-    const auto& dir = forest.camera.move.aim[ 2 ];
-    const auto& pos = forest.camera.move.aim[ 3 ];
-    
-    forest.camera.ogre_camera->setDirection( Ogre::Vector3( dir[0], dir[1], dir[2] ) );
-    forest.camera.ogre_camera->setPosition(  Ogre::Vector3( pos[0], pos[1], pos[2] ) );
+    forest.camera.ogre_camera->setDirection( ogre::cast_( forest.camera.move.aim[2] ) ); 
+    forest.camera.ogre_camera->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    // TODO: 
-    //  terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) )); // ???
-
+    // TODO: terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) )) ?
 
     // render 3D view from camera into Scene
     batb.ogre.sceneBegin( run.scene );

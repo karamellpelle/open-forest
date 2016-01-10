@@ -102,7 +102,7 @@ void StepDT::operator()(World& forest, tick_t dt)
         {
             auto& runner_b = *j;
 
-            // see if runner is close to control
+            // see if runner is close to runner
             auto diff = runner_a.move.pos - runner_b.move.pos;
             float_t epseps = glm::dot( diff, diff );
             if ( epseps < value::forestProximityRunner )
@@ -121,6 +121,14 @@ void StepDT::operator()(World& forest, tick_t dt)
     // tick of forest::World is not updated here!
 }
 
+void StepDT::operator()(World& forest)
+{
+    // set respective Ogre based on Aim
+    for (auto& runner : forest.runners )
+    {
+        runner.step();
+    }
+}
 
 } // namespace forest
 
