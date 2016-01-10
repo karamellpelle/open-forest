@@ -47,9 +47,8 @@ TBMain::TBMain(BATB& b) : batb( b )
     }
 
     // set TB window settings:
-    SetSettings( /*tb::WINDOW_SETTINGS_TITLEBAR |*/ tb::WINDOW_SETTINGS_RESIZABLE /*| tb::WINDOW_SETTINGS_CAN_ACTIVATE*/ );
+    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
     SetText( "TBMain" );
-    //Invalidate();
 }
 
 

@@ -88,8 +88,8 @@ void Output::operator()(World& demo)
         ////////////////////////////////////////////////////////////////////////////////
         // set draw transfomation
 
-        float_t alpha = course_tick_ + smooth_ticks <= demo.tick ? 1.0 : (demo.tick - course_tick_) / smooth_ticks;
-        float_t alpha_d = course_tick_d_ + smooth_ticks_d <= demo.tick ? 1.0 : (demo.tick - course_tick_d_) / smooth_ticks_d;
+        float_t alpha = course_tick_ + smooth_ticks <= run.tick ? 1.0 : (run.tick - course_tick_) / smooth_ticks;
+        float_t alpha_d = course_tick_d_ + smooth_ticks_d <= run.tick ? 1.0 : (run.tick - course_tick_d_) / smooth_ticks_d;
 
         auto p = glm::mix( course_p0_, course_p1_, alpha );
         auto v = glm::mix( course_u0_, course_u1_, alpha );
@@ -191,11 +191,13 @@ void Output::operator()(World& demo)
 
 void Output::update(World& demo)
 {
-    ////////////////////////////////////////////////////////////////////////////////
-    if ( !updated_ )
+    run::World& run = demo.run;
+
+    // if new world, setup
+    if ( world_ != &demo )
     {
         aim( demo );
-        updated_ = true;
+        world_ = &demo;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -214,11 +216,10 @@ void Output::update(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // change view if we want view whole map
 
-    
     if ( batb.demo.keyset.map_view_full->pressed() )
     {
         // set 0
-        float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
+        float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks_d );
         course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
         //std::cout << std::setprecision( 2 ) << std::fixed
         //          << "press: alpha_d " << alpha_d << " course_d0_ " << course_d0_ << std::endl;
@@ -228,13 +229,13 @@ void Output::update(World& demo)
         auto h = demo.course.height( course_p1_.y );
         course_d1_ = std::max( course_d1_, 0.5 * std::max( w, h ) );
 
-        course_tick_d_ = demo.tick;
+        course_tick_d_ = run.tick;
 
     }
     if ( batb.demo.keyset.map_view_full->released() )
     {
         // set 0
-        float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks_d );
+        float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks_d );
         course_d0_ = smooth( course_d0_, course_d1_, alpha_d );
         //std::cout << std::setprecision( 2 ) << std::fixed
         //          << "release: alpha_d " << alpha_d << " course_d0_ " << course_d0_ << std::endl << std::endl;
@@ -246,7 +247,7 @@ void Output::update(World& demo)
         auto p1 = glm::vec2( control1->aim.pos.x, control1->aim.pos.z ); 
         course_d1_ = glm::distance( p0, p1 );
 
-        course_tick_d_ = demo.tick;
+        course_tick_d_ = run.tick;
     }
 
 
@@ -255,10 +256,12 @@ void Output::update(World& demo)
 
 void Output::aim(World& demo)
 {
+    run::World& run = demo.run;
+
     bool map_view = batb.demo.keyset.map_view_full->press();
 
-    float_t alpha = keep_inside( 0.0, 1.0, (demo.tick - course_tick_) / smooth_ticks );
-    float_t alpha_d = keep_inside( 0.0, 1.0, (demo.tick - course_tick_d_) / smooth_ticks ); // here: use 'smooth_ticks', not 'smooth_ticks_d'
+    float_t alpha = keep_inside( 0.0, 1.0, (run.tick - course_tick_) / smooth_ticks );
+    float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks ); // here: use 'smooth_ticks', not 'smooth_ticks_d'
 
     // set 0
     course_p0_ = glm::mix( course_p0_, course_p1_, alpha );
@@ -283,8 +286,8 @@ void Output::aim(World& demo)
         if ( !map_view ) course_d0_ = course_d1_;
     }
 
-    course_tick_ = demo.tick;
-    if ( !map_view ) course_tick_d_ = demo.tick;
+    course_tick_ = run.tick;
+    if ( !map_view ) course_tick_d_ = run.tick;
 
 
 

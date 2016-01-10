@@ -49,7 +49,8 @@ protected:
 
     BATB& batb;
 
-    bool updated_ = false;
+    World* world_ = nullptr;
+
     uint course_i_ = 0;
     tick_t course_tick_ = 0.0;
     glm::vec2 course_u0_;

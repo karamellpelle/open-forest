@@ -115,8 +115,12 @@ bool Console::operator()(const std::string& input)
     using CommandEater = bool(BATB& , std::string& );
     extern CommandEater cmd_echo;
     extern CommandEater cmd_value;
-    extern CommandEater cmd_easteregg;
 
+
+    // easteregg command typed?
+    bool (cmd_easteregg)(BATB& , const std::string& );
+    if ( cmd_easteregg( batb, input ) ) return true;
+    
     std::string in = input;
     std::string cmd = word( in );
     
@@ -128,9 +132,6 @@ bool Console::operator()(const std::string& input)
     if ( cmd == "echo" )      return cmd_echo( batb, in );   
     if ( cmd == "value" )     return cmd_value( batb, in );
 
-    // easteregg command typed?
-    std::string input_ = input;
-    if ( cmd_easteregg( batb, input_ ) ) return true;
 
     *this << "Console: command not found: " << cmd << std::endl;
     return false;

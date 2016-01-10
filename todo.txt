@@ -1,6 +1,5 @@
 get/set values + YAML + Console
 run by events
-easteregg
 
 
 * define precision of glm (vec, mat, etc) the same as float_t 

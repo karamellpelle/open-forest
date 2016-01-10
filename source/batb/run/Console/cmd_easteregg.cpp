@@ -32,15 +32,17 @@ namespace run
 {
 
 // output string to console
-bool cmd_easteregg(BATB& batb, std::string& in)
+bool cmd_easteregg(BATB& batb, const std::string& input)
 {
+    // ('input' is the whole command line typed)
   
     // if correct command typed, do easter egg
     // eater egg is PS1|reverse(PS1)
     
-    if ( in.empty() )         return false;
-    if ( in.front() != '|' )  return false;
-    auto right = in.substr( 1 );
+
+    if ( input.empty() )         return false;
+    if ( input.front() != '|' )  return false;
+    auto right = input.substr( 1 );
     std::reverse( std::begin( right ), std::end( right ) );
     for (auto i = std::begin( right ); i != std::end( right ); ++i)
     {
@@ -60,6 +62,8 @@ bool cmd_easteregg(BATB& batb, std::string& in)
     {
         demo::al::demo_play( batb, file::static_data( "easteregg.mp3" ) );
 
+        // output PS1 + typed command line
+        batb.run.console << left << input << std::endl;
         return true;
     }
     return false;

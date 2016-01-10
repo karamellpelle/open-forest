@@ -71,9 +71,8 @@ TBConsole::TBConsole(BATB& b) : batb( b )
     }
 
     // settings:
-    SetSettings( /*tb::WINDOW_SETTINGS_TITLEBAR |*/  tb::WINDOW_SETTINGS_RESIZABLE /*| tb::WINDOW_SETTINGS_CAN_ACTIVATE*/ );
+    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
     SetText( "TBConsole" );
-    //Invalidate();
 }
 
 

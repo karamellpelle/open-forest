@@ -19,6 +19,7 @@
 
 #ifdef __unix__
 #include <unistd.h>
+#include <pwd.h>
 #endif
 
 
@@ -35,15 +36,16 @@ Player local_player()
     Player ret;
     
 #ifdef __unix__
-    if ( auto name = ::getlogin() )
+    if ( auto pw = ::getpwuid( ::geteuid() ) )
     {
-        ret.name = std::string( name );
+        ret.name = std::string( pw->pw_name );
     }
     else
 #endif
-    ret.name = "openforest";
+    ret.name = "open-forest";
 
     return ret;
+
 }
 
 
