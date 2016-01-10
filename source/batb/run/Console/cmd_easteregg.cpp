@@ -37,7 +37,7 @@ bool cmd_easteregg(BATB& batb, const std::string& input)
     // ('input' is the whole command line typed)
   
     // if correct command typed, do easter egg
-    // eater egg is PS1|reverse(PS1)
+    // easter egg is PS1|reverse(PS1)
     
 
     if ( input.empty() )         return false;
@@ -62,8 +62,6 @@ bool cmd_easteregg(BATB& batb, const std::string& input)
     {
         demo::al::demo_play( batb, file::static_data( "easteregg.mp3" ) );
 
-        // output PS1 + typed command line
-        batb.run.console << left << input << std::endl;
         return true;
     }
     return false;

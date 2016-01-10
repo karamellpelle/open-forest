@@ -116,6 +116,8 @@ bool Console::operator()(const std::string& input)
     extern CommandEater cmd_echo;
     extern CommandEater cmd_value;
 
+    // output PS1 + typed command line
+    *this << getPS1() << input << "\n";
 
     // easteregg command typed?
     bool (cmd_easteregg)(BATB& , const std::string& );
@@ -124,8 +126,6 @@ bool Console::operator()(const std::string& input)
     std::string in = input;
     std::string cmd = word( in );
     
-    // output PS1 + typed command
-    *this << getPS1() << cmd << "\n";
 
     // handle command
     if ( cmd == "" )          return true;                    // empty command is OK

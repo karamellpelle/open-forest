@@ -38,8 +38,46 @@ namespace run
 // modify value::'s
 bool cmd_value(BATB& batb, std::string& in)
 {
+    auto name = identifier( in );
+
+    auto v = word( in );
+
+    // get value if nothing follows the variable name
+    if ( v.empty() )
+    {
+        // get
+        std::string value;
+        if ( batb.value.get( name, value ) )
+        {
+            batb.run.console << value << "\n";
+            return true;
+        }
+        else
+        {
+            batb.run.console << "variable '"
+                             << name 
+                             << "' is not available.\n";
+            return false;
+        }
+    }
+    else
+    {
+        if ( batb.value.set( name, v ) )
+        {
+            return true;
+        }
+        else
+        {
+            batb.run.console << "could not set variable '"
+                             << name
+                             << "'\n"
+                             ;
+            return false;
+        }
+    }
+
     // (allowed to modify 'in' directly)
-    return true;
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //

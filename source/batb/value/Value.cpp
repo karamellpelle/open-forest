@@ -144,10 +144,11 @@ float_t coursedrawerColorA;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Value
-/*
-#define TRY_SET_VALUE( variable ) if ( name == #variable ) return is >> variable
+
 bool Value::set(const std::string& name, const std::string& v)
 {
+#define TRY_SET_VALUE( variable ) if ( name == #variable ) return (bool)(is >> (variable))
+
     std::istringstream is( v ); 
 
     TRY_SET_VALUE( dt );
@@ -168,9 +169,10 @@ bool Value::set(const std::string& name, const std::string& v)
     return false;
 }
 
-#define TRY_GET_VALUE( variable ) if ( name == #variable ) return os >> v
 bool Value::get(const std::string& name, std::string& v)
 {
+#define TRY_GET_VALUE( variable ) if ( name == #variable ) { os << (variable); v = os.str(); return true; }
+
     std::ostringstream os;
     TRY_GET_VALUE( dt );
     TRY_GET_VALUE( dt_max );
@@ -184,8 +186,10 @@ bool Value::get(const std::string& name, std::string& v)
     TRY_GET_VALUE( forestProximityRunner );
     TRY_GET_VALUE( forestTraceD );
     TRY_GET_VALUE( forestModifyRunnerSpeed );
+
+    return false;
 }
-*/
+
 
 
 } // namespace value

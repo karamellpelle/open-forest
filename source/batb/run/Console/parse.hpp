@@ -81,6 +81,25 @@ inline std::string alphanums(std::string& str)
 
 }
 
+// alphanum + '_'
+inline std::string identifier(std::string& str)
+{
+    // http://stackoverflow.com/questions/21578544/stdremove-if-and-stdisspace-compile-time-error
+    auto is = [](std::string::value_type c) { return std::isspace(c); };
+    auto ia = [](std::string::value_type c) { return std::isalnum(c) || c == '_'; };
+
+    // find word (trim front from spaces)
+    auto b = std::find_if_not( std::begin( str ), std::end( str ), is );
+    auto e = std::end( str );
+    auto i = std::find_if_not( b, e, ia );
+    
+    auto ret = std::string( b, i );
+    str.erase( std::begin( str ), i );
+
+    return ret;
+
+}
+
 // if given word is found (and word ended with space), remove it
 inline bool word(const std::string& ref, std::string& str)
 {

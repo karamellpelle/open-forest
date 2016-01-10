@@ -36,6 +36,10 @@ friend void end(Value& value);
 
 public:
     Value(BATB& b) : ModuleBATB( b ) { }
+    
+    // set and get from string
+    bool set(const std::string& , const std::string& );
+    bool get(const std::string& , std::string& );
 
 private:
 

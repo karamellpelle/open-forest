@@ -185,7 +185,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
 {
-    constexpr uint m = 8;
+    constexpr uint m = 16;
 
     auto& runner = demo.runner;
 
