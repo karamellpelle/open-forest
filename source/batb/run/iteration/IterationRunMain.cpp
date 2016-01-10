@@ -35,19 +35,12 @@ namespace run
 {
 
 
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b ), beginEvents( b )
 {
 
 }
 
-
-
+  
 void IterationRunMain::iterate_begin(World& run)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
@@ -92,58 +85,39 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     //  OUTPUT
-    //
 
     // draw background
     demo::background( batb, run );
 
-    // nanovg demo
-    if ( batb.run.keyset.nanovg->toggle() ) demo::nanovg::demo_iterate( batb, false, false );
 
     ////////////////////////////////////////////////////////////////////////////////
-    // grab and clean up events
+    // grab and clean up events (must be done between output and step!)
     beginEvents( run );
     ////////////////////////////////////////////////////////////////////////////////
+
 
     ////////////////////////////////////////////////////////////////////////////////
     //  STEP
     
-    // ALURE demo:
-    demo::al::demo_iterate( batb, run );
 
-    // start forest-demo:
+    demo::al::demo_iterate( batb, run );
+    demo::nanovg::demo_iterate( batb, false, false );
+
+
 #ifdef DEMO_FOREST_DIRECT
     if ( true )
 #else
     if ( batb.run.keyset.ogre->click() )
 #endif
     {
-        // remove main widget from screen
-        tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
-
-        //auto* demo = new demo::World( run );
-        //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
-        //         game::begin_iteration( new IterationRunDemo( batb ) ),
-        //         game::begin_iteration( new IterationRunWork( batb, UnloadWorker<demo::World>( batb, demo ) ) ),
-        //         game::begin_iteration( this )
-        //       }
-        return { game::begin_iteration( new IterationRunDemo( batb ) ), 
-                 game::begin_iteration( this ) };
+        run.events.push( event::Do::DemoForest );
     }
-    
-
-    if ( batb.run.keyset.escape->click() ) return _emptylist_;
-    
-    // old-BATB
-    if ( batb.run.keyset.old->click() )
-    {
-        tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
-
-        return {  game::begin_iteration( batb.run.iterationRunOld ), 
-                  game::begin_iteration( *this ) };
-    }
+    if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
+    if ( batb.run.keyset.nanovg->click() )  run.events.push( event::Do::NanoVG );
+    if ( batb.run.keyset.old->click() )     run.events.push( event::Do::Old );
 
 
+    // think: look at events and handle thereafter
     for ( auto& event : run.events )
     {
         ////////////////////////////////////////////////////////////////////////////////
@@ -154,29 +128,36 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             {
             case event::Do::DemoForest:
                 batb.run.console( R"(echo "event: do-demo-forest")" );
-                //auto* demo = new demo::World( run );
+
+                // remove main widget from screen
+                tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
+
                 //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
                 //         game::begin_iteration( new IterationRunDemo( batb ) ),
                 //         game::begin_iteration( new IterationRunWork( batb, UnloadWorker<demo::World>( batb, demo ) ) ),
                 //         game::begin_iteration( this )
                 //       }
-                //return { game::begin_iteration( new IterationRunDemo( batb ) ), 
-                //         game::begin_iteration( this ) };
+                return { game::begin_iteration( new IterationRunDemo( batb ) ), 
+                         game::begin_iteration( this ) };
                 
             case event::Do::NanoVG:
                 batb.run.console( R"(echo "do-nanovg")" );
-                //run.toggle_nanovg = !run.toggle_nanovg;
+
+                demo::nanovg::demo_toggle();
                 break;
 
             case event::Do::Old:
                 batb.run.console( R"(echo "do-old")" );
-                //return {  game::begin_iteration( batb.run.iterationRunOld ), 
-                //          game::begin_iteration( *this ) };
+
+                tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
+
+                return {  game::begin_iteration( batb.run.iterationRunOld ), 
+                          game::begin_iteration( *this ) };
 
             case event::Do::Exit:
                 batb.run.console( R"(echo "do-exit")" );
-                break;
 
+                return _emptylist_;
             }
         }
 
@@ -198,10 +179,7 @@ void begin(IterationRunMain& iter)
     BATB& batb = iter.batb;
 
 
-    // set up GUI's
-    // FIXME: memory leak, according to valgring
     iter.tb_main = new TBMain( batb );
-
 
     // add to screen
     // TODO: use layout

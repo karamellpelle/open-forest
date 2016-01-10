@@ -39,6 +39,7 @@ static PerfGraph fps;
 static double prevt = 0;
 
 static bool tmp_empty = true;
+static bool on_ = false;
 
 
 void demo_begin(BATB& batb)
@@ -65,11 +66,21 @@ void demo_end(BATB& batb)
 }
 
 
+void demo_on(bool b)
+{
+    on_ = b;
+}
+
+void demo_toggle()
+{
+    on_ = !on_;
+}
 
 void demo_iterate(BATB& batb, bool premult, bool blowup)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
+    
 /*
     // set for next iteration...
     if (premult)
@@ -77,10 +88,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     else
             glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
 */   
-    if ( tmp_empty )
-    {
-        return;
-    }
+    if ( tmp_empty ) return;
+    if ( !on_ )  return;
 
     // begin GL state for nanovg
     gl::begin_nanovg();
