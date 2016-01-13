@@ -39,6 +39,9 @@ extern float_t forestTraceD;
 
 extern float_t forestModifyRunnerSpeed;
 
+extern float_t forestRunnerAnimSpeed;
+extern float_t forestRunnerAnimSpeedMin;
+
 
 
 

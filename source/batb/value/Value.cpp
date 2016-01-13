@@ -62,6 +62,9 @@ void begin(Value& value)
         forestModifyRunnerSpeed = 35.0;
         //forestModifyRunnerSpeed = 200.0;
 
+        forestRunnerAnimSpeed     = 0.032;
+        forestRunnerAnimSpeedMin  = 1.0;
+
         ////////////////////////////////////////////////////////////////////////////////
         
         coursedrawerSizeNormal    = 1.00;
@@ -125,6 +128,9 @@ float_t forestTraceD;
 
 float_t forestModifyRunnerSpeed;
 
+float_t forestRunnerAnimSpeed;
+float_t forestRunnerAnimSpeedMin;
+
 ////////////////////////////////////////////////////////////////////////////////
 //  batb.hpp
 //
@@ -163,6 +169,8 @@ bool Value::set(const std::string& name, const std::string& v)
     TRY_SET_VALUE( forestProximityRunner );
     TRY_SET_VALUE( forestTraceD );
     TRY_SET_VALUE( forestModifyRunnerSpeed );
+    TRY_SET_VALUE( forestRunnerAnimSpeed );
+    TRY_SET_VALUE( forestRunnerAnimSpeedMin );
     
 
     batb.log << "Value: could not set variable '" << name << "' to " << v << std::endl;
@@ -186,6 +194,8 @@ bool Value::get(const std::string& name, std::string& v)
     TRY_GET_VALUE( forestProximityRunner );
     TRY_GET_VALUE( forestTraceD );
     TRY_GET_VALUE( forestModifyRunnerSpeed );
+    TRY_GET_VALUE( forestRunnerAnimSpeed );
+    TRY_GET_VALUE( forestRunnerAnimSpeedMin );
 
     return false;
 }

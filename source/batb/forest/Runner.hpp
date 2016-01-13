@@ -39,6 +39,8 @@ namespace forest
 class World;
 class Control;
 class Map;
+class Runner;
+
 
 // point in a trace
 class TracePoint
@@ -91,6 +93,27 @@ public:
 private:
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// RunnerAnimation
+
+// tmp
+class RunnerAnimation
+{
+public:
+    RunnerAnimation(Runner& r) : runner( r ) { }
+
+    void reset(const YAML::Node& );
+    void step(tick_t );
+
+    Ogre::AnimationState* ogre_animstate_base = nullptr;
+    Ogre::AnimationState* ogre_animstate_top = nullptr;
+
+    tick_t tick = 0.0;
+    Runner& runner;
+};
+
+  
+
 /////////////////////////////////////////////////////////////////////////////// 
 // Runner
 //
@@ -103,8 +126,8 @@ public:
     Runner(World& w, run::Player* p = nullptr);
 
     // assignment/copy allowed, if object copy, create 'clone()'
-    Runner(const Runner& ) = default;
-    Runner& operator=(const Runner& ) = default;
+    Runner(const Runner& );
+    Runner(Runner&& );
 
     ////////////////////////////////////////////////////////////////////////////////
     void reset(const YAML::Node& );
@@ -156,10 +179,12 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // output 
 
+
     //ogre_
     Ogre::Entity* ogre_entity = nullptr;
     //AL::source al_source_ 
 
+    RunnerAnimation animation;
 
 };
 

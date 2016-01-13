@@ -19,6 +19,7 @@
 #define BATB_RUN_ITERATION_ITERATIONRUNDEMO_HPP
 #include "batb/run/iteration/IterationRun.hpp"
 #include "batb/demo/iteration/IterationDemo.hpp"
+#include "batb/demo/workers.hpp"
 #include "batb/demo/World.hpp"
 
 
@@ -39,7 +40,7 @@ class IterationRunDemo : public IterationRun
 {
 public:
     // construct from the containing Run object
-    IterationRunDemo(BATB& );
+    IterationRunDemo(BATB& , demo::World* );
 
     // iterate
     IterationStack iterate_run(World& world) override;
@@ -49,12 +50,9 @@ public:
 
     ////////////////////////////////////////
 
-
-    demo::World* demo = nullptr;
-    demo::IterationStack stack;
-
 private:
-    tick_t tick_;
+    demo::World* demo_ = nullptr;
+    demo::IterationStack stack_;
 
 };
 

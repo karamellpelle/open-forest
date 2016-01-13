@@ -17,6 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/demo/workers.hpp"
+#include "batb/demo/World.hpp"
 
 
 
@@ -29,35 +30,21 @@ namespace demo
 
 
 
-void LoadWorker<World>::operator()(Work& work)
+void LoadWorkerWorld::operator()(run::Work& work)
 {
     // how many steps to be loaded
-    work.definite( 4 + 3 ); 
+    work.definite( 2 ); 
 
     try
     {
-
-        // load forest::World
-        //forest::LoadWorker<forest::World> load_forest;
-        //work.state( "forest::World" );
-        //forest::WorldLoader load_forest( batb );
-        //work.push();
-        //load_forest.work( work );
-        //load_forest.load( demo->world, YAML::Node() );
-        //work.pop();
-
-        // tmp: fake loading, to show capabilities:
-        work.state( "Proxy library A" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-        work.state( "Proxy library B" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-        work.state( "Proxy library C" );
-        std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+        work.state( "forest::World" );
+        forest::WorldLoader loader( batb );         // TODO: pass 'Work' down
+        loader.load( demo->forest, YAML::Node() );  // TODO: YAML definition
 
     }
     catch (std::exception& e)
     {
-        batb.log << "error loading : " << e.what() << std::endl; 
+        batb.log << "error loading demo::World: " << e.what() << std::endl; 
     }
 
     // must be done to signalize completion
@@ -65,7 +52,7 @@ void LoadWorker<World>::operator()(Work& work)
 }
 
 
-void UnloadWorker<World>::operator()(Work& work)
+void UnloadWorkerWorld::operator()(run::Work& work)
 {
     // (this is done in other GL context!)
 
@@ -74,6 +61,9 @@ void UnloadWorker<World>::operator()(Work& work)
 
     try
     {
+        work.state( "forest::World" );
+        forest::WorldLoader loader( batb );           // TODO: pass 'Work' down
+        loader.unload( demo->forest );  // TODO: YAML definition
 
     } 
     catch (std::exception& e)

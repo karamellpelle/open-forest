@@ -27,7 +27,7 @@ namespace run
 {
 
 
-IterationRunDemo::IterationRunDemo(BATB& b) : IterationRun( b )
+IterationRunDemo::IterationRunDemo(BATB& b, demo::World* d) : IterationRun( b ), demo_( d )
 {
 
 }
@@ -36,22 +36,9 @@ IterationRunDemo::IterationRunDemo(BATB& b) : IterationRun( b )
 
 void IterationRunDemo::iterate_begin(World& run)
 {
-    BATB_LOG_FUNC( batb );
 
-    // load Forest
-    // NOTE: this fails anyway; 'this' is destroyed upon 
-    //       iteration is finished
-    static bool init = false;
-    if (!init)
-    {
-        demo = new demo::World( run );
-        forest::WorldLoader loader( batb );
-        loader.load( demo->forest, YAML::Node() );
-
-        init = true;
-    }
     // setup substack
-    stack = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
+    stack_ = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
 
 }
 
@@ -59,9 +46,9 @@ void IterationRunDemo::iterate_begin(World& run)
 IterationStack IterationRunDemo::iterate_run(World& run)
 {
     // wrap IterationDemo's inside IterationRun
-    game::iterate( stack, *demo );
+    game::iterate( stack_, *demo_ );
 
-    if ( stack.empty() )
+    if ( stack_.empty() )
     {
         return _emptylist_;
     }

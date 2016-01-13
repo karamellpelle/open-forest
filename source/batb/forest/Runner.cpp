@@ -19,11 +19,16 @@
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
 #include "OgreSceneNode.h"
+#include "OgreSkeletonInstance.h"
+#include "OgreAnimation.h"
+#include "OgreAnimationState.h"
+
 #include "batb/run/Player.hpp"
 #include "batb/forest/Runner.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
 #include "batb/ogre/helpers.hpp"
+#include "batb/value/forest.hpp"
 #include "batb/glm.hpp"
 
 
@@ -33,10 +38,43 @@ namespace batb
 namespace forest
 {
 
-Runner::Runner(World& w, run::Player* p) : forest( w ), player( p ) 
+
+Runner::Runner(World& w, run::Player* p) : forest( w ), player( p ), animation( *this )
 { 
 
 }
+
+Runner::Runner(const Runner& r) : 
+    forest( r.forest ),
+    player( r.player ), 
+    map( r.map ), 
+    move( r.move ),
+    control0( r.control0 ), 
+    trace( r.trace ),
+    intensity( r.intensity ), 
+    ogre_entity( r.ogre_entity ),
+    animation( *this )
+{
+
+}
+
+Runner::Runner(Runner&& r) :
+    forest(                  r.forest   ), 
+    player(       std::move( r.player ) ), 
+    map(          std::move( r.map ) ),
+    move(         std::move( r.move ) ),
+    control0(     std::move( r.control0 ) ),
+    trace(        std::move( r.trace ) ),
+    intensity(    std::move( r.intensity ) ),
+    ogre_entity(  std::move( r.ogre_entity ) ),
+    animation( *this )
+{
+
+}
+
+
+
+
 
 // create internal from definition
 void Runner::reset(const YAML::Node& yaml)
@@ -53,6 +91,10 @@ void Runner::reset(const YAML::Node& yaml)
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 3, 3, 3 ); // FIXME
     node->attachObject( ogre_entity );
+
+    // setup animations for runner
+    animation.reset( YAML::Node() /*yaml["animation"]*/ );
+
 }
 
   
@@ -104,28 +146,49 @@ void Runner::step()
     auto quat = glm::quat_cast( move.aim );
     node->setOrientation( ogre::cast( quat ) );
 
-    // TODO: update animation
-    // this is very important due to the nature of the exported animations
-    //bodyEnt->getSkeleton()->setBlendMode(ANIMBLEND_CUMULATIVE);
-    //String animNames[] =
-    //{"IdleBase", "IdleTop", "RunBase", "RunTop", "HandsClosed", "HandsRelaxed", "DrawSwords",
-    //"SliceVertical", "SliceHorizontal", "Dance", "JumpStart", "JumpLoop", "JumpEnd"};
-    //
-    //// populate our animation list
-    //for (int i = 0; i < NUM_ANIMS; i++)
-    //{
-    //    mAnims[i] = mBodyEnt->getAnimationState(animNames[i]);
-    //    mAnims[i]->setLoop(true);
-    //    mFadingIn[i] = false;
-    //    mFadingOut[i] = false;
-    //}
-    //
-    //// start off in the idle state (top and bottom together)
-    //setBaseAnimation(ANIM_IDLE_BASE);
-    //setTopAnimation(ANIM_IDLE_TOP);
-    //
-    //// relax the hands since we're not holding anything
-    //mAnims[ANIM_HANDS_RELAXED]->setEnabled(true);
+    // update animation
+    animation.step( forest.tick );
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+
+void RunnerAnimation::reset(const YAML::Node& yaml)
+{
+    // from SindbadCharacterController.h:
+    runner.ogre_entity->getSkeleton()->setBlendMode( Ogre::ANIMBLEND_CUMULATIVE );
+
+    ogre_animstate_base = runner.ogre_entity->getAnimationState( "RunBase" );
+    ogre_animstate_top = runner.ogre_entity->getAnimationState( "RunTop" );
+     
+    ogre_animstate_base->setTimePosition( 0 );
+    ogre_animstate_base->setLoop( true );
+    ogre_animstate_base->setEnabled( true );
+    ogre_animstate_top->setTimePosition( 0 );
+    ogre_animstate_top->setLoop( true );
+    ogre_animstate_top->setEnabled( true );
+
+    //runner.ogre_entity->getAnimationState( "HandsRelaxed" )->setEnabled( true );
+    runner.ogre_entity->getAnimationState( "HandsClosed" )->setEnabled( true );
+    
+    tick = 0.0;
+}
+
+
+void RunnerAnimation::step(tick_t tick_next)
+{
+    //TODO: prevent tick_next == tick
+
+    auto delta = tick_next - tick;
+    
+    auto add = delta * std::max( value::forestRunnerAnimSpeedMin, runner.move.speed * value::forestRunnerAnimSpeed );
+    ogre_animstate_base->addTime( add );
+    ogre_animstate_top->addTime( add );
+
+    tick = tick_next;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

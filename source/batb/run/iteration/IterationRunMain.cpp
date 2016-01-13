@@ -21,9 +21,10 @@
 #include "batb/demo/libs/ogre.hpp"
 #include "batb/demo/libs/al.hpp"
 #include "batb/demo/other.hpp"
-#include "batb/run/iteration/IterationRunMain/TBMain.hpp"
 #include "batb/run/events.hpp"
+#include "batb/run/iteration/IterationRunMain/TBMain.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
+#include "batb/run/iteration/IterationRunWork.hpp"
 
 //#define DEMO_FOREST_DIRECT
 
@@ -67,8 +68,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tb_main->EnsureFocus();
 
     std::cout << std::endl
-              << "escape:   exit" << std::endl
-              << "tab:      toggle console" << std::endl
+              << "escape  => exit" << std::endl
+              << "tab     => toggle console" << std::endl
               << std::endl;
 
 
@@ -101,7 +102,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 
     // escape quits main (exit)
-    if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
+    //if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
 
 #ifdef DEMO_FOREST_DIRECT
     run.events.push( event::Do::DemoForest );
@@ -117,37 +118,49 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             switch ( *next )
             {
             case event::Do::DemoForest:
+            {
                 batb.run.console( R"(echo "event: do-demo-forest")" );
 
                 // remove main widget from screen
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
-                //return { game::begin_iteration( new IterationRunWork( batb, LoadWorker<demo::World>( batb, demo ) ) ),
-                //         game::begin_iteration( new IterationRunDemo( batb ) ),
-                //         game::begin_iteration( new IterationRunWork( batb, UnloadWorker<demo::World>( batb, demo ) ) ),
-                //         game::begin_iteration( this )
-                //       }
-                return { game::begin_iteration( new IterationRunDemo( batb ) ), 
+                // create demo::World 
+                auto demo = new demo::World( run );
+                forest::WorldLoader loader( batb );        
+                loader.load( demo->forest, YAML::Node() ); 
+
+                return { game::begin_iteration( new IterationRunDemo( batb, demo ) ), 
                          game::begin_iteration( this ) };
-                
+
+                //return {
+                //          new run::IterationRunWork( batb, demo::LoadWorkerWorld( batb, demo ) ),
+                //          game::begin_iteration( new IterationRunDemo( batb, demo ) ),
+                //          new run::IterationRunWork( batb, demo::UnloadWorkerWorld( batb, demo ) ),
+                //          game::begin_iteration( this )
+                //       };
+            }    
             case event::Do::NanoVG:
+            {
                 batb.run.console( R"(echo "do-nanovg")" );
 
                 demo::nanovg::demo_toggle();
                 break;
-
+            }
             case event::Do::Old:
+            {
                 batb.run.console( R"(echo "do-old")" );
 
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
                 return {  game::begin_iteration( batb.run.iterationRunOld ), 
                           game::begin_iteration( *this ) };
-
+            }
             case event::Do::Exit:
+            {
                 batb.run.console( R"(echo "do-exit")" );
 
                 return _emptylist_;
+            }
             }
         }
 

@@ -18,43 +18,40 @@
 #ifndef BATB_DEMO_WORKERS_HPP
 #define BATB_DEMO_WORKERS_HPP
 #include "batb/batb_include.hpp"
-#include "batb/demo/iteration/IterationRunWork.hpp"
+#include "batb/run/iteration/IterationRunWork.hpp"
 
 
 namespace batb
 {
-
+class BATB;
 
 
 namespace demo
 {
+class World;
 
-////////////////////////////////////////////////////////////////////////////////
-// load non-core part of BATB
-template <>
-class LoadWorker<World>
+
+// load demo::World
+class LoadWorkerWorld
 {
 public:
-    LoadWorker(BATB& b, World* w) : batb( b ), demo( w ) { }
-    void operator()(Work& );
+    LoadWorkerWorld(BATB& b, World* w) : batb( b ), demo( w ) { }
+    void operator()(run::Work& );
 
     BATB& batb;
-    World* demo;
+    World* demo = nullptr;
 };
 
 
-  
-////////////////////////////////////////////////////////////////////////////////
-// unload non-core part of BATB
-template <>
-class UnloadWorker<BATB>
+// unload demo::World  
+class UnloadWorkerWorld
 {
 public:
-    UnloadWorker(BATB& b, World* w) : batb( b ), demo( w ) { }
-    void operator()(Work& );
+    UnloadWorkerWorld(BATB& b, World* w) : batb( b ), demo( w ) { }
+    void operator()(run::Work& );
 
     BATB& batb;
-    World* demo;
+    World* demo = nullptr;
 };
 
 

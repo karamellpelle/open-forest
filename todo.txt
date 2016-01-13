@@ -1,7 +1,9 @@
-get/set values + YAML + Console
+'reset()' for objects in forest::World
 Indefinite RunWork
 load forest world by RunWork
 TBEditField
+remove template LoadWorker
+
 
 
 

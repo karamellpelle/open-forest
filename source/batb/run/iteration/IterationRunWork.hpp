@@ -81,13 +81,8 @@ private:
 
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// IterationRunWork:
-//    loads the non-core part of BATB (and afterwards run::World??), 
-//    showing the load progress interactively. finishes when load error
-//    or load complete. continues with IterationRunMain if success loading...
-//  TODO:
-//    * create 1 GLFWwindow and reuse? (void begin(GLFWwindow* ))
+
+// load various stuff 
 class IterationRunWork : public IterationRun
 {
 public:
@@ -95,7 +90,10 @@ public:
 
     // construct from the containing Run object
     IterationRunWork(BATB& );
-    IterationRunWork(BATB& b, WorkFunction f) : IterationRunWork( b ) { work( f ); }
+    //IterationRunWork(BATB& b, WorkFunction f) : IterationRunWork( b ) { work( f ); }
+
+    template <typename F>
+    IterationRunWork(BATB& b, const F& f) : IterationRunWork( b ) { work( WorkFunction( f ) );  }
     template <class Clazz, class Method>
     IterationRunWork(BATB& b, Clazz& c, Method& m) : IterationRunWork( b, std::bind( m, c ) ) { }
     ~IterationRunWork();

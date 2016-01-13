@@ -195,6 +195,14 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     gl::end_ogre();
 }
 
+
+void WorldLoader::unload(World& forest)
+{
+    batb.log << "FIXME: unload forest::World!" << std::endl;
+}
+
+
+
 } // namespace forest
 
 } // namespace batb

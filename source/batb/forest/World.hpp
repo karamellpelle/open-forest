@@ -129,17 +129,14 @@ class WorldLoader
 {
 public:
     WorldLoader(BATB& );
-
-    //void setState( FiniteLoad* state) { state_ = state };
+    //WorldLoader(BATB& , run::Work& );
 
     void load(World& , const YAML::Node& );
     void unload(World& );
 
 private:
     BATB& batb;
-
-    //FiniteLoad* state_ = nullptr;
-
+    //run::Work& work
 };
 
 
