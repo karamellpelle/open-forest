@@ -21,6 +21,7 @@
 #include "batb.hpp"
 #include "batb/forest/Control.hpp"
 #include "batb/forest.hpp"
+#include "batb/forest/events.hpp"
 #include "batb/forest/World.hpp"
 
 
@@ -47,7 +48,9 @@ void Control::reset()
 }
 void Control::reset(const ControlDefinition& def)
 {
-    ////////////////////////////////////////////////////////////////////////////////
+    // ensure previous data is cleared
+    reset();
+
     // set correct height from terrain
     aim.pos.x = def.x;
     aim.pos.z = def.z;
@@ -55,16 +58,14 @@ void Control::reset(const ControlDefinition& def)
                 Ogre::Vector3( aim.pos.x, 0.0, aim.pos.z ) );
     aim.pos.w = 1.0;
 
-    // ensure previous data is cleared
-    reset();
 
     ////////////////////////////////////////////////////////////////////////////////
     // create output
     //
-    std::ostringstream name;
-    name << "Control_" << def.code << "(" << this << ")";
+    std::ostringstream os( "Control_" );
+    os << def.code << "(" << this << ")";
 
-    ogre_entity = forest.ogre_scenemgr->createEntity( name.str(), "control.mesh" );
+    ogre_entity = forest.ogre_scenemgr->createEntity( os.str(), "control.mesh" );
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 16, 16, 16 ); // FIXME
     node->setPosition( aim.pos.x, aim.pos.y, aim.pos.z );
@@ -80,6 +81,16 @@ void Control::punch(Runner* runner)
       
     ++stats_punches;
 
+    // add event
+    forest.events.push( event::ControlPunch( forest.tick, runner, this ) );
+
+    // tmp:
+    std::cout
+    //batb.run.console 
+                      << (runner->player == nullptr ? "a runner" : runner->player->name)
+                      << " punched control " << definition.code
+                      << std::endl
+                      ;
 }
 
 } // namespace forest

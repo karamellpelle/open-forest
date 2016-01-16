@@ -15,6 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include <iomanip>
 #include "batb/forest/StepDT.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
@@ -92,7 +93,7 @@ void StepDT::operator()(World& forest, tick_t dt)
             if ( epseps < value::forestProximityControl )
             {
                 // event::ProximityControl
-                forest.events.push( event::ProximityControl( &control, &runner_a, epseps ) );
+                forest.events.push( event::ProximityControl( tick_next, &control, &runner_a, epseps ) );
             }
         }
 
@@ -108,7 +109,7 @@ void StepDT::operator()(World& forest, tick_t dt)
             if ( epseps < value::forestProximityRunner )
             {
                 // event::ProximityRunner
-                forest.events.push( event::ProximityRunner( &runner_a, &runner_b, epseps ) );
+                forest.events.push( event::ProximityRunner( tick_next, &runner_a, &runner_b, epseps ) );
             }
         }
 

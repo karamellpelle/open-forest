@@ -44,6 +44,60 @@ inline std::ostream& operator<<(std::ostream& os, const glm::mat4& mat)
               << std::setw( w ) << mat[0].w << " " << std::setw( w ) << mat[1].w << " " << std::setw( w ) << mat[2].w << " " << std::setw( w ) << mat[3].w << "\n"
               ;
 }
+
+inline std::ostream& operator<<(std::ostream& os, const glm::vec2& vec)
+{
+    constexpr int w = 6; 
+    return os << std::setprecision( 1 ) << std::fixed << std::setw( w )
+              << "("
+              << std::setw( w ) << vec.x
+              << ", "
+              << std::setw( w ) << vec.y
+              << ")"
+              ;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const glm::vec3& vec)
+{
+    constexpr int w = 6; 
+    return os << std::setprecision( 1 ) << std::fixed << std::setw( w )
+              << "("
+              << std::setw( w ) << vec.x
+              << ", "
+              << std::setw( w ) << vec.y
+              << ", "
+              << std::setw( w ) << vec.z
+              << ")"
+              ;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const glm::vec4& vec)
+{
+    constexpr int w = 6; 
+    return os << std::setprecision( 1 ) << std::fixed << std::setw( w )
+              << "("
+              << std::setw( w ) << vec.x
+              << ", "
+              << std::setw( w ) << vec.y
+              << ", "
+              << std::setw( w ) << vec.z
+              << ", "
+              << std::setw( w ) << vec.w
+              << ")"
+              ;
+}
+
+inline glm::vec2 cast_xz(const glm::vec4& vec)
+{
+    return glm::vec2( vec.x, vec.z );
+}
+
+inline glm::vec2 cast_xz(const glm::vec3& vec)
+{
+    return glm::vec2( vec.x, vec.z );
+}
+
+
 } // namespace batb
 
 #endif

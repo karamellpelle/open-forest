@@ -27,6 +27,7 @@ namespace batb
 namespace forest
 {
 
+// z axis is forward; x right, y up
 class Aim
 {
 public:

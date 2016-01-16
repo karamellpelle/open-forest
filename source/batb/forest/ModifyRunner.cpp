@@ -75,7 +75,8 @@ void ModifyRunner::operator()(World& forest)
         float_t speed = (1.0 - incline) * speed_            // TODO: ensure 1.0 - 'incline' is OK
                         * value::forestModifyRunnerSpeed;
 
-        runner_->move.vel = (float)(speed) * runner_->move.aim[2]; // move along z-axis
+        // objects moves in z direction
+        runner_->move.vel = (float)(speed) * runner_->move.aim[2]; 
         
        
     }

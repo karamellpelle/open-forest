@@ -33,13 +33,13 @@ namespace event
 
 
 // Runner punched a Control
-// single frame
+// single frame, typically
 class ControlPunch
 {
 public:
-    ControlPunch(Runner* r, Control* c) : /*tick( t ),*/ runner( r ), control( c ) { }
+    ControlPunch(tick_t t, Runner* r, Control* c) : tick( t ), runner( r ), control( c ) { }
 
-    //tick_t tick = 0.0;
+    tick_t tick;
     Runner* runner = nullptr;
     Control* control = nullptr;
 
@@ -51,9 +51,9 @@ public:
 class ProximityControl
 {
 public:
-    ProximityControl(Control* c, Runner* r, float_t e = 0.0) : control( c ), runner( r ), epseps( e ) { }
+    ProximityControl(tick_t t, Control* c, Runner* r, float_t e = 0.0) : tick( t ), control( c ), runner( r ), epseps( e ) { }
 
-    //tick_t tick = 0.0;
+    tick_t tick;
     Control* control = nullptr;
     Runner* runner = nullptr;
     float_t epseps = 0.0; // squared distance
@@ -66,9 +66,9 @@ public:
 class ProximityRunner
 {
 public:
-    ProximityRunner(Runner* a, Runner* b, float_t e = 0.0) : runner_a( a ), runner_b( b ), epseps( e ) { }
-    //tick_t tick;
-    
+    ProximityRunner(tick_t t, Runner* a, Runner* b, float_t e = 0.0) : tick( t ), runner_a( a ), runner_b( b ), epseps( e ) { }
+
+    tick_t tick;
     Runner* runner_a = nullptr;
     Runner* runner_b = nullptr;
     float_t epseps = 0.0; // squared distance

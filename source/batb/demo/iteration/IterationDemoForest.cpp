@@ -20,6 +20,7 @@
 #include "batb/demo/iteration/IterationDemoForest.hpp"
 #include "batb/demo/World.hpp"
 #include "batb/forest/World.hpp"
+#include "batb/forest/events.hpp"
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
 #include <random>
@@ -73,7 +74,7 @@ void IterationDemoForest::iterate_begin(World& demo)
     
     ////////////////////////////////////////////////////////////////////////////////
     // add a runner
-    demo.runner = forest.addRunner();
+    demo.runner = forest.addRunner( &run.player );
     demo.runner->reset( glm::vec2( 0, 0 ) );
 
 
@@ -128,7 +129,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     beginEventsDemo( demo );      // demo::World
     beginEvents( forest );        // forest::World
     // (we ignore run::Events in IterationDemoForest)
-
+    
     
     ////////////////////////////////////////////////////////////////////////////////
     // control objects
@@ -159,7 +160,61 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     {
         // step World
         stepDT( forest, value::dt );
+       
+        // look at events (think)
+        for ( auto& ev : forest.events )
+        {
+            if ( auto e = eat<forest::event::ProximityControl>( ev ) )
+            {
+                auto eps = std::sqrt( e->epseps );
 
+                //std::cout << std::setprecision( 2 ) << std::fixed << "\r"
+                //          << "proximity of control " << e->control->definition.code << ": "
+                //          << eps
+                //          ;
+
+                // punch if close enough to control
+                constexpr float_t punch_d = 25.0;
+                if ( eps < punch_d )
+                {
+                    if ( e->runner->control0 != e->control && 
+                         e->control->definition.type != forest::ControlDefinition::Type::Start )
+                    {
+                        e->runner->punch( e->control );
+                    }
+                }
+            }
+            if ( auto e = eat<forest::event::ControlPunch>( ev ) )
+            {
+                auto code = e->control->definition.code;
+                auto code1 = demo.course[ demo.course_i + 1 ]->definition.code;
+
+                // if correct control punched, set next
+                if ( code == code1 )
+                {
+                    // set next control in course
+                    ++demo.course_i;
+
+                    if ( demo.course_i + 1 == demo.course.size() )
+                    {
+                        // course complete, create new course
+                        createCourse( demo );
+                        
+                        demo.course_i = 0;
+                    }
+
+                    // create a curve: control0 -> control1
+                    auto* control0 = demo.course[ demo.course_i ];
+                    auto* control1 = demo.course[ demo.course_i + 1 ];
+                    curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
+                                  glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
+                    curve_i = 0;
+                }
+
+            }
+        }
+
+        // update tick of world
         forest.tick += value::dt;
     }
     // update after dt
@@ -201,34 +256,20 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
         constexpr float eps = 1.0;
         if ( inside( p1, eps, p ) )
         {
-            // next control reached
-            if ( ++curve_i == m ) // stop on last segment
+            if ( curve_i == m )
             {
-                ++demo.course_i;
-
-                // TODO: remove from here and instead look at EventControl punch
-                if ( demo.course_i + 1 == demo.course.size() )
-                {
-                    // course complete, create new course
-                    createCourse( demo );
-                    
-                    demo.course_i = 0;
-                }
-
-                // control0 -> control1
-                auto* control0 = demo.course[ demo.course_i ];
-                auto* control1 = demo.course[ demo.course_i + 1 ];
-
-                // create curve: control0 -> control1
-                curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
-                              glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
-
-                curve_i = 0;
+                // (last point on the curve control0 -> control1 reached.
+                // it is now up to the runner to punch control1!)
             }
+            else
+            {
+                ++curve_i;
 
-            // set next curve
-            p0 = curve( m, curve_i );
-            p1 = curve( m, curve_i + 1);
+                // step curve
+                p0 = curve( m, curve_i );
+                p1 = curve( m, curve_i + 1);
+
+            }
 
         }
 

@@ -82,12 +82,18 @@ void Runner::reset(const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // see: SinbadCharacterController.h
    
-    // TODO:std::string name = player ? player->name : " ";
-    static uint ix = 0;
-    std::ostringstream name;
-    name << "Runner" << ix++;
+    std::ostringstream os( "Runner_" );
+    if ( player == nullptr )
+    {
+        static uint ix = 0;
+        os << ix++;
+    }
+    else
+    {
+        os << player->name;
+    }
 
-    ogre_entity = forest.ogre_scenemgr->createEntity( name.str(), "Sinbad.mesh" );
+    ogre_entity = forest.ogre_scenemgr->createEntity( os.str(), "Sinbad.mesh" );
     auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
     node->scale( 3, 3, 3 ); // FIXME
     node->attachObject( ogre_entity );
