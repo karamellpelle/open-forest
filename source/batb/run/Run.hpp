@@ -19,6 +19,7 @@
 #define BATB_RUN_RUN_HPP
 #include "batb/ModuleBATB.hpp"
 #include "batb/run/Console.hpp"
+#include "batb/run/Notify.hpp"
 #include "batb/run/KeySet.hpp"
 #include "batb/run/iteration/IterationRunMain.hpp"
 #include "batb/run/iteration/IterationRunOld.hpp"
@@ -47,8 +48,11 @@ friend class ModifyBegin;
 public:
     Run(BATB& );
 
-    // text interface
+    // text interface (world modifier)
     Console console;
+
+    // notifier
+    Notify notify;
 
     KeySet keyset;
 

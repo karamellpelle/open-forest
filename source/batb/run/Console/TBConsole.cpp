@@ -38,6 +38,11 @@ TBConsole::TBConsole(BATB& b) : batb( b )
         // let TB populate this TBWindow from file
         g_widgets_reader->LoadNodeTree( this, &node );
 
+        // read properties for 'this' (g_widgets_reader only adds children of 'this')
+        // (see void TBWidget::OnInflate(const INFLATE_INFO &info) in tb_widgets_reader.cpp)
+        SetSkinBg( node.GetValueString( "skin", "TBWindow" ) );
+        //SetOpacity( node.GetValueFloat("opacity", GetOpacity()) );
+
         // we can now retrieve child widgets of 'this' from ID with
         // - MyWidget* widget = GetWidgetByIDAndType<MyWidget>( TBIDC("my-id-name") );
         // - tb::TBWidget* widget = GetWidgetById( TBIDC( "my-id-name" ) );
@@ -58,8 +63,7 @@ TBConsole::TBConsole(BATB& b) : batb( b )
         // only input should receive focus
         tb_output_->SetIsFocusable( false );
 
-        // tmp
-        tb_input_->SetPlaceholderText( "enter command" );
+        //tb_input_->SetPlaceholderText( "enter command" );
     }
     else
     {
@@ -71,7 +75,8 @@ TBConsole::TBConsole(BATB& b) : batb( b )
     }
 
     // settings:
-    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
+    //SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
+    SetSettings( tb::WINDOW_SETTINGS_NONE );
     SetText( "TBConsole" );
 }
 

@@ -1,0 +1,23 @@
+# TODO
+
+* language files
+* `reset()` for objects in forest::World
+* Indefinite RunWork
+* load forest world by RunWork
+* TBEditField. up key can be read?
+* remove template LoadWorker
+* IterationRunWork and TB
+
+
+* define precision of glm (vec, mat, etc) the same as float_t 
+* OpenGL 3+, premultiplied colors by default
+* ThreadGLContext: exception on 'current'
+* class Key { shared_ptr<KeyImpl> impl_; }
+* implement Log: current indentation, error/warning tags, etc
+* implement batb/gui/tb_system.cpp, in a platform independent way.
+* stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
+* FPS and other BATB-stats
+* define invariants (OpenGL, ...)
+* find a suitable UDP-library (http://www.codeofhonor.com/blog/choosing-a-game-network-lib)
+* GLEW as git submodule 
+* glext.h (part of official OpenGL Registry) as git submodule, or something

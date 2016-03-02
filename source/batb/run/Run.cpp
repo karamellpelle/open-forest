@@ -32,7 +32,7 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
-Run::Run(BATB& b) : ModuleBATB( b ), console( b ), keyset( b ), 
+Run::Run(BATB& b) : ModuleBATB( b ), console( b ), notify( b ), keyset( b ), 
                     iterationRunMain( b ),
                     iterationRunOld( b )
 {
@@ -60,6 +60,9 @@ void begin(Run& run)
         // setup Console
         run::begin( run.console );
 
+        // setup Notify
+        run::begin( run.notify );
+
         // begin non-core iterations:
         run::begin( run.iterationRunOld );
         run::begin( run.iterationRunMain );
@@ -81,6 +84,9 @@ void end(Run& run)
         // end non-core iterations:
         run::end( run.iterationRunMain );
         run::end( run.iterationRunOld );
+
+        // end Notify
+        run::end( run.notify );
 
         // end Console
         run::end( run.console );

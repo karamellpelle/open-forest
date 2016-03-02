@@ -172,10 +172,11 @@ void begin(GUI& gui)
         ////////////////////////////////////////////////////////////////////////////////
         // OnBackendAttached()
         // Load language file
-        tb::g_tb_lng->Load( file::static_data( "batb/gui/resources/language/lng_en.tb.txt" ).c_str() );
+        tb::g_tb_lng->Load( file::static_data( "batb/gui/turbobadger_demo/resources/language/lng_en.tb.txt" ).c_str() );
 
         // Load the default skin, and override skin that contains the graphics specific to the demo.
-        tb::g_tb_skin->Load( file::static_data( "batb/gui/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/Demo/demo01/skin/skin.tb.txt" ).c_str() );
+        //tb::g_tb_skin->Load( file::static_data( "batb/gui/turbobadger_demo/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/turbobadger_demo/turbobadger_demo/Demo/demo01/resources/skin.tb.txt" ).c_str() ); // skin from demo
+        tb::g_tb_skin->Load( file::static_data( "batb/gui/skin/openforest/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/skin/openforest/override.tb.txt" ).c_str() );  // custom skin
 
         // Register font renderers.
         // these are buildt by turbobadger iff defined, and
@@ -193,13 +194,13 @@ void begin(GUI& gui)
 
         // Add fonts we can use to the font manager.
 #if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/vera.ttf" ).c_str(), "Vera");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/vera.ttf" ).c_str(), "Vera");
 #endif
 #ifdef TB_FONT_RENDERER_TBBF
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str(), "Segoe");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/neon.tb.txt" ).c_str(), "Neon");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/Demo/fonts/orange.tb.txt" ).c_str(), "Orange");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str(), "Segoe");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/neon.tb.txt" ).c_str(), "Neon");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orange.tb.txt" ).c_str(), "Orange");
 #endif
 
         // Set the default font description for widgets to one of the fonts we just added

@@ -76,7 +76,6 @@ bool cmd_value(BATB& batb, std::string& in)
         }
     }
 
-    // (allowed to modify 'in' directly)
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

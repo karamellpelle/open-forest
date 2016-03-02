@@ -48,10 +48,6 @@ void Console::step(World& run)
     // always on top
     tb_console->SetZ( tb::WIDGET_Z_TOP ); // at top of all others
 
-    // possible to change during run. TODO: use skin instead (solid characters)
-    tb_console->SetOpacity( value::runConsoleOpacity );
-
-
     // for now, set PS1 here
     std::ostringstream os;
     os << run.player.name << "> ",

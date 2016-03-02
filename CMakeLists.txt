@@ -268,6 +268,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_echo.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_value.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Console/cmd_easteregg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Notify.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
