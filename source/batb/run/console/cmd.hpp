@@ -15,43 +15,29 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_CAMERA_HPP
-#define BATB_FOREST_CAMERA_HPP
+#ifndef BATB_RUN_CONSOLE_CMD_HPP
+#define BATB_RUN_CONSOLE_CMD_HPP
 #include "batb/batb_include.hpp"
-#include "batb/forest/DTMovable.hpp"
 
-namespace Ogre
-{
-class Camera;
-}
 
 
 namespace batb
 {
 
-class BATB;
-
-namespace forest
+namespace run
 {
 
-class Camera 
-{
-public:
-    DTMovable move;
+// specific command handle functions.
+// these are allowed to modify input. 
+using CommandEater = bool(BATB& , std::string& );
 
-    Ogre::Camera* ogre_camera = nullptr;
-    //ALuint al_camera = 0;
-private:
-};
+CommandEater cmd_echo;
+CommandEater cmd_value;
 
 
-} // namespace forest
+} // namespace run
 
 } // namespace batb
 
 
-
-
-
 #endif
-

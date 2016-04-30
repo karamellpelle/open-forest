@@ -18,8 +18,8 @@
 #include "batb.hpp"
 #include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
-#include "batb/run/Console.hpp"
-#include "batb/run/Console/parse.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/console/parse.hpp"
 
 #include "batb/value/batb.hpp"
 #include "batb/value/run.hpp"

@@ -56,6 +56,8 @@ public:
     gl::GL gl;
     gui::GUI gui;
 
+
+
     // non-core part of BATB.
     // these are parts of BATB initialized later, by 'iterationRunBegin'.
     ogre::OGRE ogre;

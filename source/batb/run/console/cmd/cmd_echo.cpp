@@ -18,9 +18,8 @@
 #include "batb.hpp"
 #include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
-#include "batb/run/Console.hpp"
-#include "batb/run/Console/parse.hpp"
-#include "batb/demo/libs/al.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/console/parse.hpp"
 
 
 
@@ -32,38 +31,22 @@ namespace run
 {
 
 // output string to console
-bool cmd_easteregg(BATB& batb, const std::string& input)
+bool cmd_echo(BATB& batb, std::string& in)
 {
-    // ('input' is the whole command line typed)
-  
-    // if correct command typed, do easter egg
-    // easter egg is PS1|reverse(PS1)
-    
+    // (allowed to modify 'in' directly)
+    // TODO: parse commands (-n for no newline, etc.)
 
-    if ( input.empty() )         return false;
-    if ( input.front() != '|' )  return false;
-    auto right = input.substr( 1 );
-    std::reverse( std::begin( right ), std::end( right ) );
-    for (auto i = std::begin( right ); i != std::end( right ); ++i)
+    // eat string literal
+    std::string str;
+    if ( stringliteral( str, in ) ) 
     {
-        if ( *i == '<' ) { *i = '>'; continue; }
-        if ( *i == '>' ) { *i = '<'; continue; }
-        if ( *i == '(' ) { *i = ')'; continue; }
-        if ( *i == ')' ) { *i = '('; continue; }
-        if ( *i == '[' ) { *i = ']'; continue; }
-        if ( *i == ']' ) { *i = '['; continue; }
-        if ( *i == '{' ) { *i = '}'; continue; }
-        if ( *i == '}' ) { *i = '{'; continue; }
-    }
-
-    auto left   = batb.run.console.getPS1();
-    
-    if ( left == right )
-    {
-        demo::al::demo_play( batb, file::static_data( "easteregg.mp3" ) );
-
+        batb.run.console << str << std::endl;
         return true;
     }
+
+    // else just output whatever on the line
+    batb.run.console << in << std::endl;
+
     return false;
     
 }

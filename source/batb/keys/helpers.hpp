@@ -15,46 +15,28 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb.hpp"
-#include "batb/BATB.hpp"
-#include "batb/run/Run.hpp"
-#include "batb/run/Console.hpp"
-#include "batb/run/Console/parse.hpp"
+#ifndef BATB_KEYS_HELPERS_HPP
+#define BATB_KEYS_HELPERS_HPP
+#include "batb/batb_include.hpp"
 
 
-
-  
 namespace batb
 {
 
-namespace run
+
+namespace keys
 {
 
-// output string to console
-bool cmd_echo(BATB& batb, std::string& in)
-{
-    // (allowed to modify 'in' directly)
-    // TODO: parse commands (-n for no newline, etc.)
+std::string cast_key(int );
+std::string cast_mouse_button(int );
+std::string cast_modifier(int );
+//std::string cast_mouse_joystick(int );
 
-    // eat string literal
-    std::string str;
-    if ( stringliteral( str, in ) ) 
-    {
-        batb.run.console << str << std::endl;
-        return true;
-    }
+int cast(const std::string& );
 
-    // else just output whatever on the line
-    batb.run.console << in << std::endl;
-
-    return false;
-    
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-
-} // namespace run
+} // namespace keys
 
 } // namespace batb
+
+#endif
 

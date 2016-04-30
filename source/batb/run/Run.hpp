@@ -18,8 +18,8 @@
 #ifndef BATB_RUN_RUN_HPP
 #define BATB_RUN_RUN_HPP
 #include "batb/ModuleBATB.hpp"
-#include "batb/run/Console.hpp"
-#include "batb/run/Notify.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/notify/Notify.hpp"
 #include "batb/run/KeySet.hpp"
 #include "batb/run/iteration/IterationRunMain.hpp"
 #include "batb/run/iteration/IterationRunOld.hpp"
@@ -46,6 +46,7 @@ friend void end(Run& );
 friend class ModifyBegin;
 
 public:
+
     Run(BATB& );
 
     // text interface (world modifier)

@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/run/Console/TBConsole.hpp"
+#include "batb/run/console/TBConsole.hpp"
 #include "tb/tb_widgets_common.h"
 #include "tb/tb_editfield.h"
 #include "batb.hpp"

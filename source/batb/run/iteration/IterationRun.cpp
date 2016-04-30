@@ -54,11 +54,21 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     // begin frame for AL
     batb.al.frameBegin();
 
+    if ( batb.run.initialized() )
+    {
+        // sets tick and 
+        // TODO: only uses Scene
+        batb.run.notify.step( world );
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     // actual iteration, implemented by subclass
 debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
     ////////////////////////////////////////////////////////////////////////////////
+
+    //batb.run.notify.frameEnd(); or remove?
 
     
     // end AL frame
@@ -84,6 +94,9 @@ debug::gl::msg("iterate_run()");
 
         // update Console
         batb.run.console.step( world );
+
+        // update Notify
+        batb.run.notify.step( world );
     }
 
     ////////////////////////////////////////////////////////////////////////////////

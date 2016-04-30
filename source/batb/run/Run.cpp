@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
-#include "batb/run/Console.hpp"
+#include "batb/run/console/Console.hpp"
 
 
 
@@ -70,6 +70,7 @@ void begin(Run& run)
 
     run.init( true );
 }
+
 
 // end the non-core part of Run
 void end(Run& run)

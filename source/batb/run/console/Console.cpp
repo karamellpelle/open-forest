@@ -18,11 +18,13 @@
 #include "batb.hpp"
 #include "batb/run.hpp"
 #include "batb/run/World.hpp"
-#include "batb/run/Console.hpp"
-#include "batb/run/Console/TBConsole.hpp"
-#include "batb/run/Console/parse.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/console/TBConsole.hpp"
+#include "batb/run/console/parse.hpp"
+#include "batb/run/console/cmd.hpp"
 #include "batb/value/run.hpp"
 #include "tb/animation/tb_widget_animation.h"
+
 
 
 
@@ -106,12 +108,6 @@ void Console::close(World& run)
 
 bool Console::operator()(const std::string& input)
 {
-    // specific command handle functions.
-    // these are allowed to modify input. 
-    using CommandEater = bool(BATB& , std::string& );
-    extern CommandEater cmd_echo;
-    extern CommandEater cmd_value;
-
     // output PS1 + typed command line
     *this << getPS1() << input << "\n";
 

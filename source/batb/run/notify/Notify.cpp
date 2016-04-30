@@ -18,8 +18,7 @@
 #include "batb.hpp"
 #include "batb/run.hpp"
 #include "batb/run/World.hpp"
-#include "batb/run/Notify.hpp"
-//#include "batb/run/Notify/TBNotify.hpp"
+#include "batb/run/notify/Notify.hpp"
 #include "batb/value/run.hpp"
 #include "tb/animation/tb_widget_animation.h"
 
@@ -34,45 +33,48 @@ namespace run
 
 void Notify::step(World& run)
 {
-    for ( auto& msg : messages_ )
+ 
+    // remove completed messages
+    for ( auto i = std::begin( messages_ ); i != std::end( messages_ ); ++i )
     {
-        // TODO: use batb.run.keyset
-        if ( msg.tick_ + msg.duration_ <= run.tick )
+
+        if ( i->finished_ )
         {
-            // TODO: remove (or set next)
+            // send event 
+            event::NotifyMessageComplete event( &( *i ) );
+            run.events.push( event );
+
+            messages_.erase( i );
+            
         }
     }
-/*
+
+
     auto wth = run.scene.wth;
     auto hth = run.scene.hth;
-    auto rect = tb_notify->GetRect();
 
-    // fasten notify widget (height preserved)
+    // fasten widget to root 
+    tb::TBRect rect;
     rect.x = 0;
     rect.y = 0;
     rect.w = wth;
+    rect.h = hth;
     tb_notify->SetRect( rect );
 
-    // always on top
-    tb_notify->SetZ( tb::WIDGET_Z_TOP ); // at top of all others
-
-    // possible to change during run. TODO: use skin instead (solid characters)
-    tb_notify->SetOpacity( value::runNotifyOpacity );
-
-
-    // for now, set PS1 here
-    std::ostringstream os;
-    os << run.player.name << "> ",
-    ps1_ = os.str(); 
-*/
+    // update GUI
+    tb_notify->step( run );
 }
 
-bool Notify::operator()(const NotifyMessage& msg)
+bool Notify::operator()(const NotifyMessage& m)
 {
-    
-    //messages_.push_back( msg );
-    // TODO: add widget
-    // TODO: set tick
+    NotifyMessage msg = m;
+    msg.tick = batb.env.tick();
+
+    messages_.push_back( msg );
+    NotifyMessage* ptr = &messages_.back();
+
+    // add UI-object
+    tb_notify->push( ptr );
 
     return true;
 }
@@ -85,10 +87,10 @@ void begin(Notify& notify)
 {
     BATB& batb = notify.batb;
 
-    //notify.tb_notify = new TBNotify( batb );
+    notify.tb_notify = new TBNotify( notify );
 
     // add to screen
-    //batb.gui.addWidget( notify.tb_notify );
+    batb.gui.addWidget( notify.tb_notify );
 
 
 }
@@ -97,10 +99,10 @@ void end(Notify& notify)
 {
     BATB& batb = notify.batb;
     
-    //batb.gui.removeWidget( notify.tb_notify );
-    //
-    //delete notify.tb_notify;
-    //notify.tb_notify = nullptr;
+    batb.gui.removeWidget( notify.tb_notify );
+    
+    delete notify.tb_notify;
+    notify.tb_notify = nullptr;
 }
 
 } // namespace run

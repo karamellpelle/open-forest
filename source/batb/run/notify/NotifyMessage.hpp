@@ -15,9 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_NOTIFY_HPP
-#define BATB_RUN_NOTIFY_HPP
+#ifndef BATB_RUN_NOTIFYMESSAGE_HPP
+#define BATB_RUN_NOTIFYMESSAGE_HPP
 #include "batb/batb_include.hpp"
+
 
 
 namespace batb
@@ -30,6 +31,8 @@ class World;
 class Notify;
 
 
+
+// a message to the user
 class NotifyMessage
 {
 friend class Notify;
@@ -37,56 +40,21 @@ friend class Notify;
 public:
     NotifyMessage() = default;
     NotifyMessage(const std::string& s) : str( s ) { }
+    NotifyMessage(const std::string& s, tick_t d) : str( s ), duration( d ) { }
+
+    void finish() { finished_ = true; }
 
     std::string str;    // this is also allowed to contain widgets etc.
 
-private:
-    tick_t tick_ = 0;
-    tick_t duration_ = 0;
-
-};
-
-
-// class for presenting short messages to the user, for example
-// tips and tricks, in-game tutorials, etc.
-class Notify 
-{
-friend void begin(Notify& );
-friend void end(Notify& );
-
-public:
-    Notify(BATB& b) : batb( b ) { }
-
-    void step(World& );
-
-    // hide and clear
-    void clear();
-
-    // show message
-    bool operator()(const NotifyMessage& msg);
-    template <typename... Args> 
-    bool operator()(const Args&... args) { return operator()( NotifyMessage( args... ) ); }
-
-
-    BATB& batb;
-
-
-    //TBNotify* tb_notify = nullptr;
+    tick_t tick = 0;
+    tick_t duration = 0;
+    bool alert = false;
+    // etc.
 
 private:
-    std::forward_list<NotifyMessage> messages_;
-
+    bool finished_ = false;
 
 };
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-void begin(Notify& );
-
-void end(Notify& );
-
-////////////////////////////////////////////////////////////////////////////////
 
 
 } // namespace run
