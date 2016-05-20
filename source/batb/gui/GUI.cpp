@@ -134,6 +134,32 @@ void GUI::bind(keys::Keys& keys)
 }
 
 
+void GUI::addWidget(tb::TBWidget* w)
+{
+    if ( tb_top_ )
+    {
+        root.AddChildRelative( w, tb::WIDGET_Z_REL_BEFORE, tb_top_ );
+    }
+    else
+    {
+        root.AddChild( w );
+    }
+}
+
+void GUI::addWidgetTop(tb::TBWidget* w)
+{
+    root.AddChild( w );
+    tb_top_ = w;
+}
+
+
+void GUI::removeWidget(tb::TBWidget* w)
+{
+    if ( w == tb_top_ ) tb_top_ = nullptr;
+
+    root.RemoveChild( w );
+}
+
 void GUI::lockKeys(bool lock)
 {
     batb.keys.keyEnable( !lock );

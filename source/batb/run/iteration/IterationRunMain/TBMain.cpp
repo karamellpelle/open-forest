@@ -47,10 +47,19 @@ TBMain::TBMain(BATB& b) : batb( b )
     }
 
     // set TB window settings:
-    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
-    SetText( "TBMain" );
+    //SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
+    //SetText( "TBMain" );
 }
 
+void TBMain::step(World& run)
+{
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+
+    // span out this layout to the whole screen
+    // FIXME: fill to root automatically
+    SetRect( tb::TBRect(0, 0, wth, hth) );
+}
 
 bool TBMain::OnEvent(const tb::TBWidgetEvent& ev)
 {
@@ -82,7 +91,7 @@ bool TBMain::OnEvent(const tb::TBWidgetEvent& ev)
         }
     } 
 
-    return tb::TBWindow::OnEvent( ev );
+    return tb::TBWidget::OnEvent( ev );
 }
 
 

@@ -63,14 +63,17 @@ public:
     // root TB widget
     tb::TBWidget root;
 
-    void addWidget(tb::TBWidget* w)       { root.AddChild( w ); }
-    void removeWidget(tb::TBWidget* w)    { root.RemoveChild( w ); }
+    void addWidget(tb::TBWidget* w);
+    // add as top widget and keep it there until removed or new top
+    void addWidgetTop(tb::TBWidget* w);
+    void removeWidget(tb::TBWidget* w);
 
 
 private:
     uint wth_ = 0;
     uint hth_ = 0;
 
+    tb::TBWidget* tb_top_ = nullptr;
     // TB
     tb::TBRenderer* tb_renderer_ = nullptr;
     

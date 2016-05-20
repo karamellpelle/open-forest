@@ -44,7 +44,7 @@ public:
     TBNotifyMessage(TBNotify* , NotifyMessage* );
 
     TBNotify* tb_notify    = nullptr;
-    tb::TBEditField* edit   = nullptr;
+    tb::TBEditField* edit  = nullptr;
     NotifyMessage* message = nullptr;
 };
 
@@ -66,7 +66,7 @@ public:
     BATB& batb;
 
 private:
-    std::list<std::shared_ptr<TBNotifyMessage>> tb_notify_messages_;
+    std::list<TBNotifyMessage*> tb_notify_messages_;
     Notify& notify_;
     tick_t tick_ = 0;
 };

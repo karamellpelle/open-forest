@@ -1,9 +1,11 @@
+#TBLayout: axis: y, spacing: 0, size: available
 TBEditField: id: "edit"
-	#skin Console.output
+	skin Notify
 	#skin 0
 	gravity all
 	multiline 1
 	readonly 1
+	text "hallo"
 	
 
 

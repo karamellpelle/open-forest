@@ -18,6 +18,7 @@
 #include "batb/value/Value.hpp"
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
+#include "batb/value/tb.hpp"
 #include "batb/value/batb.hpp"
 #include "batb/BATB.hpp"
 
@@ -79,6 +80,9 @@ void begin(Value& value)
         coursedrawerColorG        = 0.04;
         coursedrawerColorB        = 0.35;
         coursedrawerColorA        = 0.6;
+
+        ////////////////////////////////////////////////////////////////////////////////
+        notifyInflate             = 0.5;
 
         // TODO: use 'Value::yaml', override values, if defined
     }
@@ -147,6 +151,11 @@ float_t coursedrawerColorR;
 float_t coursedrawerColorG;
 float_t coursedrawerColorB;
 float_t coursedrawerColorA;
+
+////////////////////////////////////////////////////////////////////////////////
+//  tb.hpp
+//
+tick_t notifyInflate;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  Value

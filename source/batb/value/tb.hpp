@@ -15,45 +15,24 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_TBMAIN_HPP
-#define BATB_RUN_TBMAIN_HPP
+#ifndef BATB_VALUE_TB_HPP
+#define BATB_VALUE_TB_HPP
 #include "batb/batb_include.hpp"
-#include "batb/gui.hpp"
+
 
 namespace batb
 {
-class BATB;
 
 
-namespace run
+namespace value
 {
 
-class IterationRunMain;
+extern tick_t notifyInflate;
 
 
-// the "main menu" widget
-class TBMain : public tb::TBWidget
-{
-public:
-    TBOBJECT_SUBCLASS( TBMain, tb::TBWidget );
 
-    TBMain(BATB& );
+} // namespace value
 
-    void step(World& );
-
-    virtual bool OnEvent(const tb::TBWidgetEvent& ev) override;
-
-
-    BATB& batb;
-
-};
-
-
-} // namespace run
-
-} // namespace batb
-
+} // namespace tb
 
 #endif
-
-

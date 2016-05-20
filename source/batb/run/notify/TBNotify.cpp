@@ -22,6 +22,8 @@
 #include "batb/run/notify/TBNotify.hpp"
 #include "batb/value/run.hpp"
 #include "tb/animation/tb_widget_animation.h"
+#include "tb/tb_editfield.h"
+
 
 
 
@@ -32,12 +34,12 @@ namespace batb
 namespace run
 {
 
-TBNotify::TBNotify(BATB& b) : batb( b ), notify_( b.run.notify )
+TBNotify::TBNotify(BATB& b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b.run.notify )
 {
     // set layout parameters
     
     // size: preferred
-    SetLayoutSize( tb::LAYOUT_SIZE_PREFERRED );
+    //SetLayoutSize( tb::LAYOUT_SIZE_PREFERRED );
     // position: center
     SetLayoutPosition( tb::LAYOUT_POSITION_CENTER );
     // distribution: preferred
@@ -47,6 +49,18 @@ TBNotify::TBNotify(BATB& b) : batb( b ), notify_( b.run.notify )
 
     // clip
     SetLayoutOverflow( tb::LAYOUT_OVERFLOW_CLIP );
+
+    // spacing
+	/** Set the spacing between widgets in this layout. Setting the default (SPACING_FROM_SKIN)
+		will make it use the spacing specified in the skin. */
+	//void SetSpacing(int spacing);
+
+    // since this is a non-interactive top widget spanning the whole screen,
+    // make sure it does not steal input
+    SetIsFocusable( false );
+    SetIgnoreInput( true );
+
+    SetSize( 220, 800 );
 }
 
 TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n ), message( msg )
@@ -58,16 +72,17 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n
     // read file as node tree, letting us parse custom nodes for this widget.
     // see tb_widgets_reader.[hc]pp
     TBNode node;
-    if ( node.ReadFile( "static://batb/run/notifymesssage.tb.txt" ) )
+    if ( node.ReadFile( "static://batb/run/notifymessage.tb.txt" ) )
     {
         // let TB populate this TBWindow from file
         g_widgets_reader->LoadNodeTree( this, &node );
 
-        SetSkinBg( node.GetValueString( "skin", "TBWindow" ) ); // TODO!
+        //SetSkinBg( node.GetValueString( "skin", "TBWindow" ) ); // TODO!
 
         if ( ( edit = GetWidgetByIDAndType<TBEditField>( TBIDC( "edit" ) ) ) )
         {
-            // TODO: write msg to edit
+            // set text
+            edit->SetText( msg->str.c_str() );
         }
         else
         {
@@ -86,6 +101,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n
 
     }
 
+    SetSize( 200, 100 );
 }
 
 
@@ -94,9 +110,9 @@ void TBNotify::step(World& run)
     auto wth = run.scene.wth;
     auto hth = run.scene.hth;
 
-    // fasten widget at top center
-    SetPosition( tb::TBPoint( wth / 2, 0 ) );
-
+    // span out this layout to the whole screen
+    // FIXME: fill to root automatically
+    SetRect( tb::TBRect(0, 0, wth, hth) );
 
     for ( auto i : tb_notify_messages_ )
     {
@@ -108,6 +124,8 @@ void TBNotify::step(World& run)
             {
                 // TODO: remove 'i'
                 // message->finish() and remove elemnet from list
+                // RemoveChild( i );
+                // delete i;
             }
         }
     }
@@ -116,8 +134,15 @@ void TBNotify::step(World& run)
 
 void TBNotify::push(NotifyMessage* m)
 {
-    tb_notify_messages_.push_back( std::make_shared<TBNotifyMessage>( this, m ) );
+    auto ptr = new TBNotifyMessage( this, m );
+    
+    tb_notify_messages_.push_back( ptr );
 
+    // add as child widget
+    AddChild( ptr );
+    
+
+    
 }
 
 

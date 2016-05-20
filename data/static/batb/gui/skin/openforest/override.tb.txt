@@ -85,4 +85,9 @@ elements
 		cut 12
 		expand 4
 		padding 4
+	Notify
+		bitmap notify.png
+		cut 12
+		expand 4
+		padding 4
 

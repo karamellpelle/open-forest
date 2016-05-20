@@ -78,7 +78,7 @@ void begin(Notify& notify)
     notify.tb_notify_ = new TBNotify( batb );
 
     // add to screen
-    batb.gui.addWidget( notify.tb_notify_ );
+    batb.gui.addWidgetTop( notify.tb_notify_ );
 
 
 }

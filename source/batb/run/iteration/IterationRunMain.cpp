@@ -61,11 +61,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // ALURE demo
     demo::al::demo_begin( batb );
 
+  /*  
     // TODO: use TBLayout
     tb_main->SetSize( 800, 200  );
     tb_main->SetPosition( tb::TBPoint( 0, 100 ) );
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
     tb_main->EnsureFocus();
+    */
 
     std::cout << std::endl
               << "escape  => exit" << std::endl
@@ -100,6 +102,8 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     demo::al::demo_iterate( batb, run );
     demo::nanovg::demo_iterate( batb, false, false );
 
+    // step widget
+    tb_main->step( run );
 
     // escape quits main (exit)
     //if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
@@ -144,6 +148,10 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
                 batb.run.console( R"(echo "do-nanovg")" );
 
                 demo::nanovg::demo_toggle();
+
+                // tmp
+                NotifyMessage msg( "dere er kule, altså!!" );
+                batb.run.notify( msg );
                 break;
             }
             case event::Do::Old:
@@ -185,7 +193,6 @@ void begin(IterationRunMain& iter)
     iter.tb_main = new TBMain( batb );
 
     // add to screen
-    // TODO: use layout
     batb.gui.addWidget( iter.tb_main );
 
 }
