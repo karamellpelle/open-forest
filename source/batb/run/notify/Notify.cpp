@@ -35,14 +35,13 @@ void Notify::step(World& run)
 {
  
     // remove completed messages
-    for ( auto i = std::begin( messages_ ); i != std::end( messages_ ); ++i )
+    for (auto i = std::begin( messages_ ); i != std::end( messages_ ); ++i)
     {
-
         if ( i->finished_ )
         {
             // send event 
-            event::NotifyMessageComplete event( &( *i ) );
-            run.events.push( event );
+            //event::NotifyMessageComplete event( &( *i ) );
+            //run.pushEvent( event );
 
             messages_.erase( i );
             
@@ -50,19 +49,8 @@ void Notify::step(World& run)
     }
 
 
-    auto wth = run.scene.wth;
-    auto hth = run.scene.hth;
-
-    // fasten widget to root 
-    tb::TBRect rect;
-    rect.x = 0;
-    rect.y = 0;
-    rect.w = wth;
-    rect.h = hth;
-    tb_notify->SetRect( rect );
-
     // update GUI
-    tb_notify->step( run );
+    tb_notify_->step( run );
 }
 
 bool Notify::operator()(const NotifyMessage& m)
@@ -74,7 +62,7 @@ bool Notify::operator()(const NotifyMessage& m)
     NotifyMessage* ptr = &messages_.back();
 
     // add UI-object
-    tb_notify->push( ptr );
+    tb_notify_->push( ptr );
 
     return true;
 }
@@ -87,10 +75,10 @@ void begin(Notify& notify)
 {
     BATB& batb = notify.batb;
 
-    notify.tb_notify = new TBNotify( notify );
+    notify.tb_notify_ = new TBNotify( batb );
 
     // add to screen
-    batb.gui.addWidget( notify.tb_notify );
+    batb.gui.addWidget( notify.tb_notify_ );
 
 
 }
@@ -99,10 +87,10 @@ void end(Notify& notify)
 {
     BATB& batb = notify.batb;
     
-    batb.gui.removeWidget( notify.tb_notify );
+    batb.gui.removeWidget( notify.tb_notify_ );
     
-    delete notify.tb_notify;
-    notify.tb_notify = nullptr;
+    delete notify.tb_notify_;
+    notify.tb_notify_ = nullptr;
 }
 
 } // namespace run

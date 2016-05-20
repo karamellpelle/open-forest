@@ -18,6 +18,7 @@
 #ifndef BATB_RUN_NOTIFYMESSAGE_HPP
 #define BATB_RUN_NOTIFYMESSAGE_HPP
 #include "batb/batb_include.hpp"
+#include "batb/keys.hpp"
 
 
 
@@ -49,6 +50,7 @@ public:
     tick_t tick = 0;
     tick_t duration = 0;
     bool alert = false;
+    keys::Key* key = nullptr;
     // etc.
 
 private:

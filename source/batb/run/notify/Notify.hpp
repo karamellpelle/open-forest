@@ -57,7 +57,7 @@ public:
 
 private:
     std::list<NotifyMessage> messages_;
-    TBNotify* tb_notify = nullptr;
+    TBNotify* tb_notify_ = nullptr;
 
 
 };

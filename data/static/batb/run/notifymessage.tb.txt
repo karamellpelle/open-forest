@@ -1,0 +1,10 @@
+TBEditField: id: "edit"
+	#skin Console.output
+	#skin 0
+	gravity all
+	multiline 1
+	readonly 1
+	
+
+
+

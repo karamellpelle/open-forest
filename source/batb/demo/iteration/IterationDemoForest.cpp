@@ -24,6 +24,7 @@
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
 #include <random>
+#include <chrono>
 #include <iomanip>
 
 
@@ -323,7 +324,7 @@ void IterationDemoForest::createCourse(demo::World& demo)
     // Start
     course.addControl( p1.x, p1.z, code++, ControlDefinition::Type::Start );
 
-    static std::default_random_engine rand; 
+    static std::default_random_engine rand( std::chrono::system_clock::now().time_since_epoch().count() );
 
     constexpr uint max_controls = 16;
     uint m = std::uniform_int_distribution<uint>( 1, max_controls )( rand );

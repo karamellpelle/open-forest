@@ -20,7 +20,10 @@
 #include "batb/batb_include.hpp"
 #include "batb/run/notify/NotifyMessage.hpp"
 #include "tb/tb_widgets.h"
+#include "tb/tb_layout.h"
 
+
+namespace tb { class TBEditField; }
 
 namespace batb
 {
@@ -41,6 +44,7 @@ public:
     TBNotifyMessage(TBNotify* , NotifyMessage* );
 
     TBNotify* tb_notify    = nullptr;
+    tb::TBEditField* edit   = nullptr;
     NotifyMessage* message = nullptr;
 };
 
@@ -49,12 +53,12 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 
 // holding messages
-class TBNotify : public tb::TBWidget
+class TBNotify : public tb::TBLayout
 {
 
 public:
-    TBOBJECT_SUBCLASS( TBNotify, tb::TBWidget );
-    TBNotify(Notify& );
+    TBOBJECT_SUBCLASS( TBNotify, tb::TBLayout );
+    TBNotify(BATB& );
 
     void step(World& );
     void push(NotifyMessage* );

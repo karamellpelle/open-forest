@@ -32,65 +32,72 @@ namespace batb
 namespace run
 {
 
-TBNotify::TBNotify(Notify& notify) : batb( notify.batb ), notify_( notify )
+TBNotify::TBNotify(BATB& b) : batb( b ), notify_( b.run.notify )
 {
-    /*
+    // set layout parameters
+    
+    // size: preferred
+    SetLayoutSize( tb::LAYOUT_SIZE_PREFERRED );
+    // position: center
+    SetLayoutPosition( tb::LAYOUT_POSITION_CENTER );
+    // distribution: preferred
+    SetLayoutDistribution( tb::LAYOUT_DISTRIBUTION_PREFERRED );
+    // distribution position: top
+    SetLayoutDistributionPosition( tb::LAYOUT_DISTRIBUTION_POSITION_LEFT_TOP );
+
+    // clip
+    SetLayoutOverflow( tb::LAYOUT_OVERFLOW_CLIP );
+}
+
+TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n ), message( msg )
+{
     using namespace tb;
+
+    BATB& batb = tb_notify->batb;
 
     // read file as node tree, letting us parse custom nodes for this widget.
     // see tb_widgets_reader.[hc]pp
     TBNode node;
-    if ( node.ReadFile( "static://batb/run/console.tb.txt" ) )
+    if ( node.ReadFile( "static://batb/run/notifymesssage.tb.txt" ) )
     {
         // let TB populate this TBWindow from file
         g_widgets_reader->LoadNodeTree( this, &node );
 
-        // read properties for 'this' (g_widgets_reader only adds children of 'this')
-        // (see void TBWidget::OnInflate(const INFLATE_INFO &info) in tb_widgets_reader.cpp)
-        SetSkinBg( node.GetValueString( "skin", "TBWindow" ) );
-        //SetOpacity( node.GetValueFloat("opacity", GetOpacity()) );
+        SetSkinBg( node.GetValueString( "skin", "TBWindow" ) ); // TODO!
 
-        // we can now retrieve child widgets of 'this' from ID with
-        // - MyWidget* widget = GetWidgetByIDAndType<MyWidget>( TBIDC("my-id-name") );
-        // - tb::TBWidget* widget = GetWidgetById( TBIDC( "my-id-name" ) );
-        if ( (tb_input_ = GetWidgetByIDAndType<TBEditFieldEnter>( TBIDC( "input" ) ) ) == nullptr )
+        if ( ( edit = GetWidgetByIDAndType<TBEditField>( TBIDC( "edit" ) ) ) )
         {
-            batb.log << "TBNotify: "
-                     << "no TBEditFieldEnter 'input' defined :("
-                     << std::endl;
+            // TODO: write msg to edit
         }
-        if ( (tb_output_ = GetWidgetByIDAndType<TBEditField>( TBIDC( "output" ) ) ) == nullptr )
+        else
         {
-            batb.log << "TBNotify: "
-                     << "no TBEditField 'output' defined :("
-                     << std::endl;
+            batb.log << "TBNotifyMessage: 'edit' not defined\n";
         }
-        // , and read custom configuration from TBNode; see Demo01.cpp
 
         // only input should receive focus
-        tb_output_->SetIsFocusable( false );
+        //tb_output_->SetIsFocusable( false );
+        
+        // TODO: set preferred size!
 
-        //tb_input_->SetPlaceholderText( "enter command" );
     }
     else
     {
-        batb.log << "TBNotify: "
-                 << "could not read tbconsole.tb.txt" 
-                 << std::endl;
+        batb.log << "TBNotify: could not read notifymessage.tb.txt\n" ;
 
-        //throw std::runtime_error( "TBNotify: error reading file" );
     }
 
-    // settings:
-    //SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
-    SetSettings( tb::WINDOW_SETTINGS_NONE );
-    SetText( "TBNotify" );
-    */
 }
 
 
 void TBNotify::step(World& run)
 {
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+
+    // fasten widget at top center
+    SetPosition( tb::TBPoint( wth / 2, 0 ) );
+
+
     for ( auto i : tb_notify_messages_ )
     {
         auto dur = i->message->duration;
@@ -104,6 +111,7 @@ void TBNotify::step(World& run)
             }
         }
     }
+
 }
 
 void TBNotify::push(NotifyMessage* m)
@@ -112,11 +120,6 @@ void TBNotify::push(NotifyMessage* m)
 
 }
 
-
-TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* m) : tb_notify( n ), message( m )
-{
-
-}
 
 
 //void TBNotify::OnFocusChanged(bool focus)

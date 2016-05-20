@@ -17,6 +17,7 @@
 //
 #include "batb/demo/CourseCurve.hpp" 
 #include "batb.hpp" 
+#include <chrono>
 
 namespace batb
 {
@@ -35,7 +36,7 @@ CourseCurve::CourseCurve()
 // create random path p0 -> p1
 void CourseCurve::create(const Point& p0, const Point& p1)
 {
-    static std::default_random_engine rand; 
+    static std::default_random_engine rand( std::chrono::system_clock::now().time_since_epoch().count() ); 
     
 
     // number of control points
