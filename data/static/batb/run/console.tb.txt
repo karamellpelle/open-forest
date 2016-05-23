@@ -11,7 +11,7 @@ TBLayout
 		gravity all
 		multiline 1
 		readonly 1
-	TBEditFieldEnter
+	TBEditField
 		skin Console.input
 		id: "input"
 		gravity all

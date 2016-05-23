@@ -61,13 +61,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // ALURE demo
     demo::al::demo_begin( batb );
 
-  /*  
-    // TODO: use TBLayout
-    tb_main->SetSize( 800, 200  );
-    tb_main->SetPosition( tb::TBPoint( 0, 100 ) );
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
-    tb_main->EnsureFocus();
-    */
 
     std::cout << std::endl
               << "escape  => exit" << std::endl

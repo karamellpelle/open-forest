@@ -46,10 +46,10 @@ TBConsole::TBConsole(BATB& b) : batb( b )
         // we can now retrieve child widgets of 'this' from ID with
         // - MyWidget* widget = GetWidgetByIDAndType<MyWidget>( TBIDC("my-id-name") );
         // - tb::TBWidget* widget = GetWidgetById( TBIDC( "my-id-name" ) );
-        if ( (tb_input_ = GetWidgetByIDAndType<TBEditFieldEnter>( TBIDC( "input" ) ) ) == nullptr )
+        if ( (tb_input_ = GetWidgetByIDAndType<TBEditField>( TBIDC( "input" ) ) ) == nullptr )
         {
             batb.log << "TBConsole: "
-                     << "no TBEditFieldEnter 'input' defined :("
+                     << "no TBEditField 'input' defined :("
                      << std::endl;
         }
         if ( (tb_output_ = GetWidgetByIDAndType<TBEditField>( TBIDC( "output" ) ) ) == nullptr )
@@ -93,20 +93,39 @@ void TBConsole::OnFocusChanged(bool focus)
 bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
 {
 
-    if ( event.special_key == tb::TB_KEY_ENTER )
-    { 
-        // enter clicked. push to output
-        // note: newline is not added!
-        tb::TBStr str;
-        tb_input_->GetStyleEdit()->GetText( str );
+    //if ( event.special_key == tb::TB_KEY_ENTER )
+    //{ 
+    //    // enter clicked. push to output
+    //    // note: newline is not added!
+    //    tb::TBStr str;
+    //    tb_input_->GetStyleEdit()->GetText( str );
+    //
+    //    // send typed command to Console
+    //    batb.run.console( str.CStr() );
+    //
+    //    tb_input_->GetStyleEdit()->Clear();
+    //
+    //    return true;
+    //} 
+    if ( event.type == tb::EVENT_TYPE_KEY_DOWN )
+    {
+        if ( event.special_key == tb::TB_KEY_ENTER )
+        {
+            // enter clicked. push to output
+            // note: newline is not added!
+            tb::TBStr str;
+            tb_input_->GetStyleEdit()->GetText( str );
 
-        // send typed command to Console
-        batb.run.console( str.CStr() );
+            // send typed command to Console
+            batb.run.console( str.CStr() );
 
-        tb_input_->GetStyleEdit()->Clear();
+            tb_input_->GetStyleEdit()->Clear();
 
-        return true;
-    } 
+            return true;
+
+        }
+
+    }
 
     return tb::TBWindow::OnEvent( event );
 }

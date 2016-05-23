@@ -24,6 +24,7 @@
 #include "batb/run/console/cmd.hpp"
 #include "batb/value/run.hpp"
 #include "tb/animation/tb_widget_animation.h"
+#include "tb/tb_editfield.h"
 
 
 

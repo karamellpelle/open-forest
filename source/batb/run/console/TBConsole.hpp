@@ -23,7 +23,6 @@
 
 
 namespace tb { class TBEditField; }
-namespace tb { class TBEditFieldEnter; }
 
 
 namespace batb
@@ -55,7 +54,7 @@ public:
     BATB& batb;
 
 private:
-    tb::TBEditFieldEnter* tb_input_ = nullptr;
+    tb::TBEditField* tb_input_ = nullptr;
     tb::TBEditField* tb_output_ = nullptr;
 
 };

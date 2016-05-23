@@ -18,31 +18,10 @@
 #ifndef BATB_TB_HPP
 #define BATB_TB_HPP
 #include "batb/batb_include.hpp"
-#include "tb/tb_editfield.h"
 
 
 namespace tb
 {
-
-// ignores enter and returns false (hence parent can receive enter)
-class TBEditFieldEnter : public TBEditField
-{
-    TBOBJECT_SUBCLASS( TBEditFieldEnter, TBEditField );
-
-    virtual bool OnEvent(const tb::TBWidgetEvent& event) override
-    {
-        if ( event.special_key == TB_KEY_ENTER )
-        {
-            // TBEditField only uses EVENT_TYPE_KEY_DOWN for input.
-            // hence return true to dismiss key up, and false
-            // for key down (so parent can handle enter event)
-            return event.type == EVENT_TYPE_KEY_DOWN;
-        }
-
-        return TBEditField::OnEvent( event );
-    }
-    
-};
 
 
 
