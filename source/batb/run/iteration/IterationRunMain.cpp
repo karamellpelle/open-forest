@@ -61,6 +61,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // ALURE demo
     demo::al::demo_begin( batb );
 
+    // make GUI visible
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
     std::cout << std::endl
@@ -144,7 +145,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
                 demo::nanovg::demo_toggle();
 
                 // tmp
-                NotifyMessage msg( "dere er kule, altså!!" );
+                NotifyMessage msg( "this is a notification :)" );
                 batb.run.notify( msg );
                 break;
             }

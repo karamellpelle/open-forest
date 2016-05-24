@@ -93,45 +93,59 @@ void TBConsole::OnFocusChanged(bool focus)
 bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
 {
 
-    //if ( event.special_key == tb::TB_KEY_ENTER )
-    //{ 
-    //    // enter clicked. push to output
-    //    // note: newline is not added!
-    //    tb::TBStr str;
-    //    tb_input_->GetStyleEdit()->GetText( str );
-    //
-    //    // send typed command to Console
-    //    batb.run.console( str.CStr() );
-    //
-    //    tb_input_->GetStyleEdit()->Clear();
-    //
-    //    return true;
-    //} 
     if ( event.type == tb::EVENT_TYPE_KEY_DOWN )
     {
+        // enter key down?
         if ( event.special_key == tb::TB_KEY_ENTER )
         {
-            // enter clicked. push to output
             // note: newline is not added!
-            tb::TBStr str;
-            tb_input_->GetStyleEdit()->GetText( str );
+            tb::TBStr tbstr;
+            tb_input_->GetStyleEdit()->GetText( tbstr );
 
-            // send typed command to Console
-            batb.run.console( str.CStr() );
+            std::string str = tbstr.CStr();
+
+            // save to history
+            // TODO: only push if not equal to previous
+            history_.push_back( str );
+            history_ix_ = history_.size();
+
+            history_current_.clear();
 
             tb_input_->GetStyleEdit()->Clear();
+
+            // send command to Console
+            batb.run.console( str );
+
 
             return true;
 
         }
+        if ( event.special_key == tb::TB_KEY_F1 )
+        {
+            history_up();
+            return true;
+        }
+        if ( event.special_key == tb::TB_KEY_F2 )
+        {
+            history_down();
+            return true;
+        }
 
     }
+    //if ( event.type == tb::EVENT_TYPE_CHANGED )
+    //{
+    //    return true;
+    //}
+
 
     return tb::TBWindow::OnEvent( event );
 }
 
+void TBConsole::step(World& run)
+{
+}
 
-void TBConsole::output(const std::string& str)
+void TBConsole::operator()(const std::string& str)
 {
     tb_output_->GetStyleEdit()->AppendText( str.c_str(), str.size() );
     tb_output_->GetStyleEdit()->ScrollIfNeeded();
@@ -140,6 +154,47 @@ void TBConsole::output(const std::string& str)
 void TBConsole::clear()
 {
     tb_output_->GetStyleEdit()->Clear();
+    
+    // clear history too
+    history_current_.clear();
+    history_.clear();
+    history_ix_ = 0;
+}
+
+void TBConsole::history_up()
+{
+    // TODO: search backwards for first matching history_current_
+
+    tb::TBStr str;
+    tb_input_->GetStyleEdit()->GetText( str );
+
+    // make sure to save current line
+    if ( history_ix_ == history_.size() )
+    {
+        history_current_ = str.CStr();
+    }
+
+    if ( history_ix_ != 0 )
+    {
+        --history_ix_;
+        auto* str = history_[ history_ix_ ].c_str();
+
+        tb_input_->GetStyleEdit()->SetText( str , tb::TB_CARET_POS_END );
+    }
+}
+
+void TBConsole::history_down()
+{
+    // TODO: search forwards for first matching history_current_
+
+    if ( history_ix_ != history_.size() )
+    {
+        ++history_ix_;
+        const char* str = history_ix_ == history_.size() ?
+                          history_current_.c_str() : history_[ history_ix_ ].c_str();
+
+        tb_input_->GetStyleEdit()->SetText( str, tb::TB_CARET_POS_END  );
+    }
 }
 
 } // namespace run

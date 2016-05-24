@@ -32,7 +32,7 @@ class BATB;
 namespace run
 {
 class Console;
-
+class World;
 
 
 class TBConsole : public tb::TBWindow           // or TBWidget?
@@ -46,9 +46,10 @@ public:
 
     virtual void OnFocusChanged(bool focus) override;
     virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
-  
-    // output
-    void output(const std::string& );
+
+    void step(World& );
+
+    void operator()(const std::string& );
     void clear();
 
     BATB& batb;
@@ -57,6 +58,12 @@ private:
     tb::TBEditField* tb_input_ = nullptr;
     tb::TBEditField* tb_output_ = nullptr;
 
+    // history
+    void history_up();
+    void history_down();
+    std::string history_current_;
+    std::vector<std::string> history_;
+    decltype( history_ )::size_type history_ix_ = 0;
 };
 
 

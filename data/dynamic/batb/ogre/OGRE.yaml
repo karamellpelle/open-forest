@@ -1,4 +1,3 @@
-rendersystem: !<!> OpenGL Rendering Subsystem
 plugins:
   - RenderSystem_GL
   - Plugin_ParticleFX
@@ -7,3 +6,4 @@ plugins:
   - Plugin_PCZSceneManager
   - Plugin_OctreeZone
   - Plugin_OctreeSceneManager
+rendersystem: !<!> OpenGL Rendering Subsystem
