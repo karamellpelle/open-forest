@@ -58,10 +58,13 @@ TBConsole::TBConsole(BATB& b) : batb( b )
                      << "no TBEditField 'output' defined :("
                      << std::endl;
         }
-        // , and read custom configuration from TBNode; see Demo01.cpp
+        {
+            // only input should receive focus
+            tb_output_->SetIsFocusable( false );
+            // TODO: change skin of scrollbar. use TBEditField::GetScrollRoot() ?
+            
+        }
 
-        // only input should receive focus
-        tb_output_->SetIsFocusable( false );
 
         //tb_input_->SetPlaceholderText( "enter command" );
     }
@@ -120,12 +123,12 @@ bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
             return true;
 
         }
-        if ( event.special_key == tb::TB_KEY_F1 )
+        if ( event.special_key == tb::TB_KEY_UP )
         {
             history_up();
             return true;
         }
-        if ( event.special_key == tb::TB_KEY_F2 )
+        if ( event.special_key == tb::TB_KEY_DOWN )
         {
             history_down();
             return true;

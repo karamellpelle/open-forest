@@ -15,24 +15,45 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-//#include "batb/tb.hpp"
+#include "batb/tb.hpp"
 #include "tb/tb_window.h"
 #include "tb/tb_widgets_reader.h"
-
-//#include "tb_linklist.h"
-//#include "tb_widgets.h"
-//#include "tb/tb_widgets_reader.h"
-//#include "tb/tb_window.h"
 
 
 namespace tb
 {
 
 
+void TBCommandline::OnInflate(const tb::INFLATE_INFO& info)
+{
+    TBEditField::OnInflate( info );
+}
+
+
+bool TBCommandline::OnEvent(const tb::TBWidgetEvent& event)
+{
+    // prevent special usage of UP/DOWN (StyleEdit movements)
+    if ( event.type == tb::EVENT_TYPE_KEY_DOWN )
+    {
+        if ( event.special_key == tb::TB_KEY_UP || event.special_key == tb::TB_KEY_DOWN )
+        {
+            // propagate event to parent  
+            return false;
+        }
+    }
+
+    // otherwise act like an EditField
+    return TBEditField::OnEvent( event );
+
+}
+
+TB_WIDGET_FACTORY(TBCommandline, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
+
 ////////////////////////////////////////////////////////////////////////////////
-// TBWindow. not present in turbobadger source :/
+// WidgetFactory: TBWindow. not present in turbobadger source :/
 //
 TB_WIDGET_FACTORY(TBWindow, TBValue::TYPE_NULL, WIDGET_Z_BOTTOM) {}
+
 
 } // namespace tb
 

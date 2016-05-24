@@ -399,7 +399,7 @@ static inline bool InvokeKey(tb::TBWidget* widget, GLFWwindow *window, unsigned 
 
 ////////////////////////////////////////////////////////////////////////////////
 //  GLFW callbacks
-//
+//  
 
 void GUI::glfw_callback_char(GLFWwindow *window, unsigned int character)
 {
@@ -416,6 +416,10 @@ void GUI::glfw_callback_key(GLFWwindow *window, int key, int scancode, int actio
 {
         tb::MODIFIER_KEYS modifier = GetModifierKeys(glfwmod);
         bool down = (action == GLFW_PRESS || action == GLFW_REPEAT);
+
+        // assert callback widget
+        if ( callback_widget == nullptr ) return;
+
         switch (key)
         {
         case GLFW_KEY_F1:                       InvokeKey( callback_widget, window, 0, tb::TB_KEY_F1, modifier, down); break;

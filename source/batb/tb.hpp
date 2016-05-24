@@ -18,10 +18,21 @@
 #ifndef BATB_TB_HPP
 #define BATB_TB_HPP
 #include "batb/batb_include.hpp"
+#include "tb/tb_editfield.h"
 
 
 namespace tb
 {
+
+// 
+class TBCommandline : public TBEditField
+{
+    TBOBJECT_SUBCLASS( TBCommandline, TBEditField );
+
+    virtual void OnInflate(const tb::INFLATE_INFO& ) override;
+
+    virtual bool OnEvent(const tb::TBWidgetEvent& event) override;
+};
 
 
 
