@@ -47,12 +47,38 @@ bool TBCommandline::OnEvent(const tb::TBWidgetEvent& event)
 
 }
 
+
 TB_WIDGET_FACTORY(TBCommandline, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
 
 ////////////////////////////////////////////////////////////////////////////////
-// WidgetFactory: TBWindow. not present in turbobadger source :/
-//
-TB_WIDGET_FACTORY(TBWindow, TBValue::TYPE_NULL, WIDGET_Z_BOTTOM) {}
+// TBPanel (a window)
+
+TBPanel::TBPanel()
+{
+    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
+    
+}
+
+
+void TBPanel::OnInflate(const tb::INFLATE_INFO& info)
+{
+    //TBWindow::OnInflate( info );
+    TBWidget::OnInflate( info );
+
+    //if (const char *skin = info.node->GetValueString("skin", nullptr))
+    //{
+    //    SetSkinBg(skin);
+    //}
+
+}
+
+// TODO: remove this
+bool TBPanel::OnEvent(const tb::TBWidgetEvent& event)
+{
+    return false;
+}
+
+TB_WIDGET_FACTORY(TBPanel, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
 
 
 } // namespace tb

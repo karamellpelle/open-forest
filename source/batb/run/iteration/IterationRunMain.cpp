@@ -146,6 +146,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
                 // tmp
                 NotifyMessage msg( "this is a notification :)" );
+                msg.duration = 5.0;
                 batb.run.notify( msg );
                 break;
             }

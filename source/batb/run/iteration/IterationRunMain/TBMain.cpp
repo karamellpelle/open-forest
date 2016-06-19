@@ -69,22 +69,22 @@ bool TBMain::OnEvent(const tb::TBWidgetEvent& ev)
     {
         tb::TBID id = ev.target->GetID(); 
 
-        if ( id == tb::TBIDC( "do-demo-forest" ) )
+        if ( id == TBIDC( "do-demo-forest" ) )
         {
             batb.run.pushEvent( event::Do::DemoForest );
             return true;
         }
-        if ( id == tb::TBIDC( "do-nanovg" ) )
+        if ( id == TBIDC( "do-nanovg" ) )
         {
             batb.run.pushEvent( event::Do::NanoVG );
             return true;
         }
-        if ( id == tb::TBIDC( "do-old" ) )
+        if ( id == TBIDC( "do-old" ) )
         {
             batb.run.pushEvent( event::Do::Old );
             return true;
         }
-        if ( id == tb::TBIDC( "do-exit" ) )
+        if ( id == TBIDC( "do-exit" ) )
         {
             batb.run.pushEvent( event::Do::Exit );
             return true;

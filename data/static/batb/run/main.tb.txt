@@ -1,5 +1,6 @@
 TBLayout
-	TBWindow
+	TBWidget
+		skin 0
 		TBLayout
 			axis x
 

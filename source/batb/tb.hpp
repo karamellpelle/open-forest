@@ -19,6 +19,7 @@
 #define BATB_TB_HPP
 #include "batb/batb_include.hpp"
 #include "tb/tb_editfield.h"
+#include "tb/tb_window.h"
 
 
 namespace tb
@@ -27,7 +28,20 @@ namespace tb
 // 
 class TBCommandline : public TBEditField
 {
+public:
     TBOBJECT_SUBCLASS( TBCommandline, TBEditField );
+
+    virtual void OnInflate(const tb::INFLATE_INFO& ) override;
+
+    virtual bool OnEvent(const tb::TBWidgetEvent& event) override;
+};
+
+class TBPanel : public TBWindow
+{
+public:
+    TBOBJECT_SUBCLASS( TBPanel, TBWindow );
+
+    TBPanel();
 
     virtual void OnInflate(const tb::INFLATE_INFO& ) override;
 

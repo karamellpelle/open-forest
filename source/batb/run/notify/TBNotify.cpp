@@ -61,9 +61,11 @@ TBNotify::TBNotify(BATB& b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b.
     SetIgnoreInput( true );
 
     SetSize( 220, 800 );
+    // this makes widget fill to root automatically:
+    //SetGravity( tb:WIDGET_GRAVITY_ALL );
 }
 
-TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n ), message( msg )
+TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb::TBWidget(), tb_notify( n ), message( msg )
 {
     using namespace tb;
 
@@ -74,6 +76,11 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n
     TBNode node;
     if ( node.ReadFile( "static://batb/run/notifymessage.tb.txt" ) )
     {
+	if (const char *skin = node.GetValueString("skin", nullptr))
+	{
+	    SetSkinBg(skin);
+	}
+
         // let TB populate this TBWindow from file
         g_widgets_reader->LoadNodeTree( this, &node );
 
@@ -83,6 +90,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n
         {
             // set text
             edit->SetText( msg->str.c_str() );
+
         }
         else
         {
@@ -101,6 +109,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb_notify( n
 
     }
 
+    // hardcoded size for now!
     SetSize( 200, 100 );
 }
 
@@ -111,22 +120,49 @@ void TBNotify::step(World& run)
     auto hth = run.scene.hth;
 
     // span out this layout to the whole screen
-    // FIXME: fill to root automatically
+    // FIXME: fill to root automatically, SetGravity all
     SetRect( tb::TBRect(0, 0, wth, hth) );
 
-    for ( auto i : tb_notify_messages_ )
+    tick_t tick = batb.env.tick();
+    
+
+    auto i = std::begin( tb_notify_messages_ );
+    while ( i != std::end( tb_notify_messages_ ) )
     {
-        auto dur = i->message->duration;
-        if ( dur != 0 )
+        TBNotifyMessage* tbmsg = *i;
+        bool remove = false;
+
+        auto message = tbmsg->message;
+        tick_t ts = message->tick + message->duration;
+
+        // duration specifies minimum time
+        if ( ts <= tick ) 
         {
-            tick_t tick = i->message->tick + i->message->duration;
-            if ( batb.env.tick() <= tick ) 
+            if ( message->key )
             {
-                // TODO: remove 'i'
-                // message->finish() and remove elemnet from list
-                // RemoveChild( i );
-                // delete i;
+                if ( message->key->is_down() )
+                {
+                    remove = true;
+                }
             }
+            else
+            {
+                remove = true;
+            }
+        }
+        if ( remove )
+        {
+            message->finish();
+
+            // TODO: animate
+            RemoveChild( tbmsg );
+            delete tbmsg;
+
+            i = tb_notify_messages_.erase( i );    
+        }
+        else
+        {
+            ++i;
         }
     }
 

@@ -35,7 +35,8 @@ void Notify::step(World& run)
 {
  
     // remove completed messages
-    for (auto i = std::begin( messages_ ); i != std::end( messages_ ); ++i)
+    auto i = std::begin( messages_ );
+    while ( i != std::end( messages_ ) )
     {
         if ( i->finished_ )
         {
@@ -43,8 +44,11 @@ void Notify::step(World& run)
             //event::NotifyMessageComplete event( &( *i ) );
             //run.pushEvent( event );
 
-            messages_.erase( i );
-            
+            i = messages_.erase( i );
+        }
+        else
+        {
+            ++i;
         }
     }
 

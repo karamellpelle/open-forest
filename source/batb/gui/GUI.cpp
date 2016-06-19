@@ -232,9 +232,9 @@ void begin(GUI& gui)
         // Set the default font description for widgets to one of the fonts we just added
         tb::TBFontDescription fd;
 #ifdef TB_FONT_RENDERER_TBBF
-        fd.SetID(tb::TBIDC("Segoe"));
+        fd.SetID(TBIDC("Segoe"));
 #else
-        fd.SetID(tb::TBIDC("Vera"));
+        fd.SetID(TBIDC("Vera"));
 #endif
         fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
         tb::g_font_manager->SetDefaultFontDescription(fd);
@@ -360,21 +360,21 @@ static bool InvokeShortcut(int key, tb::SPECIAL_KEY special_key, tb::MODIFIER_KE
         bool reverse_key = (modifierkeys & tb::TB_SHIFT) ? true : false;
         tb::TBID id;
         if (toupr_ascii(key) == 'X' && shortcut_key)
-                id = tb::TBIDC("cut");
+                id = TBIDC("cut");
         else if ((toupr_ascii(key) == 'C' || special_key == tb::TB_KEY_INSERT) && shortcut_key)
-                id = tb::TBIDC("copy");
+                id = TBIDC("copy");
         else if (((toupr_ascii(key) == 'V' && shortcut_key) ||
                         (special_key == tb::TB_KEY_INSERT && reverse_key)))
-                id = tb::TBIDC("paste");
+                id = TBIDC("paste");
         else if (toupr_ascii(key) == 'A' && shortcut_key)
-                id = tb::TBIDC("selectall");
+                id = TBIDC("selectall");
         else if ((toupr_ascii(key) == 'Z' && shortcut_key) ||
                         (toupr_ascii(key) == 'Y' && shortcut_key))
         {
                 bool undo = toupr_ascii(key) == 'Z';
                 if (reverse_key)
                         undo = !undo;
-                id = undo ? tb::TBIDC("undo") : tb::TBIDC("redo");
+                id = undo ? TBIDC("undo") : TBIDC("redo");
         }
         else
                 return false;

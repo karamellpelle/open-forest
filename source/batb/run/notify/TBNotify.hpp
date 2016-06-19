@@ -21,6 +21,7 @@
 #include "batb/run/notify/NotifyMessage.hpp"
 #include "tb/tb_widgets.h"
 #include "tb/tb_layout.h"
+#include "batb/tb.hpp"
 
 
 namespace tb { class TBEditField; }

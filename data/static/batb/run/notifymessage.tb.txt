@@ -1,11 +1,14 @@
 #TBLayout: axis: y, spacing: 0, size: available
+skin Notify
+
 TBEditField: id: "edit"
-	skin Notify
-	#skin 0
+	skin 0
 	gravity all
 	multiline 1
+	adapt-to-content 1
+	styling 1
 	readonly 1
-	text "hallo"
+	#text "hallo"
 	
 
 
