@@ -1,3 +1,16 @@
+# macOS Sierra
+* let CMake add compile options, don't rely on custom compiler like gcc
+* glew submodule does not build; relies on installed (brew)
+* create open-forest-ogre mirror
+* install openal-soft from submodule
+  - libmpg123. submodule!
+  - forward declaration alure::ALSource 
+* install more dependencies for ogre:
+  - zziplib
+  - freeimage 
+  - +++; see Ogre CMake configuration
+
+
 # TODO
 * Notify and Console from run::Run into BATB ??
 * language files
