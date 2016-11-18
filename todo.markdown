@@ -1,4 +1,5 @@
-# macOS Sierra
+ macOS Sierra
+
 * let CMake add compile options, don't rely on custom compiler like gcc
 * glew submodule does not build; relies on installed (brew)
 * create open-forest-ogre mirror

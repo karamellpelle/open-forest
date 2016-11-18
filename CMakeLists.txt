@@ -76,9 +76,60 @@ add_compile_options( "$<$<COMPILE_LANGUAGE:C>:${flags_c}>" )
 
 
 
+################################################################################
+# options for building this project
+
+option( BATB_BUILD      "Build OpenForest"                            ON  )
+option( BATB_BUILD_OLD  "Build old-BATB part into OpenForest"         ON  )
+option( BATB_INSTALL    "Install OpenForest"                          OFF )
+
+
 set( MAIN_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/source" )
 set( LIBS_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/libs" )
 
+
+# set version
+set( BATB_VERSION_MAJOR  0 )
+set( BATB_VERSION_MINOR  0 )
+set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
+
+################################################################################
+# find library GLEW
+find_package( GLEW )
+if ( NOT GLEW_FOUND )
+    message( FATAL_ERROR "GLEW not found (open-forest depends on this library)" )
+endif()
+#set( BUILD_UTILS    OFF CACHE BOOL "" FORCE )   # we do not want to utility programs
+#add_subdirectory( ${LIBS_SOURCE_DIR}/glew/build/cmake )
+# wait for cmake fix for this submodule!
+
+################################################################################
+# build library 'glfw'
+#
+set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE )   # we do not want to build examples
+set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )   # we do not want to build documentation
+set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
+set( GLFW_INSTALL           OFF CACHE BOOL "" FORCE )   # we do not want to install GLFW
+add_subdirectory( ${LIBS_SOURCE_DIR}/glfw )
+
+
+################################################################################
+# build library 'my-tinyxml2'. this exports the necessary include directories
+add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/tinyxml2" )
+
+
+################################################################################
+# build library 'my-turbobadger'. this exports the necessary include directories
+# NOTE my-turbobadger -> TurboBadgerLib
+add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/turbobadger" )
+## build library TurboBadgerLib
+#set( TB_BUILD_DEMO OFF)
+#add_subdirectory( ${LIBS_SOURCE_DIR}/turbobadger )
+
+################################################################################
+# build library 'yaml-cpp'.
+set( YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE )   # disable "testing and parse tools"
+add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 
 
 ################################################################################
@@ -123,15 +174,335 @@ set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build 
 
 # FIXME!
 set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
-set( CMAKE_CXX_FLAGS_COPY "${CMAKE_CXX_FLAGS}" )
-set( CMAKE_C_FLAGS_COPY "${CMAKE_C_FLAGS}" )
 set( CMAKE_BUILD_TYPE "Release" )
-#set( CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
-#set( CMAKE_CXX_FLAGS "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-non-template-friend" )
-#set( CMAKE_C_FLAGS "-Wall -Wno-switch -Wno-unused-variable -Wno-unused-function" ) 
 add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/open-forest-ogre" )
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
-set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_COPY} )
-set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS_COPY} )
+
+
+# ALURE
+
+# I had a lot of hazzle making alure work on macOS Sierra, hence I created a custom submodule
+# for this platform, for now
+if ( APPLE )
+  add_subdirectory( ${LIBS_SOURCE_DIR}/open-forest-audio )
+  # ^ gives us ALURE_INCLUDE_DIR and ALURE_LIBRARIES 
+else ()
+
+find_package( OpenAL REQUIRED )
+message( "OPENAL_INCLUDE_DIR: ${OPENAL_INCLUDE_DIR}" )
+add_subdirectory( ${LIBS_SOURCE_DIR}/alure )
+target_include_directories( alure2_s PUBLIC OPENAL_INCLUDE_DIR )
+# alure2_s does not expose libs, lets add'em
+list( APPEND CMAKE_MODULE_PATH "${LIBS_SOURCE_DIR}/alure/cmake" )
+list( APPEND ALURE_LIBRARIES ${OPENAL_LIBRARY} )
+list( APPEND ALURE_LIBRARIES alure2_s )
+
+
+find_package( Ogg )
+find_package( Vorbis )
+find_package( FLAC )
+find_package( Opus )
+find_package( SndFile )
+find_package( MPG123 )
+find_package( DUMB )
+##find_package( PHYSFS )
+## EXERCISE: make this work:
+##set( ALURE_LIBRARIES  $<$<STREQUAL:TRUE,${OGG_FOUND}>:"${OGG_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${VORBIS_FOUND}>:"${VORBIS_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${FLAC_FOUND}>:"${FLAC_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${OPUS_FOUND}>:"${OPUS_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${SNDFILE_FOUND}>:"${SNDFILE_LIBRARIES}"> 
+##                      $<$<STREQUAL:TRUE,${MPG123_FOUND}>:"${MPG123_LIBRARIES}"> 
+##                      #$<$<STREQUAL:TRUE,${DUMB_FOUND}>:"${DUMB_LIBRARIES}">
+##                      $<$<STREQUAL:TRUE,${PHYSFS_FOUND}>:"${PHYSFS_LIBRARIES}"> 
+##                      )
+if ( OGG_FOUND )
+list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
+endif()
+if ( VORBIS_FOUND )
+list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
+endif()
+if ( FLAC_FOUND )
+list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
+endif()
+if ( OPUS_FOUND )
+list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
+endif()
+if ( SNDFILE_FOUND )
+list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
+endif()
+if ( MPG123_FOUND )
+list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
+endif()
+if ( DUMB_FOUND )
+list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
+endif()
+if ( PHYSFS_FOUND )
+list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
+endif()
+
+endif()
+
+################################################################################
+# lib-file
+add_library(  lib-file STATIC 
+              "${MAIN_SOURCE_DIR}/file.cpp"
+           )
+target_include_directories( lib-file PUBLIC "${MAIN_SOURCE_DIR}" )
+
+################################################################################
+# lib-env
+add_library(  lib-env STATIC
+              "${MAIN_SOURCE_DIR}/env/Env.cpp"
+           )
+target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
+target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
+target_link_libraries( lib-env yaml-cpp )
+
+
+################################################################################
+# define batb sources
+set(  BATB_SOURCES
+      "${MAIN_SOURCE_DIR}/main.cpp"
+      "${MAIN_SOURCE_DIR}/Module.cpp"
+      "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
+      # BATB core:
+      "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"
+      "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeyClicker.cpp"
+      "${MAIN_SOURCE_DIR}/batb/keys/KeyPointer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/GUI.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/widgets/TBProgressBarWidget.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/tb_system_batb.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gui/tb_file_batb.cpp"
+      "${MAIN_SOURCE_DIR}/batb/gl/GL.cpp"
+      "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork/RunWorkTBWidget.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/workers.cpp"
+      # BATB non-core:
+      "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
+      "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/Player.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/console/Console.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/console/TBConsole.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_echo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_value.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_easteregg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/notify/Notify.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/notify/TBNotify.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunDemo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain/TBMain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/World.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Weather.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Terrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyCamera.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyRunner.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlCamera.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/StepDT.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Runner.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/Control.cpp"
+      "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/workers.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/Output.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/Demo.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/Course.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/CourseCurve.cpp"
+      # 
+      "${MAIN_SOURCE_DIR}/batb/CourseDrawer.cpp"             
+      # helpers
+      "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
+      "${MAIN_SOURCE_DIR}/batb/tb.cpp"             
+      # nanovg
+      "${CMAKE_SOURCE_DIR}/libs/nanovg/src/nanovg.c"
+      # demo:
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/demo.c"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/perf.c"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/libs/al.cpp"
+      "${MAIN_SOURCE_DIR}/batb/demo/other.cpp"
+      
+   )
+
+################################################################################
+# define old sources
 #
+
+set(  BATB_SOURCES_OLD 
+      "${MAIN_SOURCE_DIR}/batb/old/old.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/calcalt.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/client.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/common.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/control.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/course.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/database.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgCommon.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgCourse.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgEvent.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgHost1.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgHost2.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin1.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin2.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgMap.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgMenu.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgOptions.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgOrienteer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgPlayers.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgResult.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgSelect.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgSingle.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgStack.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/dlgTerrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/event.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/eventproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/fdManager.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/forest.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/global.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/map.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mapproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/md5.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mesh.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/message.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/noise.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/orienteer.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/oriproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/point.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/random.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/run.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/server.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/shader.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/terrain.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/terrainproxy.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/texture.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/util.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/windowMessage.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/xmlParser.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/xmountains.cpp"
+      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
+   )
+
+
+################################################################################
+# build executable 'open-forest'
+################################################################################
+
+if ( BATB_BUILD )
+
+
+    # old-BATB
+    if( BATB_BUILD_OLD )
+        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+    endif( BATB_BUILD_OLD )
+
+
+    # create executable target 'open-forest'
+    add_executable( open-forest ${BATB_SOURCES} ) 
+
+    # define target properties
+    set_target_properties( open-forest PROPERTIES OUTPUT_NAME "open-forest" )
+
+    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/glm" )
+    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/tmp/nanovg" )
+    target_include_directories( open-forest PRIVATE "${CMAKE_SOURCE_DIR}/libs/nanovg/src" )
+
+    # GLEW
+    list( APPEND BATB_LIBRARIES ${GLEW_LIBRARIES} )
+    target_include_directories( open-forest PRIVATE ${GLEW_INCLUDE_DIRS} )
+
+    # GLFW
+    list( APPEND BATB_LIBRARIES glfw ${GLFW_LIBRARIES} )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/glfw/include" )
+
+    # my-tinyxml2
+    list( APPEND BATB_LIBRARIES my-tinyxml2 )
+
+    # my-turbobadger
+    list( APPEND BATB_LIBRARIES my-turbobadger )
+    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/gui" ) # point to _our_ tb_config.h
+
+    # yaml-cpp
+    list( APPEND BATB_LIBRARIES yaml-cpp )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
+
+    # Ogre
+    list( APPEND BATB_LIBRARIES OgreMain )
+    list( APPEND BATB_LIBRARIES OgreTerrain )
+    list( APPEND BATB_LIBRARIES OgrePaging )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
+    # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
+    if ( OGRE_BUILD_RENDERSYSTEM_GL )
+        list( APPEND BATB_LIBRARIES RenderSystem_GL )
+    endif()
+    if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
+        #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
+    endif()
+
+    # ALURE
+    list( APPEND BATB_LIBRARIES ${ALURE_LIBRARIES} )
+    target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIR} )
+    #list( APPEND BATB_LIBRARIES alure2_s ${ALURE_LIBRARIES} )
+    #target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/alure/include" )  # NOTE: this adds alc.h, etc. from alure,
+                                                                                          #       if #include "alc.h" and not
+                                                                                          #       #include "AL/alc.h", see lib source
+
+    # lib-file
+    list( APPEND BATB_LIBRARIES lib-file )
+
+    # lib-env
+    list( APPEND BATB_LIBRARIES lib-env )
+
+    # old-BATB
+    if( BATB_BUILD_OLD )
+        list( APPEND BATB_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc ) # FIXME: find package plib
+        target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
+        target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
+    endif( BATB_BUILD_OLD )
+
+
+    # write our CMake variables into code
+    configure_file( "${MAIN_SOURCE_DIR}/definitions.hpp.in" "${MAIN_SOURCE_DIR}/definitions.hpp" )
+
+
+    # link libraries to our executable target
+    target_link_libraries( open-forest ${BATB_LIBRARIES} )
+
+endif()
+
+
+################################################################################
+# Install open-forest
+################################################################################
+
+if ( BATB_INSTALL )
+    message( "install not implemented..." )
+    # ...
+endif()
+
+
 
