@@ -53,7 +53,7 @@ function do_init-submodules()
     git submodule update libs/tinyxml2
 
     # turbobadger
-    git submodule init libs/turbobadger   #turbobadger
+    git submodule init libs/turbobadger
     git submodule update libs/turbobadger
 
     # alure
@@ -63,17 +63,11 @@ function do_init-submodules()
     # yaml-cpp
     git submodule init libs/yaml-cpp      
     git submodule update libs/yaml-cpp
+   
+    # open-forest-ogre
+    git submodule init libs/open-forest-ogre
+    git submodule update libs/open-forest-ogre
 
-    ############################################################
-    # these must be manually installed :(
-
-
-    # boost
-    #git submodule init libs/boost         #boost
-    #git submodule update libs/boost       
-    #cd libs/boost
-    #git submodule init     xxx
-    #git submodule update   xxx
 }
 
 function do_usage()
