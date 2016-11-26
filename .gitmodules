@@ -10,9 +10,6 @@
 [submodule "libs/nanovg"]
 	path = libs/nanovg
 	url = https://github.com/memononen/nanovg
-[submodule "libs/ogre"]
-	path = libs/ogre
-	url = ./libs/ogre
 [submodule "libs/yaml-cpp"]
 	path = libs/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
