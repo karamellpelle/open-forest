@@ -1,6 +1,3 @@
-[submodule "libs/boost"]
-	path = libs/boost
-	url = https://github.com/boostorg/boost.git
 [submodule "libs/tinyxml2"]
 	path = libs/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
@@ -13,15 +10,9 @@
 [submodule "libs/nanovg"]
 	path = libs/nanovg
 	url = https://github.com/memononen/nanovg
-[submodule "libs/glew"]
-	path = libs/glew
-	url = https://github.com/nigels-com/glew.git
 [submodule "libs/ogre"]
 	path = libs/ogre
 	url = ./libs/ogre
-[submodule "libs/alure"]
-	path = libs/alure
-	url = git://repo.or.cz/alure.git
 [submodule "libs/yaml-cpp"]
 	path = libs/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
