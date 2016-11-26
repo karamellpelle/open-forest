@@ -79,7 +79,7 @@ add_compile_options( "$<$<COMPILE_LANGUAGE:C>:${flags_c}>" )
 ################################################################################
 # options for building this project
 
-option( BATB_BUILD      "Build OpenForest"                            ON  )
+option( BATB_BUILD      "Build OpenForest executable"                 ON  )
 option( BATB_BUILD_OLD  "Build old-BATB part into OpenForest"         ON  )
 option( BATB_INSTALL    "Install OpenForest"                          OFF )
 
@@ -179,14 +179,8 @@ add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/open-forest-ogre" )
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
 
 
+################################################################################
 # ALURE
-
-# I had a lot of hazzle making alure work on macOS Sierra, hence I created a custom submodule
-# for this platform, for now
-if ( APPLE )
-  add_subdirectory( ${LIBS_SOURCE_DIR}/open-forest-audio )
-  # ^ gives us ALURE_INCLUDE_DIR and ALURE_LIBRARIES 
-else ()
 
 find_package( OpenAL REQUIRED )
 message( "OPENAL_INCLUDE_DIR: ${OPENAL_INCLUDE_DIR}" )
@@ -205,43 +199,16 @@ find_package( Opus )
 find_package( SndFile )
 find_package( MPG123 )
 find_package( DUMB )
-##find_package( PHYSFS )
-## EXERCISE: make this work:
-##set( ALURE_LIBRARIES  $<$<STREQUAL:TRUE,${OGG_FOUND}>:"${OGG_LIBRARIES}"> 
-##                      $<$<STREQUAL:TRUE,${VORBIS_FOUND}>:"${VORBIS_LIBRARIES}"> 
-##                      $<$<STREQUAL:TRUE,${FLAC_FOUND}>:"${FLAC_LIBRARIES}"> 
-##                      $<$<STREQUAL:TRUE,${OPUS_FOUND}>:"${OPUS_LIBRARIES}"> 
-##                      $<$<STREQUAL:TRUE,${SNDFILE_FOUND}>:"${SNDFILE_LIBRARIES}"> 
-##                      $<$<STREQUAL:TRUE,${MPG123_FOUND}>:"${MPG123_LIBRARIES}"> 
-##                      #$<$<STREQUAL:TRUE,${DUMB_FOUND}>:"${DUMB_LIBRARIES}">
-##                      $<$<STREQUAL:TRUE,${PHYSFS_FOUND}>:"${PHYSFS_LIBRARIES}"> 
-##                      )
-if ( OGG_FOUND )
-list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
-endif()
-if ( VORBIS_FOUND )
-list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
-endif()
-if ( FLAC_FOUND )
-list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
-endif()
-if ( OPUS_FOUND )
-list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
-endif()
-if ( SNDFILE_FOUND )
-list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
-endif()
-if ( MPG123_FOUND )
-list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
-endif()
-if ( DUMB_FOUND )
-list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
-endif()
-if ( PHYSFS_FOUND )
-list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
-endif()
 
-endif()
+# empty appends allowed
+list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
+list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
 
 ################################################################################
 # lib-file
@@ -410,10 +377,17 @@ set(  BATB_SOURCES_OLD
 if ( BATB_BUILD )
 
 
-    # old-BATB
+    ############################################################################
+    # old
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+        find_package( Plib )
+        if ( PLIB_FOUND )
+            list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+        else()
+            message( WARNING "Plib (needed for BATB_BUILD_OLD) not found. skipping BATB_BUILD_OLD" )
+        endif()
     endif( BATB_BUILD_OLD )
+    ############################################################################
 
 
     # create executable target 'open-forest'
@@ -477,12 +451,17 @@ if ( BATB_BUILD )
     # lib-env
     list( APPEND BATB_LIBRARIES lib-env )
 
+    ############################################################################
     # old-BATB
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_LIBRARIES -lplibpuaux -lplibpu -lplibfnt -lplibsg -lplibul -lGLEW -lGL -lGLU -lglut -lm -lc ) # FIXME: find package plib
-        target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
-        target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
+        if ( PLIB_FOUND )
+            list( APPEND BATB_LIBRARIES ${PLIB_LIBRARIES} )
+            target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
+            target_include_directories( open-forest PRIVATE ${PBLIB_INCLUDE_DIRS} )
+            target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
+        endif()
     endif( BATB_BUILD_OLD )
+    ############################################################################
 
 
     # write our CMake variables into code
@@ -498,11 +477,9 @@ endif()
 ################################################################################
 # Install open-forest
 ################################################################################
-
 if ( BATB_INSTALL )
-    message( "install not implemented..." )
+    message( "installation not implemented (yet)" )
     # ...
 endif()
-
-
+################################################################################
 

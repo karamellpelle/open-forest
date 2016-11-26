@@ -1,11 +1,7 @@
  macOS Sierra
 
-* let CMake add compile options, don't rely on custom compiler like gcc
 * glew submodule does not build; relies on installed (brew)
 * create open-forest-ogre mirror
-* install openal-soft from submodule
-  - libmpg123. submodule!
-  - forward declaration alure::ALSource 
 * install more dependencies for ogre:
   - zziplib
   - freeimage 
@@ -22,7 +18,7 @@
 * remove template LoadWorker
 * IterationRunWork and TB
 
-
+* rename `float_t` ?  `floating_t` ?
 * define precision of glm (vec, mat, etc) the same as float_t 
 * OpenGL 3+, premultiplied colors by default
 * ThreadGLContext: exception on 'current'
@@ -35,3 +31,10 @@
 * find a suitable UDP-library (http://www.codeofhonor.com/blog/choosing-a-game-network-lib)
 * GLEW as git submodule 
 * glext.h (part of official OpenGL Registry) as git submodule, or something
+
+## CMake
+
+* control debug build in CMakeLists.txt
+* let CMake add compile options, don't rely on custom compiler like gcc
+* check for required packages: glew, boost, openal, etc.
+
