@@ -32,6 +32,7 @@ cmake_minimum_required( VERSION 3.3 )
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # open-forest
 project( open-forest )
 
@@ -87,6 +88,9 @@ option( BATB_INSTALL    "Install OpenForest"                          OFF )
 set( MAIN_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/source" )
 set( LIBS_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/libs" )
 
+# where we can put custom FindXXX.cmake
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
+
 
 # set version
 set( BATB_VERSION_MAJOR  0 )
@@ -94,18 +98,18 @@ set( BATB_VERSION_MINOR  0 )
 set( BATB_VERSION_STRING "${BATB_VERSION_MAJOR}.${BATB_VERSION_MINOR}" )
 
 ################################################################################
+# find package Boost
+# todo: as git and cmake submodule
+find_package(Boost REQUIRED)
+
+################################################################################
 # find library GLEW
-find_package( GLEW )
-if ( NOT GLEW_FOUND )
-    message( FATAL_ERROR "GLEW not found (open-forest depends on this library)" )
-endif()
-#set( BUILD_UTILS    OFF CACHE BOOL "" FORCE )   # we do not want to utility programs
-#add_subdirectory( ${LIBS_SOURCE_DIR}/glew/build/cmake )
-# wait for cmake fix for this submodule!
+# todo: as git and cmake submodule
+find_package( GLEW REQUIRED )
+
 
 ################################################################################
 # build library 'glfw'
-#
 set( GLFW_BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE )   # we do not want to build examples
 set( GLFW_BUILD_DOCS        OFF CACHE BOOL "" FORCE )   # we do not want to build documentation
 set( GLFW_BUILD_TESTS       OFF CACHE BOOL "" FORCE )   # we do not want to build tests 
@@ -125,6 +129,7 @@ add_subdirectory( "${CMAKE_SOURCE_DIR}/cmake/libs/turbobadger" )
 ## build library TurboBadgerLib
 #set( TB_BUILD_DEMO OFF)
 #add_subdirectory( ${LIBS_SOURCE_DIR}/turbobadger )
+
 
 ################################################################################
 # build library 'yaml-cpp'.
@@ -172,7 +177,9 @@ set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # instal
 set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
 set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
 
-# FIXME!
+# set release build for Ogre3D (should be faster)
+# http://stackoverflow.com/questions/30985215/passing-variables-down-to-subdirectory-only 
+# http://stackoverflow.com/questions/24460486/cmake-build-type-not-being-used-in-cmakelists-txt/24470998#24470998
 set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
 set( CMAKE_BUILD_TYPE "Release" )
 add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/open-forest-ogre" )
@@ -180,35 +187,35 @@ set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
 
 
 ################################################################################
-# ALURE
+# alure
 
-find_package( OpenAL REQUIRED )
-message( "OPENAL_INCLUDE_DIR: ${OPENAL_INCLUDE_DIR}" )
+#find_package( OpenAL REQUIRED )
+#message( "OPENAL_INCLUDE_DIR: ${OPENAL_INCLUDE_DIR}" )
 add_subdirectory( ${LIBS_SOURCE_DIR}/alure )
-target_include_directories( alure2_s PUBLIC OPENAL_INCLUDE_DIR )
-# alure2_s does not expose libs, lets add'em
-list( APPEND CMAKE_MODULE_PATH "${LIBS_SOURCE_DIR}/alure/cmake" )
-list( APPEND ALURE_LIBRARIES ${OPENAL_LIBRARY} )
-list( APPEND ALURE_LIBRARIES alure2_s )
 
+#list( APPEND ALURE_LIBRARIES ${OPENAL_LIBRARY} )
+#list( APPEND ALURE_LIBRARIES alure2 )
+#
+#
+#list( APPEND CMAKE_MODULE_PATH "${LIBS_SOURCE_DIR}/alure/cmake" )
+#find_package( Ogg )
+#find_package( Vorbis )
+#find_package( FLAC )
+#find_package( Opus )
+#find_package( SndFile )
+#find_package( MPG123 )
+#find_package( DUMB )
+#
+## empty appends allowed
+#list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
+#list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
 
-find_package( Ogg )
-find_package( Vorbis )
-find_package( FLAC )
-find_package( Opus )
-find_package( SndFile )
-find_package( MPG123 )
-find_package( DUMB )
-
-# empty appends allowed
-list( APPEND ALURE_LIBRARIES ${OGG_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${VORBIS_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${FLAC_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${OPUS_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${SNDFILE_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${MPG123_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${DUMB_LIBRARIES} )
-list( APPEND ALURE_LIBRARIES ${PHYSFS_LIBRARIES} )
 
 ################################################################################
 # lib-file
@@ -216,15 +223,23 @@ add_library(  lib-file STATIC
               "${MAIN_SOURCE_DIR}/file.cpp"
            )
 target_include_directories( lib-file PUBLIC "${MAIN_SOURCE_DIR}" )
+################################################################################
 
 ################################################################################
 # lib-env
+find_package( OpenGL )
 add_library(  lib-env STATIC
               "${MAIN_SOURCE_DIR}/env/Env.cpp"
            )
 target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
 target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
+target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/glfw/include" )
+target_include_directories( lib-env PUBLIC ${Boost_INCLUDE_DIRS} )
+
 target_link_libraries( lib-env yaml-cpp )
+################################################################################
+
+
 
 
 ################################################################################
@@ -439,7 +454,7 @@ if ( BATB_BUILD )
 
     # ALURE
     list( APPEND BATB_LIBRARIES ${ALURE_LIBRARIES} )
-    target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIR} )
+    target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIRS} )
     #list( APPEND BATB_LIBRARIES alure2_s ${ALURE_LIBRARIES} )
     #target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/alure/include" )  # NOTE: this adds alc.h, etc. from alure,
                                                                                           #       if #include "alc.h" and not

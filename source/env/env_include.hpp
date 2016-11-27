@@ -26,9 +26,9 @@
 // expose native GL
 // TODO:  set this based on Platform and context type!!
 //        see http://www.glfw.org/docs/latest/group__native.html
-#define GLFW_EXPOSE_NATIVE_X11
-#define GLFW_EXPOSE_NATIVE_GLX // or EGL??
-#include <GLFW/glfw3native.h>
+//#define GLFW_EXPOSE_NATIVE_X11
+//#define GLFW_EXPOSE_NATIVE_GLX // or EGL??
+//#include <GLFW/glfw3native.h>
 
 namespace env
 {

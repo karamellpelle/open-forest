@@ -37,4 +37,5 @@
 * control debug build in CMakeLists.txt
 * let CMake add compile options, don't rely on custom compiler like gcc
 * check for required packages: glew, boost, openal, etc.
-
+* debug build. flags
+* 
