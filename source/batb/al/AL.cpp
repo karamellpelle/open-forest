@@ -74,15 +74,12 @@ void begin(AL& al)
     {
         //////////////////////////////////////////////////
         // TODO: check nullptr!
-
-        al.alure_devicemanager = alure::DeviceManager::get();
+        alure::DeviceManager& devmgr = alure::DeviceManager::get();
 
         // FIXME: memory leak, according to valgrind
-        al.alure_device = al.alure_devicemanager->openPlayback(); // FIXME: leak according to valgrind!
+        al.alure_device = devmgr.openPlayback(); 
 
-        al.batb.log << "AL: opened alure_device \""
-                    << al.alure_device->getName( alure::PlaybackDevType_Basic )
-                    << "\"" << std::endl;
+        al.batb.log << "AL: opened alure_device \"" << al.alure_device->getName() << "\"" << std::endl;
 
         al.alure_context = al.alure_device->createContext();
         alure::Context::MakeCurrent( al.alure_context );

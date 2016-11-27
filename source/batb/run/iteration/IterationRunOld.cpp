@@ -34,14 +34,18 @@ IterationRunOld::IterationRunOld(BATB& b) : IterationRun( b )
 void IterationRunOld::iterate_begin(World& world)
 {
     BATB_LOG_FUNC( batb );
-
+#ifdef BATB_BUILD_OLD
     old::begin();
+#else
+    batb.log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)\n";
+#endif
 
 }
 
 
 IterationStack IterationRunOld::iterate_run(World& world)
 {
+#ifdef BATB_BUILD_OLD
     if ( old::is_exit() )
     {
         old::end();
@@ -65,6 +69,9 @@ IterationStack IterationRunOld::iterate_run(World& world)
             return { this };
         }
     }
+#else
+    return _emptylist_;
+#endif
 
 
 

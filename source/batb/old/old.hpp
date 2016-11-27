@@ -53,6 +53,8 @@ int getElapsedTime();
 ////////////////////////////////////////////////////////////////////////////////
 // removing the GLUT-binding of plib that old-BATB used:
 //
+
+#ifdef BATB_BUILD_OLD
 #include <plib/pu.h>
 
 inline int puGetWindowOLD()
@@ -90,6 +92,7 @@ inline void puInitOLD()
 }
 
 
+#endif
 
 
 #endif

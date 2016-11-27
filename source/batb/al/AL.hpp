@@ -51,7 +51,6 @@ public:
     void frameBegin();
     void frameEnd();
 
-    alure::DeviceManager* alure_devicemanager = nullptr;
     alure::Device* alure_device = nullptr;
     alure::Context* alure_context = nullptr;
 

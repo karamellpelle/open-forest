@@ -36,9 +36,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # open-forest
 project( open-forest )
 
-# FIXME: is the -g switch added down to Ogre, even if CMAKE_BUILD_TYPE is 
-#        DebWithRelInfo for Ogre??
-#        
 ################################################################################
 # set compiler flags
 #
@@ -52,6 +49,8 @@ project( open-forest )
 # http://stackoverflow.com/questions/10046114/in-cmake-how-can-i-test-if-the-compiler-is-clang
 if ( ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") )
   # using Clang
+  # warnings: http://clang.llvm.org/docs/DiagnosticsReference.html
+  # todo: Wno-inconsistent-missing-override
   set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual )
   set( flags_c -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -81,12 +80,13 @@ add_compile_options( "$<$<COMPILE_LANGUAGE:C>:${flags_c}>" )
 # options for building this project
 
 option( BATB_BUILD      "Build OpenForest executable"                 ON  )
-option( BATB_BUILD_OLD  "Build old-BATB part into OpenForest"         ON  )
+option( BATB_BUILD_OLD  "Build old code into open-forest"             ON  )
 option( BATB_INSTALL    "Install OpenForest"                          OFF )
 
 
 set( MAIN_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/source" )
 set( LIBS_SOURCE_DIR          "${CMAKE_SOURCE_DIR}/libs" )
+set( LIBS_BINARY_DIR          "${CMAKE_BINARY_DIR}/libs" )
 
 # where we can put custom FindXXX.cmake
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
@@ -189,13 +189,12 @@ set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
 ################################################################################
 # alure
 
-#find_package( OpenAL REQUIRED )
-#message( "OPENAL_INCLUDE_DIR: ${OPENAL_INCLUDE_DIR}" )
 add_subdirectory( ${LIBS_SOURCE_DIR}/alure )
 
-#list( APPEND ALURE_LIBRARIES ${OPENAL_LIBRARY} )
-#list( APPEND ALURE_LIBRARIES alure2 )
-#
+#list( APPEND ALURE_LIBRARIES alure2 ${OPENAL_LIBRARY} )
+list( APPEND ALURE_LIBRARIES alure2 )
+list( APPEND ALURE_INCLUDE_DIRS "${LIBS_SOURCE_DIR}/alure/include" )
+
 #
 #list( APPEND CMAKE_MODULE_PATH "${LIBS_SOURCE_DIR}/alure/cmake" )
 #find_package( Ogg )
@@ -392,15 +391,19 @@ set(  BATB_SOURCES_OLD
 if ( BATB_BUILD )
 
 
+    # can we build old code?
+    find_package( Plib )
+    if ( PLIB_FOUND )
+        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+    else()
+        message( WARNING "Plib (needed for BATB_BUILD_OLD) not found. skipping build of old code" )
+        set( BATB_BUILD_OLD OFF )
+    endif()
+
     ############################################################################
     # old
     if( BATB_BUILD_OLD )
-        find_package( Plib )
-        if ( PLIB_FOUND )
-            list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
-        else()
-            message( WARNING "Plib (needed for BATB_BUILD_OLD) not found. skipping BATB_BUILD_OLD" )
-        endif()
+        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
     endif( BATB_BUILD_OLD )
     ############################################################################
 
@@ -430,6 +433,9 @@ if ( BATB_BUILD )
     # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
     target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/gui" ) # point to _our_ tb_config.h
+    if ( APPLE )
+        target_compile_definitions( open-forest PUBLIC MACOSX ) # turbobadger needs MACOSX
+    endif()
 
     # yaml-cpp
     list( APPEND BATB_LIBRARIES yaml-cpp )
@@ -439,11 +445,12 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES OgreMain )
     list( APPEND BATB_LIBRARIES OgreTerrain )
     list( APPEND BATB_LIBRARIES OgrePaging )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/OgreMain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/Components/Paging/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/Components/Terrain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre" )
+    target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/open-forest-ogre/include" ) # we need the build generated OgreBuildSettings.h
     # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
     if ( OGRE_BUILD_RENDERSYSTEM_GL )
         list( APPEND BATB_LIBRARIES RenderSystem_GL )
@@ -455,10 +462,8 @@ if ( BATB_BUILD )
     # ALURE
     list( APPEND BATB_LIBRARIES ${ALURE_LIBRARIES} )
     target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIRS} )
-    #list( APPEND BATB_LIBRARIES alure2_s ${ALURE_LIBRARIES} )
-    #target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/alure/include" )  # NOTE: this adds alc.h, etc. from alure,
-                                                                                          #       if #include "alc.h" and not
-                                                                                          #       #include "AL/alc.h", see lib source
+    message( "ALURE_INCLUDE_DIRS: ${ALURE_INCLUDE_DIRS}" )
+    message( "ALURE_LIBRARIES: ${ALURE_LIBRARIES}" )
 
     # lib-file
     list( APPEND BATB_LIBRARIES lib-file )
@@ -469,12 +474,10 @@ if ( BATB_BUILD )
     ############################################################################
     # old-BATB
     if( BATB_BUILD_OLD )
-        if ( PLIB_FOUND )
-            list( APPEND BATB_LIBRARIES ${PLIB_LIBRARIES} )
-            target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
-            target_include_directories( open-forest PRIVATE ${PBLIB_INCLUDE_DIRS} )
-            target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
-        endif()
+        list( APPEND BATB_LIBRARIES ${PLIB_LIBRARIES} )
+        target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
+        target_include_directories( open-forest PRIVATE ${PBLIB_INCLUDE_DIRS} )
+        target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
     endif( BATB_BUILD_OLD )
     ############################################################################
 
