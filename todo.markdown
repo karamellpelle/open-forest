@@ -40,3 +40,8 @@
 * debug build. flags
 * no rtti for turbobadger
 * remove cmake/libs/alure
+
+
+## Ogre
+* make dynamic library?
+* freeimage added

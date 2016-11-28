@@ -9,3 +9,4 @@ session.vim
 data/tmp/batb-ogre.log
 data/tmp/batb-ogre.log.old
 data/old/routes
+source/definitions.hpp

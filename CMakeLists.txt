@@ -50,8 +50,7 @@ project( open-forest )
 if ( ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") )
   # using Clang
   # warnings: http://clang.llvm.org/docs/DiagnosticsReference.html
-  # todo: Wno-inconsistent-missing-override
-  set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual )
+  set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual -Wno-inconsistent-missing-override )
   set( flags_c -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -107,6 +106,9 @@ find_package(Boost REQUIRED)
 # todo: as git and cmake submodule
 find_package( GLEW REQUIRED )
 
+################################################################################
+# find library OpenGL
+find_package( OPENGL REQUIRED )
 
 ################################################################################
 # build library 'glfw'
@@ -159,7 +161,7 @@ set( OGRE_BUILD_COMPONENT_RTSSHADERSYSTEM     ON CACHE BOOL "" FORCE)   # rtssha
 set( OGRE_BUILD_COMPONENT_TERRAIN             ON CACHE BOOL "" FORCE)   # terrain component
 set( OGRE_BUILD_COMPONENT_VOLUME              ON CACHE BOOL "" FORCE)   # volume component
 set( OGRE_BUILD_COMPONENT_BSP                 ON CACHE BOOL "" FORCE)   # bsp component
-set( OGRE_BUILD_PLUGIN_CG                     ON CACHE BOOL "" FORCE)   # Cg plugin
+#set( OGRE_BUILD_PLUGIN_CG                     ON CACHE BOOL "" FORCE)   # Cg plugin
 set( OGRE_BUILD_PLUGIN_OCTREE                 ON CACHE BOOL "" FORCE)   # octree plugin
 set( OGRE_BUILD_PLUGIN_PCZ                    ON CACHE BOOL "" FORCE)   # PCZ plugin
 set( OGRE_BUILD_PLUGIN_PFX                    ON CACHE BOOL "" FORCE)   # PFX plugin
@@ -175,7 +177,7 @@ set( OGRE_BUILD_TOOLS                         ON CACHE BOOL "" FORCE)   # build 
 set( OGRE_INSTALL_DOCS                        OFF CACHE BOOL "" FORCE)  # install documentation
 set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # install samples
 set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
-set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
+set( OGRE_STATIC                              ON CACHE BOOL "" FORCE)  # build OGRE as a static lib.
 
 # set release build for Ogre3D (should be faster)
 # http://stackoverflow.com/questions/30985215/passing-variables-down-to-subdirectory-only 
@@ -458,12 +460,14 @@ if ( BATB_BUILD )
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
         #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
     endif()
+    # fix a link error (add AGL)
+    if ( APPLE )
+        set_target_properties( open-forest PROPERTIES LINK_FLAGS "-framework AGL")
+    endif()
 
     # ALURE
     list( APPEND BATB_LIBRARIES ${ALURE_LIBRARIES} )
     target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIRS} )
-    message( "ALURE_INCLUDE_DIRS: ${ALURE_INCLUDE_DIRS}" )
-    message( "ALURE_LIBRARIES: ${ALURE_LIBRARIES}" )
 
     # lib-file
     list( APPEND BATB_LIBRARIES lib-file )
@@ -474,10 +478,10 @@ if ( BATB_BUILD )
     ############################################################################
     # old-BATB
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_LIBRARIES ${PLIB_LIBRARIES} )
-        target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
-        target_include_directories( open-forest PRIVATE ${PBLIB_INCLUDE_DIRS} )
-        target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
+          list( APPEND BATB_LIBRARIES ${PLIB_LIBRARIES} )
+          target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/old" )
+          target_include_directories( open-forest PRIVATE ${PBLIB_INCLUDE_DIRS} )
+          target_compile_definitions( open-forest PRIVATE PU_USE_NONE ) # remove GLUT from plib
     endif( BATB_BUILD_OLD )
     ############################################################################
 
