@@ -35,6 +35,12 @@ void init_state()
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
+std::cout << std::endl;
+std::cout << "****************************************************************" << std::endl;
+std::cout << "init_state():\n";
+std::cout << "glEnable: " << &glEnable << std::endl;
+std::cout << "glClearColor: " << &glClearColor << std::endl;
+std::cout << "glBlendEquationSeparate: " << &glBlendEquationSeparate << std::endl;
 
     //  set up our GL-invariants:
     glEnable( GL_MULTISAMPLE );

@@ -50,6 +50,7 @@ project( open-forest )
 if ( ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") )
   # using Clang
   # warnings: http://clang.llvm.org/docs/DiagnosticsReference.html
+  # TODO: -Wno-unused-private-field
   set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual -Wno-inconsistent-missing-override )
   set( flags_c -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -263,6 +264,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/gl/GL.cpp"
       "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
+
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork/RunWorkTBWidget.cpp"
@@ -311,12 +313,14 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/demo/CourseCurve.cpp"
       # 
       "${MAIN_SOURCE_DIR}/batb/CourseDrawer.cpp"             
-      # helpers
+
+      ## helpers
       "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
       "${MAIN_SOURCE_DIR}/batb/tb.cpp"             
-      # nanovg
+
+      ## nanovg
       "${CMAKE_SOURCE_DIR}/libs/nanovg/src/nanovg.c"
-      # demo:
+      ## demo:
       "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/perf.c"
       "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg.cpp"
@@ -409,9 +413,12 @@ if ( BATB_BUILD )
     endif( BATB_BUILD_OLD )
     ############################################################################
 
+    #set( BATB_SOURCES "${MAIN_SOURCE_DIR}/main.cpp" )
 
     # create executable target 'open-forest'
     add_executable( open-forest ${BATB_SOURCES} ) 
+    
+
 
     # define target properties
     set_target_properties( open-forest PROPERTIES OUTPUT_NAME "open-forest" )

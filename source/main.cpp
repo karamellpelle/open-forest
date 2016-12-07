@@ -15,6 +15,123 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+
+#if 0
+#include <iostream>
+#include <sstream>
+#include <GL/glew.h>    // must be done before GLFW!!
+#include <GLFW/glfw3.h> // FIXME: build option?
+
+extern "C"
+{
+
+static void glfw_error_callback(int error, const char* str)
+{
+    std::cerr << "GLFW error (code " << error << "): " << str << std::endl;
+}
+
+}
+
+
+void f()
+{
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // GLFW
+    glfwSetErrorCallback( glfw_error_callback );
+
+    if ( !glfwInit() )
+    {
+        throw std::runtime_error( "env::begin: could not init GLFW" );
+    }
+
+    // set all hints to defaults
+    glfwDefaultWindowHints();
+
+    // set hints to window
+    // http://www.glfw.org/docs/latest/window.html#window_hints
+    //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
+    //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
+    //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+    //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+    glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );     // debug symbols (?) 
+    glfwWindowHint( GLFW_DECORATED, GL_FALSE );               // we do not need a close button.
+
+
+    // size
+    uint wth = 640;
+    uint hth = 480;
+
+    // fullscreen
+    bool fullscreen = false;
+
+    // multisamples
+    uint samples = 0;
+    //if ( YAML::Node node = screen[ "multisamples" ] )
+    //{
+    //    samples = node.as<uint>( samples );
+    //    glfwWindowHint( GLFW_SAMPLES, samples ); 
+    //}
+
+    // title
+    std::string title = "test-glew";
+
+    GLFWmonitor* monitor = nullptr;
+    
+    // NOTE: error in implementation of glfw, according to valgrind:
+    auto* window = glfwCreateWindow( wth, hth, title.c_str(), monitor, 0 );
+
+    // set GL context as 'theWindow_'
+    glfwMakeContextCurrent( window );
+
+    if ( !window )
+    {
+        throw std::runtime_error( "env::begin: could not create window" );
+    }
+
+std::cout << "before glew:\n";
+std::cout << "glEnable: " << &glEnable << std::endl;
+std::cout << "glClearColor: " << &glClearColor << std::endl;
+std::cout << "glBlendEquationSeparate: " << &glBlendEquationSeparate << std::endl;
+
+    // we now have a context, init GLEW
+    GLenum err = glewInit();
+    if ( err != GLEW_OK )
+    {
+        std::ostringstream os;
+        os << "env::begin: could not init GLEW (" << glewGetErrorString( err ) << ")";
+        throw std::runtime_error( os.str() );
+    }
+
+std::cout << std::endl;
+std::cout << "****************************************************************" << std::endl;
+std::cout << "after glew:\n";
+std::cout << "glEnable: " << &glEnable << std::endl;
+std::cout << "glClearColor: " << &glClearColor << std::endl;
+std::cout << "glBlendEquationSeparate: " << &glBlendEquationSeparate << std::endl;
+
+//  set up our GL-invariants:
+glEnable( GL_MULTISAMPLE );
+glClearColor( 0, 0, 0, 0 );
+glBlendEquationSeparate( GL_FUNC_ADD, GL_FUNC_ADD );
+
+while ( true )
+{
+    // populate events
+    glfwPollEvents();
+    glfwSwapBuffers( window );
+
+}
+//while ( true );
+
+}
+
+int main(int argc, char** argv)
+{
+    f();
+}
+#endif
+
 #include "include.hpp"
 #include "env.hpp"
 #include "game.hpp"
@@ -110,4 +227,3 @@ int main(int argc, char** argv)
 
     return ret;
 }
-
