@@ -9,21 +9,21 @@ function do_build()
     # FIXME: cd to THIS_PATH
     mkdir -p build/cmake
     cd build/cmake
-    cmake -DCMAKE_BUILD_TYPE=None "$@" ../.. && make && cp $BINARY_NAME ..
+    cmake -DCMAKE_BUILD_TYPE=None "$@" ../.. && make
 }
 
 function do_make()
 {
     # FIXME: cd to THIS_PATH
     cd build/cmake
-    make && cp $BINARY_NAME ..
+    make 
 }
 
 function do_make_openforest()
 {
     # FIXME: cd to THIS_PATH
     cd build/cmake
-    make open-forest/fast && cp $BINARY_NAME ..
+    make open-forest/fast 
 }
 
 function do_clean()
