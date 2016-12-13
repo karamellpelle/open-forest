@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd build/cmake
+cd build
 ./open-forest

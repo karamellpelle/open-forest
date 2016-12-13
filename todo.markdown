@@ -1,4 +1,28 @@
- macOS Sierra
+# link paths
+
+OpenForest.app/
+  Contents/
+    MacOS/
+      open-forest
+    Frameworks/
+      
+    Resources/
+
+function(ogre_config_framework LIBNAME) in OgreConfigTargets.cmake
+OGRE_LIBRARY_OUTPUT tells where to put out libraries (i.e. plugins
+OGRE_COMP_LIB_TYPE: type of compilation
+
+macBundlePath() = Bundle path ASSERT: this is root
+open forest rpath = lib/
+
+structure of lib/:
+  Frameworks/
+      OgrePaging.framework/
+  Plugins/
+      RenderSystem_GL
+      ParticleFX
+  
+macOS Sierra
 
 * glew submodule does not build; relies on installed (brew)
 * create open-forest-ogre mirror

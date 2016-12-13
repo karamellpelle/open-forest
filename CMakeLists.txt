@@ -32,8 +32,32 @@ cmake_minimum_required( VERSION 3.3 )
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+################################################################################
+# set up RPATH (paths used for dynamic linkage)
+# https://cmake.org/Wiki/CMake_RPATH_handling#CMake_and_the_RPATH
+# https://blog.kitware.com/upcoming-in-cmake-2-8-12-osx-rpath-support/
+set( CMAKE_MACOSX_RPATH TRUE )
+set(CMAKE_SKIP_BUILD_RPATH  FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+################################################################################
+# this is more interesting later when we implement install (i.e. creating a 
+# bundle on macOS)in this CMakeLists!  
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+# the RPATH to be used when installing, but only if it's not a system directory
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
+################################################################################
 
+
+
+
+################################################################################
 # open-forest
+################################################################################
+
 project( open-forest )
 
 ################################################################################
@@ -50,8 +74,7 @@ project( open-forest )
 if ( ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") )
   # using Clang
   # warnings: http://clang.llvm.org/docs/DiagnosticsReference.html
-  # TODO: -Wno-unused-private-field
-  set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual -Wno-inconsistent-missing-override )
+  set( flags_cpp -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function -Wno-deprecated-declarations -Wno-overloaded-virtual -Wno-inconsistent-missing-override -Wno-unused-private-field )
   set( flags_c -g -Wall -Wno-switch -Wno-unused-variable -Wno-unused-function )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -91,6 +114,11 @@ set( LIBS_BINARY_DIR          "${CMAKE_BINARY_DIR}/libs" )
 # where we can put custom FindXXX.cmake
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 
+# set platform
+# TODO: linux, etc
+if ( APPLE )
+  set( BATB_BUILD_PLATFORM_APPLE ON )
+endif()
 
 # set version
 set( BATB_VERSION_MAJOR  0 )
@@ -154,6 +182,8 @@ add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 #           set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 #         endif ()
 #
+# TODO: 
+#   * OGRE_CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT ?
 set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                    # prevent "RelWithDebInfo" 
 set( OGRE_BUILD_COMPONENT_OVERLAY             ON CACHE BOOL "" FORCE)   # overlay component
 set( OGRE_BUILD_COMPONENT_PAGING              ON CACHE BOOL "" FORCE)   # paging component
@@ -167,7 +197,7 @@ set( OGRE_BUILD_PLUGIN_OCTREE                 ON CACHE BOOL "" FORCE)   # octree
 set( OGRE_BUILD_PLUGIN_PCZ                    ON CACHE BOOL "" FORCE)   # PCZ plugin
 set( OGRE_BUILD_PLUGIN_PFX                    ON CACHE BOOL "" FORCE)   # PFX plugin
 set( OGRE_BUILD_RENDERSYSTEM_GL               ON CACHE BOOL "" FORCE)   # GL-rendering
-set( OGRE_BUILD_RENDERSYSTEM_GL3Plus          ON CACHE BOOL "" FORCE)   # GL3+-rendering
+set( OGRE_BUILD_RENDERSYSTEM_GL3Plus          ON CACHE BOOL "" FORCE)   # GL3+-rendering # FIXME: does not seem to exists
 #set( OGRE_BUILD_RENDERSYSTEM_GL3PLUS          ON CACHE BOOL "" FORCE)   # GL3+-rendering # FIXME: use this (capital letters)
 #set( OGRE_BUILD_RENDERSYSTEM_GLES2            ON CACHE BOOL "" FORCE)   # GLES2-rendering.
 #set( OGRE_CONFIG_THREADS 2                    ON CACHE BOOL "" FORCE)   # thread setting 2, default. see doc...
@@ -178,7 +208,7 @@ set( OGRE_BUILD_TOOLS                         ON CACHE BOOL "" FORCE)   # build 
 set( OGRE_INSTALL_DOCS                        OFF CACHE BOOL "" FORCE)  # install documentation
 set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # install samples
 set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
-set( OGRE_STATIC                              ON CACHE BOOL "" FORCE)  # build OGRE as a static lib.
+set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
 
 # set release build for Ogre3D (should be faster)
 # http://stackoverflow.com/questions/30985215/passing-variables-down-to-subdirectory-only 
@@ -461,15 +491,22 @@ if ( BATB_BUILD )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre" )
     target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/open-forest-ogre/include" ) # we need the build generated OgreBuildSettings.h
     # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
+
+
     if ( OGRE_BUILD_RENDERSYSTEM_GL )
         list( APPEND BATB_LIBRARIES RenderSystem_GL )
     endif()
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
-        #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet...
+        #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet... FIXME: user capital letters
     endif()
-    # fix a link error (add AGL)
+
+
+    # link hazzle on macOS
     if ( APPLE )
+        # fix a link error (add AGL)
         set_target_properties( open-forest PROPERTIES LINK_FLAGS "-framework AGL")
+        # set where to look after dynamic libraries (where rpath points to (may be more than one; see doc))
+        set_target_properties( open-forest PROPERTIES INSTALL_RPATH "@executable_path/lib/" )
     endif()
 
     # ALURE

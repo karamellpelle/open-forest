@@ -2,7 +2,7 @@ plugins:
   - RenderSystem_GL
   - Plugin_ParticleFX
   - Plugin_BSPSceneManager
-  - Plugin_CgProgramManager
+  #- Plugin_CgProgramManager
   - Plugin_PCZSceneManager
   - Plugin_OctreeZone
   - Plugin_OctreeSceneManager
