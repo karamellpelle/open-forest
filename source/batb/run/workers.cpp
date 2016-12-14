@@ -19,7 +19,7 @@
 #include "batb/run/workers.hpp"
 
 
-//#define LOAD_PROXY
+#define LOAD_PROXY
 
   
 namespace batb
@@ -53,7 +53,8 @@ void LoadWorker<BATB>::operator()(Work& work)
         //       diffused and cause some minor rendering artifacts when changing back
         //       to main context. 
         work.state( "OGRE" );
-        ogre::begin( batb.ogre );
+        //ogre::begin( batb.ogre ); // FIXME: temporary disabled!
+        batb.log << "NOTE: ogre::begin( batb.ogre ) temporary disabled!\n in run/workers.cpp!" << std::endl;
 
         // load AL
         work.state( "AL" );
@@ -74,7 +75,7 @@ void LoadWorker<BATB>::operator()(Work& work)
 #ifdef LOAD_PROXY
         // tmp: fake loading, to show capabilities:
         work.state( "Proxy library A" );
-        std::this_thread::sleep_for( std::chrono::seconds( 8 ) );
+        std::this_thread::sleep_for( std::chrono::seconds( 2 ) );
         work.state( "Proxy library B" );
         std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
         work.state( "Proxy library C" );
@@ -122,7 +123,8 @@ void UnloadWorker<BATB>::operator()(Work& work)
         // FIXME!!! current thread is not main. 
         //          OGRE::frameBegin is calledafter delete!
         work.state( "OGRE" );
-        ogre::end( batb.ogre );
+        //ogre::end( batb.ogre );// FIXME: temporary disabled!
+        batb.log << "NOTE: ogre::end( batb.ogre ) temporary disabled!\n in run/workers.cpp!" << std::endl;
 
 #ifdef LOAD_PROXY
         work.state( "Proxy library B" );

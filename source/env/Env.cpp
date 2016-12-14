@@ -130,9 +130,11 @@ void begin(Env& env)
         //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
         //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
         glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );     // debug symbols (?) 
-        glfwWindowHint( GLFW_DECORATED, GL_FALSE );               // we do not need a close button.
-        // TODO: hints from yaml
+        // TODO: parse GLFW hints from yaml
 
+        // decorate window?
+        bool decorate = screen["decorate"].as<bool>( false );
+        glfwWindowHint( GLFW_DECORATED, decorate );               
 
         // size
         uint wth = 640;

@@ -18,6 +18,25 @@
 #include "batb/ogre/GLContextGLFW.hpp"
 #include "batb/BATB.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// expose native GL
+// TODO:  set this based on Platform and context type!!
+//        see http://www.glfw.org/docs/latest/group__native.html
+
+// linux
+#ifdef BATB_BUILD_PLATFORM_LINUX
+#define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_GLX // or EGL??
+#endif
+
+// macOS
+#ifdef BATB_BUILD_PLATFORM_APPLE
+#define GLFW_EXPOSE_NATIVE_COCOA
+#define GLFW_EXPOSE_NATIVE_NSGL
+#endif
+#include <GLFW/glfw3native.h>
+////////////////////////////////////////////////////////////////////////////////
+
 namespace batb
 {
 
@@ -38,7 +57,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 #endif
 
     // apple
-#ifdef GLFW_EXPOSE_NATIVE_NSGL
+#ifdef BATB_BUILD_PLATFORM_APPLE
+//#ifdef GLFW_EXPOSE_NATIVE_NSGL
     glfwMakeContextCurrent( batb.env.window );
 #endif
     
