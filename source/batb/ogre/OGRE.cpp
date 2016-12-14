@@ -332,6 +332,7 @@ debug::gl::msg( "ogre.ogre_root->createRenderWindow()" );
             Ogre::NameValuePairList params;
             params["currentGLContext"] = "true";  // let RenderWindow use our GL context
             params["externalGLControl"] = "true"; // no automatic swapping
+            params["macAPI"] = "cocoa";
             ogre.ogre_renderwindow = ogre.ogre_root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
             ogre.ogre_renderwindow->setVisible(true);
 

@@ -117,7 +117,7 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 # set platform
 # TODO: linux, etc
 if ( APPLE )
-  set( BATB_BUILD_PLATFORM_APPLE ON )
+  set( BATB_BUILD_PLATFORM_APPLE ON ) #fixme: call it _MACOS
 endif()
 
 # set version

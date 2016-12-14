@@ -36,6 +36,11 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     ::GLXContext context = glfwGetGLXContext( batb.env.window );
     glXMakeCurrent( display, drawable, context );
 #endif
+
+    // apple
+#ifdef GLFW_EXPOSE_NATIVE_NSGL
+    glfwMakeContextCurrent( batb.env.window );
+#endif
     
 }
 
