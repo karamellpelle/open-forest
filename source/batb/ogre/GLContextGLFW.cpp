@@ -49,6 +49,7 @@ void GLContextGLFW::setCurrent()
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     //
     // TODO: other platforms...
+    // TODO: cant we just do glfwMakeContextCurrent( batb.env.window ) ??
 #ifdef GLFW_EXPOSE_NATIVE_GLX
     ::Display* display = glfwGetX11Display();
     ::Window drawable = glfwGetX11Window( batb.env.window );
@@ -58,7 +59,6 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // apple
 #ifdef BATB_BUILD_PLATFORM_APPLE
-//#ifdef GLFW_EXPOSE_NATIVE_NSGL
     glfwMakeContextCurrent( batb.env.window );
 #endif
     

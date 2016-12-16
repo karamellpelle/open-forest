@@ -1,5 +1,7 @@
 # link paths
 
+See OSXCocoaCOntext::clone() for how threading is done!
+
 OpenForest.app/
   Contents/
     MacOS/

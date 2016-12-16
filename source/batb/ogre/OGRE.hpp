@@ -58,7 +58,7 @@ public:
     //
 
     // should Ogre be ignored each frame?
-    void enabled(bool e) { enabled_ = e; }
+    void enabled(bool e);
 
     // start/end frame (each iteration, i.e. inside IterationRun::iterate)
     void frameBegin();

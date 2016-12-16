@@ -24,6 +24,33 @@
 #include "batb/demo/other.hpp"
 
 
+void load_batb(batb::BATB& batb)
+{
+    using namespace batb;
+    try
+    {
+        // load Ogre
+        ogre::begin( batb.ogre ); 
+
+        // load AL
+        al::begin( batb.al );
+
+        // load the non-core part of Run
+        run::begin( batb.run );
+
+        // load Forest
+        forest::begin( batb.forest );
+
+        // load demo
+        demo::begin( batb.demo );
+
+
+    }
+    catch (std::exception& e)
+    {
+        batb.log << "error loading : " << e.what() << std::endl; 
+    }
+}
 
 //void commandline_env(int argc, char** argv, YAML::Node& yaml)
 //{
@@ -69,7 +96,6 @@ int main(int argc, char** argv)
         run::World run;
         run.player = batb::run::local_player();
         
-
         auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
         auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
         run::IterationStack stack =
@@ -78,6 +104,14 @@ int main(int argc, char** argv)
               game::begin_iteration( batb.run.iterationRunMain ),     // main
               game::begin_iteration( unloadBATB )                     // destroy game data at end
         };
+
+        // tmp:
+        //// load resources but not in thread
+        //load_batb( batb );
+        //run::IterationStack stack =
+        //{
+        //      game::begin_iteration( batb.run.iterationRunMain ),     // main
+        //};
 
   
   
