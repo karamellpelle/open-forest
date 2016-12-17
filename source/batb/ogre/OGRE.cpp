@@ -349,7 +349,7 @@ debug::gl::msg( "ogre.ogre_root->createRenderWindow()" );
             params["externalGLControl"] = "true"; 
 #endif
 
-#ifdef BATB_BUILD_PLATFORM_APPLE
+#ifdef BATB_BUILD_PLATFORM_MACOS
             // defaults to "carbon", it segfaults if not set
             params["macAPI"] = "cocoa";
 

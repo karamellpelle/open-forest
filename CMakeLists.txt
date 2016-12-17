@@ -117,7 +117,7 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 # set platform
 # TODO: linux, etc
 if ( APPLE )
-  set( BATB_BUILD_PLATFORM_APPLE ON ) #fixme: call it _MACOS
+  set( BATB_BUILD_PLATFORM_MACOS ON ) #fixme: call it _MACOS
 endif()
 
 # set version
@@ -137,7 +137,7 @@ find_package( GLEW REQUIRED )
 
 ################################################################################
 # find library OpenGL
-find_package( OPENGL REQUIRED )
+find_package( OpenGL REQUIRED )
 
 ################################################################################
 # build library 'glfw'

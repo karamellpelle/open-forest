@@ -1,11 +1,11 @@
-build/cmake
+./build/cmake
 .*.swp
 .*.swo
 .DS_Store
 gmon.out
 leaks-*.txt
 session.vim
-./tmp
+tmp
 data/tmp/batb-ogre.log
 data/tmp/batb-ogre.log.old
 data/old/routes

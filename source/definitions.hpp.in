@@ -21,8 +21,10 @@
 // should we build old-BATB?
 #cmakedefine BATB_BUILD_OLD
 
-#cmakedefine BATB_BUILD_PLATFORM_APPLE
+// are we building for Apple macOS?
+#cmakedefine BATB_BUILD_PLATFORM_MACOS
 
+// are we building for Linux?
 #cmakedefine BATB_BUILD_PLATFORM_LINUX
 
 

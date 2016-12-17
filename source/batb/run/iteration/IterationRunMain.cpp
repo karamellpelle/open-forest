@@ -65,9 +65,12 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
     std::cout << std::endl
-              << "escape  => exit" << std::endl
               << "tab     => toggle console" << std::endl
               << std::endl;
+
+    NotifyMessage msg( "Use Tab to toggle console" ); // here it would be nice to use run.keyset.console->to_str() which makes a TB widget for us
+    msg.duration = 8;
+    batb.run.notify( msg );
 
 
 }

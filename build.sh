@@ -39,34 +39,9 @@ function do_init-submodules()
 {
     # FIXME: cd to THIS_PATH
     # create git submodules (libs/)
-
-    # glfw
-    git submodule init libs/glfw         
-    git submodule update libs/glfw
-
-    # nanovg
-    git submodule init libs/nanovg     
-    git submodule update libs/nanovg 
-
-    # tinyxml2
-    git submodule init libs/tinyxml2   
-    git submodule update libs/tinyxml2
-
-    # turbobadger
-    git submodule init libs/turbobadger
-    git submodule update libs/turbobadger
-
-    # alure
-    git submodule init libs/alure   
-    git submodule update libs/alure
-   
-    # yaml-cpp
-    git submodule init libs/yaml-cpp      
-    git submodule update libs/yaml-cpp
-   
-    # open-forest-ogre
-    git submodule init libs/open-forest-ogre
-    git submodule update libs/open-forest-ogre
+    
+    git submodule init
+    git submodule update
 
 }
 

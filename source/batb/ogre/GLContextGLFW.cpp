@@ -30,7 +30,7 @@
 #endif
 
 // macOS
-#ifdef BATB_BUILD_PLATFORM_APPLE
+#ifdef BATB_BUILD_PLATFORM_MACOS
 #define GLFW_EXPOSE_NATIVE_COCOA
 #define GLFW_EXPOSE_NATIVE_NSGL
 #endif
@@ -58,7 +58,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 #endif
 
     // apple
-#ifdef BATB_BUILD_PLATFORM_APPLE
+#ifdef BATB_BUILD_PLATFORM_MACOS
     glfwMakeContextCurrent( batb.env.window );
 #endif
     
