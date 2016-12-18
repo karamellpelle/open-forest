@@ -79,14 +79,19 @@ which creates a program you can run with `./open-forest.sh`.
 
 I am working on build on macOS Sierra. Use [homebrew](www.brew.sh) to install what you need:
 
-    * `brew install cmake`
-    * `brew install glew`
-    * `brew install boost`
-    * `brew install mpg123`
-    * `brew install libzzip`
-    * `brew install freeimage`
-    * `brew install freetype`
+    $ brew install cmake
+    $ brew install glew
+    $ brew install boost
+    $ brew install mpg123
+    $ brew install libzzip
+    $ brew install freeimage
+    $ brew install freetype
 
+
+Screenshots
+----------------
+
+Some [screenshots](data/meta/screenshots/screenshots.markdown) showing the terrain rendering (based on Ogre3D sample).
 
 Contact
 ----------------
