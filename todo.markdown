@@ -1,6 +1,7 @@
 See OSXCocoaCOntext::clone() for how threading is done!
 
 # TODO
+* use metric system for terrain and all models!!!
 * Notify and Console from run::Run into BATB ??
 * language files
 * `reset()` for objects in forest::World

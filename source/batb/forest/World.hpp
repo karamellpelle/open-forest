@@ -25,6 +25,7 @@
 #include "batb/forest/Runner.hpp"
 #include "batb/forest/Weather.hpp"
 #include "batb/event.hpp"
+#include "AL/alure2.h"
 
 
 
@@ -119,6 +120,9 @@ public:
     Ogre::SceneManager* ogre_scenemgr = nullptr;
     Ogre::Viewport*     ogre_viewport = nullptr;
 
+
+    // sound
+    alure::Listener* al_listener = nullptr;
 private:
     
 };

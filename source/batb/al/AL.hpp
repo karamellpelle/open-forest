@@ -51,13 +51,22 @@ public:
     void frameBegin();
     void frameEnd();
 
-    alure::Device* alure_device = nullptr;
-    alure::Context* alure_context = nullptr;
+    // create and play a source. the returned object is only allowed to be used
+    // instantly to setup the source, because the created source will automatically
+    // be released (i.e. destroyed) by 'AL' at end of some frame when the source is
+    // finished.
+    alure::Source* source(const std::string& , const glm::mat4& );
+    //alure::Source& source(const std::string& ); // <- TODO: no matrix means background sound
+
+    alure::Device* al_device = nullptr;
+    alure::Context* al_context = nullptr;
 
 
 private:
     bool enabled_ = true;
-    
+   
+    // for playing sources
+    std::list<alure::Buffer*> buffers_;
 };
 
 

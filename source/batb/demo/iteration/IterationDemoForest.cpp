@@ -190,6 +190,30 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
                 auto code = e->control->definition.code;
                 auto code1 = demo.course[ demo.course_i + 1 ]->definition.code;
 
+                // outpu sound
+                // TODO: use dedicated alure::Buffer loaded by forest::World
+                // create a source aimed upwards 
+                glm::mat4 source_aim;
+                source_aim[3] = e->control->aim.pos;
+                auto* src = batb.al.source( file::static_data( "batb/forest/audio/si_punch.mp3" ), source_aim);
+
+                // does not work for me!!!
+                src->setDistanceRange( 1.0, 50.0 );
+                src->setConeAngles( 60.0, 300.0 ) ;
+                src->setRolloffFactors( 8.0 );
+                src->setGain( 0.5 );
+
+                //std::cout << "control: \n"
+                //          << "x: " << source_aim[3].x << std::endl
+                //          << "y: " << source_aim[3].y << std::endl
+                //          << "z: " << source_aim[3].z << std::endl
+                //          << "camera: \n"
+                //          << "x: " << forest.camera.move.pos.x << std::endl
+                //          << "y: " << forest.camera.move.pos.y << std::endl
+                //          << "z: " << forest.camera.move.pos.z << std::endl
+                //          << std::endl;
+
+
                 // if correct control punched, set next
                 if ( code == code1 )
                 {

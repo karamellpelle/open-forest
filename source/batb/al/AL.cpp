@@ -17,6 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/Scene.hpp"
+#include <algorithm>
 
 
 namespace batb
@@ -57,10 +58,64 @@ void AL::frameEnd()
     { 
         if ( enabled_ )
         {
-            alure_context->update();
+            al_context->update();
+
+            // try to release buffers (if no source is using it)
+            auto i = std::begin( buffers_ );
+            while ( i != std::end( buffers_ ) )
+            {
+                alure::Buffer* buf = *i;
+
+                // release sources that are not using this buffer anymore
+                auto srcs = buf->getSources();
+                for ( auto src : srcs )
+                {
+                    if ( !src->isPlaying() )
+                    {
+                        src->release();
+                    }
+                }
+               
+                // if no Source is using the buffer, remove it from context and 'buffers_'
+                if ( buf->isInUse() )
+                {
+                    ++i;
+                }
+                else
+                {
+                    al_context->removeBuffer( buf );
+                    i = buffers_.erase( i );
+                }
+            }
         }
     }
 
+}
+
+
+alure::Source* AL::source(const std::string& path, const glm::mat4& mat)
+{
+    // "multiple calls with the same name will return the same buffer"
+    //    - alure doc
+    auto* buf = al_context->getBuffer( path );
+    if ( std::find( std::begin( buffers_ ), std::end( buffers_ ), buf ) == std::end( buffers_ ) )
+    {
+        buffers_.push_back( buf );
+    }
+   
+    auto* src = al_context->getSource();
+    //auto* src = al_context->createSource();
+
+    auto pos = mat[3];
+    src->setPosition( pos.x, pos.y, pos.z );
+    auto at = mat[2]; // z
+    auto up = mat[1]; // y
+    src->setOrientation( at.x, at.y, at.z, up.x, up.y, up.z );
+
+    // and play
+    src->play( buf );
+
+    return src;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,12 +132,12 @@ void begin(AL& al)
         alure::DeviceManager& devmgr = alure::DeviceManager::get();
 
         // FIXME: memory leak, according to valgrind
-        al.alure_device = devmgr.openPlayback(); 
+        al.al_device = devmgr.openPlayback(); 
 
-        al.batb.log << "AL: opened alure_device \"" << al.alure_device->getName() << "\"" << std::endl;
+        al.batb.log << "AL: opened al_device \"" << al.al_device->getName() << "\"" << std::endl;
 
-        al.alure_context = al.alure_device->createContext();
-        alure::Context::MakeCurrent( al.alure_context );
+        al.al_context = al.al_device->createContext();
+        alure::Context::MakeCurrent( al.al_context );
 
 
         //////////////////////////////////////////////////////////
@@ -109,10 +164,10 @@ void end(AL& al)
         al.save();
 
         alure::Context::MakeCurrent( nullptr );
-        al.alure_context->destroy();
-        al.alure_context = nullptr;
-        al.alure_device->close();
-        al.alure_device = nullptr;
+        al.al_context->destroy();
+        al.al_context = nullptr;
+        al.al_device->close();
+        al.al_device = nullptr;
         
     }
    

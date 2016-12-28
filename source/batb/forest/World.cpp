@@ -83,6 +83,13 @@ WorldLoader::WorldLoader(BATB& b) : batb( b )
 
 void WorldLoader::load(World& forest, const YAML::Node& yaml)
 {
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // setup AL
+
+    forest.al_listener = batb.al.al_context->getListener();
+    // TODO: create alure::Buffer's from defines in .yaml file.
+    
     using namespace Ogre;
     // TODO: delete old before loading
     // TODO: use state
@@ -105,8 +112,9 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
         {
             batb.log << "forest::WorldLoader: no resources defined!" << std::endl;
         }
+
     } 
-        
+     
 
     ////////////////////////////////////////////////////////////////////////////////
     // create SceneManager

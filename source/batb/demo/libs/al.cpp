@@ -52,10 +52,10 @@ void demo_begin(BATB& batb)
 
 void demo_play(BATB& batb, const std::string& path)
 {
-    decoder = batb.al.alure_context->createDecoder( path );
+    decoder = batb.al.al_context->createDecoder( path );
     if ( decoder == nullptr ) return;
 
-    source = batb.al.alure_context->getSource();
+    source = batb.al.al_context->getSource();
     source->play( decoder, 32768, 4);
 /*
     std::cout << "demo::al: " << path 

@@ -265,6 +265,9 @@ debug::gl::msg( "OGRE_NEW LogManager" );
             ogre.ogre_logmanager = OGRE_NEW Ogre::LogManager();
             ogre.ogre_logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
 
+            // set detail level 
+            ogre.ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
+
             ////////////////////////////////////////////////////////////////////////////////
             // create Ogre ogre_root object
 debug::gl::msg( "OGRE_NEW Root" );
