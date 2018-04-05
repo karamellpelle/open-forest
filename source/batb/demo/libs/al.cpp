@@ -36,7 +36,7 @@ namespace al
 static bool tmp_empty = true;
 
 static alure::SharedPtr<alure::Decoder> decoder = nullptr;
-static alure::Source* source = nullptr;
+static alure::Source source;
 static bool once = false;
 
 
@@ -52,11 +52,11 @@ void demo_begin(BATB& batb)
 
 void demo_play(BATB& batb, const std::string& path)
 {
-    decoder = batb.al.al_context->createDecoder( path );
+    decoder = batb.al.al_context.createDecoder( path );
     if ( decoder == nullptr ) return;
 
-    source = batb.al.al_context->getSource();
-    source->play( decoder, 32768, 4);
+    source = batb.al.al_context.createSource();
+    source.play( decoder, 32768, 4);
 /*
     std::cout << "demo::al: " << path 
               << " ("
@@ -99,9 +99,8 @@ void demo_iterate(BATB& batb, run::World& world)
 
 void demo_end(BATB& batb)
 {
-    source->release();
-    source = nullptr;
-    decoder.reset();
+    source.destroy();
+    //decoder.reset();
 
 }
 

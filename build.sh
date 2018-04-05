@@ -62,6 +62,7 @@ function do_usage()
 
 if [ "$#" -eq 0 ] ; then
     # build program, default
+    echo "running '$THIS_NAME build'. use '$THIS_NAME help' for other options."
     do_build
 else 
     # handle arguments

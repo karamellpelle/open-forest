@@ -195,13 +195,13 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
                 // create a source aimed upwards 
                 glm::mat4 source_aim;
                 source_aim[3] = e->control->aim.pos;
-                auto* src = batb.al.source( file::static_data( "batb/forest/audio/si_punch.mp3" ), source_aim);
+                auto src = batb.al.source( file::static_data( "batb/forest/audio/si_punch.mp3" ), source_aim);
 
                 // does not work for me!!!
-                src->setDistanceRange( 1.0, 50.0 );
-                src->setConeAngles( 60.0, 300.0 ) ;
-                src->setRolloffFactors( 8.0 );
-                src->setGain( 0.5 );
+                src.setDistanceRange( 1.0, 50.0 );
+                src.setConeAngles( 60.0, 300.0 ) ;
+                src.setRolloffFactors( 8.0 );
+                src.setGain( 0.5 );
 
                 //std::cout << "control: \n"
                 //          << "x: " << source_aim[3].x << std::endl

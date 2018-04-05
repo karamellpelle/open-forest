@@ -87,7 +87,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // setup AL
 
-    forest.al_listener = batb.al.al_context->getListener();
+    forest.al_listener = batb.al.al_context.getListener();
     // TODO: create alure::Buffer's from defines in .yaml file.
     
     using namespace Ogre;

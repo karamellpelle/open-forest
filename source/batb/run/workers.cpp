@@ -46,18 +46,18 @@ void LoadWorker<BATB>::operator()(Work& work)
 
     try
     {
+        //// load AL
+        //work.state( "AL" );
+        //al::begin( batb.al );
+        // ^ AL is now part of core BATB
 
-        // load gOGRE
+        // load OGRE
         ////////////////////////////////////////////////////////////////////////////////
         // NOTE: when loading Ogre in different GL context, the Terrain component becomes
         //       diffused and cause some minor rendering artifacts when changing back
         //       to main context. 
         work.state( "OGRE" );
         ogre::begin( batb.ogre ); 
-
-        // load AL
-        work.state( "AL" );
-        al::begin( batb.al );
 
         // load the non-core part of Run
         work.state( "Run" );
@@ -114,15 +114,16 @@ void UnloadWorker<BATB>::operator()(Work& work)
         run::end( batb.run );
 
 
-        // unload AL
-        work.state( "AL" );
-        al::end( batb.al );
-
         // unload OGRE
         // FIXME!!! current thread is not main. 
         //          OGRE::frameBegin is calledafter delete!
         work.state( "OGRE" );
         ogre::end( batb.ogre );
+
+        //// unload AL
+        //work.state( "AL" );
+        //al::end( batb.al );
+
 
 #ifdef LOAD_PROXY
         work.state( "Proxy library B" );

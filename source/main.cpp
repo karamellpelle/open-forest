@@ -24,16 +24,17 @@
 #include "batb/demo/other.hpp"
 
 
+// load non-core batb on main thread
 void load_batb(batb::BATB& batb)
 {
     using namespace batb;
     try
     {
-        // load Ogre
-        ogre::begin( batb.ogre ); 
-
         // load AL
         al::begin( batb.al );
+
+        // load Ogre
+        ogre::begin( batb.ogre ); 
 
         // load the non-core part of Run
         run::begin( batb.run );
@@ -96,22 +97,21 @@ int main(int argc, char** argv)
         run::World run;
         run.player = batb::run::local_player();
         
-        auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
-        auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
-        run::IterationStack stack =
-        {
-              game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
-              game::begin_iteration( batb.run.iterationRunMain ),     // main
-              game::begin_iteration( unloadBATB )                     // destroy game data at end
-        };
-
-        // tmp:
-        //// load resources but not in thread
-        //load_batb( batb );
+        //auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
+        //auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
         //run::IterationStack stack =
         //{
+        //      game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
         //      game::begin_iteration( batb.run.iterationRunMain ),     // main
+        //      game::begin_iteration( unloadBATB )                     // destroy game data at end
         //};
+
+        // load resources but not in thread
+        load_batb( batb );
+        run::IterationStack stack =
+        {
+              game::begin_iteration( batb.run.iterationRunMain ),     // main
+        };
 
   
   

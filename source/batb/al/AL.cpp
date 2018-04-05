@@ -58,62 +58,67 @@ void AL::frameEnd()
     { 
         if ( enabled_ )
         {
-            al_context->update();
 
             // try to release buffers (if no source is using it)
             auto i = std::begin( buffers_ );
             while ( i != std::end( buffers_ ) )
             {
-                alure::Buffer* buf = *i;
+                alure::Buffer buf = *i;
 
                 // release sources that are not using this buffer anymore
-                auto srcs = buf->getSources();
-                for ( auto src : srcs )
+                auto srcs = buf.getSources();
+
+                if ( srcs.empty() )
                 {
-                    if ( !src->isPlaying() )
-                    {
-                        src->release();
-                    }
-                }
-               
-                // if no Source is using the buffer, remove it from context and 'buffers_'
-                if ( buf->isInUse() )
-                {
-                    ++i;
+                    al_context.removeBuffer( buf );
+                    i = buffers_.erase( i );
                 }
                 else
                 {
-                    al_context->removeBuffer( buf );
-                    i = buffers_.erase( i );
+                    // remove non-playing sources. this should not be done
+                    // since a source could be used multiple times
+                    //for ( auto src : srcs )
+                    //{
+                    //    if ( !src.isPlaying() )
+                    //    {
+                    //        src.destroy();
+                    //    }
+                    //}
+
+                    ++i;
                 }
+               
             }
+
+            // update ALURE/AL
+            al_context.update();
         }
     }
 
 }
 
 
-alure::Source* AL::source(const std::string& path, const glm::mat4& mat)
+alure::Source AL::source(const std::string& path, const glm::mat4& mat)
 {
     // "multiple calls with the same name will return the same buffer"
     //    - alure doc
-    auto* buf = al_context->getBuffer( path );
+    auto buf = al_context.getBuffer( path );
     if ( std::find( std::begin( buffers_ ), std::end( buffers_ ), buf ) == std::end( buffers_ ) )
     {
         buffers_.push_back( buf );
     }
    
-    auto* src = al_context->getSource();
-    //auto* src = al_context->createSource();
+    auto src = al_context.createSource();
 
     auto pos = mat[3];
-    src->setPosition( pos.x, pos.y, pos.z );
+    src.setPosition( { pos.x, pos.y, pos.z } );
     auto at = mat[2]; // z
     auto up = mat[1]; // y
-    src->setOrientation( at.x, at.y, at.z, up.x, up.y, up.z );
+    src.setOrientation( { { at.x, at.y, at.z } , { up.x, up.y, up.z } } );
 
+    // TODO: dont play.
     // and play
-    src->play( buf );
+    src.play( buf );
 
     return src;
 }
@@ -127,21 +132,31 @@ void begin(AL& al)
     
     if ( al.init_empty() )
     {
-        //////////////////////////////////////////////////
-        // TODO: check nullptr!
-        alure::DeviceManager& devmgr = alure::DeviceManager::get();
 
-        // FIXME: memory leak, according to valgrind
-        al.al_device = devmgr.openPlayback(); 
+        try
+        {
+            //////////////////////////////////////////////////
+            al.al_devmgr = alure::DeviceManager::getInstance();
 
-        al.batb.log << "AL: opened al_device \"" << al.al_device->getName() << "\"" << std::endl;
+            // FIXME: memory leak, according to valgrind
+            al.al_device = al.al_devmgr.openPlayback(); 
 
-        al.al_context = al.al_device->createContext();
-        alure::Context::MakeCurrent( al.al_context );
+            al.batb.log << "AL: opened al_device \"" << al.al_device.getName() << "\"" << std::endl;
 
+            al.al_context = al.al_device.createContext();
+            alure::Context::MakeCurrent( al.al_context );
 
-        //////////////////////////////////////////////////////////
-        //      OpenAL
+            // there is only one listener
+            al.al_listener = al.al_context.getListener();
+
+            //////////////////////////////////////////////////////////
+            //      OpenAL
+        }
+        catch (std::exception& e)
+        {
+            al.batb.log << "could not init AL: " << e.what() << std::endl;
+            throw e;
+        }
 
 
 
@@ -149,6 +164,7 @@ void begin(AL& al)
     ////////////////////////////////////////////////////////////////////////////////
     
     al.init( true );
+
 
 
     
@@ -163,11 +179,15 @@ void end(AL& al)
     {
         al.save();
 
+        // Buffer's must be destroyed according to doc
+        for ( auto buf : al.buffers_ )
+        {
+            al.al_context.removeBuffer( buf );
+        }
+
         alure::Context::MakeCurrent( nullptr );
-        al.al_context->destroy();
-        al.al_context = nullptr;
-        al.al_device->close();
-        al.al_device = nullptr;
+        al.al_context.destroy();
+        al.al_device.close();
         
     }
    

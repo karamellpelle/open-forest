@@ -55,13 +55,13 @@ public:
     keys::Keys keys;
     gl::GL gl;
     gui::GUI gui;
+    al::AL al;
 
 
 
     // non-core part of BATB.
     // these are parts of BATB initialized later, by 'iterationRunBegin'.
     ogre::OGRE ogre;
-    al::AL al;
     run::Run run;
     forest::Forest forest;
     //race::Race race;

@@ -122,7 +122,7 @@ public:
 
 
     // sound
-    alure::Listener* al_listener = nullptr;
+    alure::Listener al_listener;
 private:
     
 };

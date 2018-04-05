@@ -5,28 +5,25 @@ Open Forest
 
 This was originally a fork of an orienteering game I found on GitHub, ["Beat About The Bush]( 
 https://github.com/jarvinet/orienteering-game), but it is now completely rewritten.
-The old game is still runnable (?), but it needs additional libs in order to build (plib, ...).
+The old game is still runnable (?) through OpenForest, but then the project will have more dependencies in order to build (i.e. `plib`).
 
-My intention is to build up a foundation for an open source orienteering game. Despite the sport of 
-orienteering is small, there are multiple commercial orienteering games available (Catching Features, 
-Suunnistussimulaattori, Oriantica), and all these costs money. I don't see the point of having so many
-commercial games for something that probably not will generate enough money for a high-end product.
-There are many good programmers/developers in the orienteering community!
+My intention has been to build up a foundation for an open source orienteering game. Despite the sport of orienteering is small, there are multiple commercial orienteering games available (Catching Features, Suunnistussimulaattori, Oriantica), and all these costs money. I don't see the point of having so many commercial games for something that probably will not generate enough money for a high-end product. And there are many good programmers/developers in the orienteering community.
 
-This project is currently under construction, there needs more work (from me) before I expect others
-to join. I try to work on this project when I have time.
+This project builds (on Linux and macOS, as of April 2018) and the libraries are up and running, so collaborative development is absolutely possible although I ideally should have finished more work first (I'm in lack of time). The program's structure is based on how I've been writing functional games in Haskell. The thing is to abandon the traditional "main loop" and consider a game as a "world" (with subworlds) that is iterated by "Iteration's". See [computergames.pdf](https://github.com/karamellpelle/grid/blob/master/computergames.pdf).
+
+The [Ogre3D](https://www.ogre3d.org/) graphics library is used for 3D rendering. It has very good forest rendering capabilities, for example see this [Ogre3D based](https://forums.ogre3d.org/viewtopic.php?f=11&t=35922) game: [clip A](https://youtu.be/4QIHzn1PrxY?t=12m20s), [clip B](https://youtu.be/PWSg4olxaYE?t=5m9s), [clip C](https://youtu.be/CXr82Gtbk1Y?t=1m57s).
 
 
 Programming
 --------------------
 
-We shall aim at using modern programming and libraries (OpenGL 3.3+, C++11/14/17, etc.)
+We shall use modern programming and libraries (OpenGL 3.3+, C++14/17, etc.)
 
 #### Libraries
 
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
-graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org)  
+graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org), [glad](https://github.com/Dav1dde/glad), [Loading Library](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)
 sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)  
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
@@ -87,14 +84,14 @@ I am working on build on macOS Sierra. Use [homebrew](www.brew.sh) to install wh
     $ brew install freeimage
     $ brew install freetype
 
+I been having some problems with [Ogre3D](https://github.com/karamellpelle/open-forest-ogre) on macOS, the problem seems to lie in the files `Components/Terrain/src/OgreTerrainMaterialGeneratorA.cpp` and `Components/Terrain/src/OgreTerrainMaterialShaderHelperGLSL.cpp`. But maybe it works better on newer Apple computers; mine is a MacBook Pro 13\" Late 2011. And maybe the new 2.1 version of Ogre3D works better.
 
 Screenshots
 ----------------
 
-Some [screenshots](data/meta/screenshots/screenshots.markdown) showing the terrain rendering (based on Ogre3D sample).
+Some [screenshots](data/meta/screenshots/screenshots.markdown) showing the terrain rendering.
 
 Contact
 ----------------
-<carljsv@student.matnat.uio.no>
 
 <karamellpelle@hotmail.com>

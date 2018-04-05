@@ -23,7 +23,7 @@ namespace batb
 
 
 
-BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gl( *this ), gui( *this ), ogre( *this ), al( *this ),
+BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gl( *this ), gui( *this ), al( *this ), ogre( *this ), 
                            run( *this ), forest( *this ), demo( *this )
 {
 
@@ -69,6 +69,9 @@ void begin(BATB& batb)
 
         // gui
         gui::begin( batb.gui );
+        
+        // al
+        al::begin( batb.al );
 
         // (now the non-core part of BATB is loaded by IterationRunWork)
     }
@@ -87,6 +90,7 @@ void end(BATB& batb)
         batb.save();
         
         // (the non-core part of BATB is unloaded by IterationRunWork)
+        al::end( batb.al );
         gui::end( batb.gui );
         gl::end( batb.gl );
         keys::end( batb.keys );
