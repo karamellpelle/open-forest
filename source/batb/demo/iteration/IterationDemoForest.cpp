@@ -1,5 +1,5 @@
 //    open-demo: an orientering game.
-//    Copyright (C) 2014  carljsv@student.matnat.uio.no
+//    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
