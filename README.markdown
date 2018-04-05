@@ -23,7 +23,7 @@ We shall use modern programming and libraries (OpenGL 3.3+, C++14/17, etc.)
 
 Below are suggestions of open source libraries to use. Please add (better) alternatives.
 
-graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org), [glad](https://github.com/Dav1dde/glad), [Loading Library](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)
+graphics          : [**OpenGL**](https://www.opengl.org/wiki/), [**GLEW**](http://glew.sourceforge.net), [**GLFW**](http://www.glfw.org), [glad](https://github.com/Dav1dde/glad), [Loading Library](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)  
 sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)  
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
