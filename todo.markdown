@@ -1,6 +1,9 @@
 See OSXCocoaCOntext::clone() for how threading is done!
 
 # TODO
+* **!!! BATB modules using pointers to each others to prevent recompilation while
+  changing one header !!!**
+* fix segfault (from Ogre) during shutdown on other thread
 * use metric system for terrain and all models!!!
 * Notify and Console from run::Run into BATB ??
 * language files

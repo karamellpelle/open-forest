@@ -24,6 +24,10 @@
 #include "batb/demo/other.hpp"
 
 
+// should we load the non-core part of batb on main thread?
+// the other alternative is to use "workers"
+//#define LOAD_NONCOREBATB_ON_MAIN_THREAD
+
 // load non-core batb on main thread
 void load_batb(batb::BATB& batb)
 {
@@ -96,22 +100,28 @@ int main(int argc, char** argv)
         // application world
         run::World run;
         run.player = batb::run::local_player();
-        
-        //auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
-        //auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
-        //run::IterationStack stack =
-        //{
-        //      game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
-        //      game::begin_iteration( batb.run.iterationRunMain ),     // main
-        //      game::begin_iteration( unloadBATB )                     // destroy game data at end
-        //};
 
-        // load resources but not in thread
+#ifdef LOAD_NONCOREBATB_ON_MAIN_THREAD
+        // load resources in main thread
+        // this does not segfault during shutdown, but on the other side,
+        // no unloading of batb is done :)
         load_batb( batb );
         run::IterationStack stack =
         {
               game::begin_iteration( batb.run.iterationRunMain ),     // main
         };
+#else 
+        // load non-core batb on dedicated thread.
+        // this causes segfault during shutdown. not sure why, probably Ogre3D
+        auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
+        auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
+        run::IterationStack stack =
+        {
+              game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
+              game::begin_iteration( batb.run.iterationRunMain ),     // main
+              game::begin_iteration( unloadBATB )                     // destroy game data at end
+        };
+#endif
 
   
   
@@ -133,7 +143,7 @@ int main(int argc, char** argv)
     catch (std::exception& e)
     {
         // some serious error occured above, lets handle it
-        std::cerr << "main: " << e.what() << std::endl;
+        std::cerr << "OpenForest ERROR: " << e.what() << std::endl;
         ret = 1;
     }
 
