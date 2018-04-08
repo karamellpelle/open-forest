@@ -16,7 +16,6 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/demo/Demo.hpp" 
-#include "batb.hpp" 
 
 namespace batb
 {
@@ -30,41 +29,40 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////
 //  Demo
 
-Demo::Demo(BATB& b) : ModuleBATB( b ), keyset( b )
+Demo::Demo(BATB* b) : ModuleBATB( b )
 {
-
+    keyset = std::make_unique<KeySet>( b );
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
-void begin(Demo& demo)
+void Demo::begin()
 {
 
-    BATB_LOG_FUNC( demo.batb );
     
-    if ( demo.init_empty() )
+    if ( init_empty() )
     {
+        //config( path );
         // load associated keys 
-        demo.keyset.load( file::dynamic_data( "batb/demo/KeySet.yaml" ) );
+        keyset->load( file::dynamic_data( "batb/demo/KeySet.yaml" ) );
 
     }
 
-    demo.init( true );
+    init( true );
 }
 
-void end(Demo& demo)
+void Demo::end()
 {
-    BATB_LOG_FUNC( demo.batb );
 
-    if ( demo.init_nonempty() )
+    if ( init_nonempty() )
     {
-        demo.save();
+        save();
 
     }
     
-    demo.init( false );
+    init( false );
 }
 
 

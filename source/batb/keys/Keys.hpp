@@ -39,38 +39,45 @@ class KeyPointer;
 class KeyPointer;
 
 
+// class Keys: input from keyboard, mouse, joystick, etc.
+// currently bound to GLFW!
 class Keys : public ModuleBATB
 {
-friend void begin(Keys& keys);
-friend void end(Keys& keys);
-
 public:
-    Keys(BATB& b) : ModuleBATB( b ) { }
+    Keys(BATB* b) : ModuleBATB( b ) { }
 
+    // setup this module
+    void begin(const std::string& );
+    void end();
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // modify state of this object
+
+    // remove all created Key's
     void clear();
+    // reset state for all created Key's
     void reset();
+    // update all created Key's. to be done at each frame
     void step(tick_t t);
 
-    void keyEnable(bool b);
+    ////////////////////////////////////////////////////////////////////////////////
+    // working with keys
 
+    // WTF does this? enable/disable cursor?
+    void keyEnable(bool b);
     // get cursor pos, in pixels
     void getCursorPos(uint& x, uint& y);
     // get cursor pos, relative to screen shape 
     void getCursorPos(double& x, double& y);
     // can cursor move outside of window?
     void setCursorFree(bool ); // default false
+    // get keyboard button state
+    int getKey(int k) { return glfwGetKey( window_, k ); }
+    // get mouse button state
+    int getMouseButton(int k) { return glfwGetMouseButton( window_, k ); }
 
-    int getKey(int k)
-    {
-        return glfwGetKey( window_, k );
-    }
-    int getMouseButton(int k)
-    {
-        return glfwGetMouseButton( window_, k );
-    }
-
-    // let this object call back 
+    ////////////////////////////////////////////////////////////////////////////////
+    // set callback functions
     void charCalling(GLFWcharfun );
     void keyCalling(GLFWkeyfun );
     void mousebuttonCalling(GLFWmousebuttonfun );
@@ -78,8 +85,8 @@ public:
     void scrollCalling(GLFWscrollfun );
 
     ////////////////////////////////////////////////////////////////////////////////
-    // Key's
-
+    // let's create a Key!
+    //
     // prims
     KeyButton*      createKeyButton(int code);
     KeyMouseButton* createKeyMouseButton(int code);
@@ -90,7 +97,7 @@ public:
     KeyAlpha*       createKeyAlpha(Key* k);
     KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r);
     KeyPointer*     createKeyPointer();
-    // from definition
+    // create Key from definition
     Key* createKey(const YAML::Node& );
 
 
@@ -142,10 +149,6 @@ inline KeyT* Keys::push(KeyT* k)
 
 ////////////////////////////////////////////////////////////////////////////////
 //  
-
-void begin(Keys& keys);
-
-void end(Keys& keys);
 
 
 } // namespace keys

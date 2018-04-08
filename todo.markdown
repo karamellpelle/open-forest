@@ -1,3 +1,4 @@
+filepath and Module config
 See OSXCocoaCOntext::clone() for how threading is done!
 
 # TODO
@@ -13,6 +14,8 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * TBEditField. up key can be read?
 * remove template LoadWorker
 * IterationRunWork and TB
+* remove _emptylist_
+* create global variable 'batb'!
 
 * rename `float_t` ?  `floating_t` ? because `float_t` is found in other c libs
 * define precision of glm (vec, mat, etc) the same as float_t 
@@ -30,3 +33,5 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * control debug build in CMakeLists.txt
 * no rtti for turbobadger
 
+## macOS
+* GLSL shader for terrain fails: undeclared identifier: worldPos!

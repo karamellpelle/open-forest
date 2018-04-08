@@ -32,26 +32,23 @@ namespace run
 
 // class for presenting short messages to the user, for example
 // tips and tricks, in-game tutorials, etc.
-class Notify 
+class Notifier 
 {
-friend void begin(Notify& );
-friend void end(Notify& );
-
 public:
-    Notify(BATB& b) : batb( b ) { }
+    Notifier(BATB* b) : batb( b ) { }
 
     void step(World& );
+
+    void begin();
+    void end();
 
     // hide and clear
     void clear();
 
     // show message
-    bool operator()(const NotifyMessage& msg);
-    template <typename... Args> 
-    bool operator()(const Args&... args) { return operator()( NotifyMessage( args... ) ); }
+    bool message(const NotifyMessage& msg);
 
-
-    BATB& batb;
+    BATB* batb;
 
 
 
@@ -63,11 +60,6 @@ private:
 };
 
 
-////////////////////////////////////////////////////////////////////////////////
-
-void begin(Notify& );
-
-void end(Notify& );
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -17,7 +17,6 @@
 //
 #ifndef BATB_AL_AL_HPP
 #define BATB_AL_AL_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 #include "AL/alure2.h"
 
@@ -37,11 +36,13 @@ namespace al
 
 class AL : public ModuleBATB
 {
-friend void begin(AL& );
-friend void end(AL& );
-
 public:
-    AL(BATB& b) : ModuleBATB( b ) { }
+    AL(BATB* b) : ModuleBATB( b ) { }
+
+    // setup
+    void begin(const std::string& );
+    void end();
+
 
     // should AL be ignored each frame?
     void enabled(bool e) { enabled_ = e; }
@@ -62,9 +63,9 @@ public:
 
 
     alure::DeviceManager al_devmgr;
-    alure::Device al_device;
-    alure::Context al_context;
-    alure::Listener al_listener;
+    alure::Device        al_device;
+    alure::Context       al_context;
+    alure::Listener      al_listener;
   
 
 private:
@@ -74,9 +75,6 @@ private:
     std::list<alure::Buffer> buffers_;
 };
 
-
-void begin(AL& );
-void end(AL& );
 
 } // namespace al
 

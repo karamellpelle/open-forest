@@ -25,6 +25,7 @@
 #include "OgreSceneManager.h"
 #include "OgreWindowEventUtilities.h"
 #include "RenderSystems/GL/include/OgreGLRenderSystem.h"
+#include "batb/ogre/OGRE.hpp"
 #include "batb.hpp"
 #include "batb/Scene.hpp"
 
@@ -32,13 +33,188 @@
 namespace batb
 {
 
-
-
 namespace ogre
 {
 
 using namespace Ogre;
     
+////////////////////////////////////////////////////////////////////////////////
+// setup
+
+void OGRE::begin(const std::string& path)
+{
+    BATB_LOG_FUNC( batb );
+
+    if ( init_empty() )
+    {
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+        // set configuration file
+        config( path );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // setup Ogre
+        //
+
+        // control the log output from Ogre by creating the LogManager ourselves,
+        // before creating Ogre::Root
+debug::gl::msg( "OGRE_NEW LogManager" );
+        ogre_logmanager = OGRE_NEW Ogre::LogManager();
+        ogre_logmanager->createLog( file::tmp( "batb-ogre" ), true, false, false );
+
+        // set detail level 
+        ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // create Ogre ogre_root object
+debug::gl::msg( "OGRE_NEW Root" );
+        ogre_root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
+       
+        ////////////////////////////////////////////////////////////////////////////////
+        // add plugins (ogre_rendersystem, scene managers, ...)
+        batb->log << "OGRE: loading plugins:" << std::endl;
+        if ( YAML::Node plugins = yaml[ "plugins" ] )
+        {
+            for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
+            {
+                std::string plugin = i->as<std::string>();
+                batb->log << "  " << plugin;
+                
+                try
+                {
+std::ostringstream os; os << "ogre_root->loadPlugin( " << plugin << ")";                
+debug::gl::msg( os.str() );
+                    ogre_root->loadPlugin( plugin );
+                }
+                catch (Ogre::Exception& e)
+                {
+                    batb->log << " (" << e.what() << " )";
+                }
+
+                batb->log->endl();
+            }
+        }
+        else
+        {
+            throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+        // set ogre_rendersystem for Ogre
+
+        // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
+debug::gl::msg( "ogre_root->getRenderSystemByName" );
+        ogre_rendersystem_name_ = yaml["ogre_rendersystem"] ? yaml["ogre_rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+        ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
+
+        // set our Ogre render system
+        if ( ogre_rendersystem )
+        {
+debug::gl::msg( "ogre_root->setRenderSystem" );
+            ogre_root->setRenderSystem( ogre_rendersystem );
+        }
+        else
+        {
+            throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre_rendersystem_name_ );
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////    
+        // initialize Root, using our defined RenderSystem
+        // (this method returns nullptr, since our argument is 'false')
+debug::gl::msg( "ogre_root->initialise" );
+        ogre_root->initialise( false ); 
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // create an Ogre window, using our existing GLFW window.
+        //
+        // we find the interesting details we need in the implementation of 
+        // OSXCocoaWindow/GLXWind::create()!
+        //
+        // Ogre doc:
+        // externalGLControl: "Let the external window control OpenGL i.e. don't select 
+        //                    a pixel format for the window, do not change v-sync and 
+        //                    do not swap buffer. When set to true, the calling application 
+        //                    is responsible of OpenGL initialization and buffer swapping. 
+        //                    It should also create an OpenGL context for its own rendering, 
+        //                    Ogre will create one for its use. **Then the calling application 
+        //                    must also enable Ogre OpenGL context before calling any Ogre 
+        //                    function and restore its OpenGL context after these calls.**"
+debug::gl::msg( "ogre_root->createRenderWindow()" );
+        Ogre::NameValuePairList params;
+
+#ifdef BATB_BUILD_PLATFORM_LINUX
+        // let the created RenderWindow use current context
+        params["currentGLContext"] = "true";  // let RenderWindow use our GL context
+                                  
+        params["externalGLControl"] = "true"; 
+#endif
+
+#ifdef BATB_BUILD_PLATFORM_MACOS
+        // defaults to "carbon", it segfaults if not set
+        params["macAPI"] = "cocoa";
+
+        // let the created RenderWindow use current context
+        //
+        // OgreOSXCocoaWindow::create() seems to ignore these two in the original code; see
+        // OgreOSXCocoaWindow.mm. I've fixed this in our Ogre mirror.
+        params["currentGLContext"] = "true";  
+        params["externalGLControl"] = "true";  // not used!
+
+        // our Ogre mirror has implemented currentGLContext ans so this is redundatn
+        //params["macAPICocoaUseNSView"] = "todo: pointer";
+        //params["externalWindowHandle"] = "true"; // must be done in order for "macAPICocoaUseNSView" to trigger
+#endif
+        // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
+        //                                -> XXXWindow::create(). and this creates XXXContext class too.
+        ogre_renderwindow = ogre_root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
+        ogre_renderwindow->setVisible(true);
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // Ogre GL context
+        // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
+        //       OGRE in another GL context (background thread)
+        glcontextglfw_.begin();
+
+    }
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    init( true );
+
+
+    
+}
+
+
+void OGRE::end()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+    BATB_LOG_FUNC( batb );
+
+    if ( init_nonempty() )
+    {
+        save();
+   
+        // needs to be done before modding Ogre, since
+        // frameBegin/End may be done in other thread (i.e. main thread)
+        init( false );
+
+        
+debug::gl::msg( "OGRE_DELETE Root" );
+        OGRE_DELETE ogre_root;
+debug::gl::msg( "OGRE_DELETE LogManager" );
+        OGRE_DELETE ogre_logmanager;
+
+        ogre_root = nullptr;
+
+        // since Ogre steal our GLXContext we have to rebind it after 
+        // Ogre shutdown
+        glcontextglfw_.setCurrent();
+    
+        glcontextglfw_.end();
+
+    }
+   
+}
 ////////////////////////////////////////////////////////////////////////////////
 //  OGRE
 
@@ -199,11 +375,11 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
         YAML::Node group = i->first;
         std::string name = group.as<std::string>();
         
-        batb.log << "OGRE: adding items to resource group '" << name << "':\n";
+        batb->log << "OGRE: adding items to resource group '" << name << "':\n";
         // iterate over defined content for that group
         for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
         {
-            batb.log << "  ";
+            batb->log << "  ";
 
             YAML::Node resource = *j;
             if ( resource[ "type" ] && resource[ "path" ] )
@@ -211,25 +387,25 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
                 std::string type = resource[ "type" ].as<std::string>();
                 std::string path = resource[ "path" ].as<std::string>();
                 
-                batb.log << path;
+                batb->log << path;
 
                 // add resource item
                 try
                 {
-                    batb.ogre.ogre_root->addResourceLocation(  file::static_data( path ), type, name );
+                    ogre_root->addResourceLocation(  file::static_data( path ), type, name );
                 }
                 catch (Ogre::Exception& e)
                 {
-                    batb.log << " (" << e.what() << ")";
+                    batb->log << " (" << e.what() << ")";
                 }
 
             }
             else
             {
-                batb.log << "(invalid item definition)";
+                batb->log << "(invalid item definition)";
             }
 
-            batb.log << "\n";
+            batb->log->endl();
         }
     }
 
@@ -244,180 +420,6 @@ void OGRE::enabled(bool e)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(OGRE& ogre)
-{
-    BATB_LOG_FUNC( ogre.batb );
-
-    if ( ogre.init_empty() )
-    {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // setup Ogre
-            //
-
-            // control the log output from Ogre by creating the LogManager ourselves,
-            // before creating Ogre::Root
-debug::gl::msg( "OGRE_NEW LogManager" );
-            ogre.ogre_logmanager = OGRE_NEW Ogre::LogManager();
-            ogre.ogre_logmanager->createLog( file::tmp( "batb-ogre.log" ), true, false, false );
-
-            // set detail level 
-            ogre.ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // create Ogre ogre_root object
-debug::gl::msg( "OGRE_NEW Root" );
-            ogre.ogre_root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
-           
-            ////////////////////////////////////////////////////////////////////////////////
-            // add plugins (ogre_rendersystem, scene managers, ...)
-            ogre.batb.log << "OGRE: loading plugins:" << std::endl;
-            if ( YAML::Node plugins = ogre.yaml[ "plugins" ] )
-            {
-                for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
-                {
-                    std::string plugin = i->as<std::string>();
-                    ogre.batb.log << "  " << plugin;
-                    
-                    try
-                    {
-std::ostringstream os; os << "ogre.ogre_root->loadPlugin( " << plugin << ")";                
-debug::gl::msg( os.str() );
-                        ogre.ogre_root->loadPlugin( plugin );
-                    }
-                    catch (Ogre::Exception& e)
-                    {
-                        ogre.batb.log << " (" << e.what() << " )";
-                    }
-
-                    ogre.batb.log << std::endl;
-                }
-            }
-            else
-            {
-                throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
-            }
-            ////////////////////////////////////////////////////////////////////////////////
-            // set ogre_rendersystem for Ogre
-
-            // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
-debug::gl::msg( "ogre.ogre_root->getRenderSystemByName" );
-            ogre.ogre_rendersystem_name_ = ogre.yaml["ogre_rendersystem"] ? ogre.yaml["ogre_rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
-            ogre.ogre_rendersystem = ogre.ogre_root->getRenderSystemByName( ogre.ogre_rendersystem_name_ );
-
-            // set our Ogre render system
-            if ( ogre.ogre_rendersystem )
-            {
-debug::gl::msg( "ogre.ogre_root->setRenderSystem" );
-                ogre.ogre_root->setRenderSystem( ogre.ogre_rendersystem );
-            }
-            else
-            {
-                throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre.ogre_rendersystem_name_ );
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////    
-            // initialize Root, using our defined RenderSystem
-            // (this method returns nullptr, since our argument is 'false')
-debug::gl::msg( "ogre.ogre_root->initialise" );
-            ogre.ogre_root->initialise( false ); 
-
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // create an Ogre window, using our existing GLFW window.
-            //
-            // we find the interesting details we need in the implementation of 
-            // OSXCocoaWindow/GLXWind::create()!
-            //
-            // Ogre doc:
-            // externalGLControl: "Let the external window control OpenGL i.e. don't select 
-            //                    a pixel format for the window, do not change v-sync and 
-            //                    do not swap buffer. When set to true, the calling application 
-            //                    is responsible of OpenGL initialization and buffer swapping. 
-            //                    It should also create an OpenGL context for its own rendering, 
-            //                    Ogre will create one for its use. **Then the calling application 
-            //                    must also enable Ogre OpenGL context before calling any Ogre 
-            //                    function and restore its OpenGL context after these calls.**"
-debug::gl::msg( "ogre.ogre_root->createRenderWindow()" );
-            Ogre::NameValuePairList params;
-
-#ifdef BATB_BUILD_PLATFORM_LINUX
-            // let the created RenderWindow use current context
-            params["currentGLContext"] = "true";  // let RenderWindow use our GL context
-                                      
-            params["externalGLControl"] = "true"; 
-#endif
-
-#ifdef BATB_BUILD_PLATFORM_MACOS
-            // defaults to "carbon", it segfaults if not set
-            params["macAPI"] = "cocoa";
-
-            // let the created RenderWindow use current context
-            //
-            // OgreOSXCocoaWindow::create() seems to ignore these two in the original code; see
-            // OgreOSXCocoaWindow.mm. I've fixed this in our Ogre mirror.
-            params["currentGLContext"] = "true";  
-            params["externalGLControl"] = "true";  // not used!
-
-            // our Ogre mirror has implemented currentGLContext ans so this is redundatn
-            //params["macAPICocoaUseNSView"] = "todo: pointer";
-            //params["externalWindowHandle"] = "true"; // must be done in order for "macAPICocoaUseNSView" to trigger
-#endif
-            // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
-            //                                -> XXXWindow::create(). and this creates XXXContext class too.
-            ogre.ogre_renderwindow = ogre.ogre_root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
-            ogre.ogre_renderwindow->setVisible(true);
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // Ogre GL context
-            // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
-            //       OGRE in another GL context (background thread)
-            begin( ogre.glcontextglfw_ );
-
-    }
-    ////////////////////////////////////////////////////////////////////////////////
-    
-    ogre.init( true );
-
-
-    
-}
-
-
-void end(OGRE& ogre)
-{
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-    BATB_LOG_FUNC( ogre.batb );
-
-    if ( ogre.init_nonempty() )
-    {
-        ogre.save();
-   
-        // needs to be done before modding Ogre, since
-        // frameBegin/End may be done in other thread (i.e. main thread)
-        ogre.init( false );
-
-        
-debug::gl::msg( "OGRE_DELETE Root" );
-        OGRE_DELETE ogre.ogre_root;
-debug::gl::msg( "OGRE_DELETE LogManager" );
-        OGRE_DELETE ogre.ogre_logmanager;
-
-        ogre.ogre_root = nullptr;
-
-        // since Ogre steal our GLXContext we have to rebind it after 
-        // Ogre shutdown
-        ogre.glcontextglfw_.setCurrent();
-    
-        end( ogre.glcontextglfw_ );
-
-    }
-   
-}
 
 void OGRE::set_glfwcontext_()
 {

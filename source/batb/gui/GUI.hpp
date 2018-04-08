@@ -17,36 +17,44 @@
 //
 #ifndef BATB_GUI_GUI_HPP
 #define BATB_GUI_GUI_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 
-// TB
-#include "tb/tb_renderer.h"
-#include "tb/tb_window.h"
-#include "tb/tb_font_renderer.h"
-#include "tb/tb_widgets.h"
-#include "tb/tb_widgets_reader.h"
-#include "tb/tb_widgets_common.h"
+#include "tb/tb_system.h"
+#include "tb/tb_language.h"
+#include "tb/tb_bitmap_fragment.h"
+#include "tb/animation/tb_widget_animation.h"
 #include "tb/tb_node_tree.h"
+#include "tb/tb_tempbuffer.h"
+#include "tb/tb_font_renderer.h"
+#include "tb/image/tb_image_manager.h"
+#include "tb/utf8/utf8.h"
+#include "tb/tb_renderer.h"
+#include "tb/tb_widgets_reader.h"
+#include "tb/renderers/tb_renderer_gl.h"
+#include "tb/tb_msg.h"
 
 
 namespace batb
 {
 
 class Scene;
-namespace keys { class Keys; }
+namespace keys  { class Keys; }
 
 namespace gui
 {
 
+////////////////////////////////////////////////////////////////////////////////
+//
+
 
 class GUI : public ModuleBATB
 {
-friend void begin(GUI& gui);
-friend void end(GUI& gui);
-
 public:
-    GUI(BATB& b) : ModuleBATB( b )        { }
+    GUI(BATB* b) : ModuleBATB( b )        { }
+
+    // setup
+    void begin(const std::string& );
+    void end();
 
     // output GUI
     void output(const Scene& );
@@ -55,7 +63,7 @@ public:
     void step(tick_t );
 
     // bind keys to this GUI object
-    void bind(keys::Keys& );
+    void bind(keys::Keys* );
 
     // ensure input only for GUI (except non-disable keys)
     void lockKeys(bool );
@@ -73,8 +81,8 @@ private:
     uint wth_ = 0;
     uint hth_ = 0;
 
-    tb::TBWidget* tb_top_ = nullptr;
     // TB
+    tb::TBWidget* tb_top_ = nullptr;
     tb::TBRenderer* tb_renderer_ = nullptr;
     
     // callbacks
@@ -89,13 +97,6 @@ private:
 
 
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//
-
-void begin(GUI& );
-
-void end(GUI& );
 
 
 } // namespace gui

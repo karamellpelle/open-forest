@@ -18,8 +18,9 @@
 #include "batb.hpp"
 #include "batb/run.hpp"
 #include "batb/run/World.hpp"
-#include "batb/run/notify/Notify.hpp"
+#include "batb/run/notify/Notifier.hpp"
 #include "batb/value/run.hpp"
+#include "batb/gui/GUI.hpp"
 #include "tb/animation/tb_widget_animation.h"
 
 
@@ -31,7 +32,29 @@ namespace batb
 namespace run
 {
 
-void Notify::step(World& run)
+////////////////////////////////////////////////////////////////////////////////
+//
+
+void Notifier::begin()
+{
+
+    tb_notify_ = new TBNotify( batb );
+
+    // add to screen
+    batb->gui->addWidgetTop( tb_notify_ );
+
+
+}
+
+void Notifier::end()
+{
+    batb->gui->removeWidget( tb_notify_ );
+    
+    delete tb_notify_;
+    tb_notify_ = nullptr;
+}
+
+void Notifier::step(World& run)
 {
  
     // remove completed messages
@@ -57,10 +80,10 @@ void Notify::step(World& run)
     tb_notify_->step( run );
 }
 
-bool Notify::operator()(const NotifyMessage& m)
+bool Notifier::message(const NotifyMessage& m)
 {
     NotifyMessage msg = m;
-    msg.tick = batb.env.tick();
+    msg.tick = batb->env->tick();
 
     messages_.push_back( msg );
     NotifyMessage* ptr = &messages_.back();
@@ -72,30 +95,6 @@ bool Notify::operator()(const NotifyMessage& m)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-
-void begin(Notify& notify)
-{
-    BATB& batb = notify.batb;
-
-    notify.tb_notify_ = new TBNotify( batb );
-
-    // add to screen
-    batb.gui.addWidgetTop( notify.tb_notify_ );
-
-
-}
-
-void end(Notify& notify)
-{
-    BATB& batb = notify.batb;
-    
-    batb.gui.removeWidget( notify.tb_notify_ );
-    
-    delete notify.tb_notify_;
-    notify.tb_notify_ = nullptr;
-}
 
 } // namespace run
 

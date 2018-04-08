@@ -31,6 +31,10 @@
 #include "batb/run.hpp"
 #include "batb/BATB.hpp"
 
+#include "batb/al/AL.hpp"
+#include "batb/gl/GL.hpp"
+#include "batb/ogre/OGRE.hpp"
+
 
 namespace batb
 {
@@ -75,7 +79,7 @@ Runner* World::addRunner(run::Player* player)
     return runner;
 }
 
-WorldLoader::WorldLoader(BATB& b) : batb( b )
+WorldLoader::WorldLoader(BATB* b) : batb( b )
 {
 
 }
@@ -87,7 +91,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // setup AL
 
-    forest.al_listener = batb.al.al_context.getListener();
+    forest.al_listener = batb->al->al_context.getListener();
     // TODO: create alure::Buffer's from defines in .yaml file.
     
     using namespace Ogre;
@@ -106,11 +110,11 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            batb.ogre.addResourceLocation( yaml["resources"] );
+            batb->ogre->addResourceLocation( yaml["resources"] );
         }
         else
         {
-            batb.log << "forest::WorldLoader: no resources defined!" << std::endl;
+            batb->log << "forest::WorldLoader: no resources defined!" << std::endl;
         }
 
     } 
@@ -119,14 +123,14 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // create SceneManager
     // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-    forest.ogre_scenemgr = batb.ogre.ogre_root->createSceneManager( "DefaultSceneManager" );
+    forest.ogre_scenemgr = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
 
     // create a view into scene, a Camera!
     forest.camera.ogre_camera = forest.ogre_scenemgr->createCamera( "Camera::ogre_camera" );
 
     //
     // create Viewport, the 2D target of Camera
-    forest.ogre_viewport = batb.ogre.ogre_renderwindow->addViewport( forest.camera.ogre_camera );
+    forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
     forest.ogre_viewport->setClearEveryFrame( false, 0 ); // TODO: remove 0??
 
 
@@ -191,7 +195,7 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
     forest.camera.ogre_camera->setFarClipDistance(50000);
 
 #endif
-    if (batb.ogre.ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
+    if (batb->ogre->ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
     {
         forest.camera.ogre_camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
@@ -206,7 +210,7 @@ Ogre::Vector3 terrain_pos(1000,0,5000);
 
 void WorldLoader::unload(World& forest)
 {
-    batb.log << "FIXME: unload forest::World!" << std::endl;
+    batb->log << "FIXME: unload forest::World!" << std::endl;
 }
 
 
@@ -214,6 +218,4 @@ void WorldLoader::unload(World& forest)
 } // namespace forest
 
 } // namespace batb
-
-
 

@@ -20,6 +20,7 @@
 #include "batb/demo/Output.hpp"
 #include "batb/demo.hpp"
 #include "batb/demo/World.hpp"
+#include "batb/run/World.hpp"
 #include "batb/CourseDrawer.hpp"
 #include "batb/value/run.hpp"
 #include "batb/glm.hpp"
@@ -44,7 +45,7 @@ inline void nvg_point(NVGcontext* vg, float_t x, float_t y, float r = 14.0)
     //nvgStroke( vg );
 }
 
-Output::Output(BATB& b) : batb( b )
+Output::Output(BATB* b) : batb( b )
 {
     course_p0_ = glm::vec2( 0, 0 );
     course_p1_ = glm::vec2( 0, 0 );
@@ -71,7 +72,7 @@ void Output::operator()(World& demo)
 
         ////////////////////////////////////////////////////////////////////////////////
         // begin nanovg drawing
-        auto* nvg = batb.gl.nanovg_begin( run.scene );
+        auto* nvg = batb->gl->nanovg_begin( run.scene );
 
         nvgSave( nvg );
 
@@ -180,7 +181,7 @@ void Output::operator()(World& demo)
         }
 
         nvgRestore( nvg );
-        batb.gl.nanovg_end();
+        batb->gl->nanovg_end();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +222,7 @@ void Output::update(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // change d (zoom) if we want to view whole map
 
-    if ( batb.demo.keyset.map_view_full->pressed() )
+    if ( batb->demo->keyset->map_view_full->pressed() )
     {
         // set 0
         float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks_d );
@@ -236,7 +237,7 @@ void Output::update(World& demo)
         course_tick_d_ = run.tick;
 
     }
-    if ( batb.demo.keyset.map_view_full->released() )
+    if ( batb->demo->keyset->map_view_full->released() )
     {
         // set 0
         float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks_d );
@@ -262,7 +263,7 @@ void Output::aim(World& demo)
     run::World& run = demo.run;
 
     // ignore setting d if zooming out
-    bool map_view = batb.demo.keyset.map_view_full->press();
+    bool map_view = batb->demo->keyset->map_view_full->press();
 
     float_t alpha = keep_inside( 0.0, 1.0, (run.tick - course_tick_) / smooth_ticks );
     float_t alpha_d = keep_inside( 0.0, 1.0, (run.tick - course_tick_d_) / smooth_ticks ); // here: use 'smooth_ticks', not 'smooth_ticks_d'

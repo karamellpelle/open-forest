@@ -37,6 +37,8 @@ template <typename Iter_>
 friend Iteration<typename Iter_::World>* begin_iteration(Iter_& );
 template <typename Iter_> 
 friend Iteration<typename Iter_::World>* begin_iteration(Iter_* );
+template <typename Iter_> 
+friend Iteration<typename Iter_::World>* begin_iteration(const std::unique_ptr<Iter_>& );
 
 public:
 
@@ -73,6 +75,11 @@ Iteration<typename Iter::World>* begin_iteration(Iter& iter)
 }
 template <typename Iter>
 Iteration<typename Iter::World>* begin_iteration(Iter* iter)
+{
+    return new IterationBegin<Iter>( *iter );
+}
+template <typename Iter>
+Iteration<typename Iter::World>* begin_iteration(const std::unique_ptr<Iter>& iter)
 {
     return new IterationBegin<Iter>( *iter );
 }

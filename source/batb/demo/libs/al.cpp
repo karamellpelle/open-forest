@@ -40,7 +40,7 @@ static alure::Source source;
 static bool once = false;
 
 
-void demo_begin(BATB& batb)
+void demo_begin(BATB* batb)
 {
 
     if ( tmp_empty )
@@ -50,12 +50,12 @@ void demo_begin(BATB& batb)
     tmp_empty = false;
 }
 
-void demo_play(BATB& batb, const std::string& path)
+void demo_play(BATB* batb, const std::string& path)
 {
-    decoder = batb.al.al_context.createDecoder( path );
+    decoder = batb->al->al_context.createDecoder( path );
     if ( decoder == nullptr ) return;
 
-    source = batb.al.al_context.createSource();
+    source = batb->al->al_context.createSource();
     source.play( decoder, 32768, 4);
 /*
     std::cout << "demo::al: " << path 
@@ -69,7 +69,7 @@ void demo_play(BATB& batb, const std::string& path)
 */
 }
 
-void demo_iterate(BATB& batb, run::World& world)
+void demo_iterate(BATB* batb, run::World& world)
 {
     // TODO: create media player with nanovg
 /*
@@ -97,7 +97,7 @@ void demo_iterate(BATB& batb, run::World& world)
 }
 
 
-void demo_end(BATB& batb)
+void demo_end(BATB* batb)
 {
     source.destroy();
     //decoder.reset();

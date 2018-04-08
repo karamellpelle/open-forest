@@ -132,14 +132,14 @@ private:
 class WorldLoader
 {
 public:
-    WorldLoader(BATB& );
-    //WorldLoader(BATB& , run::Work& );
+    WorldLoader(BATB* );
+    //WorldLoader(BATB* , run::Work& );
 
     void load(World& , const YAML::Node& );
     void unload(World& );
 
 private:
-    BATB& batb;
+    BATB* batb;
     //run::Work& work
 };
 

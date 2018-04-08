@@ -39,7 +39,7 @@ using IterationStack = game::IterationStack<World>;
 class IterationForest
 {
 public:
-    IterationForest(BATB& b);
+    IterationForest(BATB* b);
 
     // this handles each frame, delegating work to the subclass 
     // implementation of 'iterate_forest'
@@ -48,7 +48,7 @@ public:
     // also, each subclass should typically create a non-virtual method:
     // void iterate_begin(World& );
 
-    BATB& batb;
+    BATB* batb;
 
 protected:
     // subclasses implements this:

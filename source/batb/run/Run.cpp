@@ -16,7 +16,13 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/event/EventList.hpp"
+#include "batb/run/Run.hpp"
 #include "batb/run/console/Console.hpp"
+#include "batb/run/notify/Notifier.hpp"
+#include "batb/run/KeySet.hpp"
+#include "batb/run/iteration/IterationRunMain.hpp"
+#include "batb/run/iteration/IterationRunOld.hpp"
 
 
 
@@ -28,74 +34,85 @@ namespace batb
 namespace run
 {
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //  Run
 
-Run::Run(BATB& b) : ModuleBATB( b ), console( b ), notify( b ), keyset( b ), 
-                    iterationRunMain( b ),
-                    iterationRunOld( b )
+Run::Run(BATB* b) : ModuleBATB( b )
+{
+    console          = std::make_unique<Console>( b );
+    notifier         = std::make_unique<Notifier>( b );
+    keyset           = std::make_unique<KeySet>( b );
+    iterationRunOld  = std::make_unique<IterationRunOld>( b );
+    iterationRunMain = std::make_unique<IterationRunMain>( b );
+}
+
+Run::~Run()
 {
 
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // begin the non-core part of Run
-void begin(Run& run)
+void Run::begin(const std::string& path)
 {
 
-    BATB_LOG_FUNC( run.batb );
+    BATB_LOG_FUNC( batb );
 
-
-    if ( run.init_empty() )
+    if ( init_empty() )
     {
+        // set config
+        config( path );
+        
+        // TODO: use 'yaml' for configuration
+
         // load associated keys 
-        run.keyset.load("batb/run/KeySet.yaml");
+        keyset->load("batb/run/KeySet.yaml");
         // console key should not be disabled
-        run.keyset.console->canDisable( false );
+        keyset->console->canDisable( false );
 
         // setup Console
-        run::begin( run.console );
+        console->begin();
 
         // setup Notify
-        run::begin( run.notify );
+        notifier->begin(); 
 
         // begin non-core iterations:
-        run::begin( run.iterationRunOld );
-        run::begin( run.iterationRunMain );
+        iterationRunOld->begin();
+        iterationRunMain->begin();
     }
 
-    run.init( true );
+    init( true );
 }
 
 
 // end the non-core part of Run
-void end(Run& run)
+void Run::end()
 {
-    BATB_LOG_FUNC( run.batb );
+    BATB_LOG_FUNC( batb );
 
-    if ( run.init_nonempty() )
+    if ( init_nonempty() )
     {
-        run.save();
+        save();
 
 
         // end non-core iterations:
-        run::end( run.iterationRunMain );
-        run::end( run.iterationRunOld );
+        iterationRunMain->end();
+        iterationRunOld->end();
 
         // end Notify
-        run::end( run.notify );
+        notifier->end();
 
         // end Console
-        run::end( run.console );
+        console->end();
 
     }
     
-    run.init( false );
+    init( false );
 }
+
+
 
 
 } // namespace run

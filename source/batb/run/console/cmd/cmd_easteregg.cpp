@@ -32,7 +32,7 @@ namespace run
 {
 
 // output string to console
-bool cmd_easteregg(BATB& batb, const std::string& input)
+bool cmd_easteregg(BATB* batb, const std::string& input)
 {
     // ('input' is the whole command line typed)
   
@@ -56,7 +56,7 @@ bool cmd_easteregg(BATB& batb, const std::string& input)
         if ( *i == '}' ) { *i = '{'; continue; }
     }
 
-    auto left   = batb.run.console.getPS1();
+    auto left   = batb->run->console->getPS1();
     
     if ( left == right )
     {

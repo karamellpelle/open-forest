@@ -17,7 +17,6 @@
 //
 #ifndef BATB_GL_GL_HPP
 #define BATB_GL_GL_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 
 // TODO: GL 3+
@@ -27,6 +26,7 @@
 namespace batb
 {
 
+class BATB;
 class Scene;
 
 
@@ -38,27 +38,27 @@ namespace gl
 
 class GL : public ModuleBATB
 {
-friend void begin(GL& );
-friend void end(GL& );
-
 public:
-    GL(BATB& b) : ModuleBATB( b ) { }
+    GL(BATB* b) : ModuleBATB( b ) { }
 
-    NVGcontext* nvg_context = nullptr;
+    // setup
+    void begin(const std::string& );
+    void end();
 
+
+    // FIXME: camel case
     NVGcontext* nanovg_begin(const Scene& );
     void nanovg_end();  
     void nanovg_normalize(const Scene& );
     int nanovg_font(const std::string& , const std::string& );
+
+    NVGcontext* nvg_context = nullptr;
 
 private:
     //std::map<std::string, int> nanovg_fonts_;
     
 };
 
-
-void begin(GL& );
-void end(GL& );
 
 } // namespace gl
 

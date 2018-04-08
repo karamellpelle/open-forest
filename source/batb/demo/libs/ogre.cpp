@@ -142,12 +142,12 @@ public:
         bool unprepareProceduralPage(Page* page, PagedWorldSection* section) { return true; }
 } dummy_page_provider;
 
-void begin_head(BATB& );
-void begin_terrain(BATB& );
-void iterate_head(BATB& batb, run::World& world);
-void iterate_terrain(BATB& batb, run::World& world, forest::World& forest);
+void begin_head(BATB* );
+void begin_terrain(BATB* );
+void iterate_head(BATB* batb, run::World& world);
+void iterate_terrain(BATB* batb, run::World& world, forest::World& forest);
 
-void demo_begin(BATB& batb)
+void demo_begin(BATB* batb)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
@@ -163,7 +163,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            batb.ogre.addResourceLocation( yaml["resources"] );
+            batb->ogre->addResourceLocation( yaml["resources"] );
         }
         else
         {
@@ -173,13 +173,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
         ////////////////////////////////////////////////////////////////////////////////
         // create SceneManager
         // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-        scenemgr = batb.ogre.ogre_root->createSceneManager( "DefaultSceneManager" );
+        scenemgr = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
         
         //// create a view into scene, a Camera!
         camera = scenemgr->createCamera( "PlayerCam" );
       
         // create Viewport, the 2D target of Camera
-        viewport = batb.ogre.ogre_renderwindow->addViewport( camera );
+        viewport = batb->ogre->ogre_renderwindow->addViewport( camera );
 
         viewport->setClearEveryFrame( false, 0 ); // TODO: remove 0??
 
@@ -196,7 +196,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     tmp_empty = false;
 }
 
-void demo_iterate(BATB& batb, run::World& run, forest::World& forest)
+void demo_iterate(BATB* batb, run::World& run, forest::World& forest)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
@@ -215,7 +215,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 
 
-void begin_head(BATB& batb)
+void begin_head(BATB* batb)
 {
     Ogre::Entity* head = scenemgr->createEntity( "Head", "ogrehead.mesh" );
     Ogre::SceneNode* node = scenemgr->getRootSceneNode()->createChildSceneNode();
@@ -239,7 +239,7 @@ void begin_head(BATB& batb)
     camera->setNearClipDistance( 5 );
 }
 
-void iterate_head(BATB& batb, run::World& world)
+void iterate_head(BATB* batb, run::World& world)
 {
     tick_t tick = world.tick;
     float_t x,z;
@@ -252,7 +252,7 @@ void iterate_head(BATB& batb, run::World& world)
 }
 
 
-void begin_terrain(BATB& batb)
+void begin_terrain(BATB* batb)
 {
 // http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3
 // http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Terrain+System
@@ -429,7 +429,7 @@ void begin_terrain(BATB& batb)
 
 #endif
 
-    if (batb.ogre.ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
+    if (batb->ogre->ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
     {
         camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
@@ -440,7 +440,7 @@ void begin_terrain(BATB& batb)
 // shutdown:
 //
 
-void demo_end(BATB& batb)
+void demo_end(BATB* batb)
 {
     if( terrain_paging )
     {
@@ -455,7 +455,7 @@ void demo_end(BATB& batb)
 }
 
 
-void iterate_terrain(BATB& batb, run::World& run, forest::World& forest)
+void iterate_terrain(BATB* batb, run::World& run, forest::World& forest)
 {
     //terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) ));
     tick_t tick = run.tick;

@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/gl/GL.hpp"
 #include "batb/CourseDrawer.hpp"
 #include "batb/value/batb.hpp"
 
@@ -24,7 +25,7 @@ namespace batb
 
 
 
-CourseDrawer::CourseDrawer(BATB& b) : batb( b )
+CourseDrawer::CourseDrawer(BATB* b) : batb( b )
 {
 
     // set values 
@@ -37,7 +38,7 @@ CourseDrawer::CourseDrawer(BATB& b) : batb( b )
     size_line_      = value::coursedrawerSizeLine;
 
     /// set nanovg context to work on
-    nvg = batb.gl.nvg_context;
+    nvg = batb->gl->nvg_context;
 
     // set default color
     nanovg_color_next_ = nvgRGBAf( 
@@ -51,7 +52,7 @@ CourseDrawer::CourseDrawer(BATB& b) : batb( b )
     if ( nanovg_font_ == -1 )
     {
         // create font
-        nanovg_font_ = batb.gl.nanovg_font( "CourseDrawer", 
+        nanovg_font_ = batb->gl->nanovg_font( "CourseDrawer", 
                        file::static_data( "batb/CourseDrawer.ttf" ) );
     }
 

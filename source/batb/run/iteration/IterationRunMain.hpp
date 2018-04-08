@@ -35,11 +35,12 @@ class TBMain;
 // the "main menu" (application is up and running)
 class IterationRunMain : public IterationRun
 {
-friend void begin(IterationRunMain& );
-friend void end(IterationRunMain& );
-
 public:
-    IterationRunMain(BATB& );
+    IterationRunMain(BATB* );
+
+    // setup
+    void begin();
+    void end();
 
     IterationStack iterate_run(World& world) override;
 
@@ -56,12 +57,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////
 //  
-
-void begin(IterationRunMain& );
-
-
-void end(IterationRunMain& );
-
 
 
 } // namespace run

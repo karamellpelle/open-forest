@@ -26,7 +26,7 @@ namespace batb
 namespace forest
 {
 
-IterationForest::IterationForest(BATB& b) : batb( b )
+IterationForest::IterationForest(BATB* b) : batb( b )
 {
 
 }

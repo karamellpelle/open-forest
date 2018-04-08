@@ -18,7 +18,7 @@
 #ifndef BATB_RUN_RUN_KEYSET_HPP
 #define BATB_RUN_RUN_KEYSET_HPP
 #include "batb/batb_include.hpp"
-#include "batb/keys.hpp"
+#include "batb/keys/KeySet.hpp"
 
 namespace batb
 {
@@ -32,7 +32,7 @@ namespace run
 class KeySet : public keys::KeySet
 {
 public:
-    KeySet(BATB& b);
+    KeySet(BATB* b);
 
     // define 'this' from map defined by file
     void load(const std::string& filepath);
@@ -46,7 +46,7 @@ public:
     keys::KeyClicker* console = nullptr;
     keys::KeyClicker* escape  = nullptr;
 
-    BATB& batb;
+    BATB* batb;
 };
 
 } // namespace run

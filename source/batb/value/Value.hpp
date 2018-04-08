@@ -17,7 +17,6 @@
 //
 #ifndef BATB_VALUE_VALUE_HPP
 #define BATB_VALUE_VALUE_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 
 
@@ -29,13 +28,19 @@ namespace value
 {
 
 
+////////////////////////////////////////////////////////////////////////////////
+// values are included in headers (not by default)
+
 class Value : public ModuleBATB
 {
-friend void begin(Value& value);
-friend void end(Value& value);
-
 public:
-    Value(BATB& b) : ModuleBATB( b ) { }
+    Value(BATB* b) : ModuleBATB( b ) { }
+
+
+    // setup
+    void begin(const std::string& );
+    void end();
+
     
     // set and get from string
     bool set(const std::string& , const std::string& );
@@ -44,17 +49,6 @@ public:
 private:
 
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//  
-//
-void begin(Value& );
-
-void end(Value& );
-
-
-////////////////////////////////////////////////////////////////////////////////
-// values included in headers (not by default)
 
 
 } // namespace value

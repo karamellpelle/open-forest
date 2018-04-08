@@ -17,18 +17,9 @@
 //
 #ifndef BATB_BATB_HPP
 #define BATB_BATB_HPP
+#include <ostream>
 #include "batb/batb_include.hpp"
-#include "batb/log.hpp"
-#include "batb/value.hpp"
-#include "batb/keys.hpp"
-#include "batb/gl.hpp"
-#include "batb/gui.hpp"
-#include "batb/ogre.hpp"
-#include "batb/al.hpp"
-#include "batb/forest.hpp"
-#include "batb/demo.hpp"
-//#include "batb/race.hpp"
-#include "batb/run.hpp"
+#include "batb/Log.hpp"
 #include "Module.hpp"
 
 
@@ -36,48 +27,91 @@ namespace batb
 {
 
 
+namespace value  { class Value; };
+namespace keys   { class Keys; };
+namespace gl     { class GL; };
+namespace gui    { class GUI; };
+namespace al     { class AL; };
+namespace ogre   { class OGRE; };
+namespace run    { class Run; };
+namespace forest { class Forest; };
+//class race::Race race;
+namespace demo   { class Demo; };
+
+
+
+// class BATB: work environment
 class BATB : public Module
 {
-friend void begin(BATB& batb);
-friend void end(BATB& batb);
-
 public:
-    BATB(env::Env& );
+    BATB();
+    ~BATB();
+
+    // setup object
+    void begin(const std::string& );
+    void end();
+
+    using Module::init;
+
+    // this sets up the non-core part of BATB. it can also be done 
+    // outside class, i.e. a worker thread
+    void beginNonCore();
+
+    // create a new frame for an iteration
+    void frameBegin();
+    void frameEnd();
+
+    // 
+    std::unique_ptr<Log>              log;
 
     // our environment
-    env::Env& env;
+    // TODO: remove and merge into BATB
+    std::unique_ptr<env::Env>         env;
 
+    ////////////////////////////////////////////////////////////////////////////////
     // core part of BATB.
-    // these are the parts of BATB fully initialized by 'void begin(BATB& )'.
-    // we need a minimum part for 'iterationRunBegin' to work.
-    log::Log log;
-    value::Value value;
-    keys::Keys keys;
-    gl::GL gl;
-    gui::GUI gui;
-    al::AL al;
+    // we need a minimum part of BATB to start running Iteration's: the core part.
+    // core will be fully initialized by 'void begin(const YAML::Node& )'.
+    std::unique_ptr<value::Value>     value;
+    std::unique_ptr<keys::Keys>       keys;
+    std::unique_ptr<gl::GL>           gl;
+    std::unique_ptr<gui::GUI>         gui;
+    std::unique_ptr<al::AL>           al;
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////
     // non-core part of BATB.
-    // these are parts of BATB initialized later, by 'iterationRunBegin'.
-    ogre::OGRE ogre;
-    run::Run run;
-    forest::Forest forest;
-    //race::Race race;
-    demo::Demo demo;
+    // this part is initialized later, for example by 'void begin_noncore()'
+    std::unique_ptr<ogre::OGRE>       ogre;
+    std::unique_ptr<run::Run>         run;
+    std::unique_ptr<forest::Forest>   forest;
+    //std::unique_ptr<race::Race>       race;
+    std::unique_ptr<demo::Demo>       demo;
 
 };
 
+// make sure we can use pointer (i.e. unique_ptr) to log as ostream
+template <typename T>
+inline std::ostream& operator<<(std::unique_ptr<Log>& l, const T& t)
+{
+    return l->operator<<( t );
+}
+inline std::ostream& operator<<(std::unique_ptr<Log>& l, const std::string& str)
+{
+    return operator<<( *l, str );
+}
 
-// start BATB-object
-void begin(BATB& batb);
-
-
-// end BATB-object
-void end(BATB& batb);
-
-
+// I wasn't able to make these compile, hence I create helper functions!
+//std::ostream& operator<<(std::unique_ptr<Log>& l, std::ios& (*pf)(std::ios&))
+//{
+//    return l->operator<<( pf );
+//}
+//std::ostream& operator<<(std::unique_ptr<Log>& l, std::ios_base& (*pf)(std::ios_base&))
+//{
+//    return l->operator<<( pf );
+//}
 } // namespace batb
+
 
 #endif

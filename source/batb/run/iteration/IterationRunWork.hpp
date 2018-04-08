@@ -67,13 +67,13 @@ public:
 private:
     using WorkFunction = std::function<void(Work& )>;
 
-    Work(BATB& b) : batb( b ) { }
+    Work(BATB* b) : batb( b ) { }
     void work(WorkFunction f) { function_ = f; }
 
     void run() override;
 
 
-    BATB& batb;
+    BATB* batb;
     WorkFunction function_;
     WorkItem::Mode mode_;
     uint n_ = 0;
@@ -89,13 +89,13 @@ public:
     using WorkFunction = std::function<void(Work& )>;
 
     // construct from the containing Run object
-    IterationRunWork(BATB& );
-    //IterationRunWork(BATB& b, WorkFunction f) : IterationRunWork( b ) { work( f ); }
+    IterationRunWork(BATB* );
+    //IterationRunWork(BATB* b, WorkFunction f) : IterationRunWork( b ) { work( f ); }
 
     template <typename F>
-    IterationRunWork(BATB& b, const F& f) : IterationRunWork( b ) { work( WorkFunction( f ) );  }
+    IterationRunWork(BATB* b, const F& f) : IterationRunWork( b ) { work( WorkFunction( f ) );  }
     template <class Clazz, class Method>
-    IterationRunWork(BATB& b, Clazz& c, Method& m) : IterationRunWork( b, std::bind( m, c ) ) { }
+    IterationRunWork(BATB* b, Clazz& c, Method& m) : IterationRunWork( b, std::bind( m, c ) ) { }
     ~IterationRunWork();
 
     ////////////////////////////////////////

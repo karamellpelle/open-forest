@@ -18,7 +18,6 @@
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
 #include "batb/ModuleBATB.hpp"
-#include "batb/batb_include.hpp"
 #include "batb/ogre/GLContextGLFW.hpp"
 
 
@@ -47,17 +46,18 @@ namespace ogre
 
 class OGRE : public ModuleBATB
 {
-friend void begin(OGRE& );
-friend void end(OGRE& );
-
 public:
-    OGRE(BATB& b) : ModuleBATB( b ), glcontextglfw_( b ) { }
+    OGRE(BATB* b) : ModuleBATB( b ), glcontextglfw_( b ) { }
+
+    // setup
+    void begin(const std::string& );
+    void end();
 
     ////////////////////////////////////////////////////////////////////////////////
     // Scene rendering
     //
 
-    // should Ogre be ignored each frame?
+    // should Ogre not be ignored each frame?
     void enabled(bool e);
 
     // start/end frame (each iteration, i.e. inside IterationRun::iterate)
@@ -103,9 +103,6 @@ private:
     bool enabled_ = true;
 };
 
-
-void begin(OGRE& );
-void end(OGRE& );
 
 } // namespace ogre
 

@@ -36,7 +36,7 @@ class ModifyCamera;
 class ModifyControlCamera 
 {
 public:
-    ModifyControlCamera(BATB& b) : batb( b )    { }
+    ModifyControlCamera(BATB* b) : batb( b )    { }
 
     void operator()(World& );
 
@@ -51,7 +51,7 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     //
-    BATB& batb;
+    BATB* batb;
 
 private:
     ModifyCamera* modifier_ = nullptr;

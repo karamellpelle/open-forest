@@ -19,10 +19,16 @@
 #include "batb/glm.hpp"
 #include "batb/demo/iteration/IterationDemoForest.hpp"
 #include "batb/demo/World.hpp"
+#include "batb/run/World.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/KeySet.hpp"
+#include "batb/gui/GUI.hpp"
+#include "batb/al/AL.hpp"
 #include "batb/forest/World.hpp"
 #include "batb/forest/events.hpp"
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
+#include "batb/demo/Demo.hpp"
 #include <random>
 #include <chrono>
 #include <iomanip>
@@ -44,7 +50,7 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-IterationDemoForest::IterationDemoForest(BATB& b) : 
+IterationDemoForest::IterationDemoForest(BATB* b) : 
     IterationDemo( b ), outputDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
     modifyCamera( b ), modifyRunner( b ),
     modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
@@ -66,11 +72,11 @@ void IterationDemoForest::iterate_begin(World& demo)
     forest.tick = demo.tick;
 
     // clear keys
-    batb.demo.keyset.reset();
-    batb.forest.keyset.reset();
+    batb->demo->keyset->reset();
+    batb->forest->keyset->reset();
 
     // no cursor
-    batb.keys.setCursorFree( true );
+    batb->keys->setCursorFree( true );
 
     
     ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +107,7 @@ void IterationDemoForest::iterate_begin(World& demo)
     modifyControlCamera.modifier( &modifyCamera );
 
     // ensure we can use Key's
-    batb.gui.lockKeys( false );
+    batb->gui->lockKeys( false );
 
 }
 
@@ -195,7 +201,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
                 // create a source aimed upwards 
                 glm::mat4 source_aim;
                 source_aim[3] = e->control->aim.pos;
-                auto src = batb.al.source( file::static_data( "batb/forest/audio/si_punch.mp3" ), source_aim);
+                auto src = batb->al->source( file::static_data( "batb/forest/audio/si_punch.mp3" ), source_aim);
 
                 // does not work for me!!!
                 src.setDistanceRange( 1.0, 50.0 );
@@ -247,10 +253,10 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 
     // TODO: look at demo-events!
-    if ( batb.run.keyset.escape->click() )
+    if ( batb->run->keyset->escape->click() )
     {
         // set back cursor
-        batb.keys.setCursorFree( false );
+        batb->keys->setCursorFree( false );
 
         return _emptylist_;
     }

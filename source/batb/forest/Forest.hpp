@@ -17,7 +17,6 @@
 //
 #ifndef BATB_FOREST_FOREST_HPP
 #define BATB_FOREST_FOREST_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 #include "batb/forest/KeySet.hpp"
 
@@ -28,9 +27,6 @@ namespace batb
 {
 
 
-class BATB;
-
-
 namespace forest
 {
 
@@ -39,13 +35,14 @@ namespace forest
 
 class Forest : public ModuleBATB
 {
-friend void begin(Forest& );
-friend void end(Forest& );
-
 public:
-    Forest(BATB& b);
+    Forest(BATB* b);
 
-    KeySet keyset;
+    void begin(const std::string& );
+    void end();
+
+
+    std::unique_ptr<KeySet> keyset;
 
 private:
 
@@ -53,8 +50,6 @@ private:
 };
 
 
-void begin(Forest& );
-void end(Forest& );
 
 } // namespace forest
 

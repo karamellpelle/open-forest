@@ -17,6 +17,8 @@
 //
 #include "batb.hpp"
 #include "batb/run/iteration/IterationRunMain/TBMain.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/World.hpp"
 #include "batb/run/events.hpp"
 
 namespace batb
@@ -26,7 +28,7 @@ namespace run
 {
 
 
-TBMain::TBMain(BATB& b) : batb( b )
+TBMain::TBMain(BATB* b) : batb( b )
 {
 
     // read file as node tree, letting us parse custom nodes for this widget.
@@ -43,7 +45,7 @@ TBMain::TBMain(BATB& b) : batb( b )
     }
     else
     {
-        batb.log << "TBMain: could not read main.tb.txt" << std::endl;
+        batb->log << "TBMain: could not read main.tb.txt" << std::endl;
     }
 
     // set TB window settings:
@@ -71,22 +73,22 @@ bool TBMain::OnEvent(const tb::TBWidgetEvent& ev)
 
         if ( id == TBIDC( "do-demo-forest" ) )
         {
-            batb.run.pushEvent( event::Do::DemoForest );
+            batb->run->pushEvent( event::Do::DemoForest );
             return true;
         }
         if ( id == TBIDC( "do-nanovg" ) )
         {
-            batb.run.pushEvent( event::Do::NanoVG );
+            batb->run->pushEvent( event::Do::NanoVG );
             return true;
         }
         if ( id == TBIDC( "do-old" ) )
         {
-            batb.run.pushEvent( event::Do::Old );
+            batb->run->pushEvent( event::Do::Old );
             return true;
         }
         if ( id == TBIDC( "do-exit" ) )
         {
-            batb.run.pushEvent( event::Do::Exit );
+            batb->run->pushEvent( event::Do::Exit );
             return true;
         }
     } 

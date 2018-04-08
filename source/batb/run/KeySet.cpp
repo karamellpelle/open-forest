@@ -26,7 +26,7 @@ namespace batb
 namespace run
 {
 
-KeySet::KeySet(BATB& b) : keys::KeySet( b.keys ), batb( b )
+KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
 {
 
 }

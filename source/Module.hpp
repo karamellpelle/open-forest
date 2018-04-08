@@ -23,7 +23,14 @@
 class Module
 {
 public:
-    Module() : initialized_( false ) { }
+    Module() = default;
+    Module(const YAML::Node& n)  : Module() { config( n ); }
+    Module(const std::string& n) : Module() { config( n ); }
+
+    // prevent copies.
+    // multple instance still OK, but for what reason?
+    Module(const Module& ) = delete;
+    Module& operator=(const Module& ) = delete;
 
     void config(const YAML::Node& );    // from given Node
     void config(const std::string& );   // from Node read from file
@@ -32,16 +39,18 @@ public:
 
     bool initialized() const            { return initialized_; }
 
+    std::string filepath() const       { return filepath_; }
+
 protected:
     YAML::Node yaml;
-    std::string filepath;
 
     bool init_empty() const { return !initialized_; }
     bool init_nonempty() const { return initialized_; }
     void init(bool b) { initialized_ = b; }
 
 private:
-    bool initialized_;
+    bool initialized_ = false;
+    std::string filepath_;
 
 };
 

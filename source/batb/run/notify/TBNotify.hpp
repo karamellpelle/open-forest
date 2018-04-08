@@ -32,7 +32,7 @@ class BATB;
 
 namespace run
 {
-class Notify;
+class Notifier;
 class TBNotify;
 class World;
 
@@ -59,16 +59,16 @@ class TBNotify : public tb::TBLayout
 
 public:
     TBOBJECT_SUBCLASS( TBNotify, tb::TBLayout );
-    TBNotify(BATB& );
+    TBNotify(BATB* );
 
     void step(World& );
     void push(NotifyMessage* );
 
-    BATB& batb;
+    BATB* batb;
 
 private:
     std::list<TBNotifyMessage*> tb_notify_messages_;
-    Notify& notify_;
+    Notifier* notify_ = nullptr;
     tick_t tick_ = 0;
 };
 

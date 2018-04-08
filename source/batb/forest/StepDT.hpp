@@ -36,7 +36,7 @@ class World;
 class StepDT : public game::StepDT<World, tick_t>
 {
 public:
-    StepDT(BATB& b) : batb( b )       { }
+    StepDT(BATB* b) : batb( b )       { }
 
     // dt-step
     // tick of world is not updated!
@@ -47,7 +47,7 @@ public:
 
 
 protected:
-    BATB& batb;
+    BATB* batb;
 };
 
 

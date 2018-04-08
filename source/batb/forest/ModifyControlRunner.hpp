@@ -36,13 +36,13 @@ class ModifyRunner;
 class ModifyControlRunner
 {
 public:
-    ModifyControlRunner(BATB& b) : batb( b ) { }
+    ModifyControlRunner(BATB* b) : batb( b ) { }
 
     void operator()(World& );
 
     void modifier(ModifyRunner* );
 
-    BATB& batb;
+    BATB* batb;
 
 private:
     ModifyRunner* modifier_ = nullptr;

@@ -35,10 +35,10 @@ template <>
 class LoadWorker<BATB>
 {
 public:
-    LoadWorker(BATB& b) : batb( b ) { }
+    LoadWorker(BATB* b) : batb( b ) { }
     void operator()(Work& );
 
-    BATB& batb;
+    BATB* batb;
 };
 
 
@@ -49,10 +49,10 @@ template <>
 class UnloadWorker<BATB>
 {
 public:
-    UnloadWorker(BATB& b) : batb( b ) { }
+    UnloadWorker(BATB* b) : batb( b ) { }
     void operator()(Work& );
 
-    BATB& batb;
+    BATB* batb;
 };
 
 

@@ -285,8 +285,8 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/main.cpp"
       "${MAIN_SOURCE_DIR}/Module.cpp"
       "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
+      "${MAIN_SOURCE_DIR}/batb/Log.cpp"
       # BATB core:
-      "${MAIN_SOURCE_DIR}/batb/log/Log.cpp"
       "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
       "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
       "${MAIN_SOURCE_DIR}/batb/keys/KeySet.cpp"
@@ -315,7 +315,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_echo.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_value.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_easteregg.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/notify/Notify.cpp"
+      "${MAIN_SOURCE_DIR}/batb/run/notify/Notifier.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/notify/TBNotify.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"

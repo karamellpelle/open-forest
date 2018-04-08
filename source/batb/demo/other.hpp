@@ -32,10 +32,10 @@ class World;
 namespace demo
 {
 
-void other_begin(BATB& );
-void other_end(BATB& );
+void other_begin(BATB* );
+void other_end(BATB* );
 
-void background(BATB& , run::World& );
+void background(BATB* , run::World& );
 
 
 } // namespace demo

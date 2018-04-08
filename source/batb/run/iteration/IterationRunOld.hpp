@@ -38,12 +38,13 @@ namespace run
 //
 class IterationRunOld : public IterationRun
 {
-friend void begin(IterationRunOld& );
-friend void end(IterationRunOld& );
-
 public:
     // construct from the containing Run object
-    IterationRunOld(BATB& );
+    IterationRunOld(BATB* );
+
+    // setup
+    void begin();
+    void end();
 
     // iterate
     IterationStack iterate_run(World& world) override;
@@ -60,10 +61,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
-void begin(IterationRunOld& );
-
-
-void end(IterationRunOld& );
 
 
 

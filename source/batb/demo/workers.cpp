@@ -44,7 +44,7 @@ void LoadWorkerWorld::operator()(run::Work& work)
     }
     catch (std::exception& e)
     {
-        batb.log << "error loading demo::World: " << e.what() << std::endl; 
+        batb->log << "error loading demo::World: " << e.what() << std::endl; 
     }
 
     // must be done to signalize completion
@@ -68,7 +68,7 @@ void UnloadWorkerWorld::operator()(run::Work& work)
     } 
     catch (std::exception& e)
     {
-        batb.log << "error unloading : " << e.what() << std::endl; 
+        batb->log << "error unloading : " << e.what() << std::endl; 
     }
 
     // free world

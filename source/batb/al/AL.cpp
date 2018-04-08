@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb.hpp"
+#include "batb/al/AL.hpp"
 #include "batb/Scene.hpp"
 #include <algorithm>
 
@@ -27,6 +28,82 @@ namespace batb
 
 namespace al
 {
+
+
+////////////////////////////////////////////////////////////////////////////////
+// setup
+
+void AL::begin(const std::string& path)
+{
+
+    BATB_LOG_FUNC( batb );
+    
+    if ( init_empty() )
+    {
+        
+        // set configuration file
+        config( path );
+
+        try
+        {
+            //////////////////////////////////////////////////
+            al_devmgr = alure::DeviceManager::getInstance();
+
+            // FIXME: memory leak, according to valgrind
+            al_device = al_devmgr.openPlayback(); 
+
+            batb->log << "AL: opened al_device \"" << al_device.getName() << "\"" << std::endl;
+
+            al_context = al_device.createContext();
+            alure::Context::MakeCurrent( al_context );
+
+            // there is only one listener
+            al_listener = al_context.getListener();
+
+            //////////////////////////////////////////////////////////
+            //      OpenAL
+        }
+        catch (std::exception& e)
+        {
+            batb->log << "ERRO: could not init AL: " << e.what() << std::endl;
+            throw e;
+        }
+
+
+
+    }
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    init( true );
+
+
+
+    
+}
+
+
+void AL::end()
+{
+    BATB_LOG_FUNC( batb );
+
+    if ( init_nonempty() )
+    {
+        save();
+
+        // Buffer's must be destroyed according to doc
+        for ( auto buf : buffers_ )
+        {
+            al_context.removeBuffer( buf );
+        }
+
+        alure::Context::MakeCurrent( nullptr );
+        al_context.destroy();
+        al_device.close();
+        
+    }
+   
+    init( false );
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,76 +200,6 @@ alure::Source AL::source(const std::string& path, const glm::mat4& mat)
     return src;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(AL& al)
-{
-
-    BATB_LOG_FUNC( al.batb );
-    
-    if ( al.init_empty() )
-    {
-
-        try
-        {
-            //////////////////////////////////////////////////
-            al.al_devmgr = alure::DeviceManager::getInstance();
-
-            // FIXME: memory leak, according to valgrind
-            al.al_device = al.al_devmgr.openPlayback(); 
-
-            al.batb.log << "AL: opened al_device \"" << al.al_device.getName() << "\"" << std::endl;
-
-            al.al_context = al.al_device.createContext();
-            alure::Context::MakeCurrent( al.al_context );
-
-            // there is only one listener
-            al.al_listener = al.al_context.getListener();
-
-            //////////////////////////////////////////////////////////
-            //      OpenAL
-        }
-        catch (std::exception& e)
-        {
-            al.batb.log << "could not init AL: " << e.what() << std::endl;
-            throw e;
-        }
-
-
-
-    }
-    ////////////////////////////////////////////////////////////////////////////////
-    
-    al.init( true );
-
-
-
-    
-}
-
-
-void end(AL& al)
-{
-    BATB_LOG_FUNC( al.batb );
-
-    if ( al.init_nonempty() )
-    {
-        al.save();
-
-        // Buffer's must be destroyed according to doc
-        for ( auto buf : al.buffers_ )
-        {
-            al.al_context.removeBuffer( buf );
-        }
-
-        alure::Context::MakeCurrent( nullptr );
-        al.al_context.destroy();
-        al.al_device.close();
-        
-    }
-   
-    al.init( false );
-}
 
 } // namespace al
 

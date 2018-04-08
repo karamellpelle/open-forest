@@ -21,41 +21,15 @@
 #include "file.hpp"
 #include "batb.hpp"
 #include "batb/run/workers.hpp" 
+#include "batb/run/iteration/IterationRunMain.hpp"
+#include "batb/run/Run.hpp" 
 #include "batb/demo/other.hpp"
 
 
 // should we load the non-core part of batb on main thread?
 // the other alternative is to use "workers"
-//#define LOAD_NONCOREBATB_ON_MAIN_THREAD
+#define LOAD_NONCOREBATB_ON_MAIN_THREAD
 
-// load non-core batb on main thread
-void load_batb(batb::BATB& batb)
-{
-    using namespace batb;
-    try
-    {
-        // load AL
-        al::begin( batb.al );
-
-        // load Ogre
-        ogre::begin( batb.ogre ); 
-
-        // load the non-core part of Run
-        run::begin( batb.run );
-
-        // load Forest
-        forest::begin( batb.forest );
-
-        // load demo
-        demo::begin( batb.demo );
-
-
-    }
-    catch (std::exception& e)
-    {
-        batb.log << "error loading : " << e.what() << std::endl; 
-    }
-}
 
 //void commandline_env(int argc, char** argv, YAML::Node& yaml)
 //{
@@ -71,86 +45,94 @@ int main(int argc, char** argv)
 {
     int ret = 0;
 
-    // TODO: use YAML::LoadFile, modify node from cmdline, pass to module.
-    //       if so, configurations from command line options will be saved
-    //       to file.
-
-    env::Env env;
-    env.config( file::dynamic_data( "env/Env.yaml" ) );
-
-    // our BATB object
-    batb::BATB batb( env );
-    batb.config( file::dynamic_data( "batb/BATB.yaml" ) );
-
-
     try
     {
-            
-        // create our environment
-        env::begin( env );
-
-        // initialize the core parts of BATB.
-        // (the non-core part is created by 'iterationRunBegin')
-        batb::begin( batb );
-
-        batb::demo::other_begin( batb ); // FIXME: remove
-
         using namespace batb;
-        
-        // application world
+
+        // TODO: use YAML::LoadFile, modify node from cmdline, pass to module.
+        //       if so, configurations from command line options will be saved
+        //       to file.
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // create and initiaze the core parts of our game environment
+        // the non-core part is created by 'iterationRunBegin'
+        //
+        auto batb = std::make_unique<BATB>();
+        batb->begin( file::dynamic_data( "batb/BATB.yaml" ) ); 
+            
+        // TMP: demo
+        batb::demo::other_begin( batb.get() ); 
+
+        // this is the application world
         run::World run;
-        run.player = batb::run::local_player();
+
+        // who is playing this game?
+        run.player = run::local_player();
 
 #ifdef LOAD_NONCOREBATB_ON_MAIN_THREAD
+        ////////////////////////////////////////////////////////////////////////////////
         // load resources in main thread
         // this does not segfault during shutdown, but on the other side,
         // no unloading of batb is done :)
-        load_batb( batb );
+        batb->beginNonCore();
         run::IterationStack stack =
         {
-              game::begin_iteration( batb.run.iterationRunMain ),     // main
+              game::begin_iteration( batb->run->iterationRunMain ),     // main
         };
 #else 
+        ////////////////////////////////////////////////////////////////////////////////
         // load non-core batb on dedicated thread.
         // this causes segfault during shutdown. not sure why, probably Ogre3D
+        //
         auto* loadBATB = new run::IterationRunWork( batb, run::LoadWorker<BATB>( batb ) );
         auto* unloadBATB = new run::IterationRunWork( batb, run::UnloadWorker<BATB>( batb ) );
         run::IterationStack stack =
         {
               game::begin_iteration( loadBATB ),                      // create the non-core part of BATB
-              game::begin_iteration( batb.run.iterationRunMain ),     // main
+              game::begin_iteration( batb->run->iterationRunMain ),     // main
               game::begin_iteration( unloadBATB )                     // destroy game data at end
         };
 #endif
 
-  
-  
+        ////////////////////////////////////////////////////////////////////////////////
         // "main loop"
+
         while ( !stack.empty() )
         {
             // begin frame for iteration
-            env.frameBegin();
+            batb->frameBegin();
 
-            // make 1 iteration of 'run'
+            // make one iteration of the application world
             iterate( stack, run );
 
             // end frame for iteration
-            env.frameEnd();
+            batb->frameEnd();
         }
+        
+        ////////////////////////////////////////////////////////////////////////////////
+        //
+        // FIXME: remove
+        batb::demo::other_end( batb.get() ); 
+        
+#ifndef LOAD_NONCOREBATB_ON_MAIN_THREAD
+        batb->end();
+#endif
 
-        batb::demo::other_end( batb ); // FIXME: remove
     }
     catch (std::exception& e)
     {
+        ////////////////////////////////////////////////////////////////////////////////
         // some serious error occured above, lets handle it
+        //
         std::cerr << "OpenForest ERROR: " << e.what() << std::endl;
-        ret = 1;
+
+        return 1;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // successful run
 
-    batb::end( batb );
+    std::cout << "OpenForest exited normally. Peace & Love" << std::endl;
+    return 0;
 
-    env::end( env );
-
-    return ret;
 }

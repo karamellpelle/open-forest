@@ -37,12 +37,12 @@ namespace al
 {
 
 
-void demo_begin(BATB& );
-void demo_end(BATB& );
+void demo_begin(BATB* );
+void demo_end(BATB* );
 
-void demo_play(BATB& , const std::string& );
+void demo_play(BATB* , const std::string& );
 
-void demo_iterate(BATB& , run::World& );
+void demo_iterate(BATB* , run::World& );
 
 
 

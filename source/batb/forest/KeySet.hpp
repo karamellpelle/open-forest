@@ -32,7 +32,7 @@ namespace forest
 class KeySet : public keys::KeySet //, Module
 {
 public:
-    KeySet(BATB& b);
+    KeySet(BATB* b);
 
     // define 'this' from map defined by file
     void load(const std::string& filepath);
@@ -49,7 +49,7 @@ public:
     keys::KeyClicker* tmp0 = nullptr;
     keys::KeyClicker* tmp1 = nullptr;
 
-    BATB& batb;
+    BATB* batb;
 };
 
 } // namespace forest

@@ -16,6 +16,8 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/run/console/TBConsole.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/Run.hpp"
 #include "tb/tb_widgets_common.h"
 #include "tb/tb_editfield.h"
 #include "batb.hpp"
@@ -26,7 +28,7 @@ namespace batb
 namespace run
 {
 
-TBConsole::TBConsole(BATB& b) : batb( b )
+TBConsole::TBConsole(BATB* b) : batb( b )
 {
     using namespace tb;
 
@@ -48,13 +50,13 @@ TBConsole::TBConsole(BATB& b) : batb( b )
         // - tb::TBWidget* widget = GetWidgetById( TBIDC( "my-id-name" ) );
         if ( (tb_input_ = GetWidgetByIDAndType<TBEditField>( TBIDC( "input" ) ) ) == nullptr )
         {
-            batb.log << "TBConsole: "
+            batb->log << "TBConsole: "
                      << "no TBEditField 'input' defined :("
                      << std::endl;
         }
         if ( (tb_output_ = GetWidgetByIDAndType<TBEditField>( TBIDC( "output" ) ) ) == nullptr )
         {
-            batb.log << "TBConsole: "
+            batb->log << "TBConsole: "
                      << "no TBEditField 'output' defined :("
                      << std::endl;
         }
@@ -70,7 +72,7 @@ TBConsole::TBConsole(BATB& b) : batb( b )
     }
     else
     {
-        batb.log << "TBConsole: "
+        batb->log << "TBConsole: "
                  << "could not read tbconsole.tb.txt" 
                  << std::endl;
 
@@ -117,7 +119,7 @@ bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
             tb_input_->GetStyleEdit()->Clear();
 
             // send command to Console
-            batb.run.console( str );
+            batb->run->console->cmd( str );
 
 
             return true;

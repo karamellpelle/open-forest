@@ -16,7 +16,9 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/run/BeginEvents.hpp"
+#include "batb/BATB.hpp"
 #include "batb/run.hpp"
+#include "batb/run/World.hpp"
 #include "batb.hpp"
 
 
@@ -45,7 +47,7 @@ void BeginEvents::operator()(World& run)
     // only work on 1 run::World each frame (and always!)
     //
     //world.events.push( batb.run.events ); 
-    run.events.take( batb.run.events );
+    run.events.take( *batb->run->events );
 
 
 }

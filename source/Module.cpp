@@ -22,15 +22,15 @@ void Module::config(const YAML::Node& cfg)
 {
     // important: YAML::Node is similar to a shared_ptr
     yaml = cfg;     
-    filepath.clear();
+    filepath_.clear();
 }
 
 void Module::config(const std::string& path)
 {
     try
     {
-        filepath = path;
-        yaml = YAML::LoadFile( filepath );
+        filepath_ = path;
+        yaml = YAML::LoadFile( filepath_ );
     }
     catch (std::exception& e)
     {
@@ -44,9 +44,9 @@ void Module::config(const std::string& path)
 void Module::save()
 {
     // save iff this Module has its own config file
-    if ( !filepath.empty() )
+    if ( !filepath_.empty() )
     {
-        save( filepath );
+        save( filepath_ );
     }
 }
 

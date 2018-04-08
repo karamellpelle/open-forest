@@ -18,11 +18,8 @@
 #ifndef BATB_RUN_RUN_HPP
 #define BATB_RUN_RUN_HPP
 #include "batb/ModuleBATB.hpp"
-#include "batb/run/console/Console.hpp"
-#include "batb/run/notify/Notify.hpp"
-#include "batb/run/KeySet.hpp"
-#include "batb/run/iteration/IterationRunMain.hpp"
-#include "batb/run/iteration/IterationRunOld.hpp"
+#include "batb/event/EventList.hpp"
+#include "batb/run/notify/NotifyMessage.hpp"
 
 
 
@@ -36,55 +33,58 @@ namespace batb
 namespace run
 {
 
-
+class Console;
+class Notifier;
+class KeySet;
+class IterationRunMain;
+class IterationRunOld;
 
 
 class Run : public ModuleBATB
 {
-friend void begin(Run& );
-friend void end(Run& );
-friend class ModifyBegin;
 
 public:
 
-    Run(BATB& );
+    Run(BATB* );
+    ~Run();
+
+    // setup
+    void begin(const std::string& );
+    void end();
+
 
     // text interface (world modifier)
-    Console console;
-
+    std::unique_ptr<Console> console;
     // notifier
-    Notify notify;
+    std::unique_ptr<Notifier> notifier;
+    // set of key's
+    std::unique_ptr<KeySet> keyset;
 
-    KeySet keyset;
 
     // Iteration's
     //IterationRunIntro     iterationRunIntro;
-    IterationRunMain      iterationRunMain;
+    std::unique_ptr<IterationRunMain> iterationRunMain;
     //IterationRunOutro     iterationRunOutro;
-    IterationRunOld       iterationRunOld; 
+    std::unique_ptr<IterationRunOld>  iterationRunOld; 
 
     ////////////////////////////////////////////////////////////////////////////////
     // push events
     template <typename T>
     void pushEvent(const T& d)
     {
-      events.push( d );
+        events->push( d );
     }
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
     void pushEvent(T* d, const D& del = D())
     {
-        events.push( d, del );
+        events->push( d, del );
     }
 
 
     // events to move over to world
-    EventList events;
+    std::unique_ptr<EventList> events;
 
 };
-
-
-void begin(Run& );
-void end(Run& );
 
 } // namespace run
 

@@ -40,7 +40,7 @@ using IterationStack = game::IterationStack<World>;
 class IterationRun : public game::Iteration<World>
 {
 public:
-    IterationRun(BATB& b);
+    IterationRun(BATB* b);
 
     // this handles each frame, delegating work to the subclass 
     // implementation of 'iterate_run'
@@ -49,7 +49,7 @@ public:
     // also, each subclass should typically create a non-virtual method:
     // void iterate_begin(World& );
 
-    BATB& batb;
+    BATB* batb = nullptr;
 
 protected:
     // subclasses implements this:

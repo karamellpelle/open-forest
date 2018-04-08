@@ -33,8 +33,69 @@ namespace gl
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//  GL
+// setup 
+//
 
+void GL::begin(const std::string& path)
+{
+
+    BATB_LOG_FUNC( gl.batb );
+    
+    if ( init_empty() )
+    {
+        // set configuration file
+        config( path );
+
+        // init our GL state
+        gl::init_state();
+
+#ifdef NANOVG_GL2_IMPLEMENTATION
+        nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES | NVG_DEBUG );
+#endif
+#ifdef NANOVG_GL3_IMPLEMENTATION
+
+#endif
+	if ( nvg_context == nullptr )
+        {
+            throw std::runtime_error( "GL: could not create nanovg context" );
+	}
+
+        
+    }
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    init( true );
+
+
+    
+}
+
+
+void GL::end()
+{
+    BATB_LOG_FUNC( gl.batb );
+
+    if ( init_nonempty() )
+    {
+         //clear fonts
+        //for ( auto& i : gl.nanovg_fonts_ )
+        //{
+        //    // (release font not necessary (?))
+        //
+        //}
+#ifdef NANOVG_GL2_IMPLEMENTATION
+        nvgDeleteGL2( nvg_context );
+#endif
+#ifdef NANOVG_GL3_IMPLEMENTATION
+
+#endif
+    }
+   
+    init( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// working with nanovg
 
 NVGcontext* GL::nanovg_begin(const Scene& scene)
 {
@@ -42,9 +103,9 @@ NVGcontext* GL::nanovg_begin(const Scene& scene)
 
     // TODO: use Scene!!!
     int winWidth, winHeight;
-    glfwGetWindowSize( batb.env.window, &winWidth, &winHeight );
+    glfwGetWindowSize( batb->env->window, &winWidth, &winHeight );
     int fbWidth, fbHeight;
-    glfwGetFramebufferSize( batb.env.window, &fbWidth, &fbHeight );
+    glfwGetFramebufferSize( batb->env->window, &fbWidth, &fbHeight ); // FIXME: remove env
     float pxRatio = (float)fbWidth / (float)winWidth; // Calculate pixel ration for hi-dpi devices.
 
     auto wth = scene.wth;
@@ -77,63 +138,6 @@ int GL::nanovg_font(const std::string& name, const std::string& file)
     return h;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// 
-void begin(GL& gl)
-{
-
-    BATB_LOG_FUNC( gl.batb );
-    
-    if ( gl.init_empty() )
-    {
-
-        // init our GL state
-        gl::init_state();
-
-#ifdef NANOVG_GL2_IMPLEMENTATION
-        gl.nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES | NVG_DEBUG );
-#endif
-#ifdef NANOVG_GL3_IMPLEMENTATION
-
-#endif
-	if ( gl.nvg_context == nullptr )
-        {
-            throw std::runtime_error( "GL: could not create nanovg context" );
-	}
-
-        
-    }
-    ////////////////////////////////////////////////////////////////////////////////
-    
-    gl.init( true );
-
-
-    
-}
-
-
-void end(GL& gl)
-{
-    BATB_LOG_FUNC( gl.batb );
-
-    if ( gl.init_nonempty() )
-    {
-         //clear fonts
-        //for ( auto& i : gl.nanovg_fonts_ )
-        //{
-        //    // (release font not necessary (?))
-        //
-        //}
-#ifdef NANOVG_GL2_IMPLEMENTATION
-        nvgDeleteGL2(gl.nvg_context);
-#endif
-#ifdef NANOVG_GL3_IMPLEMENTATION
-
-#endif
-    }
-   
-    gl.init( false );
-}
 
 } // namespace gl
 

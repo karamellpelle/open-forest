@@ -42,9 +42,9 @@ namespace ogre
 {
 
 
-void demo_begin(BATB& );
+void demo_begin(BATB* );
 
-void demo_iterate(BATB& , run::World& , forest::World& );
+void demo_iterate(BATB* , run::World& , forest::World& );
 
 
 

@@ -17,6 +17,15 @@
 //
 #include "batb.hpp"
 #include "batb/run/workers.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/value/run.hpp"
+#include "batb/keys/Keys.hpp"
+#include "batb/ogre/OGRE.hpp"
+#include "batb/al/AL.hpp"
+#include "batb/gl/GL.hpp"
+#include "batb/gui/GUI.hpp"
+#include "batb/forest/Forest.hpp"
+#include "batb/demo/Demo.hpp"
 
 
 #define LOAD_PROXY
@@ -46,30 +55,28 @@ void LoadWorker<BATB>::operator()(Work& work)
 
     try
     {
-        //// load AL
-        //work.state( "AL" );
-        //al::begin( batb.al );
-        // ^ AL is now part of core BATB
 
         // load OGRE
         ////////////////////////////////////////////////////////////////////////////////
         // NOTE: when loading Ogre in different GL context, the Terrain component becomes
         //       diffused and cause some minor rendering artifacts when changing back
         //       to main context. 
+        // load Ogre
         work.state( "OGRE" );
-        ogre::begin( batb.ogre ); 
+        batb->ogre->begin( file::directory( batb->filepath() ) + "/ogre/OGRE.yaml" );
 
         // load the non-core part of Run
         work.state( "Run" );
-        run::begin( batb.run );
+        batb->run->begin( file::directory( batb->filepath() ) + "/run/Run.yaml" );
 
         // load Forest
         work.state( "Forest" );
-        forest::begin( batb.forest );
+        batb->forest->begin( file::directory( batb->filepath() ) + "/forest/Forest.yaml" );
 
         // load demo
         work.state( "Demo" );
-        demo::begin( batb.demo );
+        batb->demo->begin();
+
 
 #ifdef LOAD_PROXY
         // tmp: fake loading, to show capabilities:
@@ -84,7 +91,7 @@ void LoadWorker<BATB>::operator()(Work& work)
     }
     catch (std::exception& e)
     {
-        batb.log << "error loading : " << e.what() << std::endl; 
+        batb->log << "error loading : " << e.what() << std::endl; 
     }
 
     // must be done to signalize completion
@@ -102,23 +109,23 @@ void UnloadWorker<BATB>::operator()(Work& work)
     try
     {
         // unload Demo
-        demo::end( batb.demo );
+        batb->demo->end();
 
         // unload race
         //race::begin( batb.race );
 
         // unload forest
-        forest::end( batb.forest );
+        batb->forest->end();
 
         // unload the non-core part of run
-        run::end( batb.run );
+        batb->run->end();
 
 
         // unload OGRE
         // FIXME!!! current thread is not main. 
         //          OGRE::frameBegin is calledafter delete!
         work.state( "OGRE" );
-        ogre::end( batb.ogre );
+        batb->ogre->end();
 
         //// unload AL
         //work.state( "AL" );
@@ -135,7 +142,7 @@ void UnloadWorker<BATB>::operator()(Work& work)
     } 
     catch (std::exception& e)
     {
-        batb.log << "error unloading : " << e.what() << std::endl; 
+        batb->log << "error unloading : " << e.what() << std::endl; 
     }
 
     // must be done to signalize completion

@@ -17,20 +17,13 @@
 //
 #ifndef BATB_DEMO_DEMO_HPP
 #define BATB_DEMO_DEMO_HPP
-#include "batb/batb_include.hpp"
 #include "batb/ModuleBATB.hpp"
 #include "batb/demo/KeySet.hpp"
 
 
 
-
 namespace batb
 {
-
-
-class BATB;
-
-
 namespace demo
 {
 
@@ -39,13 +32,14 @@ namespace demo
 
 class Demo : public ModuleBATB
 {
-friend void begin(Demo& );
-friend void end(Demo& );
-
 public:
-    Demo(BATB& b);
+    Demo(BATB* b);
 
-    KeySet keyset;
+    void begin();
+    void end();
+
+
+    std::unique_ptr<KeySet> keyset;
 
     //EventList events;
 private:
@@ -53,9 +47,6 @@ private:
 
 };
 
-
-void begin(Demo& );
-void end(Demo& );
 
 } // namespace demo
 

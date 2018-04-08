@@ -36,7 +36,7 @@ class Notify;
 // a message to the user
 class NotifyMessage
 {
-friend class Notify;
+friend class Notifier;
 
 public:
     NotifyMessage() = default;

@@ -36,12 +36,12 @@ class World;
 class BeginEvents
 {
 public:
-    BeginEvents(BATB& b) : batb( b ) { }
+    BeginEvents(BATB* b) : batb( b ) { }
 
     void operator()(World& );
 
 protected:
-    BATB& batb;
+    BATB* batb;
 };
 
 

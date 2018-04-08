@@ -18,7 +18,16 @@
 #include "batb.hpp"
 #include "batb/run/iteration/IterationRun.hpp"
 #include "batb/run/World.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/notify/Notifier.hpp"
+#include "batb/run/KeySet.hpp"
+#include "batb/run/console/Console.hpp"
 #include "batb/value/run.hpp"
+#include "batb/keys/Keys.hpp"
+#include "batb/ogre/OGRE.hpp"
+#include "batb/al/AL.hpp"
+#include "batb/gl/GL.hpp"
+#include "batb/gui/GUI.hpp"
 
 namespace batb
 {
@@ -27,7 +36,7 @@ namespace batb
 namespace run
 {
 
-IterationRun::IterationRun(BATB& b) : batb( b )
+IterationRun::IterationRun(BATB* b) : batb( b )
 {
 
 }
@@ -40,25 +49,25 @@ IterationStack IterationRun::iterate(World& world)
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
     // set current tick for world.
-    world.tick = batb.env.tick();
+    world.tick = batb->env->tick();
 
     // setup scene for this frame
     begin( world.scene );
 
     // step all Key's, before 'iterate_run' implementation
-    batb.keys.step( world.tick );
+    batb->keys->step( world.tick );
 
     // setup Ogre for a new frame
-    batb.ogre.frameBegin(); 
+    batb->ogre->frameBegin(); 
 
     // begin frame for AL
-    batb.al.frameBegin();
+    batb->al->frameBegin();
 
-    if ( batb.run.initialized() )
+    if ( batb->run->initialized() )
     {
         // sets tick and 
         // TODO: only uses Scene
-        batb.run.notify.step( world );
+        batb->run->notifier->step( world );
 
     }
 
@@ -68,35 +77,35 @@ debug::gl::msg("iterate_run()");
     auto ret = iterate_run( world );
     ////////////////////////////////////////////////////////////////////////////////
 
-    //batb.run.notify.frameEnd(); or remove?
+    //batb.run.notifier.frameEnd(); or remove?
 
     
     // end AL frame
-    batb.al.frameEnd();
+    batb->al->frameEnd();
 
     // end Ogre frame
-    batb.ogre.frameEnd();
+    batb->ogre->frameEnd();
 
     // output and step GUI (_every_ frame!)
-    batb.gui.output( world.scene );
-    batb.gui.step( world.tick );
+    batb->gui->output( world.scene );
+    batb->gui->step( world.tick );
 
 
-    if ( batb.run.initialized() )
+    if ( batb->run->initialized() )
     {
         // console always available
 
-        if ( batb.run.keyset.console->click() )
+        if ( batb->run->keyset->console->click() )
         {
             // note that 'keyset.console' can not be disabled
-            if ( batb.run.keyset.console->toggle() ) batb.run.console.open( world ); else batb.run.console.close( world );
+            if ( batb->run->keyset->console->toggle() ) batb->run->console->open( world ); else batb->run->console->close( world );
         }
 
         // update Console
-        batb.run.console.step( world );
+        batb->run->console->step( world );
 
         // update Notify
-        batb.run.notify.step( world );
+        batb->run->notifier->step( world );
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +123,7 @@ void IterationRun::begin(Scene& scene)
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // set fragment size of scene.
-    batb.env.screenSize( scene.wth, scene.hth );
+    batb->env->screenSize( scene.wth, scene.hth );
 
     // set shape
     scene.shape.size( scene.wth, scene.hth );

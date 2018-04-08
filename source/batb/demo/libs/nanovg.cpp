@@ -19,6 +19,7 @@
 #include "batb/demo/libs/nanovg.hpp"
 #include "batb/demo/libs/nanovg/demo.h"
 #include "batb/demo/libs/nanovg/perf.h"
+#include "batb/gl/GL.hpp"
 
 namespace batb
 {
@@ -42,7 +43,7 @@ static bool tmp_empty = true;
 static bool on_ = false;
 
 
-void demo_begin(BATB& batb)
+void demo_begin(BATB* batb)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
@@ -50,18 +51,18 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     {
 	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
 
-	if (loadDemoData(batb.gl.nvg_context, &data) == -1)
+	if (loadDemoData(batb->gl->nvg_context, &data) == -1)
 		return;
     }
     tmp_empty = false;
 }
 
 
-void demo_end(BATB& batb)
+void demo_end(BATB* batb)
 {
     if ( !tmp_empty )
     {
-        freeDemoData(batb.gl.nvg_context, &data); 
+        freeDemoData(batb->gl->nvg_context, &data); 
     }
 }
 
@@ -76,7 +77,7 @@ void demo_toggle()
     on_ = !on_;
 }
 
-void demo_iterate(BATB& batb, bool premult, bool blowup)
+void demo_iterate(BATB* batb, bool premult, bool blowup)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
@@ -93,8 +94,8 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // begin GL state for nanovg
     gl::begin_nanovg();
-    window = batb.env.window;
-    vg = batb.gl.nvg_context;
+    window = batb->env->window;
+    vg = batb->gl->nvg_context;
 
 		double mx, my, t, dt;
 		int winWidth, winHeight;

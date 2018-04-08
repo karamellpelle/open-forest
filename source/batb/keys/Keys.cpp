@@ -34,8 +34,43 @@ namespace keys
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// setup 
+
+void Keys::begin(const std::string& path)
+{
+    if ( init_empty() )
+    {
+        // set configuration file
+        config( path );
+
+        // FIXME: remove Env
+        window_ = batb->env->window;
+
+        // cursor input mode is _NORMAL!
+        glfwSetInputMode( window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
+        cursor_free_ = false;
+    }
+
+    init( true );
+}
+
+void Keys::end()
+{
+    if ( init_nonempty() )
+    {
+        // save configuration
+        save();
+
+        // remove all created Key's
+        clear();
+    }
+
+    init( false );
+}
+////////////////////////////////////////////////////////////////////////////////
 //
 
+// remove all created Key's 
 void Keys::clear()
 {
     std::for_each( std::begin( keys_ ), std::end( keys_ ), std::default_delete<Key>() );
@@ -252,35 +287,6 @@ Key* Keys::createKey(const YAML::Node& yaml)
 
 
 
-////////////////////////////////////////////////////////////////////////////////
-//  
-
-
-void begin(Keys& keys)
-{
-    if ( keys.init_empty() )
-    {
-        keys.window_ = keys.batb.env.window;
-
-        // cursor input mode is _NORMAL!
-        glfwSetInputMode( keys.window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
-        keys.cursor_free_ = false;
-    }
-
-    keys.init( true );
-}
-
-void end(Keys& keys)
-{
-    if ( keys.init_nonempty() )
-    {
-        keys.save();
-
-        keys.clear();
-    }
-
-    keys.init( false );
-}
 
 } // namespace keys
 

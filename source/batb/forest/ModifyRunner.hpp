@@ -36,7 +36,7 @@ class Runner;
 class ModifyRunner
 {
 public:
-    ModifyRunner(BATB& b) : batb( b ) { }
+    ModifyRunner(BATB* b) : batb( b ) { }
 
     void operator()(World& );
    
@@ -44,7 +44,7 @@ public:
     void aim(const glm::vec2& );
     void speed(float_t );
     
-    BATB& batb;
+    BATB* batb;
 
 private:
     Runner* runner_ = nullptr;

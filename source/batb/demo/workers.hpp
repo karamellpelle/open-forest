@@ -35,10 +35,10 @@ class World;
 class LoadWorkerWorld
 {
 public:
-    LoadWorkerWorld(BATB& b, World* w) : batb( b ), demo( w ) { }
+    LoadWorkerWorld(BATB* b, World* w) : batb( b ), demo( w ) { }
     void operator()(run::Work& );
 
-    BATB& batb;
+    BATB* batb;
     World* demo = nullptr;
 };
 
@@ -47,10 +47,10 @@ public:
 class UnloadWorkerWorld
 {
 public:
-    UnloadWorkerWorld(BATB& b, World* w) : batb( b ), demo( w ) { }
+    UnloadWorkerWorld(BATB* b, World* w) : batb( b ), demo( w ) { }
     void operator()(run::Work& );
 
-    BATB& batb;
+    BATB* batb;
     World* demo = nullptr;
 };
 

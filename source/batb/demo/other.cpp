@@ -17,6 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/run/World.hpp"
+#include "batb/gl/GL.hpp"
 
 
 namespace batb
@@ -32,9 +33,9 @@ static uint image_hth = 0;
 static NVGpaint image_paint;
 
 
-void other_begin(BATB& batb)
+void other_begin(BATB* batb)
 {
-    auto* nvg = batb.gl.nvg_context;
+    auto* nvg = batb->gl->nvg_context;
 
 
     //glClearColor( 0, 0, 0.3, 0 );
@@ -49,9 +50,9 @@ void other_begin(BATB& batb)
 }
     
 
-void other_end(BATB& batb)
+void other_end(BATB* batb)
 {
-    auto* nvg = batb.gl.nvg_context;
+    auto* nvg = batb->gl->nvg_context;
 
     nvgDeleteImage( nvg, image );
     image = -1;
@@ -59,9 +60,9 @@ void other_end(BATB& batb)
     image_hth = 0;
 }
 
-void background(BATB& batb, run::World& run)
+void background(BATB* batb, run::World& run)
 {
-    auto* nvg = batb.gl.nanovg_begin( run.scene );
+    auto* nvg = batb->gl->nanovg_begin( run.scene );
     auto wth = run.scene.wth;
     auto hth = run.scene.hth;
 
@@ -76,7 +77,7 @@ void background(BATB& batb, run::World& run)
     nvgFillPaint( nvg, image_paint );
     nvgFill( nvg );
 
-    batb.gl.nanovg_end();
+    batb->gl->nanovg_end();
 }
 
 

@@ -29,7 +29,7 @@ namespace run
 
 // specific command handle functions.
 // these are allowed to modify input. 
-using CommandEater = bool(BATB& , std::string& );
+using CommandEater = bool(BATB* , std::string& );
 
 CommandEater cmd_echo;
 CommandEater cmd_value;

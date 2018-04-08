@@ -29,9 +29,9 @@ class BATB;
 class ModuleBATB : public Module
 {
 public:
-    ModuleBATB(BATB& b) : Module(), batb( b ) { }
+    ModuleBATB(BATB* b) : Module(), batb( b ) { }
 
-    BATB& batb;
+    BATB* batb = nullptr;
 
 protected:
     using Module::yaml;

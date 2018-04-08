@@ -48,12 +48,13 @@ private:
 
 class Console : public std::ostream
 {
-friend void begin(Console& );
-friend void end(Console& );
 friend class ConsoleStreambuf;
 
 public:
-    Console(BATB& b) : std::ostream( &streambuf_ ), batb( b ), streambuf_( *this ) { }
+    Console(BATB* b) : std::ostream( &streambuf_ ), batb( b ), streambuf_( *this ) { }
+
+    void begin();
+    void end();
 
     void step(World& );
 
@@ -64,9 +65,10 @@ public:
     std::string getPS1();
 
     // command to console
-    bool operator()(const std::string& );
+    bool cmd(const std::string& );
+    bool operator()(const std::string& s) { return this->cmd( s ); }
 
-    BATB& batb;
+    BATB* batb;
 
 
     TBConsole* tb_console = nullptr;
@@ -78,11 +80,16 @@ private:
 };
 
 
-////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::ostream& operator<<(std::unique_ptr<Console>& l, const T& t)
+{
+    return l->operator<<( t );
+}
+inline std::ostream& operator<<(std::unique_ptr<Console>& l, const std::string& str)
+{
+    return operator<<( *l, str );
+}
 
-void begin(Console& );
-
-void end(Console& );
 
 ////////////////////////////////////////////////////////////////////////////////
 

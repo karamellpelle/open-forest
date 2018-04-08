@@ -15,28 +15,13 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb.hpp"
+#include "batb/BATB.hpp"
 #include "batb/gui/GUI.hpp"
 #include "batb/gui/tb_system_batb.hpp"
-#include "batb/log.hpp"
+#include "batb/Scene.hpp"
 #include "batb/keys.hpp"
 
 
-// TB
-#include "tb/tb_system.h"
-#include "tb/tb_language.h"
-#include "tb/tb_bitmap_fragment.h"
-#include "tb/animation/tb_widget_animation.h"
-#include "tb/tb_node_tree.h"
-#include "tb/tb_tempbuffer.h"
-#include "tb/tb_font_renderer.h"
-#include "tb/image/tb_image_manager.h"
-#include "tb/utf8/utf8.h"
-
-
-#include "tb/tb_core.h"
-#include "tb/renderers/tb_renderer_gl.h"
-#include "tb/animation/tb_animation.h"
 
 
 
@@ -47,6 +32,148 @@ namespace gui
 {
 
 
+////////////////////////////////////////////////////////////////////////////////
+//  
+
+void GUI::begin(const std::string& path)
+{
+
+    if ( init_empty() )
+    {
+        debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+        // set configuration file
+        config( path );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // TODO: use 'yaml' for configuration 
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // this is the actual init process in turbobadger demo:
+        // * AppBackendGLFW()
+        // * AppBackendGLFW::Init()
+        // * DemoApplication::Init()
+        // * (main loop)
+        // * DemoApplication::Shutdown()
+        // * some more
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // AppBackendGLFW::Init()
+          
+        tb_renderer_ =  new tb::TBRendererGL();
+        tb::tb_core_init( tb_renderer_ );
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // OnBackendAttached()
+        // Load language file
+        tb::g_tb_lng->Load( file::static_data( "batb/gui/turbobadger_demo/resources/language/lng_en.tb.txt" ).c_str() );
+
+        // Load the default skin, and override skin that contains the graphics specific to the demo.
+        //tb::g_tb_skin->Load( file::static_data( "batb/gui/turbobadger_demo/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/turbobadger_demo/turbobadger_demo/Demo/demo01/resources/skin.tb.txt" ).c_str() ); // skin from demo
+        tb::g_tb_skin->Load( file::static_data( "batb/gui/skin/openforest/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/skin/openforest/override.tb.txt" ).c_str() );  // custom skin
+
+        // Register font renderers.
+        // these are buildt by turbobadger iff defined, and
+        // the corresponding functions, used below, are 
+        // declared in batb/gui/tb_system.hpp 
+#ifdef TB_FONT_RENDERER_TBBF
+        register_tbbf_font_renderer();
+#endif
+#ifdef TB_FONT_RENDERER_STB
+        register_stb_font_renderer();
+#endif
+#ifdef TB_FONT_RENDERER_FREETYPE
+        register_freetype_font_renderer();
+#endif
+
+        // Add fonts we can use to the font manager.
+#if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/vera.ttf" ).c_str(), "Vera");
+#endif
+#ifdef TB_FONT_RENDERER_TBBF
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str(), "Segoe");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/neon.tb.txt" ).c_str(), "Neon");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang");
+        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orange.tb.txt" ).c_str(), "Orange");
+#endif
+
+        // Set the default font description for widgets to one of the fonts we just added
+        tb::TBFontDescription fd;
+#ifdef TB_FONT_RENDERER_TBBF
+        fd.SetID(TBIDC("Segoe"));
+#else
+        fd.SetID(TBIDC("Vera"));
+#endif
+        fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
+        tb::g_font_manager->SetDefaultFontDescription(fd);
+
+        // Create the font now.
+        tb::TBFontFace *font = tb::g_font_manager->CreateFontFace(tb::g_font_manager->GetDefaultFontDescription());
+
+        // Render some glyphs in one go now since we know we are going to use them. It would work fine
+        // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
+        if (font)
+        {
+            font->RenderGlyphs(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~•·åäöÅÄÖ");
+        }
+        // Give the root widget a background skin
+        //m_root.SetSkinBg(TBIDC("background"));
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // DemoApplication::Init()
+        ////////////////////////////////////////////////////////////////////////////////
+        // App::Init()
+        tb::TBWidgetsAnimationManager::Init();
+        { tb::TBAnimationBlocker anim_blocker; }
+
+        // (demo is now set up)
+        ////////////////////////////////////////////////////////////////////////////////
+        
+        // set name of root widget
+        root.SetText( "GUI::root" );
+
+
+    }
+
+    init( true );
+}
+
+
+void GUI::end()
+{
+
+    if ( init_nonempty() )
+    {
+        save();
+
+        // TODO?
+        //root.DeleteAllChildren();
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // App::Shutdown()
+        tb::TBWidgetsAnimationManager::Shutdown();
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // AppBackendGLFW::Shutdown()
+        tb::tb_core_shutdown();
+
+        delete tb_renderer_;
+        tb_renderer_ = nullptr;
+
+        wth_ = 0;
+        hth_ = 0;
+    }
+    
+    init( false );
+}
+
+
+
+// render to Scene
 void GUI::output(const Scene& scene)
 {
 debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
@@ -118,19 +245,19 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     
 }
 
-void GUI::bind(keys::Keys& keys)
+void GUI::bind(keys::Keys* keys)
 {
     // binding keys to this GUI object's root widget
     callback_widget = &root;
     
-    keys.cursorposCalling(   glfw_callback_cursor_pos );
-    keys.mousebuttonCalling( glfw_callback_mouse_button );
-    keys.scrollCalling(      glfw_callback_scroll );
-    keys.keyCalling(         glfw_callback_key );
-    keys.charCalling(        glfw_callback_char );
+    keys->cursorposCalling(   glfw_callback_cursor_pos );
+    keys->mousebuttonCalling( glfw_callback_mouse_button );
+    keys->scrollCalling(      glfw_callback_scroll );
+    keys->keyCalling(         glfw_callback_key );
+    keys->charCalling(        glfw_callback_char );
 
     // set cursor mode to non-free (pointer type)
-    keys.setCursorFree( false );
+    keys->setCursorFree( false );
 }
 
 
@@ -162,146 +289,9 @@ void GUI::removeWidget(tb::TBWidget* w)
 
 void GUI::lockKeys(bool lock)
 {
-    batb.keys.keyEnable( !lock );
+    batb->keys->keyEnable( !lock );
     // (cursor not touched)
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//  
-
-void begin(GUI& gui)
-{
-    BATB_LOG_FUNC( gui.batb );
-
-    if ( gui.init_empty() )
-    {
-        debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-
-        // TODO: parse yaml
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // this is the actual init process in turbobadger demo:
-        // * AppBackendGLFW()
-        // * AppBackendGLFW::Init()
-        // * DemoApplication::Init()
-        // * (main loop)
-        // * DemoApplication::Shutdown()
-        // * some more
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // AppBackendGLFW::Init()
-          
-        gui.tb_renderer_ =  new tb::TBRendererGL();
-        tb::tb_core_init( gui.tb_renderer_ );
-
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // OnBackendAttached()
-        // Load language file
-        tb::g_tb_lng->Load( file::static_data( "batb/gui/turbobadger_demo/resources/language/lng_en.tb.txt" ).c_str() );
-
-        // Load the default skin, and override skin that contains the graphics specific to the demo.
-        //tb::g_tb_skin->Load( file::static_data( "batb/gui/turbobadger_demo/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/turbobadger_demo/turbobadger_demo/Demo/demo01/resources/skin.tb.txt" ).c_str() ); // skin from demo
-        tb::g_tb_skin->Load( file::static_data( "batb/gui/skin/openforest/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/skin/openforest/override.tb.txt" ).c_str() );  // custom skin
-
-        // Register font renderers.
-        // these are buildt by turbobadger iff defined, and
-        // the corresponding functions, used below, are 
-        // declared in batb/gui/tb_system.hpp 
-#ifdef TB_FONT_RENDERER_TBBF
-        register_tbbf_font_renderer();
-#endif
-#ifdef TB_FONT_RENDERER_STB
-        register_stb_font_renderer();
-#endif
-#ifdef TB_FONT_RENDERER_FREETYPE
-        register_freetype_font_renderer();
-#endif
-
-        // Add fonts we can use to the font manager.
-#if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/vera.ttf" ).c_str(), "Vera");
-#endif
-#ifdef TB_FONT_RENDERER_TBBF
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str(), "Segoe");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/neon.tb.txt" ).c_str(), "Neon");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang");
-        tb::g_font_manager->AddFontInfo( file::static_data( "batb/gui/turbobadger_demo/Demo/fonts/orange.tb.txt" ).c_str(), "Orange");
-#endif
-
-        // Set the default font description for widgets to one of the fonts we just added
-        tb::TBFontDescription fd;
-#ifdef TB_FONT_RENDERER_TBBF
-        fd.SetID(TBIDC("Segoe"));
-#else
-        fd.SetID(TBIDC("Vera"));
-#endif
-        fd.SetSize( tb::g_tb_skin->GetDimensionConverter()->DpToPx(14));
-        tb::g_font_manager->SetDefaultFontDescription(fd);
-
-        // Create the font now.
-        tb::TBFontFace *font = tb::g_font_manager->CreateFontFace(tb::g_font_manager->GetDefaultFontDescription());
-
-        // Render some glyphs in one go now since we know we are going to use them. It would work fine
-        // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
-        if (font)
-                font->RenderGlyphs(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~•·åäöÅÄÖ");
-
-        // Give the root widget a background skin
-        //m_root.SetSkinBg(TBIDC("background"));
-
-
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // DemoApplication::Init()
-        ////////////////////////////////////////////////////////////////////////////////
-        // App::Init()
-        tb::TBWidgetsAnimationManager::Init();
-        { tb::TBAnimationBlocker anim_blocker; }
-
-        // (demo is now set up)
-        ////////////////////////////////////////////////////////////////////////////////
-        
-        // set name of root widget
-        gui.root.SetText( "GUI::root" );
-
-
-    }
-
-    gui.init( true );
-}
-
-
-void end(GUI& gui)
-{
-    BATB_LOG_FUNC( gui.batb );
-
-    if ( gui.init_nonempty() )
-    {
-        gui.save();
-
-        // TODO?
-        //root.DeleteAllChildren();
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // App::Shutdown()
-        tb::TBWidgetsAnimationManager::Shutdown();
-
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // AppBackendGLFW::Shutdown()
-        tb::tb_core_shutdown();
-
-        delete gui.tb_renderer_;
-        gui.tb_renderer_ = nullptr;
-
-        gui.wth_ = 0;
-        gui.hth_ = 0;
-    }
-    
-    gui.init( false );
-}
-
 
 
 // the receving widget for keys callbacks (static)

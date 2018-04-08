@@ -22,7 +22,9 @@
 #include "batb/forest/Output.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/World.hpp"
+#include "batb/run/World.hpp"
 #include "batb/ogre/helpers.hpp"
+#include "batb/ogre/OGRE.hpp"
 #include "batb.hpp"
 
 
@@ -52,9 +54,9 @@ void Output::operator()(World& forest)
     // TODO: terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) )) ?
 
     // render 3D view from camera into Scene
-    batb.ogre.sceneBegin( run.scene );
-    batb.ogre.outputCamera( forest.camera.ogre_camera );
-    batb.ogre.sceneEnd();
+    batb->ogre->sceneBegin( run.scene );
+    batb->ogre->outputCamera( forest.camera.ogre_camera );
+    batb->ogre->sceneEnd();
 
 
     ////////////////////////////////////////////////////////////////////////////////

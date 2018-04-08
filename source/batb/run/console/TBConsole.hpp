@@ -42,7 +42,7 @@ friend class ConsoleStreambuf;
 public:
     TBOBJECT_SUBCLASS( TBConsole, tb::TBWindow );
 
-    TBConsole(BATB& );
+    TBConsole(BATB* );
 
     virtual void OnFocusChanged(bool focus) override;
     virtual bool OnEvent(const tb::TBWidgetEvent &ev) override;       // TBWidget
@@ -52,7 +52,7 @@ public:
     void operator()(const std::string& );
     void clear();
 
-    BATB& batb;
+    BATB* batb;
 
 private:
     tb::TBEditField* tb_input_ = nullptr;

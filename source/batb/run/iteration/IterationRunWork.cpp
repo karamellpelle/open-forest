@@ -19,6 +19,10 @@
 #include "batb/run/iteration/IterationRunWork.hpp"
 #include "batb/run/iteration/IterationRunWork/RunWorkTBWidget.hpp"
 #include "batb/demo/other.hpp"
+#include "batb/ogre/OGRE.hpp"
+#include "batb/al/AL.hpp"
+#include "batb/gui/GUI.hpp"
+#include "batb/gl/GL.hpp"
 
 namespace batb
 {
@@ -27,7 +31,7 @@ namespace run
 {
 
 
-IterationRunWork::IterationRunWork(BATB& b) : IterationRun( b ), work_( b )
+IterationRunWork::IterationRunWork(BATB* b) : IterationRun( b ), work_( b )
 {
     
 }
@@ -54,13 +58,13 @@ void IterationRunWork::iterate_begin(World& world)
     // this thread is not interrested in BATB/run::World.
 
     // ensure Ogre is only touched in work-thread
-    batb.ogre.enabled( false );
+    batb->ogre->enabled( false );
     // ensure AL is only touched in work-thread
-    batb.al.enabled( false );
+    batb->al->enabled( false );
 
     // create widget
     tb_widget_ = new RunWorkTBWidget();
-    batb.gui.addWidget( tb_widget_ );
+    batb->gui->addWidget( tb_widget_ );
 
     // load non-core on current context, but in background thread:
     work_.begin();
@@ -106,14 +110,14 @@ IterationStack IterationRunWork::iterate_run(World& world)
         tb_widget_->set( 1.0 );
 
         // TODO: delete tb_widget_ and set to nullptr to save memory?
-        batb.gui.removeWidget( tb_widget_ ); // FIXME
+        batb->gui->removeWidget( tb_widget_ ); // FIXME
         //tb_widget_->Die();
 
 
         // set back AL
-        batb.al.enabled( true );
+        batb->al->enabled( true );
         // set back Ogre
-        batb.ogre.enabled( true );
+        batb->ogre->enabled( true );
 
 
         // finish this iteration
@@ -140,7 +144,7 @@ void IterationRunWork::output(run::World& run)
             auto alpha = item_->alpha;
 
             // draw progressbar. FIXME
-            auto nvg = batb.gl.nanovg_begin( run.scene );
+            auto nvg = batb->gl->nanovg_begin( run.scene );
             float_t w = 512;
             float_t h = 22;
             float_t x = 0.5 * (run.scene.wth - w);
@@ -159,7 +163,7 @@ void IterationRunWork::output(run::World& run)
             static int font = -1;
             if ( font == -1 )
             {
-               font = batb.gl.nanovg_font( "sans", file::static_data( "batb/Ubuntu-Title.ttf" ) );
+               font = batb->gl->nanovg_font( "sans", file::static_data( "batb/Ubuntu-Title.ttf" ) );
             }
             nvgFontSize( nvg, 20 );
             nvgTextAlign( nvg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE );
@@ -169,7 +173,7 @@ void IterationRunWork::output(run::World& run)
             //nvgFillColor( nvg, nvgRGBf( 0.11, 0.64, 0.04 ) );
             nvgText( nvg, x + 0.5 * w, y + 0.5 * h, tag.c_str(), nullptr );
 
-            batb.gl.nanovg_end();
+            batb->gl->nanovg_end();
         }    
         break;
         case WorkItem::Mode::Indefinite:

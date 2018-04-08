@@ -44,7 +44,7 @@ void ModifyControlCamera::operator()(World& forest)
     ////////////////////////////////////////////////////////////////////////////////
     // move camera in xy-plane from mouse (yaw, pitch)
     float_t x, y;
-    batb.forest.keyset.aim->axis( x, y );
+    batb->forest->keyset->aim->axis( x, y );
     aim_a_ = value::forestAimX * (-x);
     aim_b_ = value::forestAimY * (y);
     auto aim = glm::eulerAngleYXZ( aim_a_, aim_b_, aim_c_ );
@@ -57,10 +57,10 @@ void ModifyControlCamera::operator()(World& forest)
 
     ////////////////////////////////////////////////////////////////////////////////
     // move camera from keys. this should modify Runner
-    float_t move_x = (batb.forest.keyset.left->press()  ? (1.0)  : (0.0)) +
-                     (batb.forest.keyset.right->press() ? (-1.0) : (0.0));
-    float_t move_z = (batb.forest.keyset.forward->press()  ? (1.0)  : (0.0)) +
-                     (batb.forest.keyset.backward->press() ? (-1.0) : (0.0));
+    float_t move_x = (batb->forest->keyset->left->press()  ? (1.0)  : (0.0)) +
+                     (batb->forest->keyset->right->press() ? (-1.0) : (0.0));
+    float_t move_z = (batb->forest->keyset->forward->press()  ? (1.0)  : (0.0)) +
+                     (batb->forest->keyset->backward->press() ? (-1.0) : (0.0));
     auto& vel = camera.move.vel;
     auto& x_ = aim[0];
     auto& z_ = aim[2];

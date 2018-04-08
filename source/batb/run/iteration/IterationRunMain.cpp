@@ -22,9 +22,15 @@
 #include "batb/demo/libs/al.hpp"
 #include "batb/demo/other.hpp"
 #include "batb/run/events.hpp"
+#include "batb/run/notify/Notifier.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/run/console/Console.hpp"
+#include "batb/run/KeySet.hpp"
+#include "batb/run/iteration/IterationRunMain.hpp"
 #include "batb/run/iteration/IterationRunMain/TBMain.hpp"
 #include "batb/run/iteration/IterationRunDemo.hpp"
 #include "batb/run/iteration/IterationRunWork.hpp"
+#include "batb/run/iteration/IterationRunOld.hpp"
 
 //#define DEMO_FOREST_DIRECT
 
@@ -36,21 +42,43 @@ namespace run
 {
 
 
-IterationRunMain::IterationRunMain(BATB& b) : IterationRun( b ), beginEvents( b )
+IterationRunMain::IterationRunMain(BATB* b) : IterationRun( b ), beginEvents( b )
 {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+void IterationRunMain::begin()
+{
+
+    tb_main = new TBMain( batb );
+
+    // add to screen
+    batb->gui->addWidget( tb_main );
+
+}
+
+void IterationRunMain::end()
+{
+
+    batb->gui->removeWidget( tb_main );
+
+    delete tb_main;
+    tb_main = nullptr;
+}
   
+////////////////////////////////////////////////////////////////////////////////
 void IterationRunMain::iterate_begin(World& run)
 {
 debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // we want clean state for our Key's, no garbage:
-    batb.run.keyset.reset();
+    batb->run->keyset->reset();
 
     // point Keys to GUI 
-    batb.gui.bind( batb.keys );
+    batb->gui->bind( batb->keys.get() );
 
     // Ogre demo
     //demo::ogre::demo_begin( batb );
@@ -68,9 +96,9 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
               << "tab     => toggle console" << std::endl
               << std::endl;
 
-    NotifyMessage msg( "Use Tab to toggle console" ); // here it would be nice to use run.keyset.console->to_str() which makes a TB widget for us
+    NotifyMessage msg( "Use Tab to toggle console" ); // here it would be nice to use run->keyset.>console->to_str() which makes a TB widget for us
     msg.duration = 8;
-    batb.run.notify( msg );
+    batb->run->notifier->message( msg );
 
 
 }
@@ -121,7 +149,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             {
             case event::Do::DemoForest:
             {
-                batb.run.console( R"(echo "event: do-demo-forest")" );
+                batb->run->console->cmd( R"(echo "event: do-demo-forest")" );
 
                 // remove main widget from screen
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
@@ -143,28 +171,28 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             }    
             case event::Do::NanoVG:
             {
-                batb.run.console( R"(echo "do-nanovg")" );
+                batb->run->console->cmd( R"(echo "do-nanovg")" );
 
                 demo::nanovg::demo_toggle();
 
                 // tmp
                 NotifyMessage msg( "this is a notification :)" );
                 msg.duration = 5.0;
-                batb.run.notify( msg );
+                batb->run->notifier->message( msg );
                 break;
             }
             case event::Do::Old:
             {
-                batb.run.console( R"(echo "do-old")" );
+                batb->run->console->cmd( R"(echo "do-old")" );
 
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
-                return {  game::begin_iteration( batb.run.iterationRunOld ), 
+                return {  game::begin_iteration( batb->run->iterationRunOld ), 
                           game::begin_iteration( *this ) };
             }
             case event::Do::Exit:
             {
-                batb.run.console( R"(echo "do-exit")" );
+                batb->run->console->cmd( R"(echo "do-exit")" );
 
                 return _emptylist_;
             }
@@ -181,30 +209,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//
-void begin(IterationRunMain& iter)
-{
-    BATB& batb = iter.batb;
-
-
-    iter.tb_main = new TBMain( batb );
-
-    // add to screen
-    batb.gui.addWidget( iter.tb_main );
-
-}
-
-void end(IterationRunMain& iter)
-{
-    BATB& batb = iter.batb;
-
-    batb.gui.removeWidget( iter.tb_main );
-
-    delete iter.tb_main;
-    iter.tb_main = nullptr;
-}
 
 
 

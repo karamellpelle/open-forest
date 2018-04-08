@@ -30,41 +30,43 @@ namespace forest
 ////////////////////////////////////////////////////////////////////////////////
 //  Forest
 
-Forest::Forest(BATB& b) : ModuleBATB( b ), keyset( b )
+Forest::Forest(BATB* b) : ModuleBATB( b )
 {
-
+    keyset = std::make_unique<KeySet>( b );
 }
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
-void begin(Forest& forest)
+void Forest::begin(const std::string& path)
 {
 
-    BATB_LOG_FUNC( forest.batb );
+    BATB_LOG_FUNC( batb );
     
-    if ( forest.init_empty() )
+    if ( init_empty() )
     {
+        config( path );
+
         // load associated keys 
-        forest.keyset.load( file::dynamic_data( "batb/forest/KeySet.yaml" ) );
+        keyset->load( file::dynamic_data( "batb/forest/KeySet.yaml" ) );
 
     }
 
-    forest.init( true );
+    init( true );
 }
 
-void end(Forest& forest)
+void Forest::end()
 {
-    BATB_LOG_FUNC( forest.batb );
+    BATB_LOG_FUNC( batb );
 
-    if ( forest.init_nonempty() )
+    if ( init_nonempty() )
     {
-        forest.save();
+        save();
 
     }
     
-    forest.init( false );
+    init( false );
 }
 
 

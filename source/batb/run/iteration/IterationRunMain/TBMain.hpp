@@ -29,6 +29,7 @@ namespace run
 {
 
 class IterationRunMain;
+class World;
 
 
 // the "main menu" widget
@@ -37,14 +38,14 @@ class TBMain : public tb::TBWidget
 public:
     TBOBJECT_SUBCLASS( TBMain, tb::TBWidget );
 
-    TBMain(BATB& );
+    TBMain(BATB* );
 
     void step(World& );
 
     virtual bool OnEvent(const tb::TBWidgetEvent& ev) override;
 
 
-    BATB& batb;
+    BATB* batb;
 
 };
 

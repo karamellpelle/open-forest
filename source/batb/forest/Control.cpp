@@ -20,6 +20,7 @@
 #include "OgreSceneNode.h"
 #include "batb.hpp"
 #include "batb/forest/Control.hpp"
+#include "batb/run/Player.hpp"
 #include "batb/forest.hpp"
 #include "batb/forest/events.hpp"
 #include "batb/forest/World.hpp"

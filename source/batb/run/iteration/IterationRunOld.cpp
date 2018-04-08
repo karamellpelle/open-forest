@@ -17,6 +17,7 @@
 //
 #include "batb.hpp"
 #include "batb/old.hpp"
+#include "batb/run/iteration/IterationRunOld.hpp"
 
 namespace batb
 {
@@ -25,9 +26,23 @@ namespace run
 {
 
 
-IterationRunOld::IterationRunOld(BATB& b) : IterationRun( b )
+IterationRunOld::IterationRunOld(BATB* b) : IterationRun( b )
 {
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+void IterationRunOld::begin()
+{
+    BATB_LOG_FUNC( batb );
+}
+
+void IterationRunOld::end()
+{
+    
+    BATB_LOG_FUNC( batb );
 }
 
 
@@ -37,7 +52,7 @@ void IterationRunOld::iterate_begin(World& world)
 #ifdef BATB_BUILD_OLD
     old::begin();
 #else
-    batb.log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)\n";
+    batb->log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)\n" << std::endl;
 #endif
 
 }
@@ -59,7 +74,7 @@ IterationStack IterationRunOld::iterate_run(World& world)
         // think
         if ( batb.run.keyset.escape->released() )
         {
-            batb.log << "IterationRunOld -> " << std::endl;
+            batb << "IterationRunOld -> " << std::endl;
             old::end();
 
             return _emptylist_;
@@ -78,20 +93,6 @@ IterationStack IterationRunOld::iterate_run(World& world)
 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-
-void begin(IterationRunOld& iter)
-{
-    BATB_LOG_FUNC( iter.batb );
-}
-
-void end(IterationRunOld& iter)
-{
-    
-    BATB_LOG_FUNC( iter.batb );
-}
 
 
 } // namespace run

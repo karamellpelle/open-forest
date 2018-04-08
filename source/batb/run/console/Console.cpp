@@ -36,6 +36,28 @@ namespace batb
 namespace run
 {
 
+////////////////////////////////////////////////////////////////////////////////
+//
+
+void Console::begin()
+{
+    tb_console = new TBConsole( batb );
+
+    // add to screen
+    batb->gui->addWidget( tb_console );
+
+
+}
+
+void Console::end()
+{
+    
+    batb->gui->removeWidget( tb_console );
+
+    delete tb_console;
+    tb_console = nullptr;
+}
+
 void Console::step(World& run)
 {
     auto wth = run.scene.wth;
@@ -82,7 +104,7 @@ void Console::open(World& run)
     tb_console->SetFocus( tb::WIDGET_FOCUS_REASON_UNKNOWN );
 
     // ensure we can write without interfere with KeySet's
-    batb.gui.lockKeys( true );
+    batb->gui->lockKeys( true );
     
 }
 
@@ -106,16 +128,16 @@ void Console::close(World& run)
     tb_console->SetIsFocusable( false );
     
     // enable KeySet's
-    batb.gui.lockKeys( false );
+    batb->gui->lockKeys( false );
 }
 
-bool Console::operator()(const std::string& input)
+bool Console::cmd(const std::string& input)
 {
     // output PS1 + typed command line
     *this << getPS1() << input << "\n";
 
     // easteregg command typed?
-    bool (cmd_easteregg)(BATB& , const std::string& );
+    bool (cmd_easteregg)(BATB* , const std::string& );
     if ( cmd_easteregg( batb, input ) ) return true;
     
     std::string in = input;
@@ -139,30 +161,6 @@ std::string Console::getPS1()
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-
-void begin(Console& console)
-{
-    BATB& batb = console.batb;
-
-    console.tb_console = new TBConsole( batb );
-
-    // add to screen
-    batb.gui.addWidget( console.tb_console );
-
-
-}
-
-void end(Console& console)
-{
-    BATB& batb = console.batb;
-    
-    batb.gui.removeWidget( console.tb_console );
-
-    delete console.tb_console;
-    console.tb_console = nullptr;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // ConsoleStreambuf

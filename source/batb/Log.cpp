@@ -15,56 +15,47 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "batb/log/Log.hpp"
+#include "batb/Log.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+//  
 
 
 namespace batb
 {
 
-namespace log
+Log::Log() : std::ostream( this )
 {
 
-////////////////////////////////////////////////////////////////////////////////
-//  
+}
 
-std::streamsize LogStreamBuf::xsputn(const char* s, std::streamsize n)
+std::ostream& Log::endl()
+{
+    return operator<<( std::endl );
+}
+
+std::ostream& Log::flush()
+{
+    return operator<<( std::endl );
+}
+
+
+std::streamsize Log::xsputn(const char* s, std::streamsize n)
 {
     //if ( s == '\n' ) indent 
 
-    // TMP:
+    // TMP: just write to std::cout
     return std::cout.rdbuf()->sputn( s, n );
 
     
 }
 
-int LogStreamBuf::overflow (int c)
+int Log::overflow (int c)
 {
-    // TMP:
+    // TMP: just write to std::cout
     return std::cout.rdbuf()->sputc( c );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  
-void begin(Log& log)
-{
-    if ( log.ModuleBATB::init_empty() )
-    {
 
-    }
-
-    log.ModuleBATB::init( true );
-}
-
-void end(Log& log)
-{
-    if ( log.ModuleBATB::init_nonempty() )
-    {
-        log.save();
-    }
-    log.ModuleBATB::init( false );
-}
-
-
-} // namespace log
 
 } // namespace batb

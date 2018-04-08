@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/BATB.hpp"
 #include "batb/run/Run.hpp"
+#include "batb/value/Value.hpp"
 #include "batb/run/console/Console.hpp"
 #include "batb/run/console/parse.hpp"
 
@@ -36,7 +37,7 @@ namespace run
 
 
 // modify value::'s
-bool cmd_value(BATB& batb, std::string& in)
+bool cmd_value(BATB* batb, std::string& in)
 {
     auto name = identifier( in );
 
@@ -47,31 +48,31 @@ bool cmd_value(BATB& batb, std::string& in)
     {
         // get
         std::string value;
-        if ( batb.value.get( name, value ) )
+        if ( batb->value->get( name, value ) )
         {
-            batb.run.console << value << "\n";
+            batb->run->console << value << "\n";
             return true;
         }
         else
         {
-            batb.run.console << "variable '"
-                             << name 
-                             << "' is not available.\n";
+            batb->run->console << "variable '"
+                               << name 
+                               << "' is not available.\n";
             return false;
         }
     }
     else
     {
-        if ( batb.value.set( name, v ) )
+        if ( batb->value->set( name, v ) )
         {
             return true;
         }
         else
         {
-            batb.run.console << "could not set variable '"
-                             << name
-                             << "'\n"
-                             ;
+            batb->run->console << "could not set variable '"
+                               << name
+                               << "'\n"
+                               ;
             return false;
         }
     }

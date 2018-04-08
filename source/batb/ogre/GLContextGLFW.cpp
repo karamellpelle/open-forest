@@ -43,6 +43,22 @@ namespace batb
 namespace ogre
 {
 
+////////////////////////////////////////////////////////////////////////////////
+//
+void GLContextGLFW::begin()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+    // see the line with _oneTimeContextInitialization();
+    // inside void GLRenderSystem::_switchContext(GLContext *context)
+    setInitialized();   
+}
+
+
+void GLContextGLFW::end()
+{
+debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+
+}
 
 void GLContextGLFW::setCurrent()
 {
@@ -59,7 +75,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
     // apple
 #ifdef BATB_BUILD_PLATFORM_MACOS
-    glfwMakeContextCurrent( batb.env.window );
+    glfwMakeContextCurrent( batb->env->window );
 #endif
     
 }
@@ -75,22 +91,6 @@ Ogre::GLContext* GLContextGLFW::clone() const
     return nullptr;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-void begin(GLContextGLFW& context)
-{
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-    // see the line with _oneTimeContextInitialization();
-    // inside void GLRenderSystem::_switchContext(GLContext *context)
-    context.setInitialized();   
-}
-
-
-void end(GLContextGLFW& )
-{
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
-
-}
 
 
 } // namespace ogre

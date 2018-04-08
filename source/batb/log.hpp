@@ -17,17 +17,39 @@
 //
 #ifndef BATB_LOG_HPP
 #define BATB_LOG_HPP
-#include "batb/log/Log.hpp"
+#include <ostream>
+#include <istream>
+#include "batb/batb_include.hpp"
+
 
 namespace batb
 {
 
-namespace log
+// defining custom std::ostream's:
+// http://www.angelikalanger.com/Articles/C++Report/IOStreamsDerivation/IOStreamsDerivation.html
+
+////////////////////////////////////////////////////////////////////////////////
+// our log object
+
+class Log : public std::ostream,
+            public std::streambuf
 {
+public:
+    Log();
 
+    // std::streambuf
+    virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
+    virtual int overflow (int c) override;
 
-}
+    // these manipulators where difficult to use on a unique_ptr to this!
+    // however, this makes it easy to create formatted output, like indented
+    // logs :)
+    std::ostream& endl();
+    std::ostream& flush();
+    // (here we can add different kind's of methods, like indentation)
+    // ...
+};
 
-}
+} // namespace batb
 
 #endif

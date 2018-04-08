@@ -32,7 +32,7 @@ namespace demo
 class KeySet : public keys::KeySet //, Module
 {
 public:
-    KeySet(BATB& b);
+    KeySet(BATB* b);
 
     // define 'this' from map defined by file
     void load(const std::string& filepath);
@@ -43,7 +43,7 @@ public:
     keys::KeyClicker* map_view_full = nullptr;
 
 
-    BATB& batb;
+    BATB* batb;
 };
 
 } // namespace demo

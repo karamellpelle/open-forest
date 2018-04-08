@@ -18,6 +18,7 @@
 #include "batb.hpp"
 #include "batb/demo/iteration/IterationDemo.hpp"
 #include "batb/demo/World.hpp"
+#include "batb/run/World.hpp"
 
 namespace batb
 {
@@ -26,7 +27,7 @@ namespace batb
 namespace demo
 {
 
-IterationDemo::IterationDemo(BATB& b) : batb( b )
+IterationDemo::IterationDemo(BATB* b) : batb( b )
 {
 
 }

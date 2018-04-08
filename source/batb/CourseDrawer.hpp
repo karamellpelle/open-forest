@@ -18,6 +18,7 @@
 #ifndef BATB_COURSEDRAWER_HPP
 #define BATB_COURSEDRAWER_HPP
 #include "batb/batb_include.hpp"
+#include "batb/gl/GL.hpp"
 
 namespace batb
 {
@@ -28,7 +29,7 @@ class BATB;
 class CourseDrawer
 {
 public:
-    CourseDrawer(BATB& batb);
+    CourseDrawer(BATB* batb);
 
     enum class ObjectType { Empty, Normal, Start, Finish, };
    
@@ -60,7 +61,7 @@ public:
     void finish(const glm::vec3& p)   { finish( glm::vec2( p.x, p.z ) ); }
 
 private:
-    BATB& batb;
+    BATB* batb;
 
 public:
     bool draw(const glm::mat3& , ObjectType );        // draw only this

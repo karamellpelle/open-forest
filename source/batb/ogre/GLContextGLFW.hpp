@@ -38,17 +38,17 @@ namespace ogre
 //
 class GLContextGLFW : public Ogre::GLContext
 {
-friend void begin(GLContextGLFW& );
-friend void end(GLContextGLFW& );
-
 public:
-    GLContextGLFW(BATB& b) : batb( b ) { }
+    GLContextGLFW(BATB* b) : batb( b ) { }
+
+    void begin();
+    void end();
 
     void setCurrent() override;
     void endCurrent() override;
     Ogre::GLContext* clone() const override;
 
-    BATB& batb;
+    BATB* batb;
 
 private:
 
@@ -57,8 +57,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 // 
 
-void begin(GLContextGLFW& );
-void end(GLContextGLFW& );
 
 } // namespace ogre
 

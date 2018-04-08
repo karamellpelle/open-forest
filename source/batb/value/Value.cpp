@@ -16,11 +16,13 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/value/Value.hpp"
+#include "batb/BATB.hpp"
+
+// values are declared here:
 #include "batb/value/forest.hpp"
 #include "batb/value/run.hpp"
 #include "batb/value/tb.hpp"
 #include "batb/value/batb.hpp"
-#include "batb/BATB.hpp"
 
 
 namespace batb
@@ -33,12 +35,19 @@ namespace value
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
-void begin(Value& value)
+void Value::begin(const std::string& path)
 {
-    if ( value.init_empty() )
+    if ( init_empty() )
     {
+        
+        // set configuration file
+        config( path );
 
+        ////////////////////////////////////////////////////////////////////////////////
         // default values:
+        // TODO: use 'yaml' to override values, if defined
+
+        //
         proj3DNear =        0.1;
         proj3DFar =         512.0;
         proj3DFOVY =        1.047;
@@ -84,25 +93,24 @@ void begin(Value& value)
         ////////////////////////////////////////////////////////////////////////////////
         notifyInflate             = 0.5;
 
-        // TODO: use 'Value::yaml', override values, if defined
     }
-    value.init( true );
+    init( true );
 }
 
-void end(Value& value)
+void Value::end()
 {
-    if ( value.init_nonempty() )
+    if ( init_nonempty() )
     {
         // save the configuration to its file
-        value.save();
+        save();
         
     }
-    value.init( false );
+    init( false );
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//
+// TODO: move these into their own files
 
 ////////////////////////////////////////////////////////////////////////////////
 //  run.hpp
@@ -182,7 +190,7 @@ bool Value::set(const std::string& name, const std::string& v)
     TRY_SET_VALUE( forestRunnerAnimSpeedMin );
     
 
-    batb.log << "Value: could not set variable '" << name << "' to " << v << std::endl;
+    batb->log << "Value: could not set variable '" << name << "' to " << v << std::endl;
     return false;
 }
 

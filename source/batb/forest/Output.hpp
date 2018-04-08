@@ -36,7 +36,7 @@ class World;
 class Output : public game::Output<World>
 {
 public:
-    Output(BATB& b) : batb( b )       { }
+    Output(BATB* b) : batb( b )       { }
 
     virtual void operator()(World& ) override;
 
@@ -44,7 +44,7 @@ public:
     // ...
 
 protected:
-    BATB& batb;
+    BATB* batb;
 };
 
 

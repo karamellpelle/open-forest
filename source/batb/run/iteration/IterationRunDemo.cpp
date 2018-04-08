@@ -27,7 +27,7 @@ namespace run
 {
 
 
-IterationRunDemo::IterationRunDemo(BATB& b, demo::World* d) : IterationRun( b ), demo_( d )
+IterationRunDemo::IterationRunDemo(BATB* b, demo::World* d) : IterationRun( b ), demo_( d )
 {
 
 }

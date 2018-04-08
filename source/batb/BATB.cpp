@@ -16,6 +16,16 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "batb/BATB.hpp"
+#include "batb/value/Value.hpp"
+#include "batb/keys/Keys.hpp"
+#include "batb/gl/GL.hpp"
+#include "batb/gui/GUI.hpp"
+#include "batb/al/AL.hpp"
+#include "batb/ogre/OGRE.hpp"
+#include "batb/run/Run.hpp"
+#include "batb/forest/Forest.hpp"
+#include "batb/demo/Demo.hpp"
+#include "env/Env.hpp"
 #include <chrono>
 
 namespace batb
@@ -23,85 +33,122 @@ namespace batb
 
 
 
-BATB::BATB(env::Env& e) :  env( e ), log( *this ), value( *this ), keys( *this ), gl( *this ), gui( *this ), al( *this ), ogre( *this ), 
-                           run( *this ), forest( *this ), demo( *this )
-{
+BATB::BATB() 
+{  
 
+    log    = std::make_unique<Log>();
+    env    = std::make_unique<env::Env>();
+    value  = std::make_unique<value::Value>( this );
+    keys   = std::make_unique<keys::Keys>( this );
+    gl     = std::make_unique<gl::GL>( this );
+    gui    = std::make_unique<gui::GUI>( this );
+    al     = std::make_unique<al::AL>( this );
+    ogre   = std::make_unique<ogre::OGRE>( this );
+    run    = std::make_unique<run::Run>( this );
+    forest = std::make_unique<forest::Forest>( this );
+    demo   = std::make_unique<demo::Demo>( this );
     
 }
 
+// without this, the compiler complaints about missing class definitions because
+// it tries to delete pointers to unknown types
+BATB::~BATB()
+{
+
+}
+
+
 
 // initialize BATB and its core parts
-void begin(BATB& batb)
+void BATB::begin(const std::string& path)
 {
-    if ( batb.init_empty() )
+    if ( init_empty() )
     {
-        // core:
-        batb.value.config(     file::directory( batb.filepath ) + "/value/Value.yaml" );
-        batb.gui.config(       file::directory( batb.filepath ) + "/gui/GUI.yaml" );
-        batb.gl.config(        file::directory( batb.filepath ) + "/gl/GL.yaml" );
-
-        // non-core:
-        batb.ogre.config(      file::directory( batb.filepath ) + "/ogre/OGRE.yaml" );
-        batb.al.config(        file::directory( batb.filepath ) + "/al/AL.yaml" );
-        batb.run.config(       file::directory( batb.filepath ) + "/run/Run.yaml" );
-        batb.forest.config(    file::directory( batb.filepath ) + "/forest/Forest.yaml" );
-        batb.demo.config(      file::directory( batb.filepath ) + "/demo/Demo.yaml" );
+        // set configuration file
+        config( path );
 
 
-        // logging
-        log::begin( batb.log );
+        // FIXME: remove Env!
+        // create and initialize our environment
+        env->config( file::dynamic_data( "env/Env.yaml" ) );
+        env::begin( *env );
 
-        // general values to use 
-        value::begin( batb.value );
-
+        ////////////////////////////////////////////////////////////////////////////////
+        // begin core
+        value->begin( file::directory( filepath() ) + "/value/Value.yaml" );
+        keys->begin(  file::directory( filepath() ) + "/keys/Keys.yaml" );
+        gui->begin(   file::directory( filepath() ) + "/gui/GUI.yaml" );
+        gl->begin(    file::directory( filepath() ) + "/gl/GL.yaml" );
+        al->begin(    file::directory( filepath() ) + "/al/AL.yaml" );
 
         // now configure module from 'yaml'
         // ...
         
+        ////////////////////////////////////////////////////////////////////////////////
+        // (non core initialized later)
 
-
-        // keys
-        keys::begin( batb.keys );
-
-        // gl
-        gl::begin( batb.gl );
-
-        // gui
-        gui::begin( batb.gui );
-        
-        // al
-        al::begin( batb.al );
-
-        // (now the non-core part of BATB is loaded by IterationRunWork)
     }
 
-    batb.init( true );
+    init( true );
     
 }
 
 
 // end BATB and its core parts
-void end(BATB& batb)
+void BATB::end()
 {
-    if ( batb.init_nonempty() )
+    if ( init_nonempty() )
     {
         // save the configuration to file
-        batb.save();
-        
+        save();
+
         // (the non-core part of BATB is unloaded by IterationRunWork)
-        al::end( batb.al );
-        gui::end( batb.gui );
-        gl::end( batb.gl );
-        keys::end( batb.keys );
-        value::end( batb.value );
-        log::end( batb.log );
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // end core part
+        al->end();
+        gui->end();
+        gl->end();
+        keys->end();
+        value->end();
+
+        // FIXME
+        env::end( *env );
     }
 
-    batb.init( false );
+    init( false );
+
+}
+
+// load non-core batb in current thread
+void BATB::beginNonCore()
+{
+    // load Ogre
+    ogre->begin( file::directory( filepath() ) + "/ogre/OGRE.yaml" );
+
+    // load the non-core part of Run
+    run->begin( file::directory( filepath() ) + "/run/Run.yaml" );
+
+    // load Forest
+    forest->begin( file::directory( filepath() ) + "/forest/Forest.yaml" );
+
+    // load demo
+    demo->begin();
 
 }
 
 
+
+void BATB::frameBegin()
+{
+    // tmp!
+    env->frameBegin();
+}
+
+void BATB::frameEnd()
+{
+    // tmp!
+    env->frameEnd();
+}
 
 }

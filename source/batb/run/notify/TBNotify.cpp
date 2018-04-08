@@ -17,8 +17,9 @@
 //
 #include "batb.hpp"
 #include "batb/run.hpp"
+#include "batb/gui/GUI.hpp"
 #include "batb/run/World.hpp"
-#include "batb/run/notify/Notify.hpp"
+#include "batb/run/notify/Notifier.hpp"
 #include "batb/run/notify/TBNotify.hpp"
 #include "batb/value/run.hpp"
 #include "tb/animation/tb_widget_animation.h"
@@ -34,7 +35,7 @@ namespace batb
 namespace run
 {
 
-TBNotify::TBNotify(BATB& b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b.run.notify )
+TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b->run->notifier.get() )
 {
     // set layout parameters
     
@@ -69,7 +70,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb::TBWidget
 {
     using namespace tb;
 
-    BATB& batb = tb_notify->batb;
+    BATB* batb = tb_notify->batb;
 
     // read file as node tree, letting us parse custom nodes for this widget.
     // see tb_widgets_reader.[hc]pp
@@ -94,7 +95,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb::TBWidget
         }
         else
         {
-            batb.log << "TBNotifyMessage: 'edit' not defined\n";
+            batb->log << "TBNotifyMessage: 'edit' not defined\n";
         }
 
         // only input should receive focus
@@ -105,7 +106,7 @@ TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb::TBWidget
     }
     else
     {
-        batb.log << "TBNotify: could not read notifymessage.tb.txt\n" ;
+        batb->log << "TBNotify: could not read notifymessage.tb.txt\n" ;
 
     }
 
@@ -123,7 +124,7 @@ void TBNotify::step(World& run)
     // FIXME: fill to root automatically, SetGravity all
     SetRect( tb::TBRect(0, 0, wth, hth) );
 
-    tick_t tick = batb.env.tick();
+    tick_t tick = batb->env->tick();
     
 
     auto i = std::begin( tb_notify_messages_ );

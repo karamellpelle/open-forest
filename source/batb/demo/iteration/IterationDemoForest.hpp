@@ -48,7 +48,7 @@ class IterationDemoForest : public IterationDemo
 {
 public:
     // construct from the containing BATB
-    IterationDemoForest(BATB& );
+    IterationDemoForest(BATB* );
 
     // iterate
     IterationStack iterate_demo(World& world) override;
