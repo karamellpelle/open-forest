@@ -15,12 +15,13 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "batb/BATB.hpp"
+#include "batb/Log.hpp"
 #include "batb/run/console/TBConsole.hpp"
 #include "batb/run/console/Console.hpp"
 #include "batb/run/Run.hpp"
 #include "tb/tb_widgets_common.h"
 #include "tb/tb_editfield.h"
-#include "batb.hpp"
 
 namespace batb
 {
@@ -28,6 +29,13 @@ namespace batb
 namespace run
 {
 
+// for some very weird reason, this had to be redefined inside the 'batb::run' namespace!!!
+// cf. Ogre module which works fine!!
+inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const std::string& str)
+{
+    return operator<<( *l, str );
+}
+  
 TBConsole::TBConsole(BATB* b) : batb( b )
 {
     using namespace tb;

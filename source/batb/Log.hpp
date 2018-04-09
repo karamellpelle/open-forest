@@ -15,9 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_LOG_LOG_HPP
-#define BATB_LOG_LOG_HPP
-#include "batb/batb_include.hpp"
+#ifndef BATB_LOG_HPP
+#define BATB_LOG_HPP
 #include "batb/ModuleBATB.hpp"
 
 
@@ -31,23 +30,18 @@ namespace log
 // defining custom std::ostream's:
 // http://www.angelikalanger.com/Articles/C++Report/IOStreamsDerivation/IOStreamsDerivation.html
 
-// our stream buffer
-class LogStreamBuf : public std::streambuf
+
+class Log : public std::ostream, public std::streambuf
 {
-public: 
+public:
+    Log();
+
+
     virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
     virtual int overflow (int c) override;
-};
 
-
-class Log : public ModuleBATB, public std::ostream
-{
-friend void begin(Log& log);
-friend void end(Log& log);
-
-public:
-    Log(BATB& b) : ModuleBATB( b ), std::ostream( &streambuf_ ) { }
-
+    std::ostream& endl();
+    std::ostream& flush();
 
     // TODO: tag messages
     //std::ostream& info();
@@ -58,7 +52,6 @@ public:
     //std::ostream& operator<<(std::ostream&) { return std::cout; }
 
 private:
-    LogStreamBuf streambuf_;
 
     // TODO:
     //std::ostream* os_; // from definition.
@@ -67,12 +60,18 @@ private:
 
 
 
-void begin(Log& log);
-
-void end(Log& log);
-
 
 } // namespace log
+//template <typename T>
+//std::ostream& operator<<(std::unique_ptr<log::Log>& l, const T& t)
+//{
+//    return l->operator<<( t );
+//}
+//inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const std::string& str)
+//{
+//    return operator<<( *l, str );
+//}
+
 
 } // namespace batb
 

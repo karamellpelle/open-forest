@@ -27,6 +27,7 @@ namespace batb
 {
 
 
+namespace log    { class Log; };
 namespace value  { class Value; };
 namespace keys   { class Keys; };
 namespace gl     { class GL; };
@@ -62,7 +63,7 @@ public:
     void frameEnd();
 
     // 
-    std::unique_ptr<Log>              log;
+    std::unique_ptr<log::Log>         log;
 
     // our environment
     // TODO: remove and merge into BATB
@@ -93,11 +94,11 @@ public:
 
 // make sure we can use pointer (i.e. unique_ptr) to log as ostream
 template <typename T>
-inline std::ostream& operator<<(std::unique_ptr<Log>& l, const T& t)
+inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const T& t)
 {
     return l->operator<<( t );
 }
-inline std::ostream& operator<<(std::unique_ptr<Log>& l, const std::string& str)
+inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const std::string& str)
 {
     return operator<<( *l, str );
 }

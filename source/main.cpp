@@ -67,6 +67,7 @@ int main(int argc, char** argv)
         run::World run;
 
         // who is playing this game?
+        // TODO: batb->getPlayer()
         run.player = run::local_player();
 
 #ifdef LOAD_NONCOREBATB_ON_MAIN_THREAD

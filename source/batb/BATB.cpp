@@ -25,6 +25,7 @@
 #include "batb/run/Run.hpp"
 #include "batb/forest/Forest.hpp"
 #include "batb/demo/Demo.hpp"
+#include "batb/Log.hpp"
 #include "env/Env.hpp"
 #include <chrono>
 
@@ -36,8 +37,8 @@ namespace batb
 BATB::BATB() 
 {  
 
-    log    = std::make_unique<Log>();
     env    = std::make_unique<env::Env>();
+    log    = std::make_unique<log::Log>();
     value  = std::make_unique<value::Value>( this );
     keys   = std::make_unique<keys::Keys>( this );
     gl     = std::make_unique<gl::GL>( this );
@@ -75,6 +76,7 @@ void BATB::begin(const std::string& path)
 
         ////////////////////////////////////////////////////////////////////////////////
         // begin core
+        //log->begin();
         value->begin( file::directory( filepath() ) + "/value/Value.yaml" );
         keys->begin(  file::directory( filepath() ) + "/keys/Keys.yaml" );
         gui->begin(   file::directory( filepath() ) + "/gui/GUI.yaml" );

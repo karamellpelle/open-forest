@@ -26,6 +26,7 @@
 
 
 
+
 namespace batb
 {
 
@@ -44,6 +45,7 @@ Run::Run(BATB* b) : ModuleBATB( b )
     keyset           = std::make_unique<KeySet>( b );
     iterationRunOld  = std::make_unique<IterationRunOld>( b );
     iterationRunMain = std::make_unique<IterationRunMain>( b );
+    events           = std::make_unique<EventList>();
 }
 
 Run::~Run()

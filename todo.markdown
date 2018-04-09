@@ -2,8 +2,15 @@ filepath and Module config
 See OSXCocoaCOntext::clone() for how threading is done!
 
 # TODO
-* **!!! BATB modules using pointers to each others to prevent recompilation while
-  changing one header !!!**
+* better naming folders/files
+* namespaces for submodules?
+* forward declaration: all submodules batb. 
+* submodule: include all parts except world (forward declare)
+* world include all parts
+* 1 lib: game
+* 1 lib: file
+* Env into BATB!
+* create global variable 'batb'!
 * fix segfault (from Ogre) during shutdown on other thread
 * use metric system for terrain and all models!!!
 * Notify and Console from run::Run into BATB ??
@@ -15,7 +22,6 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * remove template LoadWorker
 * IterationRunWork and TB
 * remove _emptylist_
-* create global variable 'batb'!
 
 * rename `float_t` ?  `floating_t` ? because `float_t` is found in other c libs
 * define precision of glm (vec, mat, etc) the same as float_t 
