@@ -80,21 +80,20 @@ private:
 };
 
 
-template <typename T>
-std::ostream& operator<<(std::unique_ptr<Console>& l, const T& t)
-{
-    return l->operator<<( t );
-}
-inline std::ostream& operator<<(std::unique_ptr<Console>& l, const std::string& str)
-{
-    return operator<<( *l, str );
-}
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 } // namespace run
+
+// make sure we can use pointer (i.e. unique_ptr) to log as ostream
+template <typename T>
+inline std::ostream& operator<<(std::unique_ptr<run::Console>& l, const T& t)
+{
+    return (*l) << t;
+}
+
 
 } // namespace batb
 

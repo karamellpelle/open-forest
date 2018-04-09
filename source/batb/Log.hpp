@@ -24,9 +24,6 @@ namespace batb
 {
 
 
-namespace log
-{
-
 // defining custom std::ostream's:
 // http://www.angelikalanger.com/Articles/C++Report/IOStreamsDerivation/IOStreamsDerivation.html
 
@@ -61,7 +58,6 @@ private:
 
 
 
-} // namespace log
 //template <typename T>
 //std::ostream& operator<<(std::unique_ptr<log::Log>& l, const T& t)
 //{

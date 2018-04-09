@@ -23,9 +23,6 @@
 
 namespace batb
 {
-namespace log
-{
-
 
 Log::Log() : std::ostream( this )
 {
@@ -61,5 +58,4 @@ int Log::overflow (int c)
 
 
 
-} // namespace log
 } // namespace batb

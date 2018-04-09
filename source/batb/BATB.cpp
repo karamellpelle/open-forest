@@ -38,7 +38,7 @@ BATB::BATB()
 {  
 
     env    = std::make_unique<env::Env>();
-    log    = std::make_unique<log::Log>();
+    log    = std::make_unique<Log>();
     value  = std::make_unique<value::Value>( this );
     keys   = std::make_unique<keys::Keys>( this );
     gl     = std::make_unique<gl::GL>( this );

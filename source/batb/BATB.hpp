@@ -63,7 +63,7 @@ public:
     void frameEnd();
 
     // 
-    std::unique_ptr<log::Log>         log;
+    std::unique_ptr<Log>         log;
 
     // our environment
     // TODO: remove and merge into BATB
@@ -94,24 +94,11 @@ public:
 
 // make sure we can use pointer (i.e. unique_ptr) to log as ostream
 template <typename T>
-inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const T& t)
+inline std::ostream& operator<<(std::unique_ptr<Log>& l, const T& t)
 {
-    return l->operator<<( t );
-}
-inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const std::string& str)
-{
-    return operator<<( *l, str );
+    return (*l) << t;
 }
 
-// I wasn't able to make these compile, hence I create helper functions!
-//std::ostream& operator<<(std::unique_ptr<Log>& l, std::ios& (*pf)(std::ios&))
-//{
-//    return l->operator<<( pf );
-//}
-//std::ostream& operator<<(std::unique_ptr<Log>& l, std::ios_base& (*pf)(std::ios_base&))
-//{
-//    return l->operator<<( pf );
-//}
 } // namespace batb
 
 

@@ -29,12 +29,6 @@ namespace batb
 namespace run
 {
 
-// for some very weird reason, this had to be redefined inside the 'batb::run' namespace!!!
-// cf. Ogre module which works fine!!
-inline std::ostream& operator<<(std::unique_ptr<log::Log>& l, const std::string& str)
-{
-    return operator<<( *l, str );
-}
   
 TBConsole::TBConsole(BATB* b) : batb( b )
 {
