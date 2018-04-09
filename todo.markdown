@@ -9,7 +9,10 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * world include all parts
 * 1 lib: game
 * 1 lib: file
+* better value
 * Env into BATB!
+* merge include.h
+* gl.hpp -> gl/GL.hpp
 * create global variable 'batb'!
 * fix segfault (from Ogre) during shutdown on other thread
 * use metric system for terrain and all models!!!
