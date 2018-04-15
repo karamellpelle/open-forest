@@ -1,0 +1,6 @@
+fullscreen: false
+size: {wth: 800, hth: 400}
+decorate: true
+multisamples: 4
+hints: ~
+title: !<!> "https://github.com/karamellpelle/open-forest"

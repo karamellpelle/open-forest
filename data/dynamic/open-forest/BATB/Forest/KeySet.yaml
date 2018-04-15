@@ -1,0 +1,12 @@
+# define keys, like:
+
+forward:  { type: KeyButton, code: GLFW_KEY_W }
+backward: { type: KeyButton, code: GLFW_KEY_S }
+left:     { type: KeyButton, code: GLFW_KEY_A }
+right:    { type: KeyButton, code: GLFW_KEY_D }
+aim:
+    axis_x: { type: KeyMouseAxisX }
+    axis_y: { type: KeyMouseAxisY }
+    left:   { type: KeyMouseButtonLeft }
+    right:  { type: KeyMouseButtonRight }
+

@@ -1,0 +1,20 @@
+skin Console
+TBLayout
+	
+	distribution available
+	axis y
+
+	TBEditField: id: "output"
+		# TODO: override scroll bar widget
+		skin Console.output
+		skin 0
+		gravity all
+		multiline 1
+		readonly 1
+	TBCommandline			# custom subclass of TBEditField
+		skin Console.input
+		id: "input"
+		gravity all
+		adapt-to-content 1
+
+
