@@ -60,6 +60,7 @@ function do_usage()
 ################################################################################
 #   main
 
+
 if [ "$#" -eq 0 ] ; then
     # build program, default
     echo ""

@@ -1,0 +1,116 @@
+                                     Game   show    count  show    show  setting    typing    show     show
+                                     off   progres  down   terrain map   location   message   routes   dialogs
+
+
+esc toggle dialogs                   X                     X                          X        X
+space toggle terrain/map                                   X
+t type message                       X                     X                          X
+h help                               X                     X                          X 
+f show fps (terrain view)            X                     X
+l show location (map view)
+r show route (map view)
+s set location (map view)
+left mouse move (terrain view, game on)
+right mouse look around (terrain view)
+left mouse move map (map view)
+right mouse rotate map (map view)
+both mouse zoom map (map view)
+
+Actions:
+toggle dialogs
+toggle terrain/map
+type message
+toggle help
+toggle show fps
+
+run forward
+look around
+
+move map
+rotate map
+zoom map
+show location
+show route
+set location
+
+
+Show dialogs
+
+Typing message
+
+Game off
+     show terrain
+     show progress
+     countdown
+
+Game on
+     show terrain
+     show map
+     setting location
+
+Show routes
+     show map with routes
+
+
+
+Game off
+  display: Show terrain
+  key: no toggle between terrain and map allowed
+  mouse: looking around ok, but no moving 
+
+show progress
+  display: generateMapDisplayFn, generateTerrainDisplayFn
+  keys: not allowed
+  mouse: not allowed
+
+countdown
+
+Game on
+  display: 
+    Show terrain
+    key: esc, space, f, t, h
+    Show map
+  key: toggle between terrain and map ok
+  mouse: full movements
+
+setting location
+  display: show map
+  key: no toggle between terrain and map allowed
+  mousekey: only left button allowed to set location
+
+typing message
+  key: allowed keys esc, enter
+
+show routes
+  display: show map with routes
+  key: no toggle between terrain and map allowed
+  key: no show location, route or set location allowed
+
+show dialogs
+  mouse: no mouse to game allowed, direct mouse to gui
+
+
+Display functions:
+  show map
+  show map with routes
+  show terrain
+  progress (gen terrain, gen map)
+
+Keyboard
+MouseKey
+MouseMotion
+
+esc toggle dialogs
+space toggle terrain/map
+t type message
+h help
+f show fps (terrain view only)
+l show location (map view only)
+r show route (map view only)
+s set location (map view only)
+left mouse move
+right mouse look around
+left mouse move map
+right mouse rotate map
+both mouse zoom map
+

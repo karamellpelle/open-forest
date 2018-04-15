@@ -1,0 +1,43 @@
+there is limitation in terrain generation parameters set by xmountains. enforce the limitation in gui
+store run routes in separate files, and load them on demand. because they can be very big.
+add presets buttons to new terrain dialog to set the gen params to preset values
+
+in multiplayer game start, each player is in same locations, making them see the inside each others heads. Alter locations slightly (in JoinAccept?)
+after multiplayer game is finished, send the results to all players
+
+valgrind
+compile in windows, freebsd, osx
+
+create web pages
+
+DONE:
+when game is not on, enable looking around horizontally as well
+Disable movements when dialogs are displayed
+enable viewing the routes of finished runs
+load and store preferences
+add Quick create button to events dialog
+
+multiplayer join game, do the dropdown box for the hostname holding five last hostnames
+When singleplayer run is finished, show dialog saying "Save this run?" if answer is yes, save the run in DB
+When quitting sinlgeplayer game, show the same dialog.
+In event, terrain, map etc names, check for spaces and do not accept them
+
+
+
+disconnecting
+-------------
+
+how can it happen:
+1) server exits (Ctrl-C)
+2) server kicks
+3) stop server 
+4) user wants to disconnect
+c->s discReq
+s->c discConf
+
+what needs to be done:
+Pop the topmost dialog 
+unregister the dialog as client observer
+Push dialog informing about being disconnected
+delete tcpClient
+unregister socket from fdManager
