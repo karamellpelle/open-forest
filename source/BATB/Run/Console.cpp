@@ -148,6 +148,7 @@ bool Console::cmd(const std::string& input)
     if ( cmd == "" )          return true;                    // empty command is OK
     if ( cmd == "echo" )      return cmd_echo( batb, in );   
     if ( cmd == "value" )     return cmd_value( batb, in );
+    if ( cmd == ":quit" )     return cmd_quit( batb, in );
 
 
     *this << "Console: command not found: " << cmd << std::endl;

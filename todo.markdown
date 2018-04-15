@@ -12,6 +12,7 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * fix segfault (from Ogre) during shutdown on seperate thread
 * uppercase Run/Event.hpp, etc
 * begin/end iterations
+* `using float_t = double_t;` in include
 * forestworld: loading
 * use metric system for terrain and all models!!!
 * Notify and Console from run::Run into BATB ??

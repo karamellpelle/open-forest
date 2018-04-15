@@ -18,6 +18,7 @@
 #include "BATB/Run.hpp"
 #include "BATB/Run/Console.hpp"
 #include "BATB/Run/Console/parse.hpp"
+#include "BATB/Run/events.hpp"
 
 
 
@@ -49,6 +50,11 @@ bool cmd_echo(BATB* batb, std::string& in)
     
 }
 
+bool cmd_quit(BATB* batb, std::string& in)
+{
+    batb->run->pushEvent( event::Do::Exit );
+    return true;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 

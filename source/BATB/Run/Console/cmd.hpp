@@ -33,6 +33,7 @@ using CommandEater = bool(BATB* , std::string& );
 
 CommandEater cmd_echo;
 CommandEater cmd_value;
+CommandEater cmd_quit;
 
 
 } // namespace run
