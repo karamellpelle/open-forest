@@ -90,6 +90,18 @@ void Screen::begin(const std::string& path)
         if ( YAML::Node node = yaml[ "fullscreen" ] )
         {
             glfw_monitor = node.as<bool>( fullscreen ) ? glfwGetPrimaryMonitor() : 0;
+
+            // if we create a fullscreen window, let us use the display's resolution
+            if ( glfw_monitor )
+            {
+                if ( auto mode = glfwGetVideoMode( glfw_monitor ) )
+                {
+                    wth = mode->width;
+                    hth = mode->height;
+
+                    batb->log << "fullscreen; using window size " << wth << "x" << hth << std::endl;
+                }
+            }
         }
 
         // multisamples
@@ -137,6 +149,8 @@ void Screen::end()
 {
     if ( init_nonempty() )
     {
+        ////////////////////////////////////////////////////////////////////////////////
+        // TODO: write values from current settings into 'yaml' before saving
         save();
 
         ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 fullscreen: false
-size: {wth: 800, hth: 400}
+size: {wth: 1024, hth: 700 }
 decorate: true
 multisamples: 4
 hints: ~

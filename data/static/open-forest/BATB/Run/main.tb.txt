@@ -1,4 +1,11 @@
 TBLayout
+	axis y
+
+	# create logo
+	TBImageWidget: id: open-forest-logo, filename: "static://BATB/openforest-512x256.png" skin: 0
+		#TBTextField: skin: "ImageCaption", text: "nanovg", gravity: bottom left right
+
+	# buttons
 	TBWidget
 		skin 0
 		TBLayout
@@ -24,13 +31,13 @@ TBLayout
 			# set font for this and children
 			#font: size: 28px
 				
-			TBImageWidget: id: do-nanovg, filename: "static://batb/run/trollveggen128.png" skin: 0
+			TBImageWidget: id: do-nanovg, filename: "static://BATB/Run/eyes-180.png" skin: 0
 				TBTextField: skin: "ImageCaption", text: "nanovg", gravity: bottom left right
-			TBImageWidget: id: do-demo-forest, filename: "static://batb/run/trollveggen128.png" skin: 0
-				TBTextField: skin: "ImageCaption", text: "demo-forest", gravity: bottom left right
-			TBImageWidget: id: do-old, filename: "static://batb/run/haskell128.png" skin: 0
+			TBImageWidget: id: do-demo-forest, filename: "static://BATB/Run/compass-180.png" skin: 0
+				TBTextField: skin: "ImageCaption", text: "ogre", gravity: bottom left right
+			TBImageWidget: id: do-old, filename: "static://BATB/Run/control-180.png" skin: 0
 				TBTextField: skin: "ImageCaption", text: "old", gravity: bottom left right
-			TBImageWidget: id: do-exit, filename: "static://batb/run/haskell128.png" skin: 0
+			TBImageWidget: id: do-exit, filename: "static://BATB/Run/power-180.png" skin: 0
 				TBTextField: skin: "ImageCaption", text: "exit", gravity: bottom left right
 
 

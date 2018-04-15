@@ -107,10 +107,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
     ////////////////////////////////////////////////////////////////////////////////
     // *** output ***
 
-    // draw background
-    demo::background( batb, run );
-
-
     ////////////////////////////////////////////////////////////////////////////////
     // grab and clean up events (must be done between output and step!)
     beginEvents( run );
