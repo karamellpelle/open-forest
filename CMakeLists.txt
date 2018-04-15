@@ -255,114 +255,98 @@ list( APPEND ALURE_INCLUDE_DIRS "${LIBS_SOURCE_DIR}/alure/include" )
 
 
 ################################################################################
-# lib-file
-add_library(  lib-file STATIC 
-              "${MAIN_SOURCE_DIR}/file.cpp"
-           )
-target_include_directories( lib-file PUBLIC "${MAIN_SOURCE_DIR}" )
-################################################################################
-
-################################################################################
-# lib-env
-find_package( OpenGL )
-add_library(  lib-env STATIC
-              "${MAIN_SOURCE_DIR}/env/Env.cpp"
-           )
-target_include_directories( lib-env PUBLIC "${MAIN_SOURCE_DIR}" )
-target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
-target_include_directories( lib-env PUBLIC "${LIBS_SOURCE_DIR}/glfw/include" )
-target_include_directories( lib-env PUBLIC ${Boost_INCLUDE_DIRS} )
-
-target_link_libraries( lib-env yaml-cpp )
-################################################################################
-
-
 
 
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
-      "${MAIN_SOURCE_DIR}/main.cpp"
+      "${MAIN_SOURCE_DIR}/BATB.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/AL.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/CourseDrawer.cpp"             
+      "${MAIN_SOURCE_DIR}/BATB/Demo.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Course.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/CourseCurve.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Iteration/IterationDemo.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Iteration/IterationDemoForest.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Output.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/al.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.c"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.c"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/other.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/workers.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Control.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Iteration/IterationForest.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyCamera.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyControlCamera.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyControlRunner.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyRunner.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Output.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Runner.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/StepDT.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Weather.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/World.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GL.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_file_BATB.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_system_BATB.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/widgets/TBProgressBarWidget.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Log.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Player.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/BeginEvents.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/TBConsole.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/cmd/cmd_easteregg.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/cmd/cmd_echo.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/cmd/cmd_value.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRun.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunDemo.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunMain.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunMain/TBMain.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunOld.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunWork.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunWork/RunWorkTBWidget.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/KeySet.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Notifier.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Notifier/TBNotify.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/World.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/workers.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Screen.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Time.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/values.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/tb.cpp"             
       "${MAIN_SOURCE_DIR}/Module.cpp"
-      "${MAIN_SOURCE_DIR}/batb/BATB.cpp"
-      "${MAIN_SOURCE_DIR}/batb/Log.cpp"
-      # BATB core:
-      "${MAIN_SOURCE_DIR}/batb/value/Value.cpp"
-      "${MAIN_SOURCE_DIR}/batb/keys/Keys.cpp"
-      "${MAIN_SOURCE_DIR}/batb/keys/KeySet.cpp"
-      "${MAIN_SOURCE_DIR}/batb/keys/KeyClicker.cpp"
-      "${MAIN_SOURCE_DIR}/batb/keys/KeyPointer.cpp"
-      "${MAIN_SOURCE_DIR}/batb/gui/GUI.cpp"
-      "${MAIN_SOURCE_DIR}/batb/gui/widgets/TBProgressBarWidget.cpp"
-      "${MAIN_SOURCE_DIR}/batb/gui/tb_system_batb.cpp"
-      "${MAIN_SOURCE_DIR}/batb/gui/tb_file_batb.cpp"
-      "${MAIN_SOURCE_DIR}/batb/gl/GL.cpp"
-      "${MAIN_SOURCE_DIR}/batb/al/AL.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/Run.cpp"
-
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRun.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunWork/RunWorkTBWidget.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/workers.cpp"
-      # BATB non-core:
-      "${MAIN_SOURCE_DIR}/batb/ogre/OGRE.cpp"
-      "${MAIN_SOURCE_DIR}/batb/ogre/GLContextGLFW.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/World.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/Player.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/KeySet.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/console/Console.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/console/TBConsole.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_echo.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_value.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/console/cmd/cmd_easteregg.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/notify/Notifier.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/notify/TBNotify.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/BeginEvents.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunOld.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunDemo.cpp"
-      "${MAIN_SOURCE_DIR}/batb/run/iteration/IterationRunMain/TBMain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Forest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/KeySet.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/World.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Weather.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Terrain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/BeginEvents.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/ModifyCamera.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/ModifyRunner.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlCamera.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/ModifyControlRunner.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Output.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/StepDT.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Runner.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/Control.cpp"
-      "${MAIN_SOURCE_DIR}/batb/forest/iteration/IterationForest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemo.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/iteration/IterationDemoForest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/workers.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/BeginEvents.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/Output.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/Demo.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/KeySet.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/Course.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/CourseCurve.cpp"
-      # 
-      "${MAIN_SOURCE_DIR}/batb/CourseDrawer.cpp"             
-
-      ## helpers
-      "${MAIN_SOURCE_DIR}/batb/gl.cpp"             
-      "${MAIN_SOURCE_DIR}/batb/tb.cpp"             
+      "${MAIN_SOURCE_DIR}/File.cpp"
+      "${MAIN_SOURCE_DIR}/main.cpp"
 
       ## nanovg
+      ## TODO: make cmake library
       "${CMAKE_SOURCE_DIR}/libs/nanovg/src/nanovg.c"
+
       ## demo:
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/demo.c"
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg/perf.c"
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/nanovg.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/ogre.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/libs/al.cpp"
-      "${MAIN_SOURCE_DIR}/batb/demo/other.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.c"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.c"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/al.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/other.cpp"
       
    )
 
@@ -371,57 +355,57 @@ set(  BATB_SOURCES
 #
 
 set(  BATB_SOURCES_OLD 
-      "${MAIN_SOURCE_DIR}/batb/old/old.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/calcalt.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/client.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/common.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/control.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/course.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/database.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgCommon.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgCourse.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgEvent.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgHost1.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgHost2.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin1.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgJoin2.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgMap.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgMenu.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgOptions.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgOrienteer.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgPlayers.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgResult.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgSelect.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgSingle.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgStack.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/dlgTerrain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/event.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/eventproxy.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/fdManager.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/forest.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/global.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/map.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/mapproxy.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/md5.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/mesh.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/message.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/noise.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/orienteer.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/oriproxy.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/point.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/random.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/run.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/server.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/shader.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/terrain.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/terrainproxy.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/texture.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/util.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/windowMessage.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/xmlParser.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/xmountains.cpp"
-      "${MAIN_SOURCE_DIR}/batb/old/mainWindow.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/old.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/calcalt.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/client.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/common.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/control.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/course.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/database.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgCommon.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgCourse.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgEvent.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgHost1.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgHost2.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgJoin1.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgJoin2.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgMap.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgMenu.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgOptions.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgOrienteer.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgPlayers.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgResult.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgSelect.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgSingle.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgStack.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/dlgTerrain.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/event.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/eventproxy.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/fdManager.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/forest.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/global.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/mainWindow.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/map.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/mapproxy.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/md5.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/mesh.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/message.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/noise.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/orienteer.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/oriproxy.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/point.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/random.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/run.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/server.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/shader.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/terrain.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/terrainproxy.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/texture.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/util.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/windowMessage.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/xmlParser.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/xmountains.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/old/mainWindow.cpp"
    )
 
 
@@ -432,28 +416,22 @@ set(  BATB_SOURCES_OLD
 if ( BATB_BUILD )
 
 
-    # can we build old code?
-    find_package( Plib )
-    if ( PLIB_FOUND )
-        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
-    else()
-        message( WARNING "Plib (needed for BATB_BUILD_OLD) not found. skipping build of old code" )
-        set( BATB_BUILD_OLD OFF )
-    endif()
-
     ############################################################################
     # old
     if( BATB_BUILD_OLD )
-        list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+        find_package( Plib )
+        if ( PLIB_FOUND )
+            list( APPEND BATB_SOURCES ${BATB_SOURCES_OLD} )
+        else()
+            message( WARNING "Plib (needed for BATB_BUILD_OLD) not found. skipping build of old code" )
+            set( BATB_BUILD_OLD OFF )
+        endif()
     endif( BATB_BUILD_OLD )
+
     ############################################################################
-
-    #set( BATB_SOURCES "${MAIN_SOURCE_DIR}/main.cpp" )
-
     # create executable target 'open-forest'
     add_executable( open-forest ${BATB_SOURCES} ) 
     
-
 
     # define target properties
     set_target_properties( open-forest PROPERTIES OUTPUT_NAME "open-forest" )
@@ -517,12 +495,6 @@ if ( BATB_BUILD )
     # ALURE
     list( APPEND BATB_LIBRARIES ${ALURE_LIBRARIES} )
     target_include_directories( open-forest PRIVATE ${ALURE_INCLUDE_DIRS} )
-
-    # lib-file
-    list( APPEND BATB_LIBRARIES lib-file )
-
-    # lib-env
-    list( APPEND BATB_LIBRARIES lib-env )
 
     ############################################################################
     # old-BATB
