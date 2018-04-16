@@ -76,9 +76,6 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // point Keys to GUI 
     batb->gui->bind( batb->keys.get() );
 
-    // Ogre demo
-    //demo::ogre::demo_begin( batb );
-
     // nanovg demo
     demo::nanovg::demo_begin( batb );
 
@@ -88,14 +85,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
     // make GUI visible
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
-    std::cout << std::endl
-              << "tab     => toggle console" << std::endl
-              << std::endl;
+    std::cout << std::endl << "use [tab] to toggle console" << std::endl; // TODO: implement Key name
 
-    NotifyMessage msg( "Use Tab to toggle console" ); // here it would be nice to use run->keyset.>console->to_str() which makes a TB widget for us
-    msg.duration = 8;
+    NotifyMessage msg( "Hint: use [tab] to toggle console" );
+    msg.duration = 8.0;
     batb->run->notifier->message( msg );
-
+    // ^ here it would be nice to use convert Key to a TB widget inside text. TB has this 
+    //   functionality to insert widgets in text, actually
 
 }
 
@@ -141,8 +137,6 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             {
             case event::Do::DemoForest:
             {
-                batb->run->console->cmd( R"(echo "event: do-demo-forest")" );
-
                 // remove main widget from screen
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
@@ -163,20 +157,17 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             }    
             case event::Do::NanoVG:
             {
-                batb->run->console->cmd( R"(echo "do-nanovg")" );
-
+                // nanovg on/off
                 demo::nanovg::demo_toggle();
 
                 // tmp
-                NotifyMessage msg( "this is a notification :)" );
+                NotifyMessage msg( "FYI: nanovg toggled." );
                 msg.duration = 5.0;
                 batb->run->notifier->message( msg );
                 break;
             }
             case event::Do::Old:
             {
-                batb->run->console->cmd( R"(echo "do-old")" );
-
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
                 return {  game::begin_iteration( batb->run->iterationRunOld ), 
@@ -184,8 +175,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
             }
             case event::Do::Exit:
             {
-                batb->run->console->cmd( R"(echo "do-exit")" );
-
+                // finish this iteration, IterationRunMain
                 return _emptylist_;
             }
             }

@@ -3,10 +3,8 @@ See OSXCocoaCOntext::clone() for how threading is done!
 
 
 # TODO
-* world include all parts
-* 1 lib: game
-* 1 lib: file
-* create global variable 'batb'!
+* DebugGroup destructor
+* create global variable 'batb'?
 * World::load -> World::begin?
 * fix nanovg+ogre debug errors! `NVG_DEBUG`
 * fix segfault (from Ogre) during shutdown on seperate thread
@@ -14,6 +12,7 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * begin/end iterations
 * `using float_t = double_t;` in include
 * forestworld: loading
+* mouse scrolling, map. KeyScroll : [-1,1]
 * use metric system for terrain and all models!!!
 * Notify and Console from run::Run into BATB ??
 * language files

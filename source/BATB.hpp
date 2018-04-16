@@ -20,7 +20,9 @@
 #include "include.hpp"
 #include "Module.hpp"
 #include "BATB/Log.hpp"
+#include "BATB/LogIndent.hpp"
 #include "BATB/Event.hpp"
+
 
 
 namespace batb

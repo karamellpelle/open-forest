@@ -51,6 +51,18 @@ int main(int argc, char** argv)
         // TMP: demo
         batb::demo::other_begin( batb.get() ); 
 
+        
+        batb->log << u8"✨ M E N U ✨" << std::endl;
+        {
+            LogIndent indent( batb->log, u8"✅  " );
+            batb->log << "run nanovg demo" << std::endl;
+            batb->log << "run terrain rendering demo" << std::endl;
+            batb->log << "run old (may not be built into application)" << std::endl;
+            batb->log->prefix( "❌  " );
+            batb->log << "exit" << std::endl;
+        }
+        
+
         // this is the application world
         run::World run;
 

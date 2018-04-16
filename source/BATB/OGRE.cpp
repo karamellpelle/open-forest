@@ -50,6 +50,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
         // set configuration file
         config( path );
+        //LogIndent( batb->log, "Ogre::begin()", "-> " );
 
         ////////////////////////////////////////////////////////////////////////////////
         // setup Ogre

@@ -32,7 +32,7 @@ class Log : public std::ostream, public std::streambuf
 public:
     Log();
 
-
+    // subclassing
     virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
     virtual int overflow (int c) override;
 
@@ -44,14 +44,34 @@ public:
     //std::ostream& error();
     //
 
-    // TMP:
-    //std::ostream& operator<<(std::ostream&) { return std::cout; }
+    // push / pop indentation
+    void indentPush();
+    void indentPop();
+    // sett next indentation width
+    void indentWidth(uint );
+
+    // prefix before each new line
+    void prefix(const std::string& ); 
+    std::string prefix() const; 
+
+    static constexpr uint default_indent_wth = 4;
 
 private:
+    
+    std::streamsize my_sputn(const char* s, std::streamsize n); 
 
-    // TODO:
-    //std::ostream* os_; // from definition.
-    //uint line_indentation_ = 0;
+    uint indent_wth_ = default_indent_wth;
+
+    std::vector<uint> indents_;
+    std::string prefix_;
+
+    // are we on the beginning of a new line?
+    bool newline_ = true;
+
+    // what to do when encoutering empty lines
+    bool indent_newline_        = true; // ident the empty line?
+    bool indent_newline_prefix_ = true; // add the prefix too, if we are indenting an empty line?
+
 };
 
 
