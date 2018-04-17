@@ -27,6 +27,9 @@ namespace batb
 Log::Log() : std::ostream( this )
 {
 
+    // we want bool output for our log through whole program
+    (*this) << std::boolalpha;
+
 }
 
 //std::ostream& Log::endl()

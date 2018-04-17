@@ -43,6 +43,8 @@ using namespace Ogre;
 
 void OGRE::begin(const std::string& path)
 {
+    batb->log << "batb->ogre->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
@@ -55,30 +57,35 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         ////////////////////////////////////////////////////////////////////////////////
         // setup Ogre
         //
-
+        
         // control the log output from Ogre by creating the LogManager ourselves,
         // before creating Ogre::Root
 debug::gl::msg( "OGRE_NEW LogManager" );
         ogre_logmanager = OGRE_NEW Ogre::LogManager();
-        ogre_logmanager->createLog( file::tmp( "openforest-ogre.log" ), true, false, false );
-
+        auto logpath = file::tmp( "openforest-ogre.log" );
+        ogre_logmanager->createLog( logpath, true, false, false );
         // set detail level 
         ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
+        batb->log << "Ogre::LogManager created at " << logpath << std::endl;
+
 
         ////////////////////////////////////////////////////////////////////////////////
         // create Ogre ogre_root object
 debug::gl::msg( "OGRE_NEW Root" );
         ogre_root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
+        batb->log << "Ogre::Root created" << std::endl;
        
         ////////////////////////////////////////////////////////////////////////////////
         // add plugins (ogre_rendersystem, scene managers, ...)
-        batb->log << "OGRE: loading plugins:" << std::endl;
+        batb->log << "loading plugins:" << std::endl;
         if ( YAML::Node plugins = yaml[ "plugins" ] )
         {
+            LogIndent indent( batb->log, "- " );
+            
             for (auto i = std::begin( plugins ); i != std::end( plugins ); ++i )
             {
                 std::string plugin = i->as<std::string>();
-                batb->log << "  " << plugin;
+                batb->log << plugin;
                 
                 try
                 {
@@ -88,14 +95,16 @@ debug::gl::msg( os.str() );
                 }
                 catch (Ogre::Exception& e)
                 {
-                    batb->log << " (" << e.what() << " )";
+                    batb->log << " (ERROR: " << e.what() << " )";
                 }
 
-                batb->log << "\n";
+                batb->log << "" << std::endl;
             }
         }
         else
         {
+            batb->log << "ERROR: no 'plugins' defined in .yaml" << std::endl;
+            batb->log->indentPop();
             throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
         }
         ////////////////////////////////////////////////////////////////////////////////
@@ -111,9 +120,12 @@ debug::gl::msg( "ogre_root->getRenderSystemByName" );
         {
 debug::gl::msg( "ogre_root->setRenderSystem" );
             ogre_root->setRenderSystem( ogre_rendersystem );
+            batb->log << "rendersystem registered: " << ogre_rendersystem_name_ << std::endl;
         }
         else
         {
+            batb->log << "ERROR: no RenderSystem with name '" << ogre_rendersystem_name_ << "'" << std::endl;
+            batb->log->indentPop();
             throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre_rendersystem_name_ );
         }
 
@@ -122,6 +134,7 @@ debug::gl::msg( "ogre_root->setRenderSystem" );
         // (this method returns nullptr, since our argument is 'false')
 debug::gl::msg( "ogre_root->initialise" );
         ogre_root->initialise( false ); 
+        batb->log << "Ogre::Root initialized" << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -168,6 +181,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         //                                -> XXXWindow::create(). and this creates XXXContext class too.
         ogre_renderwindow = ogre_root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
         ogre_renderwindow->setVisible(true);
+        batb->log << "RenderWindow created" << std::endl;
 
         ////////////////////////////////////////////////////////////////////////////////
         // Ogre GL context
@@ -189,6 +203,9 @@ void OGRE::end()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
+    batb->log << "batb->ogre->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_nonempty() )
     {
         save();
@@ -200,8 +217,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         
 debug::gl::msg( "OGRE_DELETE Root" );
         OGRE_DELETE ogre_root;
+        batb->log << "Ogre::Root deleted" << std::endl;
 debug::gl::msg( "OGRE_DELETE LogManager" );
         OGRE_DELETE ogre_logmanager;
+        batb->log << "Ogre::LogManager deleted" << std::endl;
 
         ogre_root = nullptr;
 

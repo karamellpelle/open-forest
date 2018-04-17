@@ -85,6 +85,20 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // make GUI visible
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
+    // cool
+    batb->log << "" << std::endl;
+    batb->log << u8"✨ M E N U ✨" << std::endl;
+    {
+        LogIndent indent( batb->log, u8"✅  " );
+        batb->log << "run nanovg demo" << std::endl;
+        batb->log << "run terrain rendering demo" << std::endl;
+        batb->log << "run old (may not be built into application)" << std::endl;
+        batb->log->prefix( "❌  " );
+        batb->log << "exit" << std::endl;
+    }
+        
+
+
     std::cout << std::endl << "use [tab] to toggle console" << std::endl; // TODO: implement Key name
 
     NotifyMessage msg( "Hint: use [tab] to toggle console" );

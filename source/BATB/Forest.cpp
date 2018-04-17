@@ -40,7 +40,8 @@ Forest::Forest(BATB* b) : ModuleBATB( b )
 // 
 void Forest::begin(const std::string& path)
 {
-
+    batb->log << "batb->forest->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
     
     if ( init_empty() )
     {
@@ -48,6 +49,7 @@ void Forest::begin(const std::string& path)
 
         // load associated keys 
         keyset->load( file::dynamic_data( "BATB/Forest/KeySet.yaml" ) );
+        batb->log << "KeySet loaded" << std::endl;
 
     }
 
@@ -56,6 +58,8 @@ void Forest::begin(const std::string& path)
 
 void Forest::end()
 {
+    batb->log << "batb->forest->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_nonempty() )
     {

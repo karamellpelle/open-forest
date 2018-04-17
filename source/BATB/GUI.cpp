@@ -37,16 +37,19 @@ namespace gui
 
 void GUI::begin(const std::string& path)
 {
+    batb->log << "batb->gui->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
-        debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
         // set configuration file
         config( path );
 
         ////////////////////////////////////////////////////////////////////////////////
         // TODO: use 'yaml' for configuration 
+        // TODO: check for errors
 
         ////////////////////////////////////////////////////////////////////////////////
         // this is the actual init process in turbobadger demo:
@@ -62,16 +65,20 @@ void GUI::begin(const std::string& path)
           
         tb_renderer_ =  new tb::TBRendererGL();
         tb::tb_core_init( tb_renderer_ );
+        batb->log << "TBRenderer created" << std::endl;
+
 
 
         ////////////////////////////////////////////////////////////////////////////////
         // OnBackendAttached()
         // Load language file
         tb::g_tb_lng->Load( file::static_data( "BATB/GUI/turbobadger_demo/resources/language/lng_en.tb.txt" ).c_str() );
+        batb->log << "language loaded (en)" << std::endl;
 
         // Load the default skin, and override skin that contains the graphics specific to the demo.
         //tb::g_tb_skin->Load( file::static_data( "batb/gui/turbobadger_demo/resources/default_skin/skin.tb.txt" ).c_str() ,  file::static_data( "batb/gui/turbobadger_demo/turbobadger_demo/Demo/demo01/resources/skin.tb.txt" ).c_str() ); // skin from demo
         tb::g_tb_skin->Load( file::static_data( "BATB/GUI/skin/openforest/skin.tb.txt" ).c_str() ,  file::static_data( "BATB/GUI/skin/openforest/override.tb.txt" ).c_str() );  // custom skin
+        batb->log << "skin loaded (overrided)" << std::endl;
 
         // Register font renderers.
         // these are buildt by turbobadger iff defined, and
@@ -79,23 +86,31 @@ void GUI::begin(const std::string& path)
         // declared in batb/gui/tb_system.hpp 
 #ifdef TB_FONT_RENDERER_TBBF
         register_tbbf_font_renderer();
+        batb->log << "TBBFRenderer registered" << std::endl;
 #endif
 #ifdef TB_FONT_RENDERER_STB
         register_stb_font_renderer();
+        batb->log << "STBFontRenderer registered" << std::endl;
 #endif
 #ifdef TB_FONT_RENDERER_FREETYPE
         register_freetype_font_renderer();
+        batb->log << "FreetypeFontRenderer registered" << std::endl;
 #endif
 
         // Add fonts we can use to the font manager.
 #if defined(TB_FONT_RENDERER_STB) || defined(TB_FONT_RENDERER_FREETYPE)
         tb::g_font_manager->AddFontInfo( file::static_data( "BATB/GUI/turbobadger_demo/resources/vera.ttf" ).c_str(), "Vera");
+        batb->log << "font added: vera.ttf" << std::endl;
 #endif
 #ifdef TB_FONT_RENDERER_TBBF
         tb::g_font_manager->AddFontInfo( file::static_data( "BATB/GUI/turbobadger_demo/resources/default_font/segoe_white_with_shadow.tb.txt" ).c_str(), "Segoe");
+        batb->log << "font added: segoe_white_with_shadow.tb.txt" << std::endl;
         tb::g_font_manager->AddFontInfo( file::static_data( "BATB/GUI/turbobadger_demo/Demo/fonts/neon.tb.txt" ).c_str(), "Neon");
+        batb->log << "font added: neon.tb.txt" << std::endl;
         tb::g_font_manager->AddFontInfo( file::static_data( "BATB/GUI/turbobadger_demo/Demo/fonts/orangutang.tb.txt" ).c_str(), "Orangutang");
+        batb->log << "font added: orangutang.tb.txt" << std::endl;
         tb::g_font_manager->AddFontInfo( file::static_data( "BATB/GUI/turbobadger_demo/Demo/fonts/orange.tb.txt" ).c_str(), "Orange");
+        batb->log << "font added: orange.tb.txt" << std::endl;
 #endif
 
         // Set the default font description for widgets to one of the fonts we just added
@@ -110,12 +125,12 @@ void GUI::begin(const std::string& path)
 
         // Create the font now.
         tb::TBFontFace *font = tb::g_font_manager->CreateFontFace(tb::g_font_manager->GetDefaultFontDescription());
-
         // Render some glyphs in one go now since we know we are going to use them. It would work fine
         // without this since glyphs are rendered when needed, but with some extra updating of the glyph bitmap.
         if (font)
         {
             font->RenderGlyphs(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~•·åäöÅÄÖ");
+            batb->log << "TBFontFace created and rendered" << std::endl;
         }
         // Give the root widget a background skin
         //m_root.SetSkinBg(TBIDC("background"));
@@ -128,6 +143,7 @@ void GUI::begin(const std::string& path)
         // App::Init()
         tb::TBWidgetsAnimationManager::Init();
         { tb::TBAnimationBlocker anim_blocker; }
+        batb->log << "TBWidgetsAnimationManager initialized" << std::endl;
 
         // (demo is now set up)
         ////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +160,8 @@ void GUI::begin(const std::string& path)
 
 void GUI::end()
 {
+    batb->log << "batb->gui->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_nonempty() )
     {
@@ -155,11 +173,13 @@ void GUI::end()
         ////////////////////////////////////////////////////////////////////////////////
         // App::Shutdown()
         tb::TBWidgetsAnimationManager::Shutdown();
+        batb->log << "TBWidgetsAnimationManager shut down" << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////
         // AppBackendGLFW::Shutdown()
         tb::tb_core_shutdown();
+        batb->log << "tb_core shut down" << std::endl;
 
         delete tb_renderer_;
         tb_renderer_ = nullptr;

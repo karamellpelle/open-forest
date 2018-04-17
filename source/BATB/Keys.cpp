@@ -38,12 +38,15 @@ namespace keys
 
 void Keys::begin(const std::string& path)
 {
+    batb->log << "batb->keys->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_empty() )
     {
         // set configuration file
         config( path );
 
-        // FIXME: remove Env
+        // retrieve GLFW window (needed for input)
         window_ = batb->screen->glfw_window;
 
         // cursor input mode is _NORMAL!
@@ -56,6 +59,9 @@ void Keys::begin(const std::string& path)
 
 void Keys::end()
 {
+    batb->log << "batb->keys->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_nonempty() )
     {
         // save configuration

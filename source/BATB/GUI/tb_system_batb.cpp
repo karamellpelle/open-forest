@@ -59,6 +59,8 @@ namespace tb
 #ifdef TB_RUNTIME_DEBUG_INFO
 void TBDebugOut(const char *str)
 {
+    // TODO:
+    //batb->log << str;
 	//printf("%s", str);
 }
 #endif // TB_RUNTIME_DEBUG_INFO

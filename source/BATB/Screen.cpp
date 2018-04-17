@@ -39,6 +39,8 @@ namespace screen
 
 void Screen::begin(const std::string& path)
 {
+    batb->log << "batb->screen->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
@@ -52,7 +54,9 @@ void Screen::begin(const std::string& path)
 
         if ( !glfwInit() )
         {
-            throw std::runtime_error( "could not init GLFW" );
+            batb->log << "ERROR: could not initialize GLFW" << std::endl;
+            batb->log->indentPop(); 
+            throw std::runtime_error( "Screen: Could not init GLFW" );
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -62,19 +66,35 @@ void Screen::begin(const std::string& path)
 
         // set all hints to defaults
         glfwDefaultWindowHints();
+        {
+            batb->log << "GLFW window hints:" << std::endl;
+            LogIndent indent( batb->log, "- " );
 
-        // set hints to window
-        // http://www.glfw.org/docs/latest/window.html#window_hints
-        //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
-        //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
-        //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
-        //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
-        glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );     // debug symbols (?) 
-        // TODO: parse GLFW hints from yaml
+            // set hints to window
+            // http://www.glfw.org/docs/latest/window.html#window_hints
+            // TODO: parse GLFW hints from yaml
+            //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
+            //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
+            //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+            //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+            bool debugctx = true;
+            glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, debugctx );     // debug symbols (?) 
+            batb->log << "GLFW_OPENGL_DEBUG_CONTEXT = " << debugctx << std::endl;
 
-        // decorate window?
-        bool decorate = yaml["decorate"].as<bool>( false );
-        glfwWindowHint( GLFW_DECORATED, decorate );               
+            // decorate window?
+            bool decorate = yaml["decorate"].as<bool>( false );
+            glfwWindowHint( GLFW_DECORATED, decorate );               
+            batb->log << "GLFW_DECORATED            = " << decorate << std::endl;
+
+            // multisamples
+            uint samples = 0;
+            if ( YAML::Node node = yaml[ "multisamples" ] )
+            {
+                samples = node.as<uint>( samples );
+                glfwWindowHint( GLFW_SAMPLES, samples ); 
+            }
+            batb->log << "GLFW_SAMPLES              = " << samples << std::endl;
+        }
 
         // size
         uint wth = 640;
@@ -84,6 +104,8 @@ void Screen::begin(const std::string& path)
             wth = node[ "wth" ].as<uint>( wth );
             hth = node[ "hth" ].as<uint>( hth );
         }
+        batb->log << "window size: " << wth << "x" << hth << std::endl;
+
 
         // fullscreen
         bool fullscreen = false;
@@ -99,18 +121,13 @@ void Screen::begin(const std::string& path)
                     wth = mode->width;
                     hth = mode->height;
 
-                    batb->log << "fullscreen; using window size " << wth << "x" << hth << std::endl;
                 }
             }
         }
+        batb->log << "window fullscreen: " << fullscreen;
+        if ( fullscreen ) batb->log << " (overriding window size with display resolution (" << wth << "x" << hth << ")";
+        batb->log << "" << std::endl;
 
-        // multisamples
-        uint samples = 0;
-        if ( YAML::Node node = yaml[ "multisamples" ] )
-        {
-            samples = node.as<uint>( samples );
-            glfwWindowHint( GLFW_SAMPLES, samples ); 
-        }
 
         // title
         std::string title = "";
@@ -118,6 +135,7 @@ void Screen::begin(const std::string& path)
         {
             title = node.as<std::string>( title );
         }
+        batb->log << "window title: " << title << std::endl;
 
         
         // NOTE: error in implementation of glfw, according to valgrind:
@@ -128,15 +146,23 @@ void Screen::begin(const std::string& path)
 
         if ( !glfw_window )
         {
-            throw std::runtime_error( "env::begin: could not create glfw_window" );
+            batb->log << "ERROR: could not create GLFW window" << std::endl;
+            batb->log->indentPop();
+            throw std::runtime_error( "Screen: could not create GLFW window" );
         }
 
         // we now have a context, init GLEW
+        // or other, see
+        //  * http://www.glfw.org/docs/latest/context_guide.html#context_glext_auto
+        //  * https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library
         GLenum err = glewInit();
         if ( err != GLEW_OK )
         {
+            batb->log << "ERROR: could not initialize the OpenGL loading library (GLEW): " << glewGetErrorString( err ) << std::endl;
+            batb->log->indentPop();
+
             std::ostringstream os;
-            os << "env::begin: could not init GLEW (" << glewGetErrorString( err ) << ")";
+            os << "Screen: could not init GLEW (" << glewGetErrorString( err ) << ")";
             throw std::runtime_error( os.str() );
         }
 
@@ -147,6 +173,8 @@ void Screen::begin(const std::string& path)
 
 void Screen::end()
 {
+    batb->log << "batb->screen->end()" << std::endl;
+    LogIndent indent( batb->log, "-> " );
     if ( init_nonempty() )
     {
         ////////////////////////////////////////////////////////////////////////////////

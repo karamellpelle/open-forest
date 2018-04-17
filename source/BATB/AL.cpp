@@ -33,6 +33,8 @@ namespace al
 
 void AL::begin(const std::string& path)
 {
+    batb->log << "batb->al->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
@@ -48,10 +50,11 @@ void AL::begin(const std::string& path)
             // FIXME: memory leak, according to valgrind
             al_device = al_devmgr.openPlayback(); 
 
-            batb->log << "AL: opened al_device \"" << al_device.getName() << "\"" << std::endl;
+            batb->log << "opened al_device '" << al_device.getName() << "'" << std::endl;
 
             al_context = al_device.createContext();
             alure::Context::MakeCurrent( al_context );
+            batb->log << "context created" << std::endl;
 
             // there is only one listener
             al_listener = al_context.getListener();
@@ -61,7 +64,8 @@ void AL::begin(const std::string& path)
         }
         catch (std::exception& e)
         {
-            batb->log << "ERRO: could not init AL: " << e.what() << std::endl;
+            batb->log << "ERROR: could not initialize (" << e.what() << ")" << std::endl;
+            batb->log->indentPop();
             throw e;
         }
 
@@ -81,6 +85,9 @@ void AL::begin(const std::string& path)
 void AL::end()
 {
 
+    batb->log << "batb->al->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_nonempty() )
     {
         save();
@@ -90,10 +97,13 @@ void AL::end()
         {
             al_context.removeBuffer( buf );
         }
+        batb->log << "buffers removed" << std::endl;
 
         alure::Context::MakeCurrent( nullptr );
         al_context.destroy();
+        batb->log << "context destroyed" << std::endl;
         al_device.close();
+        batb->log << "device closed" << std::endl;
         
     }
    

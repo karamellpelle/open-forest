@@ -48,7 +48,7 @@ void IterationRunOld::iterate_begin(World& world)
 #ifdef BATB_BUILD_OLD
     old::begin();
 #else
-    batb->log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)\n" << std::endl;
+    batb->log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)" << std::endl;
 #endif
 
 }

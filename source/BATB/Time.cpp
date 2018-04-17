@@ -29,6 +29,9 @@ namespace time
 
 void Time::begin(const std::string& path)
 {
+    batb->log << "batb->time->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
 
     if ( init_empty() )
     {
@@ -46,6 +49,9 @@ void Time::begin(const std::string& path)
 
 void Time::end()
 {
+    batb->log << "batb->time->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_nonempty() )
     {
         save();

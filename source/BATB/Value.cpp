@@ -36,21 +36,26 @@ namespace value
 
 void Value::begin(const std::string& path)
 {
+    batb->log << "batb->value->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_empty() )
     {
-        
         // set configuration file
         config( path );
 
         ////////////////////////////////////////////////////////////////////////////////
         // TODO: use 'yaml' to override values, if defined
 
+        batb->log << "(TODO: read values from yaml node)" << std::endl;
     }
     init( true );
 }
 
 void Value::end()
 {
+    batb->log << "batb->value->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
     if ( init_nonempty() )
     {
         // save the configuration to its file

@@ -40,13 +40,15 @@ Demo::Demo(BATB* b) : ModuleBATB( b )
 // 
 void Demo::begin()
 {
-
+    batb->log << "batb->demo->begin()" << std::endl;
+    LogIndent indent( batb->log, "* " );
     
     if ( init_empty() )
     {
         //config( path );
         // load associated keys 
         keyset->load( file::dynamic_data( "BATB/Demo/KeySet.yaml" ) );
+        batb->log << "KeySet loaded" << std::endl;
 
     }
 
@@ -55,6 +57,8 @@ void Demo::begin()
 
 void Demo::end()
 {
+    batb->log << "batb->demo->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_nonempty() )
     {

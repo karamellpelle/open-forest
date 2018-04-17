@@ -38,6 +38,8 @@ namespace gl
 
 void GL::begin(const std::string& path)
 {
+    batb->log << "batb->gl->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
@@ -46,15 +48,19 @@ void GL::begin(const std::string& path)
 
         // init our GL state
         initState();
+        batb->log << "default state initialized" << std::endl;
 
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES /*| NVG_DEBUG*/ ); // TODO: add debug if defined in yaml
+        batb->log << "nanovg GL2 context created" << std::endl;
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
-
+        //batb->log << "nanovg GL3 context created" << std::endl;
 #endif
 	if ( nvg_context == nullptr )
         {
+            batb->log << "ERROR: could not create nanovg context" << std::endl;
+            batb->log->indentPop();
             throw std::runtime_error( "GL: could not create nanovg context" );
 	}
 
@@ -72,6 +78,9 @@ void GL::begin(const std::string& path)
 void GL::end()
 {
 
+    batb->log << "batb->gl->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
+
     if ( init_nonempty() )
     {
         save();
@@ -84,6 +93,7 @@ void GL::end()
         //}
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2( nvg_context );
+        batb->log << "nanovg context deleted" << std::endl;
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
 

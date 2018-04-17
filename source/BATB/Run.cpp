@@ -58,6 +58,8 @@ Run::~Run()
 void Run::begin(const std::string& path)
 {
 
+    batb->log << "batb->run->begin( " << path << " )" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_empty() )
     {
@@ -68,18 +70,24 @@ void Run::begin(const std::string& path)
 
         // load associated keys 
         keyset->load("batb/run/KeySet.yaml");
+        batb->log << "KeySet loaded" << std::endl;
+
         // console key should not be disabled
         keyset->console->canDisable( false );
 
         // setup Console
         console->begin();
+        batb->log << "Console created" << std::endl;
 
         // setup Notify
         notifier->begin(); 
+        batb->log << "Notifier created" << std::endl;
 
         // begin non-core iterations:
         iterationRunOld->begin();
+        batb->log << "IterationRunOld created" << std::endl;
         iterationRunMain->begin();
+        batb->log << "IterationRunMain created" << std::endl;
     }
 
     init( true );
@@ -89,6 +97,8 @@ void Run::begin(const std::string& path)
 // end the non-core part of Run
 void Run::end()
 {
+    batb->log << "batb->run->end()" << std::endl;
+    LogIndent indent( batb->log, "* " );
 
     if ( init_nonempty() )
     {
@@ -97,13 +107,17 @@ void Run::end()
 
         // end non-core iterations:
         iterationRunMain->end();
+        batb->log << "IterationRunMain destroyed" << std::endl;
         iterationRunOld->end();
+        batb->log << "IterationRunOld destroyed" << std::endl;
 
         // end Notify
         notifier->end();
+        batb->log << "Notifer destroyed" << std::endl;
 
         // end Console
         console->end();
+        batb->log << "Console destroyed" << std::endl;
 
     }
     

@@ -3,7 +3,7 @@ See OSXCocoaCOntext::clone() for how threading is done!
 
 
 # TODO
-* DebugGroup destructor
+* tb.hpp/cpp into GUI 
 * create global variable 'batb'?
 * World::load -> World::begin?
 * fix nanovg+ogre debug errors! `NVG_DEBUG`
