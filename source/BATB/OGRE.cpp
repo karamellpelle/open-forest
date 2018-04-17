@@ -46,7 +46,7 @@ void OGRE::begin(const std::string& path)
 
     if ( init_empty() )
     {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
         // set configuration file
         config( path );
@@ -187,7 +187,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
 
 void OGRE::end()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     if ( init_nonempty() )
     {
@@ -341,7 +341,7 @@ void OGRE::sceneEnd()
 
 void OGRE::output(const Scene& scene)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 
     if ( init_nonempty() )
@@ -422,7 +422,7 @@ void OGRE::enabled(bool e)
 
 void OGRE::set_glfwcontext_()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // TODO: GL vs GL3Plus
     //
     Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( ogre_rendersystem );

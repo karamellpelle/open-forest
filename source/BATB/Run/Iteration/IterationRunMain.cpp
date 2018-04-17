@@ -68,7 +68,7 @@ void IterationRunMain::end()
 ////////////////////////////////////////////////////////////////////////////////
 void IterationRunMain::iterate_begin(World& run)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // we want clean state for our Key's, no garbage:
     batb->run->keyset->reset();
@@ -98,7 +98,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 IterationStack IterationRunMain::iterate_run(World& run)
 {
-debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** output ***

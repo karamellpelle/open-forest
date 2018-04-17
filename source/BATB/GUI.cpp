@@ -40,7 +40,7 @@ void GUI::begin(const std::string& path)
 
     if ( init_empty() )
     {
-        debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+        debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
         // set configuration file
         config( path );
@@ -176,7 +176,7 @@ void GUI::end()
 // render to Scene
 void GUI::output(const Scene& scene)
 {
-debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // reset gl-state after turbobadger, for  this frame
     batb->gl->turbobadgerBegin();
@@ -212,7 +212,7 @@ debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
 
 void GUI::step(tick_t tick)
 {
-debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     // void App::OnResized(int width, int height)

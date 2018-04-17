@@ -45,7 +45,7 @@ static bool on_ = false;
 
 void demo_begin(BATB* batb)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     if ( tmp_empty )
     {
@@ -79,7 +79,7 @@ void demo_toggle()
 
 void demo_iterate(BATB* batb, bool premult, bool blowup)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     
 /*

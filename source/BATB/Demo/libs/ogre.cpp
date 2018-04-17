@@ -150,7 +150,7 @@ void iterate_terrain(BATB* batb, run::World& world, forest::World& forest);
 
 void demo_begin(BATB* batb)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     if ( tmp_empty )
     {
@@ -199,7 +199,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 void demo_iterate(BATB* batb, run::World& run, forest::World& forest)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // no need for gl::ogre_begin/end since no rendering?
 

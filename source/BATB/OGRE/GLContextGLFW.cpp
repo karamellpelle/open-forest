@@ -49,7 +49,7 @@ namespace ogre
 //
 void GLContextGLFW::begin()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // see the line with _oneTimeContextInitialization();
     // inside void GLRenderSystem::_switchContext(GLContext *context)
     setInitialized();   
@@ -58,13 +58,13 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 void GLContextGLFW::end()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 }
 
 void GLContextGLFW::setCurrent()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     //
     // TODO: other platforms...
     // TODO: cant we just do glfwMakeContextCurrent( batb.env.window ) ??
@@ -84,7 +84,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 void GLContextGLFW::endCurrent()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // do nothing
 }
 

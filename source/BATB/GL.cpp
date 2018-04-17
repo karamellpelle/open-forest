@@ -102,7 +102,7 @@ void GL::end()
 
 void GL::initState()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     //batb->log << DEBUG_FUNCTION_NAME << std::endl;
 
@@ -160,14 +160,14 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 //
 void GL::ogreBegin()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 }
 
 // reset GL state after Ogre
 void GL::ogreEnd()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     glDisable( GL_LIGHTING );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
@@ -187,7 +187,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 void GL::turbobadgerBegin()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 }
 
@@ -195,7 +195,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 // see TBRendererGL::BeginPaint in tb_renderer_gl.cpp
 void GL::turbobadgerEnd()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     glDisableClientState( GL_COLOR_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
@@ -221,7 +221,7 @@ debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
 
 void GL::nanovgBegin()
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 }
 
@@ -247,7 +247,7 @@ void GL::nanovgEnd()
 {
     //nvgRestore( nvg );
     nvgEndFrame( nvg_context );
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // see nanovg's README.md for altered state
     glEnable( GL_DEPTH_TEST );

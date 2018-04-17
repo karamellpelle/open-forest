@@ -47,7 +47,7 @@ IterationStack IterationRun::iterate(World& world)
     ////////////////////////////////////////    
     // begin new frame
     ////////////////////////////////////////
-debug::gl::DebugGroup(DEBUG_FUNCTION_NAME);
+debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // set current tick for world.
     world.tick = batb->time->get();
@@ -121,7 +121,7 @@ debug::gl::msg("iterate_run()");
 // from Env
 void IterationRun::begin(Scene& scene)
 {
-debug::gl::DebugGroup( DEBUG_FUNCTION_NAME );
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // set fragment size of scene from current screen size.
     batb->screen->getSize( scene.wth, scene.hth );
