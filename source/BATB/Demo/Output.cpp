@@ -222,7 +222,7 @@ void Output::update(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // change d (zoom) if we want to view whole map
 
-    if ( batb->demo->keyset->map_view_full->pressed() )
+    if ( batb->demo->keys->map_view_full->pressed() )
     {
         // set 0
         float_t alpha_d = clamp(  (run.tick - course_tick_d_) / smooth_ticks_d, 0.0, 1.0 );
@@ -237,7 +237,7 @@ void Output::update(World& demo)
         course_tick_d_ = run.tick;
 
     }
-    if ( batb->demo->keyset->map_view_full->released() )
+    if ( batb->demo->keys->map_view_full->released() )
     {
         // set 0
         float_t alpha_d = clamp( (run.tick - course_tick_d_) / smooth_ticks_d, 0.0, 1.0 );
@@ -263,7 +263,7 @@ void Output::aim(World& demo)
     run::World& run = demo.run;
 
     // ignore setting d if zooming out
-    bool map_view = batb->demo->keyset->map_view_full->press();
+    bool map_view = batb->demo->keys->map_view_full->press();
 
     float_t alpha = clamp(   (run.tick - course_tick_) / smooth_ticks,  0.0,  1.0 );
     float_t alpha_d = clamp( (run.tick - course_tick_d_) / smooth_ticks, 0.0, 1.0 ); // here: use 'smooth_ticks', not 'smooth_ticks_d'

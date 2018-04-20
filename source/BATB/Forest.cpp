@@ -31,7 +31,7 @@ namespace forest
 
 Forest::Forest(BATB* b) : ModuleBATB( b )
 {
-    keyset = std::make_unique<KeySet>( b );
+    keys = std::make_unique<KeySet>( b );
 }
 
 
@@ -48,7 +48,7 @@ void Forest::begin(const std::string& path)
         config( path );
 
         // load associated keys 
-        keyset->load( file::dynamic_data( "BATB/Forest/KeySet.yaml" ) );
+        keys->load( file::dynamic_data( "BATB/Forest/KeySet.yaml" ) );
         batb->log << "KeySet loaded" << std::endl;
 
     }

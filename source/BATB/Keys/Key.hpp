@@ -38,10 +38,11 @@ class Key
 friend class Keys;
 
 public:
-    Key(Keys& k) : keys_( k )       { /*++refs_;*/ }
+    Key(Keys* k) : keys( k )       { }
     virtual ~Key()                  { }
 
-    // TODO: if later using shared_ptr's, set these to default:
+    // TODO: if we are later going to use shared_ptr<KeyImpl>, 
+    //       set these to 'default' instead of 'delete':
     Key(const Key& k)             = delete;
     Key& operator=(const Key& k)  = delete;
     Key(Key&& k)                  = delete;
@@ -63,8 +64,9 @@ public:
 
 
 protected:
-    Keys& keys_;
-    //uint refs_ = 0;
+    Keys* keys = nullptr;
+    //std::shared_ptr<KeyImpl> impl_ = nullptr;
+
     bool can_disable = true;  // all Key's should in general be disabled if requested by Keys
 };
 

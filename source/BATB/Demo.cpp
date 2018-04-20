@@ -31,7 +31,7 @@ namespace demo
 
 Demo::Demo(BATB* b) : ModuleBATB( b )
 {
-    keyset = std::make_unique<KeySet>( b );
+    keys = std::make_unique<KeySet>( b );
 }
 
 
@@ -47,7 +47,7 @@ void Demo::begin()
     {
         //config( path );
         // load associated keys 
-        keyset->load( file::dynamic_data( "BATB/Demo/KeySet.yaml" ) );
+        keys->load( file::dynamic_data( "BATB/Demo/KeySet.yaml" ) );
         batb->log << "KeySet loaded" << std::endl;
 
     }

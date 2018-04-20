@@ -31,10 +31,10 @@ class KeyButton;
 class KeyMouseButton; 
 class KeyMouseAxisX;  
 class KeyMouseAxisY;  
+class KeyMouseScroll;
 class KeyClicker;     
 class KeyAlpha;       
 class KeyPointer;     
-class KeyPointer;
 
 
 // class Keys: input from keyboard, mouse, joystick, etc.
@@ -53,6 +53,8 @@ public:
 
     // remove all created Key's
     void clear();
+    // TODO: remove key. make sure to look in scrolls_x/y too
+    //void remove(Key* );
     // reset state for all created Key's
     void reset();
     // update all created Key's. to be done at each frame
@@ -61,7 +63,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // working with keys
 
-    // WTF does this? enable/disable cursor?
+    // WTF does this? i dont remember. enable/disable cursor? 
     void keyEnable(bool b);
     // get cursor pos, in pixels
     void getCursorPos(uint& x, uint& y);
@@ -90,6 +92,8 @@ public:
     KeyMouseButton* createKeyMouseButton(int code);
     KeyMouseAxisX*  createKeyMouseAxisX();
     KeyMouseAxisY*  createKeyMouseAxisY();
+    KeyMouseScroll*  createKeyMouseScrollX();
+    KeyMouseScroll*  createKeyMouseScrollY();
     // cons
     KeyClicker*     createKeyClicker(Key* k);
     KeyAlpha*       createKeyAlpha(Key* k);
@@ -107,14 +111,18 @@ public:
     int getMouseButton_(int k)                  { if ( key_enable_ ) return getMouseButton( k ); else return GLFW_RELEASE; }
 
 private:
+
+    // we need 1 Keys for scroll callback
+    static Keys* keysobj_;
+
     GLFWwindow* window_ = nullptr;
 
+    // enable/disable all Key's. TODO
     bool key_enable_ = true;
+
     // previous cursor
     double cursor_enable_x0_ = 0;
     double cursor_enable_y0_ = 0;
-
-    // previous cursor
     bool cursor_free_ = false;
     double cursor_x0_ = 0;
     double cursor_y0_ = 0;
@@ -124,6 +132,12 @@ private:
     //
     using KeyContainer = std::vector<Key*>; // TODO: class Key { std::shared_pointer<KeyImpl> } ?
     KeyContainer keys_;
+
+    // handle GLFW scroll
+    static void scroll_callback_(GLFWwindow* , double , double );
+    std::vector<GLFWscrollfun> scroll_cbks_;
+    std::vector<KeyMouseScroll*> scrolls_x_;
+    std::vector<KeyMouseScroll*> scrolls_y_;
 
     // add a Key. two different Key's with same implementation can be added,
     // since they may have different settings (fex. canDisable)

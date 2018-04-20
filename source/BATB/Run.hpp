@@ -54,7 +54,7 @@ public:
     // notifier
     std::unique_ptr<Notifier> notifier;
     // set of key's
-    std::unique_ptr<KeySet> keyset;
+    std::unique_ptr<KeySet> keys;
 
 
     // Iteration's

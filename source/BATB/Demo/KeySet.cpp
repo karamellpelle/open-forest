@@ -40,6 +40,7 @@ void KeySet::load(const std::string& path)
 
     // for now, hardcode:
     map_view_full = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::right ) );
+    scroll = createKeyMouseScrollY();
 }
 
 void KeySet::reset()

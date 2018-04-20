@@ -27,7 +27,6 @@ namespace batb
 namespace value
 {
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //  run.hpp
 //
@@ -84,6 +83,12 @@ float_t coursedrawerColorA       = 0.6;
 //
 tick_t  notifyInflate            = 0.5;
 
+
+////////////////////////////////////////////////////////////////////////////////
+// keys.hpp
+
+float_t keyMouseScrollUnit       = 50.0;
+float_t keyMouseScrollVel        = 128.0;
 
 
 

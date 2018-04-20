@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Run/Iteration/IterationRunDemo.hpp"
+#include "BATB/Demo.hpp"
 #include "BATB/Demo/Iteration/IterationDemoForest.hpp"
 #include "OgreCamera.h"
 

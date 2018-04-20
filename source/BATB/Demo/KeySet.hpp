@@ -28,7 +28,7 @@ namespace demo
 {
 
 
-class KeySet : public keys::KeySet //, Module
+class KeySet : public keys::KeySet 
 {
 public:
     KeySet(BATB* b);
@@ -40,6 +40,7 @@ public:
     void reset();
 
     keys::KeyClicker* map_view_full = nullptr;
+    keys::KeyMouseScroll* scroll = nullptr;
 
 
     BATB* batb;

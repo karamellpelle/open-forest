@@ -350,6 +350,136 @@ set(  BATB_SOURCES
       
    )
 
+set(  BATB_INCLUDES
+      "${MAIN_SOURCE_DIR}/BATB.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/AL.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/CourseDrawer.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/BeginEvents.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Course.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/CourseCurve.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Iteration.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Iteration/IterationDemo.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Iteration/IterationDemoForest.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/KeySet.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/Output.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/World.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/al.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.h"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.h"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/stb_image_write.h"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/other.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/workers.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Event.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Event/EventBase.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Event/EventEater.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Event/EventList.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Aim.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/BeginEvents.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Camera.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Control.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/DTMovable.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Iteration.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Iteration/IterationForest.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/KeySet.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Map.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyCamera.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyControlCamera.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyControlRunner.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/ModifyRunner.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Output.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Runner.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/StepDT.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Weather.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/World.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/events.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GL.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_config.h"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_system_batb.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/widgets/TBProgressBarWidget.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/Key.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyAlpha.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyButton.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyMouseAxis.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyMouseButton.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyMouseScroll.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/KeySet.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/helpers.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Log.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/LogIndent.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/ModuleBATB.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/helpers.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Player.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race/Prim/Iteration.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race/RaceClass.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race/RaceClassEntry.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race/RacePunch.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Race/RaceWorld.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/BeginEvents.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/TBConsole.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/cmd.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Console/parse.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRun.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunDemo.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunMain.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunMain/TBMain.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunOld.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunWork.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Iteration/IterationRunWork/RunWorkTBWidget.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/KeySet.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Notifier.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Notifier/NotifyMessage.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/Notifier/TBNotify.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/World.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/events.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Run/workers.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Scene.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Screen.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Shape.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/ThreadGLContext.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Time.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/BATB.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/Forest.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/Keys.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/Run.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Value/tb.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/glm.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/tb.hpp"
+      "${MAIN_SOURCE_DIR}/Module.hpp"
+      "${MAIN_SOURCE_DIR}/debug/gl.hpp"
+      "${MAIN_SOURCE_DIR}/definitions.hpp"
+      "${MAIN_SOURCE_DIR}/file.hpp"
+      "${MAIN_SOURCE_DIR}/game.hpp"
+      "${MAIN_SOURCE_DIR}/game/Iteration.hpp"
+      "${MAIN_SOURCE_DIR}/game/Iteration/IterationBegin.hpp"
+      "${MAIN_SOURCE_DIR}/game/Iteration/IterationFunction.hpp"
+      "${MAIN_SOURCE_DIR}/game/Iteration/IterationId.hpp"
+      "${MAIN_SOURCE_DIR}/game/IterationStack.hpp"
+      "${MAIN_SOURCE_DIR}/game/Output.hpp"
+      "${MAIN_SOURCE_DIR}/game/StepDT.hpp"
+      "${MAIN_SOURCE_DIR}/game/iterate.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/bezier.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/follow_value.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/helpers_gl.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/helpers_tinyxml2.hpp"
+      "${MAIN_SOURCE_DIR}/include.hpp"
+   )
 
 ################################################################################
 # define old sources
@@ -407,6 +537,9 @@ set(  BATB_SOURCES_OLD
       "${MAIN_SOURCE_DIR}/BATB/old/xmlParser.cpp"
       "${MAIN_SOURCE_DIR}/BATB/old/xmountains.cpp"
       "${MAIN_SOURCE_DIR}/BATB/old/mainWindow.cpp"
+
+      # here we should also add header files, but it does not matter if we are not
+      # doing any more development of old-batb, which is true (for me :) )
    )
 
 
@@ -428,6 +561,15 @@ if ( BATB_BUILD )
             set( BATB_BUILD_OLD OFF )
         endif()
     endif( BATB_BUILD_OLD )
+
+    
+    ############################################################################
+    # append headers to sources. this is necessary to recompile changed headers, see
+    #   * https://stackoverflow.com/questions/13703647/how-to-properly-add-include-directories-with-cmake#13703725
+    #   * https://stackoverflow.com/questions/17653738/recursive-cmake-search-for-header-and-source-files
+    #   * https://stackoverflow.com/questions/32411963/why-is-cmake-file-glob-evil#32412044
+    list( APPEND BATB_SOURCES ${BATB_INCLUDES} )
+    
 
     ############################################################################
     # create executable target 'open-forest'

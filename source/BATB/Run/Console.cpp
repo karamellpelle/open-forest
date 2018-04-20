@@ -151,7 +151,7 @@ bool Console::cmd(const std::string& input)
     if ( cmd == ":quit" )     return cmd_quit( batb, in );
 
 
-    *this << "Console: command not found: " << cmd << std::endl;
+    *this << "command not found: " << cmd << std::endl;
     return false;
   
 }

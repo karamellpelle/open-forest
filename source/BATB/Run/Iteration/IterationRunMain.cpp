@@ -23,6 +23,7 @@
 #include "BATB/Run/Console.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/GUI.hpp"
+#include "BATB/Demo.hpp"
 #include "BATB/Demo/libs/nanovg.hpp"
 #include "BATB/Demo/libs/ogre.hpp"
 #include "BATB/Demo/libs/al.hpp"
@@ -71,7 +72,7 @@ void IterationRunMain::iterate_begin(World& run)
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // we want clean state for our Key's, no garbage:
-    batb->run->keyset->reset();
+    batb->run->keys->reset();
 
     // point Keys to GUI 
     batb->gui->bind( batb->keys.get() );
@@ -134,7 +135,11 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     tb_main->step( run );
 
     // escape quits main (exit)
-    //if ( batb.run.keyset.escape->click() )  run.events.push( event::Do::Exit );
+    //if ( batb.run.keys.escape->click() )  run.events.push( event::Do::Exit );
+
+    // test scrool
+    double a = batb->demo->keys->scroll->alpha();
+    //std::cout << "scroll! current: " << a << "\r" << std::flush;
 
 #ifdef DEMO_FOREST_DIRECT
     run.events.push( event::Do::DemoForest );

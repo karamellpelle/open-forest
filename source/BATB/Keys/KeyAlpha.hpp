@@ -31,9 +31,9 @@ namespace keys
 class KeyAlpha : public Key
 {
 public:
-    KeyAlpha(Keys& keys, Key* k) : KeyAlpha(keys, k, -1.0, 1.0 )                                                                { }
-    KeyAlpha(Keys& keys, Key* k, float_t a, float_t b) : KeyAlpha( keys, k, a, b, 0.5 )                                         { }
-    KeyAlpha(Keys& keys, Key* k, float_t a, float_t b, float_t c) : Key( keys ), key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
+    KeyAlpha(Keys* keys, Key* k) : KeyAlpha(keys, k, -1.0, 1.0 )                                                                { }
+    KeyAlpha(Keys* keys, Key* k, float_t a, float_t b) : KeyAlpha( keys, k, a, b, 0.5 )                                         { }
+    KeyAlpha(Keys* keys, Key* k, float_t a, float_t b, float_t c) : Key( keys ), key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
 
 
     virtual void reset() override                 { alpha_ = clear_; }

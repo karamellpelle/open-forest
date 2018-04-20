@@ -4,7 +4,12 @@ See OSXCocoaCOntext::clone() for how threading is done!
 
 # TODO
 * tb.hpp/cpp into GUI 
+* use glfwGetKeyName 
+* callback for windows: close app
+* container Key's shall not update/step children, because 'Keys' does it for all Key's!!
 * create global variable 'batb'?
+* KeyMouseButtonX/Y -> KeyMouseButton
+* `class Key { shared_ptr<KeyImpl> impl_; }`
 * World::load -> World::begin?
 * fix nanovg+ogre debug errors! `NVG_DEBUG`
 * fix segfault (from Ogre) during shutdown on seperate thread
@@ -12,9 +17,7 @@ See OSXCocoaCOntext::clone() for how threading is done!
 * begin/end iterations
 * `using float_t = double_t;` in include
 * forestworld: loading
-* mouse scrolling, map. KeyScroll : [-1,1]
 * use metric system for terrain and all models!!!
-* Notify and Console from run::Run into BATB ??
 * language files
 * `reset()` for objects in forest::World
 * load forest world by RunWork
@@ -23,7 +26,6 @@ See OSXCocoaCOntext::clone() for how threading is done!
 
 * define precision of glm (vec, mat, etc) the same as float_t 
 * OpenGL 3+, premultiplied colors by default
-* `class Key { shared_ptr<KeyImpl> impl_; }`
 * extend functionality of Log: error/warning levels with indentation
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
 * define invariants (OpenGL, ...)

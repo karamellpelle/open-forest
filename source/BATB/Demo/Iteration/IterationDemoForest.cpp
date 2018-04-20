@@ -70,8 +70,8 @@ void IterationDemoForest::iterate_begin(World& demo)
     forest.tick = demo.tick;
 
     // clear keys
-    batb->demo->keyset->reset();
-    batb->forest->keyset->reset();
+    batb->demo->keys->reset();
+    batb->forest->keys->reset();
 
     // no cursor
     batb->keys->setCursorFree( true );
@@ -251,7 +251,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
 
     // TODO: look at demo-events!
-    if ( batb->run->keyset->escape->click() )
+    if ( batb->run->keys->escape->click() )
     {
         // set back cursor
         batb->keys->setCursorFree( false );

@@ -15,46 +15,24 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_HPP
-#define BATB_FOREST_HPP
-#include "BATB/ModuleBATB.hpp"
-#include "BATB/Forest/KeySet.hpp"
-
-
+#ifndef BATB_VALUE_KEYS_HPP
+#define BATB_VALUE_KEYS_HPP
+#include "include.hpp"
 
 
 namespace batb
 {
-
-
-namespace forest
+namespace value
 {
 
+// how many scroll steps for alpha() == 1.0
+extern float_t keyMouseScrollUnit;
+// how many scroll steps to move in 1.0 seconds
+extern float_t keyMouseScrollVel;
 
 
-
-class Forest : public ModuleBATB
-{
-public:
-    Forest(BATB* b);
-
-    void begin(const std::string& );
-    void end();
-
-
-    std::unique_ptr<KeySet> keys;
-
-private:
-
-
-};
-
-
-
-} // namespace forest
+} // namespace value
 
 } // namespace batb
 
-
 #endif
-

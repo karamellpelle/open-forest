@@ -40,7 +40,7 @@ Run::Run(BATB* b) : ModuleBATB( b )
 {
     console          = std::make_unique<Console>( b );
     notifier         = std::make_unique<Notifier>( b );
-    keyset           = std::make_unique<KeySet>( b );
+    keys           = std::make_unique<KeySet>( b );
     iterationRunOld  = std::make_unique<IterationRunOld>( b );
     iterationRunMain = std::make_unique<IterationRunMain>( b );
     events           = std::make_unique<EventList>();
@@ -69,11 +69,11 @@ void Run::begin(const std::string& path)
         // TODO: use 'yaml' for configuration
 
         // load associated keys 
-        keyset->load("batb/run/KeySet.yaml");
+        keys->load("batb/run/KeySet.yaml");
         batb->log << "KeySet loaded" << std::endl;
 
         // console key should not be disabled
-        keyset->console->canDisable( false );
+        keys->console->canDisable( false );
 
         // setup Console
         console->begin();

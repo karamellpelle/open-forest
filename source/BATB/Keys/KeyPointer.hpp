@@ -33,12 +33,12 @@ class KeyPointer : public Key
 {
 
 public:
-    KeyPointer(Keys& keys, Key* x, Key* y, Key* l, Key* r) : Key( keys )
+    KeyPointer(Keys* keys, Key* x, Key* y, Key* l, Key* r) : Key( keys )
     {
         axis_x_ = x;
         axis_y_ = y;
-        clicker_left_ = keys_.createKeyClicker( l );
-        clicker_right_ = keys_.createKeyClicker( r );
+        clicker_left_ = keys->createKeyClicker( l );
+        clicker_right_ = keys->createKeyClicker( r );
     }
 
     void reset() override

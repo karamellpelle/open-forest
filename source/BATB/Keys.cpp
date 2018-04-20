@@ -19,6 +19,7 @@
 #include "BATB/Keys/KeyButton.hpp"
 #include "BATB/Keys/KeyMouseButton.hpp"
 #include "BATB/Keys/KeyMouseAxis.hpp"
+#include "BATB/Keys/KeyMouseScroll.hpp"
 #include "BATB/Keys/KeyClicker.hpp"
 #include "BATB/Keys/KeyAlpha.hpp"
 #include "BATB/Keys/KeyPointer.hpp"
@@ -31,6 +32,9 @@ namespace batb
 
 namespace keys
 {
+
+// the kananical Keys (needed for scroll)
+Keys* Keys::keysobj_ = nullptr;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +56,10 @@ void Keys::begin(const std::string& path)
         // cursor input mode is _NORMAL!
         glfwSetInputMode( window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
         cursor_free_ = false;
+
+        // let scroll callback be able to reach this object (implies only 1 Keys in program)
+        keysobj_ = this;
+        glfwSetScrollCallback( window_, scroll_callback_ );
     }
 
     init( true );
@@ -81,6 +89,10 @@ void Keys::clear()
 {
     std::for_each( std::begin( keys_ ), std::end( keys_ ), std::default_delete<Key>() );
     keys_.clear();
+
+    // also clear scroll's
+    scrolls_x_.clear();
+    scrolls_y_.clear();
 }
 
 
@@ -236,7 +248,7 @@ void Keys::cursorposCalling(GLFWcursorposfun f)
 
 void Keys::scrollCalling(GLFWscrollfun f)
 {
-    glfwSetScrollCallback( window_, f );
+    scroll_cbks_.push_back( f );
 }
 
 
@@ -247,37 +259,56 @@ void Keys::scrollCalling(GLFWscrollfun f)
 
 KeyButton* Keys::createKeyButton(int code)
 {
-    return push( new KeyButton( *this, code ) );
+    return push( new KeyButton( this, code ) );
 }
 
 KeyMouseButton* Keys::createKeyMouseButton(int code)
 {
-    return push( new KeyMouseButton( *this, code ) );
+    return push( new KeyMouseButton( this, code ) );
 }
 
 KeyMouseAxisX* Keys::createKeyMouseAxisX()
 {
-    return push( new KeyMouseAxisX( *this ) );
+    return push( new KeyMouseAxisX( this ) );
 }
 
 KeyMouseAxisY* Keys::createKeyMouseAxisY()
 {
-    return push( new KeyMouseAxisY( *this ) );
+    return push( new KeyMouseAxisY( this ) );
 }
+
+KeyMouseScroll* Keys::createKeyMouseScrollY()
+{
+    auto ret = push( new KeyMouseScroll( this ) );
+
+    // also add to scrolls
+    scrolls_y_.push_back( ret );
+    return ret;
+}
+
+KeyMouseScroll* Keys::createKeyMouseScrollX()
+{
+    auto ret = push( new KeyMouseScroll( this ) );
+
+    // also add to scrolls
+    scrolls_x_.push_back( ret );
+    return ret;
+}
+
 
 KeyClicker* Keys::createKeyClicker(Key* k)
 {
-    return push( new KeyClicker( *this, k ) );
+    return push( new KeyClicker( this, k ) );
 }
 
 KeyAlpha* Keys::createKeyAlpha(Key* k)
 {
-    return push( new KeyAlpha( *this, k ) );
+    return push( new KeyAlpha( this, k ) );
 }
 
 KeyPointer* Keys::createKeyPointer(Key* x, Key* y, Key* l, Key* r)
 {
-    return push( new KeyPointer( *this, x, y, l, r ) );
+    return push( new KeyPointer( this, x, y, l, r ) );
 }
 
 KeyPointer* Keys::createKeyPointer()
@@ -291,6 +322,32 @@ Key* Keys::createKey(const YAML::Node& yaml)
     return nullptr;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+void Keys::scroll_callback_(GLFWwindow* win, double x, double y)
+{
+    
+    //std::cout << "scroll! " << x << ", " << y << std::endl;
+    
+    // callback every registered callback
+    for ( auto cbk : Keys::keysobj_->scroll_cbks_ )
+    {
+        cbk( win, x, y );
+    }
+
+    // call our KeyMouseScroll's
+    for ( auto scroll : Keys::keysobj_->scrolls_x_ )
+    {
+       // TODO: if enabled  
+       scroll->add( x );
+    }
+    for ( auto scroll : Keys::keysobj_->scrolls_y_ )
+    {
+       // TODO: if enabled  
+       scroll->add( y );
+    }
+
+}
 
 
 

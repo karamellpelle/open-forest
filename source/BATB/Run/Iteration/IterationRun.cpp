@@ -96,10 +96,10 @@ debug::gl::msg("iterate_run()");
     {
         // console always available
 
-        if ( batb->run->keyset->console->click() )
+        if ( batb->run->keys->console->click() )
         {
-            // note that 'keyset.console' can not be disabled
-            if ( batb->run->keyset->console->toggle() ) batb->run->console->open( world ); else batb->run->console->close( world );
+            // note that 'keys.console' can not be disabled
+            if ( batb->run->keys->console->toggle() ) batb->run->console->open( world ); else batb->run->console->close( world );
         }
 
         // update Console

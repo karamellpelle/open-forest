@@ -39,7 +39,7 @@ public:
     void end();
 
 
-    std::unique_ptr<KeySet> keyset;
+    std::unique_ptr<KeySet> keys;
 
     //EventList events;
 private:
