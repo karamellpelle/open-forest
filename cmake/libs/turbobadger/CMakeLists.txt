@@ -26,8 +26,8 @@ aux_source_directory(${MY-TURBOBADGER_SOURCE_DIR}/src/tb/utf8       MY-TURBOBADG
 
 
 # 
+include_directories(  "${MAIN_SOURCE_DIR}/BATB/GUI/tb" ) # make sure we use tb_config.h 
 include_directories("${PROJECT_SOURCE_DIR}/src/tb")
-include_directories(  "${MAIN_SOURCE_DIR}/batb/gui" ) 
 
 #find_package( OpenGL )
 #include_directories( ${OPENGL_INCLUDE_DIR} )  
@@ -42,6 +42,6 @@ add_library( my-turbobadger STATIC ${MY-TURBOBADGER_SOURCES} )
 
 
 # add our own tb_config.h: FIXME: verify that this is seached before the tb-folder
-target_include_directories( my-turbobadger PRIVATE ${MAIN_SOURCE_DIR}/batb/gui ) 
-target_include_directories( my-turbobadger PRIVATE ${MAIN_SOURCE_DIR} )
+target_include_directories( my-turbobadger PRIVATE "${MAIN_SOURCE_DIR}/BATB/GUI/tb" ) 
+#target_include_directories( my-turbobadger PRIVATE "${MAIN_SOURCE_DIR}" )
 target_include_directories( my-turbobadger PUBLIC ${MY-TURBOBADGER_INCLUDE_DIRS} )  

@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/GUI.hpp"
-#include "BATB/GUI/tb_system_batb.hpp"
+#include "BATB/GUI/tb/tb_system_batb.hpp"
 #include "BATB/Scene.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/GL.hpp"

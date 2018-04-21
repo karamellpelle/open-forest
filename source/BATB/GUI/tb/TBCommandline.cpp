@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/tb.hpp"
+#include "BATB/GUI/tb/TBCommandline.hpp"
 #include "tb/tb_window.h"
 #include "tb/tb_widgets_reader.h"
 
@@ -50,35 +50,6 @@ bool TBCommandline::OnEvent(const tb::TBWidgetEvent& event)
 
 TB_WIDGET_FACTORY(TBCommandline, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
 
-////////////////////////////////////////////////////////////////////////////////
-// TBPanel (a window)
-
-TBPanel::TBPanel()
-{
-    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
-    
-}
-
-
-void TBPanel::OnInflate(const tb::INFLATE_INFO& info)
-{
-    //TBWindow::OnInflate( info );
-    TBWidget::OnInflate( info );
-
-    //if (const char *skin = info.node->GetValueString("skin", nullptr))
-    //{
-    //    SetSkinBg(skin);
-    //}
-
-}
-
-// TODO: remove this
-bool TBPanel::OnEvent(const tb::TBWidgetEvent& event)
-{
-    return false;
-}
-
-TB_WIDGET_FACTORY(TBPanel, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
 
 
 } // namespace tb

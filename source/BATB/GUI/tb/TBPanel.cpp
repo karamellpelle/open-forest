@@ -15,35 +15,44 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/GUI/widgets/TBProgressBarWidget.hpp"
+#include "BATB/GUI/tb/TBPanel.hpp"
+#include "tb/tb_window.h"
+#include "tb/tb_widgets_reader.h"
+
 
 namespace tb
 {
 
-TBProgressBarWidget::TBProgressBarWidget() 
+
+////////////////////////////////////////////////////////////////////////////////
+// TBPanel (a window)
+
+TBPanel::TBPanel()
 {
-    // SetSpacing
-    SetSqueezable( false );
+    SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
+    
+}
+
+
+void TBPanel::OnInflate(const tb::INFLATE_INFO& info)
+{
+    //TBWindow::OnInflate( info );
+    TBWidget::OnInflate( info );
+
+    //if (const char *skin = info.node->GetValueString("skin", nullptr))
+    //{
+    //    SetSkinBg(skin);
+    //}
 
 }
 
-void TBProgressBarWidget::SetAlpha(double a)
+// TODO: remove this
+bool TBPanel::OnEvent(const tb::TBWidgetEvent& event)
 {
-    uint percent = (uint)( a * 100.0 );
-    std::ostringstream os;
-    os << percent << "%";
-    SetText( os.str().c_str() );
-   
+    return false;
 }
 
-void TBProgressBarWidget::Set(double a, const TBStr& text)
-{
-    uint percent = (uint)( a * 100.0 );
-    std::ostringstream os;
-    os << text.CStr() << " [" << percent << "%]";
-    SetText( os.str().c_str() );
-
-}
+TB_WIDGET_FACTORY(TBPanel, TBValue::TYPE_STRING, WIDGET_Z_TOP) {}
 
 
 } // namespace tb

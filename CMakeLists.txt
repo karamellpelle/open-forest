@@ -296,9 +296,12 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Forest/World.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GL.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_file_BATB.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_system_BATB.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/widgets/TBProgressBarWidget.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_file_batb.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_system_batb.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBProgressBarWidget.cpp"
+      #"${MAIN_SOURCE_DIR}/BATB/tb.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBPanel.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBCommandline.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/KeyClicker.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/KeyPointer.cpp"
@@ -337,7 +340,6 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Time.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Value.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Value/values.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/tb.cpp"             
       "${MAIN_SOURCE_DIR}/Module.cpp"
       "${MAIN_SOURCE_DIR}/File.cpp"
       "${MAIN_SOURCE_DIR}/main.cpp"
@@ -407,9 +409,11 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Forest/events.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GL.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI.hpp"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_config.h"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/tb_system_batb.hpp"
-      "${MAIN_SOURCE_DIR}/BATB/GUI/widgets/TBProgressBarWidget.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_config.h"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_system_batb.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBProgressBarWidget.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBPanel.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBCommandline.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/Key.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/KeyAlpha.hpp"
@@ -467,7 +471,6 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Value/Run.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Value/tb.hpp"
       "${MAIN_SOURCE_DIR}/BATB/glm.hpp"
-      "${MAIN_SOURCE_DIR}/BATB/tb.hpp"
       "${MAIN_SOURCE_DIR}/Module.hpp"
       "${MAIN_SOURCE_DIR}/debug/gl.hpp"
       "${MAIN_SOURCE_DIR}/definitions.hpp"
@@ -604,7 +607,7 @@ if ( BATB_BUILD )
 
     # my-turbobadger
     list( APPEND BATB_LIBRARIES my-turbobadger )
-    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/gui" ) # point to _our_ tb_config.h
+    target_include_directories( open-forest PRIVATE "${MAIN_SOURCE_DIR}/batb/gui/tb" ) # point to _our_ tb_config.h
     if ( APPLE )
         target_compile_definitions( open-forest PUBLIC MACOSX ) # turbobadger needs MACOSX
     endif()

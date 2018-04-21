@@ -15,36 +15,38 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_GUI_WIDGETS_TBPROGRESSBARWIDGET_HPP
-#define BATB_GUI_WIDGETS_TBPROGRESSBARWIDGET_HPP
-#include "include.hpp"
-#include "tb/tb_widgets_common.h"
-
+#include "BATB/GUI/tb/TBProgressBarWidget.hpp"
 
 namespace tb
 {
 
-
-class TBProgressBarWidget : public TBButton
+TBProgressBarWidget::TBProgressBarWidget() 
 {
-public:
-    TBProgressBarWidget();
+    // SetSpacing
+    SetSqueezable( false );
 
-    // TODO: SetValue
-    void SetAlpha(double a); // -> SetValue( a * 100.0 );
-    //void SetText(const TBStr& );
-    void Set(double a, const TBStr& s);
+}
 
-protected:
-    //double m_alpha; 
-    //TBStr m_text;
-     
-};
+void TBProgressBarWidget::SetAlpha(double a)
+{
+    uint percent = (uint)( a * 100.0 );
+    std::ostringstream os;
+    os << percent << "%";
+    SetText( os.str().c_str() );
+   
+}
 
+void TBProgressBarWidget::Set(double a, const TBStr& text)
+{
+    uint percent = (uint)( a * 100.0 );
+    std::ostringstream os;
+    os << text.CStr() << " [" << percent << "%]";
+    SetText( os.str().c_str() );
+
+}
 
 
 } // namespace tb
 
 
-#endif
 

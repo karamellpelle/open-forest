@@ -20,7 +20,6 @@
 #include "BATB/Run/Notifier/NotifyMessage.hpp"
 #include "tb/tb_widgets.h"
 #include "tb/tb_layout.h"
-#include "BATB/tb.hpp"
 
 
 namespace tb { class TBEditField; }

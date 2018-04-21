@@ -5,6 +5,7 @@ See OSXCocoaCOntext::clone() for how threading is done!
 # TODO
 * tb.hpp/cpp into GUI 
 * use glfwGetKeyName 
+* other font renderers
 * KeyButton -> KeyKeyboardButton
 * callback for windows: close app
 * container Key's shall not update/step children, because 'Keys' does it for all Key's!!

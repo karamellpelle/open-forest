@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Run/Iteration/IterationRunWork/RunWorkTBWidget.hpp"
-#include "BATB/GUI/widgets/TBProgressBarWidget.hpp"
+#include "BATB/GUI/tb/TBProgressBarWidget.hpp"
 #include "tb/image/tb_image_widget.h"
 
 namespace batb

@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_TB_HPP
-#define BATB_TB_HPP
+#ifndef BATB_GUI_TB_TBPANEL_HPP
+#define BATB_GUI_TB_TBPANEL_HPP
 #include "include.hpp"
 #include "tb/tb_editfield.h"
 #include "tb/tb_window.h"
@@ -25,16 +25,6 @@
 namespace tb
 {
 
-// 
-class TBCommandline : public TBEditField
-{
-public:
-    TBOBJECT_SUBCLASS( TBCommandline, TBEditField );
-
-    virtual void OnInflate(const tb::INFLATE_INFO& ) override;
-
-    virtual bool OnEvent(const tb::TBWidgetEvent& event) override;
-};
 
 class TBPanel : public TBWindow
 {

@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_TB_SYSTEM_BATB_HPP
-#define BATB_TB_SYSTEM_BATB_HPP
+#ifndef BATB_GUI_TB_TBSYSTEMBATB_HPP
+#define BATB_GUI_TB_TBSYSTEMBATB_HPP
 #include "include.hpp"
 #include "tb/tb_system.h"
 
