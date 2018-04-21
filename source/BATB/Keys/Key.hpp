@@ -54,6 +54,10 @@ public:
     virtual void step(tick_t )      { }
     virtual float_t alpha()         { return 0.0; }
 
+    virtual std::string name() const;     // unique identifier
+    virtual std::string nameEasy() const; // human readable
+    virtual std::string nameGUI() const;  // GUI widget
+
     //////////////////////////////////////////////////////////////////
     //      helpers
     //

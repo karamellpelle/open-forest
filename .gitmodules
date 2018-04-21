@@ -4,6 +4,7 @@
 [submodule "libs/glfw"]
 	path = libs/glfw
 	url = https://github.com/glfw/glfw.git
+	branch = master
 [submodule "libs/turbobadger"]
 	path = libs/turbobadger
 	url = https://github.com/fruxo/turbobadger.git

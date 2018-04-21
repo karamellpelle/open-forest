@@ -313,7 +313,7 @@ KeyPointer* Keys::createKeyPointer(Key* x, Key* y, Key* l, Key* r)
 
 KeyPointer* Keys::createKeyPointer()
 {
-    return createKeyPointer( createKeyMouseAxisX(), createKeyMouseAxisY(), createKeyMouseButton( KeyMouseButton::left ), createKeyMouseButton( KeyMouseButton::right ) );
+    return createKeyPointer( createKeyMouseAxisX(), createKeyMouseAxisY(), createKeyMouseButton( KeyMouseButton::Left ), createKeyMouseButton( KeyMouseButton::Right ) );
 }
 
 Key* Keys::createKey(const YAML::Node& yaml)

@@ -99,15 +99,57 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     }
         
 
+    // use bound controls name
+    std::cout << std::endl << "use [" << batb->run->keys->console->nameEasy() << "] to to toggle console" << std::endl;
 
-    std::cout << std::endl << "use [tab] to toggle console" << std::endl; // TODO: implement Key name
-
-    NotifyMessage msg( "Hint: use [tab] to toggle console" );
+    // use bound controls widget representing the control
+    std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to to toggle console";
+    NotifyMessage msg( os.str() );
     msg.duration = 8.0;
     batb->run->notifier->message( msg );
-    // ^ here it would be nice to use convert Key to a TB widget inside text. TB has this 
-    //   functionality to insert widgets in text, actually
 
+     
+     //, createKeyClicker(Key* k),
+     //createKeyAlpha(Key* k),
+     //createKeyPointer(Key* x, Key* y, Key* l, Key* r),
+     //createKeyPointer(),
+    auto k0 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_SLASH) );
+    auto k1 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_COMMA) );
+    auto k2 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_ENTER) );
+    auto k3 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_RIGHT) );
+    auto k13= (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_LEFT) );
+    auto k4 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_SPACE) );
+    auto k5 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_L) );
+    auto k11 = (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_KP_DECIMAL) );
+    auto k12= (keys::Key*)( batb->keys->createKeyButton(GLFW_KEY_KP_MULTIPLY) );
+    auto k6 = (keys::Key*)( batb->keys->createKeyMouseButton(GLFW_MOUSE_BUTTON_LEFT) );
+    auto k7 = (keys::Key*)( batb->keys->createKeyMouseAxisX() );
+    auto k8 = (keys::Key*)( batb->keys->createKeyMouseAxisY() );
+    auto k9 = (keys::Key*)( batb->keys->createKeyMouseScrollX() );
+    auto k10= (keys::Key*)( batb->keys->createKeyMouseScrollY() );
+keys::Key* ks[] = {k0 ,
+k1 ,
+k2 ,
+k3 ,
+k13,
+k4 ,
+k5 ,
+k11,
+k12,
+k6 ,
+k7 ,
+k8 ,
+k9 ,
+k10 };
+    size_t len = sizeof( ks ) / sizeof( keys::Key* );
+    for (size_t i = 0; i != len; ++i)
+    {
+        auto k = ks[i];
+        std::ostringstream os; os << "use " << k->nameGUI() << " to to toggle console";
+        NotifyMessage msg( os.str() );
+        msg.duration = 10.0 + i;
+        batb->run->notifier->message( msg );
+    }
 }
 
 

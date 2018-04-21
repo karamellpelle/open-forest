@@ -15,40 +15,36 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Demo/KeySet.hpp"
-
+#include "BATB/Keys/KeyMouseScroll.hpp"
 
 namespace batb
 {
 
-
-namespace demo
+namespace keys
 {
+////////////////////////////////////////////////////////////////////////////////
+// names. default.
 
-
-KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
+// unique identifier
+std::string KeyMouseScroll::name() const
 {
-
+    // TODO: think through
+    std::ostringstream os; os << "KeyMouseScroll";
+    return os.str();
+}
+// human readable
+std::string KeyMouseScroll::nameEasy() const
+{
+    return "scroll wheel";
 }
 
-void KeySet::load(const std::string& path)
+// GUI widget
+std::string KeyMouseScroll::nameGUI() const
 {
-
-    // TODO: release current pointers back to Keys
-
-    // TODO: parse keys from definition in file
-
-    // for now, hardcode:
-    map_view_full = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::Right ) );
-    scroll = createKeyMouseScrollY();
+    std::ostringstream os; os << "<widget TBButton: text: '" << nameEasy() << "'>";
+    return os.str();
 }
 
-void KeySet::reset()
-{
-    map_view_full->reset();
-}
-
-} // namespace demo
+} // namespace keys
 
 } // namespace batb
-

@@ -37,6 +37,10 @@ public:
     void step(tick_t ) override;
     float_t alpha()    override       { return key_->alpha(); }
 
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
+
     void canDisable(bool b) override  { key_->canDisable( b ); }
 
     ////////////////////////////////////////////////////////////////////////////////

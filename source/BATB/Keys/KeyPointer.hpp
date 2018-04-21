@@ -64,8 +64,13 @@ public:
         clicker_right_->canDisable( b );
     }
 
+    ////////////////////////////////////////////////////////////////
 
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
     
+    ////////////////////////////////////////////////////////////////
     void axis(float_t& x, float_t& y)
     {
         x = axis_x_->alpha();

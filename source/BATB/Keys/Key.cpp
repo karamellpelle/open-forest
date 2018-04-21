@@ -15,40 +15,34 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Demo/KeySet.hpp"
-
+#include "BATB/Keys/Key.hpp"
 
 namespace batb
 {
 
-
-namespace demo
+namespace keys
 {
+////////////////////////////////////////////////////////////////////////////////
+// names. default.
 
-
-KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
+// unique identifier
+std::string Key::name() const
 {
-
+    return "0";
+}
+// human readable
+std::string Key::nameEasy() const
+{
+    return "(unknown)";
 }
 
-void KeySet::load(const std::string& path)
+// GUI widget
+std::string Key::nameGUI() const
 {
-
-    // TODO: release current pointers back to Keys
-
-    // TODO: parse keys from definition in file
-
-    // for now, hardcode:
-    map_view_full = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::Right ) );
-    scroll = createKeyMouseScrollY();
+    // TMP. inspired by TB demo
+    return "<widget TBSkinImage: skin: 'Icon16'>";
 }
 
-void KeySet::reset()
-{
-    map_view_full->reset();
-}
-
-} // namespace demo
+} // namespace keys
 
 } // namespace batb
-

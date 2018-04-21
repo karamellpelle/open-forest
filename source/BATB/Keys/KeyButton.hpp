@@ -26,6 +26,7 @@ namespace batb
 namespace keys
 {
 
+// a keyboard button
 class KeyButton : public Key
 {
 public:
@@ -35,6 +36,11 @@ public:
     void step(tick_t ) override   { }
     float_t alpha() override      { if ( can_disable ) return (keys->getKey_( code_ ) ? 1.0 : 0.0);
                                                   else return (keys->getKey( code_ )  ? 1.0 : 0.0); } 
+
+    // keyboard button names
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
 
 
 private:

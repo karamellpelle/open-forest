@@ -36,8 +36,13 @@ public:
     float_t alpha() override              { if ( can_disable ) return (keys->getMouseButton_( code_ ) ? 1.0 : 0.0);
                                                           else return (keys->getMouseButton( code_ )  ? 1.0 : 0.0); } 
     
-    static constexpr int left   = GLFW_MOUSE_BUTTON_LEFT;
-    static constexpr int right  = GLFW_MOUSE_BUTTON_RIGHT;
+    static constexpr int Left   = GLFW_MOUSE_BUTTON_LEFT;
+    static constexpr int Right  = GLFW_MOUSE_BUTTON_RIGHT;
+    static constexpr int Middle  = GLFW_MOUSE_BUTTON_MIDDLE;
+
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
 
 private:
 

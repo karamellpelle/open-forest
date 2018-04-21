@@ -44,6 +44,9 @@ public:
         return x;
     }
 
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
 
 };
 
@@ -65,6 +68,9 @@ public:
         return y;
     }
 
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
 
 };
 

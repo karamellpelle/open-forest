@@ -49,6 +49,11 @@ public:
     virtual float_t alpha() override              { return alpha_; }
     virtual void canDisable(bool b) override      { key_->canDisable( b ); }
 
+    // names
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
+
 
     ////////////////////////////////////////////////////////
     //    settings

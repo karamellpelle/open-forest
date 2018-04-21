@@ -5,10 +5,10 @@ See OSXCocoaCOntext::clone() for how threading is done!
 # TODO
 * tb.hpp/cpp into GUI 
 * use glfwGetKeyName 
+* KeyButton -> KeyKeyboardButton
 * callback for windows: close app
 * container Key's shall not update/step children, because 'Keys' does it for all Key's!!
 * create global variable 'batb'?
-* KeyMouseButtonX/Y -> KeyMouseButton
 * `class Key { shared_ptr<KeyImpl> impl_; }`
 * World::load -> World::begin?
 * fix nanovg+ogre debug errors! `NVG_DEBUG`

@@ -103,6 +103,25 @@ void KeyClicker::step(tick_t tick)
     
 }
 
+// unique identifier
+std::string KeyClicker::name() const
+{
+    // TODO: think through
+    std::ostringstream os; os << "KeyClicker+" << key_->name();
+    return os.str();
+}
+// human readable
+std::string KeyClicker::nameEasy() const
+{
+    return key_->nameEasy();
+}
+
+// GUI widget
+std::string KeyClicker::nameGUI() const
+{
+    return key_->nameGUI();
+}
+
 
 } // namespace keys
 

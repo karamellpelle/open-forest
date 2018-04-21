@@ -78,6 +78,27 @@ bool KeyPointer::drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b,  float
     return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// unique identifier
+std::string KeyPointer::name() const
+{
+    std::ostringstream os; os << "KeyPointer";
+    return os.str();
+}
+// human readable
+std::string KeyPointer::nameEasy() const
+{
+    return "mouse";
+}
+
+// GUI widget
+std::string KeyPointer::nameGUI() const
+{
+    // TODO: image
+    std::ostringstream os; os << "<widget TBButton: text: 'mouse'>";
+    return os.str();
+}
+
 } // namespace keys
 
 } // namespace batb

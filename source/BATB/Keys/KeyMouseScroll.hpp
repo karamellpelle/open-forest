@@ -39,6 +39,10 @@ public:
     void    step(tick_t ) override;
     float_t alpha() override;
 
+    virtual std::string name()     const override; // unique identifier
+    virtual std::string nameEasy() const override; // human readable
+    virtual std::string nameGUI()  const override; // GUI widget
+
     // update
     void    add(double n);
 
