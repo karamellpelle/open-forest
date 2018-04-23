@@ -107,6 +107,15 @@ debug::gl::msg("iterate_run()");
 
         // update Notify
         batb->run->notify->step( world );
+
+        ////////////////////////////////////////////////////////////////
+
+        // are we going fullscreen or nonfullscreen?
+        if ( batb->run->keys->fullscreen->click() )
+        {
+            bool full = batb->run->keys->fullscreen->toggle(); 
+            batb->screen->fullscreen( full );
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////

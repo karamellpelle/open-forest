@@ -118,6 +118,10 @@ void Screen::begin(const std::string& path)
             {
                 if ( auto mode = glfwGetVideoMode( glfw_monitor ) )
                 {
+                    // save before we set fullscreen
+                    nonfullscreen_wth_ = wth;
+                    nonfullscreen_hth_ = hth;
+
                     wth = mode->width;
                     hth = mode->height;
 
@@ -269,7 +273,30 @@ GLuint Screen::setFBO(GLuint fbo)
     return ret;
 }
 
+void Screen::fullscreen(bool full)
+{
 
+    if ( full )
+    {
+        batb->log << "batb->screen->fullscreen( true )" << std::endl;
+        // save this before going fullscreen
+        glfwGetWindowSize( glfw_window, &nonfullscreen_wth_, &nonfullscreen_hth_ );
+        glfwGetWindowPos( glfw_window, &nonfullscreen_xpos_, &nonfullscreen_ypos_ );
+
+        // full screen on
+        glfw_monitor = glfwGetPrimaryMonitor();
+        auto mode = glfwGetVideoMode( glfw_monitor );
+        glfwSetWindowMonitor( glfw_window,  glfw_monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+    }
+    else
+    {
+        batb->log << "batb->screen->fullscreen( false )" << std::endl;
+
+        // back to window with previos pos and size
+        glfw_monitor = nullptr;
+        glfwSetWindowMonitor( glfw_window, glfw_monitor, nonfullscreen_xpos_, nonfullscreen_ypos_, nonfullscreen_wth_, nonfullscreen_hth_, 0 );
+    }
+}
 
 } // namespace screen
 } // namespace batb

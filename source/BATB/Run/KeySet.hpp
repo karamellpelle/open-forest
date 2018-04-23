@@ -44,6 +44,7 @@ public:
     // keys for Run to use
     keys::KeyClicker* console = nullptr;
     keys::KeyClicker* escape  = nullptr;
+    keys::KeyClicker* fullscreen  = nullptr;
 
     BATB* batb;
 };

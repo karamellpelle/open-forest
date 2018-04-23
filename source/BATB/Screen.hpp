@@ -56,7 +56,7 @@ public:
     void setFBO1()                                  { setFBO( fbo1_ ); }
     GLuint getFBO() const                           { return fbo_; }
     GLuint setFBO(GLuint );
-    
+    void fullscreen(bool ); 
     ////////////////////////////////////////////////////////////////
     // ...
 
@@ -64,8 +64,12 @@ public:
     GLFWwindow* glfw_window     = nullptr;
 
 private:
+    // width before fullscreen
+    int nonfullscreen_wth_ = 0;
+    int nonfullscreen_hth_ = 0;
+    int  nonfullscreen_xpos_ = 0; 
+    int  nonfullscreen_ypos_ = 0; 
 
-    
     ////////////////////////////////////////////////////////////////
     // framebuffer objects
     GLuint fbo_            = 0;

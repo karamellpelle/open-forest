@@ -4,6 +4,7 @@ nullptr no check for during read
 
 # TODO
 
+* tb skin for Key::nameGUI()
 * worlds refer to each others with pointers
 * make demo::World a subworld of run::World instead of a custom world
   for IterationRunDemo
@@ -56,6 +57,7 @@ nullptr no check for during read
 ## Keys
 * read key from YAML
 * container Key's shall not update/step children, because 'Keys' does it for all Key's!!
+* KeyButton with modifiers
 * KeyButton -> KeyKeyboardButton
 
 ## tb

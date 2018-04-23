@@ -40,6 +40,7 @@ void KeySet::load(const std::string& path)
     // for now, hardcode:
     console = createKeyClicker( createKeyButton( GLFW_KEY_TAB ) );
     escape = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
+    fullscreen = createKeyClicker( createKeyButton( GLFW_KEY_F5 ) );
 }
 
 
