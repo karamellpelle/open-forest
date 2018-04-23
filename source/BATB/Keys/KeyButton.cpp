@@ -109,7 +109,7 @@ std::string KeyButton::nameEasy() const
 std::string KeyButton::nameGUI() const
 {
     // TODO: custom skin to show key instead of a button
-    std::ostringstream os; os << "<widget TBButton: text: '" << nameEasy() << "'>";
+    std::ostringstream os; os << "<widget TBButton: skin: Key.keyboard, text: '" << nameEasy() << "'>";
     return os.str();
 }
 

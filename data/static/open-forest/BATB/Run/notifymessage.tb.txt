@@ -1,7 +1,7 @@
 TBNotifyMessage: id: notify-normal
 
 	# custom skin for (normal) notifications
-	skin Notify
+	skin Notify.normal
 
 	# layout parameters.
 	# width is fixed; height has a minimum and is allowed to grow

@@ -45,6 +45,7 @@ nullptr no check for during read
 * `reset()` for objects in forest::World
 * use metric system for terrain and all models!!!
 * World::load -> World::begin. do something better than WorldLoader? it has to work with iterations loading on different threads
+* make AL sources for control punches play in 3D
 
 ## demo
 * no al in demo file.

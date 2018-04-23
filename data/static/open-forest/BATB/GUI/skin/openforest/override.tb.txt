@@ -85,9 +85,19 @@ elements
 		cut 12
 		expand 4
 		padding 4
-	Notify
-		bitmap notify.png
+	Notify.normal
+		bitmap notify_normal.png
+		cut 20
+		expand 12
+		padding 10
+	Notify.warning
+		bitmap notify_warning.png
 		cut 16
 		expand 12
 		padding 10
+	Key.keyboard
+		bitmap key_keyboard.png
+		cut 12
+		expand 3
+		padding 5 9
 
