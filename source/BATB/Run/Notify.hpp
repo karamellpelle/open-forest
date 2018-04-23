@@ -15,10 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_NOTIFIER_HPP
-#define BATB_RUN_NOTIFIER_HPP
-#include "BATB/Run/Notifier/NotifyMessage.hpp"
-#include "BATB/Run/Notifier/TBNotify.hpp"
+#ifndef BATB_RUN_NOTIFY_HPP
+#define BATB_RUN_NOTIFY_HPP
+#include "BATB/Run/Notify/NotifyMessage.hpp"
+#include "BATB/Run/Notify/TBNotify.hpp"
 
 
 namespace batb
@@ -31,10 +31,10 @@ namespace run
 
 // class for presenting short messages to the user, for example
 // tips and tricks, in-game tutorials, etc.
-class Notifier 
+class Notify
 {
 public:
-    Notifier(BATB* b) : batb( b ) { }
+    Notify(BATB* b) : batb( b ) { }
 
     void step(World& );
 
@@ -45,7 +45,8 @@ public:
     void clear();
 
     // show message
-    bool message(const NotifyMessage& msg);
+    bool message(const NotifyMessage& msg);           // add a notification message
+    bool message(const std::string& , tick_t = 0.0);  // add a plain notification message
 
     BATB* batb;
 

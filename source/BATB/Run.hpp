@@ -31,7 +31,7 @@ namespace run
 {
 
 class Console;
-class Notifier;
+class Notify;
 class KeySet;
 class IterationRunMain;
 class IterationRunOld;
@@ -51,8 +51,8 @@ public:
 
     // text interface (world modifier)
     std::unique_ptr<Console> console;
-    // notifier
-    std::unique_ptr<Notifier> notifier;
+    // notify
+    std::unique_ptr<Notify> notify;
     // set of key's
     std::unique_ptr<KeySet> keys;
 

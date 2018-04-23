@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Run/Notifier.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run.hpp"
 #include "BATB/Run/World.hpp"
 #include "BATB/Value/Run.hpp"
@@ -34,7 +34,7 @@ namespace run
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-void Notifier::begin()
+void Notify::begin()
 {
 
     tb_notify_ = new tb::TBNotify( batb );
@@ -45,7 +45,7 @@ void Notifier::begin()
 
 }
 
-void Notifier::end()
+void Notify::end()
 {
     batb->gui->removeWidget( tb_notify_ );
     
@@ -53,7 +53,7 @@ void Notifier::end()
     tb_notify_ = nullptr;
 }
 
-void Notifier::step(World& run)
+void Notify::step(World& run)
 {
  
     // remove completed messages
@@ -79,7 +79,7 @@ void Notifier::step(World& run)
     tb_notify_->step( run );
 }
 
-bool Notifier::message(const NotifyMessage& m)
+bool Notify::message(const NotifyMessage& m)
 {
     NotifyMessage msg = m;
     msg.tick = batb->time->get();
@@ -94,6 +94,14 @@ bool Notifier::message(const NotifyMessage& m)
 }
 
 
+bool Notify::message(const std::string& str, tick_t duration)
+{
+    NotifyMessage msg;
+    msg.str = str;
+    msg.duration = duration;
+
+    message( msg );
+}
 
 } // namespace run
 

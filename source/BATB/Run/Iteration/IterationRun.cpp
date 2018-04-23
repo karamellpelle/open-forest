@@ -18,7 +18,7 @@
 #include "BATB/Run/Iteration/IterationRun.hpp"
 #include "BATB/Run/World.hpp"
 #include "BATB/Run.hpp"
-#include "BATB/Run/Notifier.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/Console.hpp"
 #include "BATB/Value/Run.hpp"
@@ -68,7 +68,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     {
         // sets tick and 
         // TODO: only uses Scene
-        batb->run->notifier->step( world );
+        batb->run->notify->step( world );
 
     }
 
@@ -106,7 +106,7 @@ debug::gl::msg("iterate_run()");
         batb->run->console->step( world );
 
         // update Notify
-        batb->run->notifier->step( world );
+        batb->run->notify->step( world );
     }
 
     ////////////////////////////////////////////////////////////////////////////////

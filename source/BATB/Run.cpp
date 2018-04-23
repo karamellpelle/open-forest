@@ -18,7 +18,7 @@
 #include "BATB/Run.hpp"
 #include "BATB/Event.hpp"
 #include "BATB/Run/Console.hpp"
-#include "BATB/Run/Notifier.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/Iteration.hpp"
 
@@ -39,8 +39,8 @@ namespace run
 Run::Run(BATB* b) : ModuleBATB( b )
 {
     console          = std::make_unique<Console>( b );
-    notifier         = std::make_unique<Notifier>( b );
-    keys           = std::make_unique<KeySet>( b );
+    notify           = std::make_unique<Notify>( b );
+    keys             = std::make_unique<KeySet>( b );
     iterationRunOld  = std::make_unique<IterationRunOld>( b );
     iterationRunMain = std::make_unique<IterationRunMain>( b );
     events           = std::make_unique<EventList>();
@@ -80,8 +80,8 @@ void Run::begin(const std::string& path)
         batb->log << "Console created" << std::endl;
 
         // setup Notify
-        notifier->begin(); 
-        batb->log << "Notifier created" << std::endl;
+        notify->begin(); 
+        batb->log << "Notify created" << std::endl;
 
         // begin non-core iterations:
         iterationRunOld->begin();
@@ -112,7 +112,7 @@ void Run::end()
         batb->log << "IterationRunOld destroyed" << std::endl;
 
         // end Notify
-        notifier->end();
+        notify->end();
         batb->log << "Notifer destroyed" << std::endl;
 
         // end Console

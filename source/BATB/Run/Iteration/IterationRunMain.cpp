@@ -19,7 +19,7 @@
 #include "BATB/Run/Iteration.hpp"
 #include "BATB/Run/Iteration/IterationRunMain/TBMain.hpp"
 #include "BATB/Run/events.hpp"
-#include "BATB/Run/Notifier.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run/Console.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/GUI.hpp"
@@ -105,19 +105,9 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // use bound controls widget representing the control
     std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
-    NotifyMessage msg( os.str() );
-    msg.duration = 8.0;
-    batb->run->notifier->message( msg );
-/*
-    std::vector<uint> wths = { 10, 22, 50, 23, 11, 3, 7, 85, 1, 2, 32 };
-    static uint ix = 0;
-    std::string str( wths[ix], 'X' );
-    ix = (ix + 1) % wths.size();
-    std::cout << str << std::endl;
-    NotifyMessage msd( str );
-    msd.duration = 9.0;
-    batb->run->notifier->message( msd );
-*/
+        
+    // notification
+    batb->run->notify->message( os.str(), 8.0 );
 }
 
 
@@ -189,10 +179,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
                 // nanovg on/off
                 demo::nanovg::demo_toggle();
 
-                // tmp
-                NotifyMessage msg( "FYI: nanovg toggled." );
-                msg.duration = 5.0;
-                batb->run->notifier->message( msg );
+                batb->run->notify->message( "FYI: NanoVG toggled", 5.0 );
                 break;
             }
             case event::Do::Old:

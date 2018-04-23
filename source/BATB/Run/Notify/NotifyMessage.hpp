@@ -15,8 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_NOTIFYMESSAGE_HPP
-#define BATB_RUN_NOTIFYMESSAGE_HPP
+#ifndef BATB_RUN_NOTIFY_NOTIFYMESSAGE_HPP
+#define BATB_RUN_NOTIFY_NOTIFYMESSAGE_HPP
 #include "BATB/Keys.hpp"
 
 
@@ -35,7 +35,7 @@ class Notify;
 // a message to the user
 class NotifyMessage
 {
-friend class Notifier;
+friend class Notify;
 
 public:
     NotifyMessage() = default;
@@ -43,15 +43,18 @@ public:
     NotifyMessage(const std::string& s, tick_t d) : str( s ), duration( d ) { }
 
     void finish() { finished_ = true; }
+    
+    // the massage string
+    // allows embedded content like widgets
+    std::string str;
 
-    std::string str;    // this is also allowed to contain widgets etc.
+
+    tick_t tick     = 0;
+    tick_t duration = 0;
 
     // TODO: types. for example tip, warning, private message, next song playing etc.
-
-    tick_t tick = 0;
-    tick_t duration = 0;
-    bool alert = false;
-    keys::Key* key = nullptr;
+    bool alert      = false;
+    keys::Key* key  = nullptr;
     // etc.
 
 private:

@@ -15,9 +15,9 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_TBNOTIFY_HPP
-#define BATB_RUN_TBNOTIFY_HPP
-#include "BATB/Run/Notifier/NotifyMessage.hpp"
+#ifndef BATB_RUN_NOTIFY_TBNOTIFY_HPP
+#define BATB_RUN_NOTIFY_TBNOTIFY_HPP
+#include "BATB/Run/Notify/NotifyMessage.hpp"
 #include "tb/tb_widgets.h"
 #include "tb/tb_layout.h"
 #include "tb/tb_window.h"
@@ -29,7 +29,7 @@ class BATB;
 
 namespace run
 {
-class Notifier;
+class Notify;
 class NotifyMessage;
 class World;
 }
@@ -88,7 +88,7 @@ public:
 
 private:
     std::list<TBNotifyMessage*> tb_notify_messages_; // TODO: look at children of tb
-    batb::run::Notifier* notify_ = nullptr;
+    batb::run::Notify* notify_ = nullptr;
     tick_t tick_ = 0;
 };
 

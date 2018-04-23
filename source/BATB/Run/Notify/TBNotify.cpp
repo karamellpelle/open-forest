@@ -17,8 +17,8 @@
 //
 #include "BATB/Run.hpp"
 #include "BATB/Run/World.hpp"
-#include "BATB/Run/Notifier.hpp"
-#include "BATB/Run/Notifier/TBNotify.hpp"
+#include "BATB/Run/Notify.hpp"
+#include "BATB/Run/Notify/TBNotify.hpp"
 #include "BATB/GUI.hpp"
 #include "BATB/GUI/tb/helpers.hpp"
 #include "BATB/Value/Run.hpp"
@@ -43,7 +43,7 @@ TB_WIDGET_FACTORY(TBNotifyMessage, TBValue::TYPE_STRING, WIDGET_Z_TOP) { std::co
 //
 
 
-TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b->run->notifier.get() )
+TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b->run->notify.get() )
 {
     // set layout parameters
     // hardcoded, no .tb.txt here
