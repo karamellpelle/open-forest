@@ -37,7 +37,7 @@ namespace run
 void Notifier::begin()
 {
 
-    tb_notify_ = new TBNotify( batb );
+    tb_notify_ = new tb::TBNotify( batb );
 
     // add to screen
     batb->gui->addWidgetTop( tb_notify_ );

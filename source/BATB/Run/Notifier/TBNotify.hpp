@@ -20,9 +20,8 @@
 #include "BATB/Run/Notifier/NotifyMessage.hpp"
 #include "tb/tb_widgets.h"
 #include "tb/tb_layout.h"
+#include "tb/tb_window.h"
 
-
-namespace tb { class TBEditField; }
 
 namespace batb
 {
@@ -31,54 +30,75 @@ class BATB;
 namespace run
 {
 class Notifier;
-class TBNotify;
+class NotifyMessage;
 class World;
+}
+}
 
-// TurboBadger representation (UI) of NotifyMessage
-class TBNotifyMessage : public tb::TBWidget
+
+namespace tb 
+{
+
+class TBEditField;
+class TBNotify;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// this is a widget showing notifications
+//
+class TBNotifyMessage : public TBWidget
+//class TBNotifyMessage : public tb::TBWindow
 {
 
 public:
     TBOBJECT_SUBCLASS( TBNotifyMessage, tb::TBWidget );
-    TBNotifyMessage(TBNotify* , NotifyMessage* );
 
-    TBNotify* tb_notify    = nullptr;
-    tb::TBEditField* edit  = nullptr;
-    NotifyMessage* message = nullptr;
+    TBNotifyMessage() = default;
+    
+    void OnInflate(const INFLATE_INFO& ) override;
+
+    // set message
+    void message(batb::run::NotifyMessage* );
+
+    batb::run::NotifyMessage* notifymessage = nullptr;
+    TBNotify* tb_notify                     = nullptr;
+    TBEditField* tb_editfield               = nullptr;
 };
 
 
 
-////////////////////////////////////////////////////////////////////////////////
 
-// holding messages
-class TBNotify : public tb::TBLayout
+////////////////////////////////////////////////////////////////////////////////
+// this is the parent of notification widgets,
+// it's a layout thats holds them aligned
+//
+class TBNotify : public TBLayout
 {
 
 public:
-    TBOBJECT_SUBCLASS( TBNotify, tb::TBLayout );
-    TBNotify(BATB* );
+    TBOBJECT_SUBCLASS( TBNotify, TBLayout );
 
-    void step(World& );
-    void push(NotifyMessage* );
+    TBNotify() = default;     // empty constructor needed by TBWidgetFactory
+    TBNotify(batb::BATB* );
 
-    BATB* batb;
+    void step(batb::run::World& );
+    void push(batb::run::NotifyMessage* );
+
+    batb::BATB* batb;
 
 private:
-    std::list<TBNotifyMessage*> tb_notify_messages_;
-    Notifier* notify_ = nullptr;
+    std::list<TBNotifyMessage*> tb_notify_messages_; // TODO: look at children of tb
+    batb::run::Notifier* notify_ = nullptr;
     tick_t tick_ = 0;
 };
 
 
+} // namespace tb
 
 
 
-////////////////////////////////////////////////////////////////////////////////
 
 
-} // namespace run
 
-} // namespace batb
 
 #endif

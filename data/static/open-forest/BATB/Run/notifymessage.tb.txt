@@ -1,15 +1,22 @@
-#TBLayout: axis: y, spacing: 0, size: available
-skin Notify
+TBNotifyMessage: id: notify-normal
 
-TBEditField: id: "edit"
-	skin 0
-	gravity all
-	multiline 1
-	adapt-to-content 1
-	styling 1
-	readonly 1
-	#text "hallo"
+	# custom skin for (normal) notifications
+	skin Notify
+
+	# layout parameters.
+	# width is fixed; height has a minimum and is allowed to grow
+	lp: min-width: 440, max-width: 440, pref-width: 440, min-height: 80
+
+	TBEditField: id: "edit"
+		skin 0
+		gravity all
+		multiline 1
+		adapt-to-content 1
+		styling 1
+		readonly 1
+		
 	
-
+# TODO
+#TBNotifyMessage: id: notify-warning etc
 
 

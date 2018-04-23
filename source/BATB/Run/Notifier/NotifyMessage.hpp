@@ -46,6 +46,8 @@ public:
 
     std::string str;    // this is also allowed to contain widgets etc.
 
+    // TODO: types. for example tip, warning, private message, next song playing etc.
+
     tick_t tick = 0;
     tick_t duration = 0;
     bool alert = false;

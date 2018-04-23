@@ -15,70 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_NOTIFIER_HPP
-#define BATB_RUN_NOTIFIER_HPP
-#include "BATB/Run/Notifier/NotifyMessage.hpp"
-#include "BATB/Run/Notifier/TBNotify.hpp"
+#ifndef BATB_RUN_GUI_TB_HELPERS_HPP
+#define BATB_RUN_GUI_TB_HELPERS_HPP
+#include "tb/tb_widgets.h"
+#include "tb/tb_widgets_reader.h"
 
-
-namespace batb
+namespace tb
 {
-class BATB;
-
-namespace run
-{
-
-
-// class for presenting short messages to the user, for example
-// tips and tricks, in-game tutorials, etc.
-class Notifier 
-{
-public:
-    Notifier(BATB* b) : batb( b ) { }
-
-    void step(World& );
-
-    void begin();
-    void end();
-
-    // hide and clear
-    void clear();
-
-    // show message
-    bool message(const NotifyMessage& msg);
-
-    BATB* batb;
-
-
-
-private:
-    std::list<NotifyMessage> messages_;
-    tb::TBNotify* tb_notify_ = nullptr;
-
-
-};
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// create a widget for us from node and adding it to 'parent'. see
+// TBWidget::OnInflate() and TBWidgetsReader::CreateWIdget()
+// in tb_widgets_reader.cpp
 
-namespace event
+template <typename Widget>
+Widget* new_widget(TBWidget* parent, TBNode* node)
 {
+    auto ret = new Widget();
+   
+    INFLATE_INFO info( g_widgets_reader, parent, node, TBValue::TYPE_NULL );
 
-// tell that event was completed
-class NotifyMessageComplete
-{
-public:
-    NotifyMessageComplete(NotifyMessage* m) : message( m ) { }
+    // this adds it to the parent, see 'TBWidget::OnInflate()' 
+    ret->OnInflate( info );
 
-    NotifyMessage* message = nullptr;
+    // now read and add children
+    g_widgets_reader->LoadNodeTree( ret, node );
 
-};
+    return ret;
+}
 
-} // namespace event
 
-} // namespace run
 
-} // namespace batb
+} // namespace tb
+
 
 #endif

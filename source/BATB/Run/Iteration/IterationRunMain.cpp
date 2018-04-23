@@ -103,12 +103,21 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     std::cout << std::endl << "use [" << batb->run->keys->console->nameEasy() << "] to toggle console" << std::endl;
 
     // use bound controls widget representing the control
-    std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console";
+    std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n";
+                              //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
     NotifyMessage msg( os.str() );
     msg.duration = 8.0;
     batb->run->notifier->message( msg );
-
-     
+/*
+    std::vector<uint> wths = { 10, 22, 50, 23, 11, 3, 7, 85, 1, 2, 32 };
+    static uint ix = 0;
+    std::string str( wths[ix], 'X' );
+    ix = (ix + 1) % wths.size();
+    std::cout << str << std::endl;
+    NotifyMessage msd( str );
+    msd.duration = 9.0;
+    batb->run->notifier->message( msd );
+*/
 }
 
 

@@ -20,98 +20,84 @@
 #include "BATB/Run/Notifier.hpp"
 #include "BATB/Run/Notifier/TBNotify.hpp"
 #include "BATB/GUI.hpp"
+#include "BATB/GUI/tb/helpers.hpp"
 #include "BATB/Value/Run.hpp"
 #include "BATB/Keys/Key.hpp"
 #include "BATB/Time.hpp"
 
 
 
+using namespace batb;
+using namespace batb::run;
 
-  
-namespace batb
+namespace tb
 {
 
-namespace run
-{
+////////////////////////////////////////////////////////////////////////////////
+
+// without this, TBNotify is never read (g_widgets_reader->LoadNodeTree( this, &node )):
+TB_WIDGET_FACTORY(TBNotifyMessage, TBValue::TYPE_STRING, WIDGET_Z_TOP) { std::cout << "inflating TBNotifyMessage!"<<std::endl;}
+
+////////////////////////////////////////////////////////////////////////////////
+// TBNotify
+//
+
 
 TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b->run->notifier.get() )
 {
     // set layout parameters
+    // hardcoded, no .tb.txt here
     
-    // size: preferred
-    //SetLayoutSize( tb::LAYOUT_SIZE_PREFERRED );
-    // position: center
+    ////////////////////////////////////////////////////////////////
+    // this is a tb::AXIS_Y layout
+    // see tb_layout.h for help (this is difficult!)
+
+    // which size should children have?
+    // -> size: preferred
+    SetLayoutSize( tb::LAYOUT_SIZE_PREFERRED );
+
+    // which x position should children have?
+    // -> position: center
     SetLayoutPosition( tb::LAYOUT_POSITION_CENTER );
-    // distribution: preferred
+
+    // which height should children have when distributing the children?
+    // -> distribution: preferred
     SetLayoutDistribution( tb::LAYOUT_DISTRIBUTION_PREFERRED );
-    // distribution position: top
+
+    // how should children be moved when distributing the children?
+    // -> distribution position: top
     SetLayoutDistributionPosition( tb::LAYOUT_DISTRIBUTION_POSITION_LEFT_TOP );
-
-    // clip
-    SetLayoutOverflow( tb::LAYOUT_OVERFLOW_CLIP );
-
-    // spacing
-	/** Set the spacing between widgets in this layout. Setting the default (SPACING_FROM_SKIN)
-		will make it use the spacing specified in the skin. */
-	//void SetSpacing(int spacing);
 
     // since this is a non-interactive top widget spanning the whole screen,
     // make sure it does not steal input
     SetIsFocusable( false );
     SetIgnoreInput( true );
 
-    SetSize( 220, 800 );
-    // this makes widget fill to root automatically:
-    //SetGravity( tb:WIDGET_GRAVITY_ALL );
 }
 
-TBNotifyMessage::TBNotifyMessage(TBNotify* n, NotifyMessage* msg) : tb::TBWidget(), tb_notify( n ), message( msg )
+
+
+void TBNotifyMessage::message(NotifyMessage* msg)
 {
-    using namespace tb;
+    
+    // here it would be nice to have a global variable 'batb'!
+    auto batb = tb_notify->batb;
 
-    BATB* batb = tb_notify->batb;
+    // what this represents
+    notifymessage = msg;
 
-    constexpr const char* path = "static://BATB/Run/notifymessage.tb.txt";  
-    // read file as node tree, letting us parse custom nodes for this widget.
-    // see tb_widgets_reader.[hc]pp
-    TBNode node;
-    if ( node.ReadFile( path ) )
+    if ( ( tb_editfield = GetWidgetByIDAndType<TBEditField>( TBIDC( "edit" ) ) ) )
     {
-	if (const char *skin = node.GetValueString("skin", nullptr))
-	{
-	    SetSkinBg(skin);
-	}
-
-        // let TB populate this TBWindow from file
-        g_widgets_reader->LoadNodeTree( this, &node );
-
-        //SetSkinBg( node.GetValueString( "skin", "TBWindow" ) ); // TODO!
-
-        if ( ( edit = GetWidgetByIDAndType<TBEditField>( TBIDC( "edit" ) ) ) )
-        {
-            // set text
-            edit->SetText( msg->str.c_str() );
-
-        }
-        else
-        {
-            batb->log << "TBNotifyMessage: 'edit' not defined\n";
-        }
-
-        // only input should receive focus
-        //tb_output_->SetIsFocusable( false );
-        
-        // TODO: set preferred size!
+        // set text
+        tb_editfield->SetText( msg->str.c_str() );
+        tb_editfield->SetTextAlign( TB_TEXT_ALIGN_CENTER );
 
     }
     else
     {
-        batb->log << "TBNotify: could not read " << path << std::endl;
-
+        batb->log << "TBNotifyMessage: 'edit' not defined\n";
     }
 
-    // hardcoded size for now!
-    SetSize( 200, 100 );
 }
 
 
@@ -133,7 +119,7 @@ void TBNotify::step(World& run)
         TBNotifyMessage* tbmsg = *i;
         bool remove = false;
 
-        auto message = tbmsg->message;
+        auto message = tbmsg->notifymessage;
         tick_t ts = message->tick + message->duration;
 
         // duration specifies minimum time
@@ -169,16 +155,60 @@ void TBNotify::step(World& run)
 
 }
 
+
+void TBNotifyMessage::OnInflate(const INFLATE_INFO &info)
+{
+    // shall we read custom properties?
+    // not now.
+    TBWidget::OnInflate( info );
+}
+
 void TBNotify::push(NotifyMessage* m)
 {
-    auto ptr = new TBNotifyMessage( this, m );
-    
-    tb_notify_messages_.push_back( ptr );
+    constexpr const char* path = "static://BATB/Run/notifymessage.tb.txt";  
 
-    // add as child widget
-    AddChild( ptr );
+    // read file as node tree, letting us parse custom nodes for this widget.
+    // see tb_widgets_reader.[hc]pp
+    TBNode node;
+    if ( node.ReadFile( path ) )
+    {
+        // find a TBNotifyMessage definition in file
+        for (TBNode* child = node.GetFirstChild(); child; child = child->GetNext())
+        {
+              if ( std::string( "TBNotifyMessage" ).compare( child->GetName() ) == 0 )
+              {
+                  // TODO: look at id and compare to NotifyMessage type (warning, tip, etc, new chat, song etc).
+
+                  auto ptr = new_widget<TBNotifyMessage>( this, child );
+
+                  ptr->tb_notify = this;
+                  ptr->message( m );
+
+                  // witdh and height are defined in the layout parameters in .tb.txt
+                  // here is how:
+                  //tb::LayoutParams lp;
+                  //lp.min_w = lp.max_w = lp.pref_w = 440;
+                  //lp.min_h = 80;
+                  //SetLayoutParams( lp );
+
+
+                  tb_notify_messages_.push_back( ptr );
+                  
+                  // child created, all done
+                  return;
+
+              }
+        }
+        batb->log << "TBNotify: no TBNotifyMessage defined in " << path << std::endl;
+    }
+    else
+    {
+        batb->log << "TBNotify: could not read " << path << std::endl;
+    }
+
     
 
+    
     
 }
 
@@ -200,7 +230,5 @@ void TBNotify::push(NotifyMessage* m)
 //
 
 
-} // namespace run
-
-} // namespace batb
+} // namespace tb
 
