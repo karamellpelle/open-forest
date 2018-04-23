@@ -21,9 +21,6 @@
 #include "BATB/Run/World.hpp"
 #include "BATB/Run/Iteration.hpp"
 
-// FIXME: remove!
-#include "BATB/Demo/other.hpp"
-
 
 // should we load the non-core part of batb on main thread?
 // the other alternative is to use "workers"
@@ -47,9 +44,6 @@ int main(int argc, char** argv)
         //
         auto batb = std::make_unique<BATB>();
         batb->begin( file::dynamic_data( "BATB.yaml" ) ); 
-
-        // TMP: demo
-        batb::demo::other_begin( batb.get() ); 
 
         
         // this is the application world
@@ -99,9 +93,6 @@ int main(int argc, char** argv)
         }
         
         ////////////////////////////////////////////////////////////////////////////////
-        //
-        // FIXME: remove
-        batb::demo::other_end( batb.get() ); 
         
 #ifndef LOAD_NONCOREBATB_ON_MAIN_THREAD
         batb->end();

@@ -28,7 +28,7 @@ sound             : [**ALURE**](http://kcat.strangesoft.net/alure.html)
 input             : [**GLFW**](http://www.glfw.org)  
 GUI               : [**turbobadger**](https://github.com/fruxo/turbobadger)  
 config            : [**YAML**](http://yaml.org), [tinyxml2](http://www.grinninglizard.com/tinyxml2)  
-UDP network       : ?  
+UDP network       : [???](http://www.codeofhonor.com/blog/choosing-a-game-network-lib)  
 3D rendering      : [**OGRE**](http://www.ogre3d.org)  
 2D rendering      : [**nanovg**](https://github.com/memononen/nanovg)  
 font rendering    : (using turbobadger or nanovg)  

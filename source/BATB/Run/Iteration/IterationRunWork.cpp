@@ -17,7 +17,6 @@
 //
 #include "BATB/Run/Iteration/IterationRunWork.hpp"
 #include "BATB/Run/Iteration/IterationRunWork/RunWorkTBWidget.hpp"
-#include "BATB/Demo/other.hpp"
 #include "BATB/OGRE.hpp"
 #include "BATB/AL.hpp"
 #include "BATB/GUI.hpp"
@@ -127,9 +126,6 @@ IterationStack IterationRunWork::iterate_run(World& world)
 
 void IterationRunWork::output(run::World& run)
 {
-    // draw background
-    demo::background( batb, run );
-
     if ( item_ )
     {
         switch ( item_->mode )

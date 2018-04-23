@@ -27,7 +27,6 @@
 #include "BATB/Demo/libs/nanovg.hpp"
 #include "BATB/Demo/libs/ogre.hpp"
 #include "BATB/Demo/libs/al.hpp"
-#include "BATB/Demo/other.hpp"
 
 //#define DEMO_FOREST_DIRECT
 
