@@ -47,10 +47,21 @@ public:
     void iterate_begin(World& );
 
 
-    TBMain* tb_main = nullptr; 
+    TBMain* tb_main   = nullptr;
+
+    demo::World* demo = nullptr; 
+    // should this be here, ideally? IterationRunMain creates demo::Wolrd 
+    // and launches IterationRunDemo, so probably. otherwise it should
+    // be part of IterationRunDemo.
+    // this means IterationRunMain is reused.
 
 private:
+    // this creates a new demo world for us.
+    // demo world should maybe be a subworld of run world.
+    demo::World* newDemoWorld(run::World* );
+
     BeginEvents beginEvents;
+
 
 
 };

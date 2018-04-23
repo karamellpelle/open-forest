@@ -136,7 +136,7 @@ void Output::operator()(World& demo)
                 lineTo( points[i] );
             }
             lineTo( trace.point0 );
-            lineTo( TracePoint( forest.tick, glm::vec3( pos ) ) );
+            lineTo( TracePoint( forest->tick, glm::vec3( pos ) ) );
 
             nvgStroke(nvg);
             

@@ -29,6 +29,7 @@ namespace game
 //    encapsulating an existing iteration X, so that the world is modified
 //    before the actual iteration X, at the first iteration.
 //    the encapsulated Iteration needs a public member 'iterate_begin'
+//    UPDATE: 'iterate_begin' is now a virtual member of Iteration :)
 template <typename Iter>
 class IterationBegin : public Iteration<typename Iter::World>
 {
@@ -52,6 +53,7 @@ public:
         // iterate
         return next_.iterate( a );
     }
+
 
 private:
     using IterationBase = Iteration<typename Iter::World>;

@@ -15,6 +15,8 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "BATB/Run.hpp"
+#include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/Iteration/IterationRunDemo.hpp"
 #include "BATB/Demo.hpp"
 #include "BATB/Demo/Iteration/IterationDemoForest.hpp"
@@ -27,19 +29,34 @@ namespace run
 {
 
 
-IterationRunDemo::IterationRunDemo(BATB* b, demo::World* d) : IterationRun( b ), demo_( d )
+IterationRunDemo::IterationRunDemo(BATB* b) : IterationRun( b )
 {
 
 }
 
+void IterationRunDemo::begin()
+{
 
+    // setup substack, that is, stack of IterationDemo's
+    // (IterationDemoForest runs forever)
+    stack_ = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
+}
+
+void IterationRunDemo::demoWorld(demo::World* demo)
+{
+    demo_ = demo;
+}
 
 void IterationRunDemo::iterate_begin(World& run)
 {
-
-    // setup substack
-    stack_ = { game::begin_iteration( new demo::IterationDemoForest( batb ) ) };
-
+    // stack_ is set up previously.  that means iterations of 
+    // demo::World will continue where it was the last time.
+    // but we have to restart the iteration at stack
+    
+    if ( !stack_.empty() )
+    {
+        stack_.front()->iterate_begin( *demo_ );
+    }
 }
 
 
@@ -48,8 +65,14 @@ IterationStack IterationRunDemo::iterate_run(World& run)
     // wrap IterationDemo's inside IterationRun
     game::iterate( stack_, *demo_ );
 
-    if ( stack_.empty() )
+    // this Run-Iteration decides to go back or not 
+    // (IterationDemoForest runs forever)
+    // TODO: look at events, see if we shall exit or not 
+    if ( batb->run->keys->escape->click() )
     {
+        // set back cursor
+        batb->keys->setCursorFree( false );
+
         return _emptylist_;
     }
     else

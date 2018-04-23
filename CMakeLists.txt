@@ -334,6 +334,7 @@ set(  BATB_SOURCES
 
       ## demo:
       "${MAIN_SOURCE_DIR}/BATB/Demo.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/World.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/BeginEvents.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/Course.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/CourseCurve.cpp"

@@ -40,7 +40,13 @@ class IterationRunDemo : public IterationRun
 {
 public:
     // construct from the containing Run object
-    IterationRunDemo(BATB* , demo::World* );
+    IterationRunDemo(BATB* );
+
+    // setup 
+    void begin();
+
+    // set demo world this works on
+    void demoWorld(demo::World* demo);
 
     // iterate
     IterationStack iterate_run(World& world) override;

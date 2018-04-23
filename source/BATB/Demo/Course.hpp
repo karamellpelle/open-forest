@@ -33,12 +33,17 @@ namespace demo
 class Course
 {
 public:
-    Course(forest::World& );
+    Course();
+
     void clear();
+
+    void forest(forest::World* f) { forest_ = f; }
+
     void addControl(float_t, float_t, forest::ControlDefinition::Code, forest::ControlDefinition::Type);
     forest::Control* operator[](uint ) const;
    
     uint size() const               { return controls_.size(); }
+    bool empty() const              { return controls_.empty(); }
 
     // dimensions
     float_t radius(float_t , float_t ) const;
@@ -51,7 +56,7 @@ public:
     glm::vec2 center() const;
 
 private:
-    forest::World& forest_;
+    forest::World* forest_;
     std::vector<forest::Control*> controls_;
 
     float_t x_min_ = 0.0;

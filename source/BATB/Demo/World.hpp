@@ -17,18 +17,15 @@
 //
 #ifndef BATB_DEMO_WORLD_HPP
 #define BATB_DEMO_WORLD_HPP
-#include "BATB/Forest.hpp"
-#include "BATB/Forest/World.hpp"
 #include "BATB/Demo/Course.hpp"
 
 
 namespace batb
 {
 
-namespace run
-{
-class World;
-}
+namespace run    { class World; }
+namespace forest { class World; }
+namespace forest { class Runner; }
 
 namespace demo
 {
@@ -48,11 +45,18 @@ class World
 {
 
 public:
-    World(run::World& r) : run( r ), forest( r ), course( forest ) { }
+    World(run::World& r);
 
+    // setup this world. this should ideally be done by IterationRunDemoBegin,
+    // and not call this function, since loading takes time and should be done
+    // in seperate thread
+    void begin();
+
+    ////////////////////////////////////////////////////////////////
     run::World& run;
+
     // forest subworld
-    forest::World forest;
+    std::unique_ptr<forest::World> forest;
 
     EventList events;
 
@@ -61,9 +65,9 @@ public:
 
     
     forest::Runner* runner = nullptr;
+
     Course course;
     uint course_i = 0; // current control
-
 
 
 private:

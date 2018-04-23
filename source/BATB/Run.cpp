@@ -43,6 +43,7 @@ Run::Run(BATB* b) : ModuleBATB( b )
     keys             = std::make_unique<KeySet>( b );
     iterationRunOld  = std::make_unique<IterationRunOld>( b );
     iterationRunMain = std::make_unique<IterationRunMain>( b );
+    iterationRunDemo = std::make_unique<IterationRunDemo>( b );
     events           = std::make_unique<EventList>();
 }
 
@@ -88,6 +89,8 @@ void Run::begin(const std::string& path)
         batb->log << "IterationRunOld created" << std::endl;
         iterationRunMain->begin();
         batb->log << "IterationRunMain created" << std::endl;
+        iterationRunDemo->begin();
+        batb->log << "IterationRunDemo created" << std::endl;
     }
 
     init( true );

@@ -59,7 +59,7 @@ public:
     ////////////////////////////////////////
 
 private:
-    void createCourse(demo::World& );
+    void createRandomCourse(demo::World& );
     void modifyRunnerDemo(demo::World& );
 
     demo::Output outputDemo;

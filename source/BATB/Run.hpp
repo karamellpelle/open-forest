@@ -35,6 +35,7 @@ class Notify;
 class KeySet;
 class IterationRunMain;
 class IterationRunOld;
+class IterationRunDemo;
 
 
 class Run : public ModuleBATB
@@ -58,10 +59,12 @@ public:
 
 
     // Iteration's
-    //IterationRunIntro     iterationRunIntro;
-    std::unique_ptr<IterationRunMain> iterationRunMain;
-    //IterationRunOutro     iterationRunOutro;
-    std::unique_ptr<IterationRunOld>  iterationRunOld; 
+    //IterationRunIntro     iterationRunIntro;           // fancy game inro. use video?
+    //IterationRunOutro     iterationRunOutro;           // fancy game outro. scrolling text. credits, etc.
+    std::unique_ptr<IterationRunMain> iterationRunMain;  // main menu
+    std::unique_ptr<IterationRunOld>  iterationRunOld;   // run old BATB (may not be functional depending on build setting)
+    std::unique_ptr<IterationRunDemo>  iterationRunDemo; // run old demo, i.e. forest::World trough demo::World through this world, run::World
+
 
     ////////////////////////////////////////////////////////////////////////////////
     // push events

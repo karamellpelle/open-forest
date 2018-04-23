@@ -49,20 +49,28 @@ IterationRunMain::IterationRunMain(BATB* b) : IterationRun( b ), beginEvents( b 
 void IterationRunMain::begin()
 {
 
+    // create main menu
     tb_main = new TBMain( batb );
+    //tb_main = new TBMain();
+    //tb_main->batb = batb;
+    //tb_main->begin( path ); // use defined in .yaml? constexpr const char* path = "static://BATB/Run/main.tb.txt";
+    // ^ TODO: tb_main
 
-    // add to screen
     batb->gui->addWidget( tb_main );
 
 }
 
 void IterationRunMain::end()
 {
+    // destroy the demo world
+    delete demo;
+    demo = nullptr;
 
+    // remove main menu widget
     batb->gui->removeWidget( tb_main );
-
     delete tb_main;
     tb_main = nullptr;
+
 }
   
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +145,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     //if ( batb.run.keys.escape->click() )  run.events.push( event::Do::Exit );
 
     // test scrool
-    double a = batb->demo->keys->scroll->alpha();
+    //double a = batb->demo->keys->scroll->alpha();
     //std::cout << "scroll! current: " << a << "\r" << std::flush;
 
 #ifdef DEMO_FOREST_DIRECT
@@ -158,20 +166,39 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
                 // remove main widget from screen
                 tb_main->SetVisibility( tb::WIDGET_VISIBILITY_INVISIBLE );
 
+                auto iterationRunDemo = batb->run->iterationRunDemo.get();
+
                 // create demo::World 
-                auto demo = new demo::World( run );
-                forest::WorldLoader loader( batb );        
-                loader.load( demo->forest, YAML::Node() ); 
+                // FIXME: this world is never released as far as I know
+                if ( demo )
+                {
+                    // continue with previous
+                    return { game::begin_iteration( iterationRunDemo ), 
+                             game::begin_iteration( this ) };
+                }
+                else
+                {
 
-                return { game::begin_iteration( new IterationRunDemo( batb, demo ) ), 
-                         game::begin_iteration( this ) };
+                    // create and set up demo world
+                    auto demo = newDemoWorld( &run );
 
-                //return {
-                //          new run::IterationRunWork( batb, demo::LoadWorkerWorld( batb, demo ) ),
-                //          game::begin_iteration( new IterationRunDemo( batb, demo ) ),
-                //          new run::IterationRunWork( batb, demo::UnloadWorkerWorld( batb, demo ) ),
-                //          game::begin_iteration( this )
-                //       };
+                    // demo world created, make sure IterationRunDemo works on that
+                    // for non-demo world, that world should be a 
+                    // TODO: make demo world a subworld of run world and remove this:
+                    iterationRunDemo->demoWorld( demo );
+
+                    return { game::begin_iteration( iterationRunDemo ), 
+                             game::begin_iteration( this ) };
+
+                    // TODO: use workers to load data instead:
+                    //return {
+                    //          new run::IterationRunDemoBegin( demo ),
+                    //          game::begin_iteration( iterationRunDemo ),
+                    //          new run::IterationRunDemoEnd( demo ),
+                    //          game::begin_iteration( this )
+                    //       };
+                }
+
             }    
             case event::Do::NanoVG:
             {
@@ -206,6 +233,28 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 }
 
 
+// TODO: make dwmo world a subworld of run wolr and remvoe this:
+demo::World* IterationRunMain::newDemoWorld(run::World* run)
+{
+    if ( !demo )
+    {
+        // create and set up demo world
+        demo = new demo::World( *run );
+
+        auto& forest = *demo->forest;
+
+        // create a Forest world for demo
+        // TODO: do something better than a loading class
+        forest::WorldLoader loader( batb );        
+        loader.load( forest, YAML::Node() ); 
+
+        // now, forest world of demo world is created, continue
+        // with other set ups 
+        demo->begin();
+    }
+    return demo;
+
+}
 
 
 

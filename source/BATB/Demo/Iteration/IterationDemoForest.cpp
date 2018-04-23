@@ -63,7 +63,7 @@ void IterationDemoForest::iterate_begin(World& demo)
 {
     
     run::World& run = demo.run;
-    forest::World& forest = demo.forest;
+    auto& forest = *demo.forest;
 
     // set ticks to current run-tick
     demo.tick = run.tick;
@@ -76,43 +76,46 @@ void IterationDemoForest::iterate_begin(World& demo)
     // no cursor
     batb->keys->setCursorFree( true );
 
-    
-    ////////////////////////////////////////////////////////////////////////////////
-    // add a runner
-    demo.runner = forest.addRunner( run.player );
-    demo.runner->reset( glm::vec2( 0, 0 ) );
-
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // create a course for runner
-    createCourse( demo );
-    demo.course_i = 0;
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // create a curve: control0 -> control1
-    auto* control0 = demo.course[ demo.course_i ];
-    auto* control1 = demo.course[ demo.course_i + 1 ];
-    
-    curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
-                  glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
-    curve_i = 0;
-
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // set controllers (Keys)
-    modifyRunner.runner( demo.runner );
-    modifyControlRunner.modifier( &modifyRunner );
-    modifyControlCamera.modifier( &modifyCamera );
-
     // ensure we can use Key's
     batb->gui->lockKeys( false );
 
+#if 0
+    ////////////////////////////////////////////////////////////////////////////////
+    // add a runner
+    demo.runner = forest.addRunner( run.player ); 
+    demo.runner->reset( glm::vec2( 0, 0 ) );
+#endif
+
+    // if we have no Course, create one
+    if ( demo.course.empty() )
+    {
+        ////////////////////////////////////////////////////////////////////////////////
+        // create a course for runner
+        createRandomCourse( demo ); 
+        demo.course_i = 0;
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // create a curve: control0 -> control1
+        auto* control0 = demo.course[ demo.course_i ];
+        auto* control1 = demo.course[ demo.course_i + 1 ];
+        
+        curve.create( glm::vec2( control0->aim.pos.x, control0->aim.pos.z ),
+                      glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
+        curve_i = 0; 
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // set controllers (Keys)
+        modifyRunner.runner( demo.runner );
+        modifyControlRunner.modifier( &modifyRunner );
+        modifyControlCamera.modifier( &modifyCamera );
+    }
 }
 
 
 IterationStack IterationDemoForest::iterate_demo(World& demo)
 {
-    auto& forest = demo.forest;
+    auto& forest = *(demo.forest);
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** output ***
@@ -227,7 +230,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
                     if ( demo.course_i + 1 == demo.course.size() )
                     {
                         // course complete, create new course
-                        createCourse( demo );
+                        createRandomCourse( demo );
                         
                         demo.course_i = 0;
                     }
@@ -249,19 +252,9 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // update after dt
     stepDT( forest );
 
+    // this one runs forever 
+    return { this };
 
-    // TODO: look at demo-events!
-    if ( batb->run->keys->escape->click() )
-    {
-        // set back cursor
-        batb->keys->setCursorFree( false );
-
-        return _emptylist_;
-    }
-    else
-    {
-        return { this };
-    }
 
 
 }
@@ -314,21 +307,24 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
 
 }
 
-void IterationDemoForest::createCourse(demo::World& demo)
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+void IterationDemoForest::createRandomCourse(demo::World& demo)
 {
     using ControlDefinition = forest::ControlDefinition;   
-    forest::World& forest = demo.forest;
-    Course& course = demo.course;
+    auto& forest = *demo.forest;
 
     glm::vec4 p0;
     glm::vec4 p1;
-    if ( 2 <= course.size() )
+    if ( 2 <= demo.course.size() )
     {
-        auto size = course.size();
+        auto size = demo.course.size();
 
         // continue previous course 
-        p0 = course[ size - 2 ]->aim.pos;
-        p1 = course[ size - 1 ]->aim.pos;
+        p0 = demo.course[ size - 2 ]->aim.pos;
+        p1 = demo.course[ size - 1 ]->aim.pos;
     }
     else
     {
@@ -340,17 +336,17 @@ void IterationDemoForest::createCourse(demo::World& demo)
 
     // clear course
     // FIXME: no remove?
-    for (uint i = 0; i != course.size(); ++i)
+    for (uint i = 0; i != demo.course.size(); ++i)
     {
-        forest.removeControl( course[i] );
+        forest.removeControl( demo.course[i] );
     }
-    course.clear();
+    demo.course.clear();
 
 
     ControlDefinition::Code code = 0;
 
     // Start
-    course.addControl( p1.x, p1.z, code++, ControlDefinition::Type::Start );
+    demo.course.addControl( p1.x, p1.z, code++, ControlDefinition::Type::Start );
 
     static std::default_random_engine rand( std::chrono::system_clock::now().time_since_epoch().count() );
 
@@ -378,7 +374,7 @@ void IterationDemoForest::createCourse(demo::World& demo)
         {
             // Finish
             code = std::max( (uint)(500), (uint)(code + 32) );
-            course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Finish );
+            demo.course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Finish );
         }
         else
         {
@@ -387,7 +383,7 @@ void IterationDemoForest::createCourse(demo::World& demo)
             code += code_d;
             
             // Normal
-            course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Normal );
+            demo.course.addControl( p2.x, p2.z, code, ControlDefinition::Type::Normal );
         }
 
 
@@ -396,10 +392,6 @@ void IterationDemoForest::createCourse(demo::World& demo)
     }
 
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//
 
 ////////////////////////////////////////////////////////////////////////////////
 // 

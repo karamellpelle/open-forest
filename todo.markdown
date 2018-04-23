@@ -4,10 +4,16 @@ nullptr no check for during read
 
 # TODO
 
+* worlds refer to each others with pointers
+* make demo::World a subworld of run::World instead of a custom world
+  for IterationRunDemo
+* TBMain setup
+* Toggle fullscreen Key
+* IterationRunDemo into BATB::Run
+* load Keys from YAML
 * callback for windows: close app
 * mouse and map view
 * create global variable 'batb'?
-* World::load -> World::begin?
 * begin/end iterations
 * `using float_t = double_t;` in include
   - define precision of glm (vec, mat, etc) the same as float_t 
@@ -27,15 +33,25 @@ nullptr no check for during read
 * fix IterationRunWork to load run::World, forest::World, etc on seperate thread. 
 * remove template LoadWorker
 
+## Ogre3d
+* load/unload terrains etc, making possible to start over
+* fix terrain rendering (it's black on macOS)
+
+## game
+* wrap Iteratations into some class with shared_ptr to easily work with Iteration's and have control over their lifetimes
+
 ## forest
 * `reset()` for objects in forest::World
 * use metric system for terrain and all models!!!
+* World::load -> World::begin. do something better than WorldLoader? it has to work with iterations loading on different threads
 
 ## demo
 * no al in demo file.
   - find out what to do with the easter egg. can Alure delete buffer on finish?
 * mouse and show map:
   - right
+* accelerated movement with arrow buttons
+* restart Demo (ogre) from main menu
 
 ## Keys
 * read key from YAML
@@ -51,6 +67,7 @@ nullptr no check for during read
 * do not hardcode .tb.txt file paths. find out how to read our custom widgets.
   we should define and use OnInflate() actively.
 * create custom skin: fonts, windows, etc
+* better logo
 * TB: register other font renderers (tb_config.h needed too)
 
 ## CMake

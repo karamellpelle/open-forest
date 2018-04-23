@@ -26,7 +26,7 @@ namespace batb
 namespace demo
 {
 
-Course::Course(forest::World& w) : forest_( w )
+Course::Course() 
 {
 
 }
@@ -42,7 +42,7 @@ void Course::addControl(float_t x, float_t z, forest::ControlDefinition::Code c,
 
     // add a _new_ control to forest::World
     forest::ControlDefinition def( x, z, c, t);
-    controls_.push_back( forest_.addControl( def ) );
+    controls_.push_back( forest_->addControl( def ) );
 
     x_min_ = std::min( x_min_, x );
     x_max_ = std::max( x_max_, x );

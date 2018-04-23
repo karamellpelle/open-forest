@@ -33,12 +33,13 @@ void LoadWorkerWorld::operator()(run::Work& work)
 {
     // how many steps to be loaded
     work.definite( 2 ); 
+    auto& forest = *demo->forest;
 
     try
     {
         work.state( "forest::World" );
         forest::WorldLoader loader( batb );         // TODO: pass 'Work' down
-        loader.load( demo->forest, YAML::Node() );  // TODO: YAML definition
+        loader.load( forest, YAML::Node() );  // TODO: YAML definition
 
     }
     catch (std::exception& e)
@@ -57,12 +58,13 @@ void UnloadWorkerWorld::operator()(run::Work& work)
 
     // unknown how many steps to be taken
     work.indefinite(); 
+    auto& forest = *demo->forest;
 
     try
     {
         work.state( "forest::World" );
         forest::WorldLoader loader( batb );           // TODO: pass 'Work' down
-        loader.unload( demo->forest );  // TODO: YAML definition
+        loader.unload( forest );  // TODO: YAML definition
 
     } 
     catch (std::exception& e)

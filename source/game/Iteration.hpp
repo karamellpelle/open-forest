@@ -58,6 +58,9 @@ public:
     // define this in subclass:
     virtual IterationStack<A> iterate(A& a) = 0;
 
+    // it may be handy to set up the iteration 1 time first
+    virtual void iterate_begin(A& a) { }
+
 
 protected:
     //Iteration() = default;
