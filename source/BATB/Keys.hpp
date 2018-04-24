@@ -88,20 +88,24 @@ public:
     // let's create a Key!
     //
     // prims
-    KeyKeyboardButton*      createKeyKeyboardButton(int code);
-    KeyMouseButton* createKeyMouseButton(int code);
-    KeyMouseAxisX*  createKeyMouseAxisX();
-    KeyMouseAxisY*  createKeyMouseAxisY();
-    KeyMouseScroll*  createKeyMouseScrollX();
-    KeyMouseScroll*  createKeyMouseScrollY();
+    KeyKeyboardButton* createKeyKeyboardButton(int code);
+    KeyMouseButton*    createKeyMouseButton(int code);
+    KeyMouseAxisX*     createKeyMouseAxisX();
+    KeyMouseAxisY*     createKeyMouseAxisY();
+    KeyMouseScroll*    createKeyMouseScrollX();
+    KeyMouseScroll*    createKeyMouseScrollY();
     // cons
-    KeyClicker*     createKeyClicker(Key* k);
-    KeyAlpha*       createKeyAlpha(Key* k);
-    KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r);
-    KeyPointer*     createKeyPointer();
+    KeyClicker*        createKeyClicker(Key* k);
+    KeyAlpha*          createKeyAlpha(Key* k);
+    KeyPointer*        createKeyPointer(Key* x, Key* y, Key* l, Key* r);
+    KeyPointer*        createKeyPointer();
 
     // create Key from definition
-    Key* createKey(const YAML::Node& );
+    Key*               createKey(const YAML::Node& );
+
+    // TODO:
+    void               removeKey(Key* ) { }
+
 
 
     ////////////////////////////////////////////////////////////////////////////////

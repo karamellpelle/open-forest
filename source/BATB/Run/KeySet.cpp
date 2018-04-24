@@ -30,17 +30,24 @@ KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
 
 }
 
-void KeySet::load(const std::string& path)
+void KeySet::load(YAML::Node& keyset)
 {
+    // TODO: release current pointers back to Keys!
 
-    // TODO: release current pointers back to Keys
+    batb->log << "console:    ";
+    if ( auto key = createKey( keyset["console"] ) ) console = createKeyClicker( key );
+    batb->log << "" << std::endl;
 
-    // TODO: parse keys from definition in file
+    batb->log << "escape:     ";
+    if ( auto key = createKey( keyset["escape"] ) ) escape = createKeyClicker( key );
+    batb->log << "" << std::endl;
 
-    // for now, hardcode:
-    console = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_TAB ) );
-    escape = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_ESCAPE ) );
-    fullscreen = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_F5 ) );
+    batb->log << "fullscreen: ";
+    if ( auto key = createKey( keyset["fullscreen"] ) ) fullscreen = createKeyClicker( key );
+    batb->log << "" << std::endl;
+
+
+
 }
 
 

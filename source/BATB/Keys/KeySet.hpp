@@ -53,20 +53,20 @@ public:
 
 protected:
     // prims
-    KeyKeyboardButton*        createKeyKeyboardButton(int code)                        { return keys_->createKeyKeyboardButton( code ); }
-    KeyMouseButton*   createKeyMouseButton(int code)                   { return keys_->createKeyMouseButton( code ); }
-    KeyMouseAxisX*    createKeyMouseAxisX()                            { return keys_->createKeyMouseAxisX(); }
-    KeyMouseAxisY*    createKeyMouseAxisY()                            { return keys_->createKeyMouseAxisY(); }
-    KeyMouseScroll*   createKeyMouseScrollX()                          { return keys_->createKeyMouseScrollY(); }
-    KeyMouseScroll*   createKeyMouseScrollY()                          { return keys_->createKeyMouseScrollY(); }
+    KeyKeyboardButton* createKeyKeyboardButton(int code)                { return keys_->createKeyKeyboardButton( code ); }
+    KeyMouseButton*    createKeyMouseButton(int code)                   { return keys_->createKeyMouseButton( code ); }
+    KeyMouseAxisX*     createKeyMouseAxisX()                            { return keys_->createKeyMouseAxisX(); }
+    KeyMouseAxisY*     createKeyMouseAxisY()                            { return keys_->createKeyMouseAxisY(); }
+    KeyMouseScroll*    createKeyMouseScrollX()                          { return keys_->createKeyMouseScrollY(); }
+    KeyMouseScroll*    createKeyMouseScrollY()                          { return keys_->createKeyMouseScrollY(); }
     // cons
-    KeyClicker*       createKeyClicker(Key* k)                         { return keys_->createKeyClicker( k ); }
-    KeyAlpha*         createKeyAlpha(Key* k)                           { return keys_->createKeyAlpha( k ); }
-    KeyPointer*       createKeyPointer(Key* x, Key* y, Key* l, Key* r) { return keys_->createKeyPointer( x, y, l, r ); }
-    KeyPointer*       createKeyPointer()                               { return keys_->createKeyPointer(); }
+    KeyClicker*        createKeyClicker(Key* k)                         { return keys_->createKeyClicker( k ); }
+    KeyAlpha*          createKeyAlpha(Key* k)                           { return keys_->createKeyAlpha( k ); }
+    KeyPointer*        createKeyPointer(Key* x, Key* y, Key* l, Key* r) { return keys_->createKeyPointer( x, y, l, r ); }
+    KeyPointer*        createKeyPointer()                               { return keys_->createKeyPointer(); }
 
     // create Key from definition
-    Key* createKey(const YAML::Node& yaml)                            { return keys_->createKey( yaml ); }
+    Key*               createKey(const YAML::Node& yaml)                { return keys_->createKey( yaml ); }
 
 
     ////////////////////////////////////////////////////////////////////////////////

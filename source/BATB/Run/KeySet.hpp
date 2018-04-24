@@ -34,8 +34,8 @@ public:
     KeySet(BATB* b);
 
     // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
+    void load(YAML::Node& );
+    void save(YAML::Node& );
 
     // set clean state
     void reset();

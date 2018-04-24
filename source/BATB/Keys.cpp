@@ -318,7 +318,31 @@ KeyPointer* Keys::createKeyPointer()
 
 Key* Keys::createKey(const YAML::Node& yaml)
 {
-    // TODO!
+    using namespace YAML;
+   
+    // which kind of Key?
+    if ( Node key = yaml["KeyKeyboardButton"] )
+    {
+        int map_code_str(const std::string& ); // this creates glfw keys (int) from string
+
+        auto code_str = key["code"].as<std::string>( "" );
+        if ( code_str.empty() )
+        {
+            batb->log << "ERROR: no 'code' field"; 
+            return nullptr;
+        }
+        
+        auto glfw_code =  map_code_str( code_str ) ;
+        auto ret = createKeyKeyboardButton( glfw_code );
+        batb->log << "KeyKeyboardButton: { code: ";
+        if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
+        else                                   batb->log << code_str;
+        batb->log << " }";
+
+        return ret;
+    }
+
+    batb->log << "(key not known)"; // TODO: more description
     return nullptr;
 }
 
@@ -349,7 +373,134 @@ void Keys::scroll_callback_(GLFWwindow* win, double x, double y)
 
 }
 
+// map names into GLFW keyboar key
+int map_code_str(const std::string& name)
+{
+    if ( name.compare( "UNKNOWN" ) == 0 )      return GLFW_KEY_UNKNOWN;
+    if ( name.compare( "SPACE" ) == 0 )        return GLFW_KEY_SPACE;
+    if ( name.compare( "APOSTROPHE" ) == 0)    return GLFW_KEY_APOSTROPHE;
+    if ( name.compare( "COMMA" ) == 0)         return GLFW_KEY_COMMA;
+    if ( name.compare( "MINUS" ) == 0)         return GLFW_KEY_MINUS;
+    if ( name.compare( "PERIOD" ) == 0)        return GLFW_KEY_PERIOD;
+    if ( name.compare( "SLASH" ) == 0)         return GLFW_KEY_SLASH;
+    if ( name.compare( "0" ) == 0)             return GLFW_KEY_0;
+    if ( name.compare( "1" ) == 0)             return GLFW_KEY_1;
+    if ( name.compare( "2" ) == 0)             return GLFW_KEY_2;
+    if ( name.compare( "3" ) == 0)             return GLFW_KEY_3;
+    if ( name.compare( "4" ) == 0)             return GLFW_KEY_4;
+    if ( name.compare( "5" ) == 0)             return GLFW_KEY_5;
+    if ( name.compare( "6" ) == 0)             return GLFW_KEY_6;
+    if ( name.compare( "7" ) == 0)             return GLFW_KEY_7;
+    if ( name.compare( "8" ) == 0)             return GLFW_KEY_8;
+    if ( name.compare( "9" ) == 0)             return GLFW_KEY_9;
+    if ( name.compare( "SEMICOLON" ) == 0)     return GLFW_KEY_SEMICOLON;
+    if ( name.compare( "EQUAL" ) == 0)         return GLFW_KEY_EQUAL;
+    if ( name.compare( "A" ) == 0)             return GLFW_KEY_A;
+    if ( name.compare( "B" ) == 0)             return GLFW_KEY_B;
+    if ( name.compare( "C" ) == 0)             return GLFW_KEY_C;
+    if ( name.compare( "D" ) == 0)             return GLFW_KEY_D;
+    if ( name.compare( "E" ) == 0)             return GLFW_KEY_E;
+    if ( name.compare( "F" ) == 0)             return GLFW_KEY_F;
+    if ( name.compare( "G" ) == 0)             return GLFW_KEY_G;
+    if ( name.compare( "H" ) == 0)             return GLFW_KEY_H;
+    if ( name.compare( "I" ) == 0)             return GLFW_KEY_I;
+    if ( name.compare( "J" ) == 0)             return GLFW_KEY_J;
+    if ( name.compare( "K" ) == 0)             return GLFW_KEY_K;
+    if ( name.compare( "L" ) == 0)             return GLFW_KEY_L;
+    if ( name.compare( "M" ) == 0)             return GLFW_KEY_M;
+    if ( name.compare( "N" ) == 0)             return GLFW_KEY_N;
+    if ( name.compare( "O" ) == 0)             return GLFW_KEY_O;
+    if ( name.compare( "P" ) == 0)             return GLFW_KEY_P;
+    if ( name.compare( "Q" ) == 0)             return GLFW_KEY_Q;
+    if ( name.compare( "R" ) == 0)             return GLFW_KEY_R;
+    if ( name.compare( "S" ) == 0)             return GLFW_KEY_S;
+    if ( name.compare( "T" ) == 0)             return GLFW_KEY_T;
+    if ( name.compare( "U" ) == 0)             return GLFW_KEY_U;
+    if ( name.compare( "V" ) == 0)             return GLFW_KEY_V;
+    if ( name.compare( "W" ) == 0)             return GLFW_KEY_W;
+    if ( name.compare( "X" ) == 0)             return GLFW_KEY_X;
+    if ( name.compare( "Y" ) == 0)             return GLFW_KEY_Y;
+    if ( name.compare( "Z" ) == 0)             return GLFW_KEY_Z;
+    if ( name.compare( "LEFT_BRACKET" ) == 0)  return GLFW_KEY_LEFT_BRACKET;
+    if ( name.compare( "BACKSLASH" ) == 0)     return GLFW_KEY_BACKSLASH;
+    if ( name.compare( "RIGHT_BRACKET" ) == 0) return GLFW_KEY_RIGHT_BRACKET;
+    if ( name.compare( "ACCENT" ) == 0)        return GLFW_KEY_GRAVE_ACCENT;
+    if ( name.compare( "WORLD_1" ) == 0)       return GLFW_KEY_WORLD_1;
+    if ( name.compare( "WORLD_2" ) == 0)       return GLFW_KEY_WORLD_2;
+    if ( name.compare( "ESCAPE" ) == 0)        return GLFW_KEY_ESCAPE;
+    if ( name.compare( "ENTER" ) == 0)         return GLFW_KEY_ENTER;
+    if ( name.compare( "TAB" ) == 0)           return GLFW_KEY_TAB;
+    if ( name.compare( "BACKSPACE" ) == 0)     return GLFW_KEY_BACKSPACE;
+    if ( name.compare( "INSERT" ) == 0)        return GLFW_KEY_INSERT;
+    if ( name.compare( "DELETE" ) == 0)        return GLFW_KEY_DELETE;
+    if ( name.compare( "RIGHT" ) == 0)         return GLFW_KEY_RIGHT;
+    if ( name.compare( "LEFT" ) == 0)          return GLFW_KEY_LEFT;
+    if ( name.compare( "DOWN" ) == 0)          return GLFW_KEY_DOWN;
+    if ( name.compare( "UP" ) == 0)            return GLFW_KEY_UP;
+    if ( name.compare( "PAGE_UP" ) == 0)       return GLFW_KEY_PAGE_UP;
+    if ( name.compare( "PAGE_DOWN" ) == 0)     return GLFW_KEY_PAGE_DOWN;
+    if ( name.compare( "HOME" ) == 0)          return GLFW_KEY_HOME;
+    if ( name.compare( "END" ) == 0)           return GLFW_KEY_END;
+    if ( name.compare( "CAPS_LOCK" ) == 0)     return GLFW_KEY_CAPS_LOCK;
+    if ( name.compare( "SCROLL_LOCK" ) == 0)   return GLFW_KEY_SCROLL_LOCK;
+    if ( name.compare( "NUM_LOCK" ) == 0)      return GLFW_KEY_NUM_LOCK;
+    if ( name.compare( "PRINT_SCREEN" ) == 0)  return GLFW_KEY_PRINT_SCREEN;
+    if ( name.compare( "PAUSE" ) == 0)         return GLFW_KEY_PAUSE;
+    if ( name.compare( "F1" ) == 0)            return GLFW_KEY_F1;
+    if ( name.compare( "F2" ) == 0)            return GLFW_KEY_F2;
+    if ( name.compare( "F3" ) == 0)            return GLFW_KEY_F3;
+    if ( name.compare( "F4" ) == 0)            return GLFW_KEY_F4;
+    if ( name.compare( "F5" ) == 0)            return GLFW_KEY_F5;
+    if ( name.compare( "F6" ) == 0)            return GLFW_KEY_F6;
+    if ( name.compare( "F7" ) == 0)            return GLFW_KEY_F7;
+    if ( name.compare( "F8" ) == 0)            return GLFW_KEY_F8;
+    if ( name.compare( "F9" ) == 0)            return GLFW_KEY_F9;
+    if ( name.compare( "F10" ) == 0)           return GLFW_KEY_F10;
+    if ( name.compare( "F11" ) == 0)           return GLFW_KEY_F11;
+    if ( name.compare( "F12" ) == 0)           return GLFW_KEY_F12;
+    if ( name.compare( "F13" ) == 0)           return GLFW_KEY_F13;
+    if ( name.compare( "F14" ) == 0)           return GLFW_KEY_F14;
+    if ( name.compare( "F15" ) == 0)           return GLFW_KEY_F15;
+    if ( name.compare( "F16" ) == 0)           return GLFW_KEY_F16;
+    if ( name.compare( "F17" ) == 0)           return GLFW_KEY_F17;
+    if ( name.compare( "F18" ) == 0)           return GLFW_KEY_F18;
+    if ( name.compare( "F19" ) == 0)           return GLFW_KEY_F19;
+    if ( name.compare( "F20" ) == 0)           return GLFW_KEY_F20;
+    if ( name.compare( "F21" ) == 0)           return GLFW_KEY_F21;
+    if ( name.compare( "F22" ) == 0)           return GLFW_KEY_F22;
+    if ( name.compare( "F23" ) == 0)           return GLFW_KEY_F23;
+    if ( name.compare( "F24" ) == 0)           return GLFW_KEY_F24;
+    if ( name.compare( "F25" ) == 0)           return GLFW_KEY_F25;
+    if ( name.compare( "KP_0" ) == 0)          return GLFW_KEY_KP_0;
+    if ( name.compare( "KP_1" ) == 0)          return GLFW_KEY_KP_1;
+    if ( name.compare( "KP_2" ) == 0)          return GLFW_KEY_KP_2;
+    if ( name.compare( "KP_3" ) == 0)          return GLFW_KEY_KP_3;
+    if ( name.compare( "KP_4" ) == 0)          return GLFW_KEY_KP_4;
+    if ( name.compare( "KP_5" ) == 0)          return GLFW_KEY_KP_5;
+    if ( name.compare( "KP_6" ) == 0)          return GLFW_KEY_KP_6;
+    if ( name.compare( "KP_7" ) == 0)          return GLFW_KEY_KP_7;
+    if ( name.compare( "KP_8" ) == 0)          return GLFW_KEY_KP_8;
+    if ( name.compare( "KP_9" ) == 0)          return GLFW_KEY_KP_9;
+    if ( name.compare( "KP_DECIMAL" ) == 0)    return GLFW_KEY_KP_DECIMAL;
+    if ( name.compare( "KP_DIVIDE" ) == 0)     return GLFW_KEY_KP_DIVIDE;
+    if ( name.compare( "KP_MULTIPLY" ) == 0)   return GLFW_KEY_KP_MULTIPLY;
+    if ( name.compare( "KP_SUBTRACT" ) == 0)   return GLFW_KEY_KP_SUBTRACT;
+    if ( name.compare( "KP_ADD" ) == 0)        return GLFW_KEY_KP_ADD;
+    if ( name.compare( "KP_ENTER" ) == 0)      return GLFW_KEY_KP_ENTER;
+    if ( name.compare( "KP_EQUAL" ) == 0)      return GLFW_KEY_KP_EQUAL;
+    if ( name.compare( "LEFT_SHIFT" ) == 0)    return GLFW_KEY_LEFT_SHIFT;
+    if ( name.compare( "LEFT_CONTROL" ) == 0)  return GLFW_KEY_LEFT_CONTROL;
+    if ( name.compare( "LEFT_ALT" ) == 0)      return GLFW_KEY_LEFT_ALT;
+    if ( name.compare( "LEFT_SUPER" ) == 0)    return GLFW_KEY_LEFT_SUPER;
+    if ( name.compare( "RIGHT_SHIFT" ) == 0)   return GLFW_KEY_RIGHT_SHIFT;
+    if ( name.compare( "RIGHT_CONTROL" ) == 0) return GLFW_KEY_RIGHT_CONTROL;
+    if ( name.compare( "RIGHT_ALT" ) == 0)     return GLFW_KEY_RIGHT_ALT;
+    if ( name.compare( "RIGHT_SUPER" ) == 0)   return GLFW_KEY_RIGHT_SUPER;
+    if ( name.compare( "MENU" ) == 0)          return GLFW_KEY_MENU;
+    if ( name.compare( "LAST" ) == 0)          return GLFW_KEY_LAST;
 
+    return GLFW_KEY_UNKNOWN;
+}
 
 } // namespace keys
 

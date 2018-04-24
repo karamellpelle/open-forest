@@ -100,7 +100,8 @@ bool Notify::message(const std::string& str, tick_t duration)
     msg.str = str;
     msg.duration = duration;
 
-    message( msg );
+    return message( msg );
+
 }
 
 } // namespace run

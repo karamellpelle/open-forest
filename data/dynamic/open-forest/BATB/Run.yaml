@@ -1,1 +1,8 @@
-~
+
+KeySet:
+    console:    
+        KeyKeyboardButton: { code: TAB }
+    fullscreen:
+        KeyKeyboardButton: { code: SPACE }
+    escape: 
+        KeyKeyboardButton: { code: ESCAPE }

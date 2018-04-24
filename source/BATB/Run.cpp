@@ -58,6 +58,7 @@ Run::~Run()
 // begin the non-core part of Run
 void Run::begin(const std::string& path)
 {
+    using namespace YAML;
 
     batb->log << "batb->run->begin( " << path << " )" << std::endl;
     LogIndent indent( batb->log, "* " );
@@ -67,11 +68,14 @@ void Run::begin(const std::string& path)
         // set config
         config( path );
         
-        // TODO: use 'yaml' for configuration
-
         // load associated keys 
-        keys->load("batb/run/KeySet.yaml");
-        batb->log << "KeySet loaded" << std::endl;
+        if ( auto keyset = yaml["KeySet"] )
+        {
+            batb->log << "loading KeySet: " << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            keys->load( keyset );
+        }
 
         // console key should not be disabled
         keys->console->canDisable( false );

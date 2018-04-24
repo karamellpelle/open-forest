@@ -4,10 +4,13 @@ nullptr no check for during read
 
 # TODO
 
+* Value reads values from Value.yaml file
+* TBTickerLine statusline in top of console :)
 * tb skin for Key::nameGUI()
+* tutorial for controls in forest.
 * worlds refer to each others with pointers
 * make demo::World a subworld of run::World instead of a custom world
-  for IterationRunDemo
+  of IterationRunDemo
 * TBMain setup
 * Toggle fullscreen Key
 * IterationRunDemo into BATB::Run
@@ -28,6 +31,8 @@ nullptr no check for during read
     can YAML::Node tree easily replace elements by providing new nodes to the tree?
   - saving configuration (dynamic files)
 
+## Log
+* handle flush. important for debugging
 ## threading
 * fix nanovg+ogre debug errors! `NVG_DEBUG`
 * fix segfault (from Ogre) during shutdown on seperate thread. see OSXCocoaCOntext::clone() for how threading is done!
@@ -46,6 +51,20 @@ nullptr no check for during read
 * use metric system for terrain and all models!!!
 * World::load -> World::begin. do something better than WorldLoader? it has to work with iterations loading on different threads
 * make AL sources for control punches play in 3D
+### controls
+* while showing map, make it possible to use mouse scroll wheel (?) to
+  control the opacity of map. hence it is possible to read map while running,
+  and also don't switch screen too much thus keeping orientation. this value
+  should also be possible to set by Console
+* forest and map
+  - right click: show map
+  - right click + scroll wheel: rotate map
+  - right click + shift: rotate map
+  - left click + right click: move map
+  - left click + right click + shift: zoom map
+  - XXX: orientate map (TODO: this is a bit cheating from the orienteering skills. hence
+    make a setting to enable/disable this possibitlity)
+  - YYY: postition in map and orientate map. this is absolutely cheating :)
 
 ## demo
 * no al in demo file.
@@ -57,9 +76,10 @@ nullptr no check for during read
 
 ## Keys
 * read key from YAML
-* container Key's shall not update/step children, because 'Keys' does it for all Key's!!
-* KeyButton with modifiers
-* KeyButton -> KeyKeyboardButton
+* alpha() -> value() ?
+* KeyCombine: use children for alpha(), typically for things like Ctrl+Shift+X 
+* memory handling (create / remove )
+* Key constructor: `BATB*`
 
 ## tb
 * language files
@@ -72,6 +92,9 @@ nullptr no check for during read
 * create custom skin: fonts, windows, etc
 * better logo
 * TB: register other font renderers (tb_config.h needed too)
+
+## other game types
+* get lost: the runner is placed randomly in the forest and have to find out where in the map.
 
 ## CMake
 
