@@ -27,10 +27,11 @@ namespace keys
 
 void KeyPointer::step(tick_t t)
 {
-    axis_x_->step( t );
-    axis_y_->step( t );
-    clicker_left_->step( t );
-    clicker_right_->step( t );
+    // dont do this; all Key's are stepped by the Keys object:
+    //axis_x_->step( t );
+    //axis_y_->step( t );
+    //clicker_left_->step( t );
+    //clicker_right_->step( t );
 
     if ( clicker_left_->pressed() )
     {

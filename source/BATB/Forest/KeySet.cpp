@@ -39,14 +39,14 @@ void KeySet::load(const std::string& path)
     // TODO: parse keys from definition in file
 
     // for now, hardcode:
-    forward = createKeyClicker( createKeyButton( GLFW_KEY_W ) );
-    backward = createKeyClicker( createKeyButton( GLFW_KEY_S ) );
-    left = createKeyClicker( createKeyButton( GLFW_KEY_A ) );
-    right = createKeyClicker( createKeyButton( GLFW_KEY_D ) );
+    forward = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_W ) );
+    backward = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_S ) );
+    left = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_A ) );
+    right = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_D ) );
     aim = createKeyPointer();
 
-    tmp0 = createKeyClicker( createKeyButton( GLFW_KEY_V ) );
-    tmp1 = createKeyClicker( createKeyButton( GLFW_KEY_B ) );
+    tmp0 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_V ) );
+    tmp1 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_B ) );
 }
 
 void KeySet::reset()

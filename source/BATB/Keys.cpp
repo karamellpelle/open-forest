@@ -16,7 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Keys.hpp"
-#include "BATB/Keys/KeyButton.hpp"
+#include "BATB/Keys/KeyKeyboardButton.hpp"
 #include "BATB/Keys/KeyMouseButton.hpp"
 #include "BATB/Keys/KeyMouseAxis.hpp"
 #include "BATB/Keys/KeyMouseScroll.hpp"
@@ -257,9 +257,9 @@ void Keys::scrollCalling(GLFWscrollfun f)
 // 
 // TODO: look see the same exist!
 
-KeyButton* Keys::createKeyButton(int code)
+KeyKeyboardButton* Keys::createKeyKeyboardButton(int code)
 {
-    return push( new KeyButton( this, code ) );
+    return push( new KeyKeyboardButton( this, code ) );
 }
 
 KeyMouseButton* Keys::createKeyMouseButton(int code)

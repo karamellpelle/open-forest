@@ -38,9 +38,9 @@ void KeySet::load(const std::string& path)
     // TODO: parse keys from definition in file
 
     // for now, hardcode:
-    console = createKeyClicker( createKeyButton( GLFW_KEY_TAB ) );
-    escape = createKeyClicker( createKeyButton( GLFW_KEY_ESCAPE ) );
-    fullscreen = createKeyClicker( createKeyButton( GLFW_KEY_F5 ) );
+    console = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_TAB ) );
+    escape = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_ESCAPE ) );
+    fullscreen = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_F5 ) );
 }
 
 

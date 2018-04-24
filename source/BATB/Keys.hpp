@@ -27,7 +27,7 @@ namespace keys
 
 
 class Key;
-class KeyButton;      
+class KeyKeyboardButton;      
 class KeyMouseButton; 
 class KeyMouseAxisX;  
 class KeyMouseAxisY;  
@@ -88,7 +88,7 @@ public:
     // let's create a Key!
     //
     // prims
-    KeyButton*      createKeyButton(int code);
+    KeyKeyboardButton*      createKeyKeyboardButton(int code);
     KeyMouseButton* createKeyMouseButton(int code);
     KeyMouseAxisX*  createKeyMouseAxisX();
     KeyMouseAxisY*  createKeyMouseAxisY();
@@ -99,6 +99,7 @@ public:
     KeyAlpha*       createKeyAlpha(Key* k);
     KeyPointer*     createKeyPointer(Key* x, Key* y, Key* l, Key* r);
     KeyPointer*     createKeyPointer();
+
     // create Key from definition
     Key* createKey(const YAML::Node& );
 

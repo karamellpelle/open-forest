@@ -27,10 +27,10 @@ namespace keys
 {
 
 // a keyboard button
-class KeyButton : public Key
+class KeyKeyboardButton : public Key
 {
 public:
-    KeyButton(Keys* keys, int c) : Key( keys ), code_( c )     { } 
+    KeyKeyboardButton(Keys* keys, int c) : Key( keys ), code_( c )     { } 
 
     void reset() override         { }
     void step(tick_t ) override   { }

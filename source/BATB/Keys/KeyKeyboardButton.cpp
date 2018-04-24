@@ -15,7 +15,7 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Keys/KeyButton.hpp"
+#include "BATB/Keys/KeyKeyboardButton.hpp"
 
 namespace batb
 {
@@ -26,14 +26,14 @@ namespace keys
 // names. default.
 
 // unique identifier
-std::string KeyButton::name() const
+std::string KeyKeyboardButton::name() const
 {
     // TODO: think through
-    std::ostringstream os; os << "KeyButton+" << code_;
+    std::ostringstream os; os << "KeyKeyboardButton+" << code_;
     return os.str();
 }
 // human readable
-std::string KeyButton::nameEasy() const
+std::string KeyKeyboardButton::nameEasy() const
 {
 // GLFW don't handle these properly!
     switch ( code_ )
@@ -106,7 +106,7 @@ std::string KeyButton::nameEasy() const
 }
 
 // GUI widget
-std::string KeyButton::nameGUI() const
+std::string KeyKeyboardButton::nameGUI() const
 {
     // TODO: custom skin to show key instead of a button
     std::ostringstream os; os << "<widget TBButton: skin: Key.keyboard, text: '" << nameEasy() << "'>";

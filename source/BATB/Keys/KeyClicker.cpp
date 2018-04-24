@@ -52,7 +52,9 @@ void KeyClicker::reset()
 void KeyClicker::step(tick_t tick)
 {
     // child
-    key_->step( tick );
+    // dont call this on child; Key::step() is done for all Key's by
+    // the Keys object
+    //key_->step( tick );
 
     pressed_ = false;
     released_ = false;

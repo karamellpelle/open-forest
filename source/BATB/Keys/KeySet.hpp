@@ -17,7 +17,7 @@
 //
 #ifndef BATB_KEYS_KEYSET_HPP
 #define BATB_KEYS_KEYSET_HPP
-#include "BATB/Keys/KeyButton.hpp"
+#include "BATB/Keys/KeyKeyboardButton.hpp"
 #include "BATB/Keys/KeyMouseButton.hpp"
 #include "BATB/Keys/KeyMouseAxis.hpp"
 #include "BATB/Keys/KeyMouseScroll.hpp"
@@ -53,7 +53,7 @@ public:
 
 protected:
     // prims
-    KeyButton*        createKeyButton(int code)                        { return keys_->createKeyButton( code ); }
+    KeyKeyboardButton*        createKeyKeyboardButton(int code)                        { return keys_->createKeyKeyboardButton( code ); }
     KeyMouseButton*   createKeyMouseButton(int code)                   { return keys_->createKeyMouseButton( code ); }
     KeyMouseAxisX*    createKeyMouseAxisX()                            { return keys_->createKeyMouseAxisX(); }
     KeyMouseAxisY*    createKeyMouseAxisY()                            { return keys_->createKeyMouseAxisY(); }
