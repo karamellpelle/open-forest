@@ -98,7 +98,7 @@ debug::gl::msg( os.str() );
                     batb->log << " (ERROR: " << e.what() << " )";
                 }
 
-                batb->log << "" << std::endl;
+                batb->log->endl();
             }
         }
         else

@@ -32,16 +32,21 @@ Log::Log() : std::ostream( this )
 
 }
 
-//std::ostream& Log::endl()
-//{
-//    return operator<<( std::endl );
-//}
-//
 //std::ostream& Log::flush()
 //{
 //    return operator<<( std::endl );
 //}
 
+// flushing. see
+//  * https://stackoverflow.com/questions/14105650/how-does-stdflush-work
+//  * http://www.cplusplus.com/reference/streambuf/streambuf/pubsync/
+int Log::sync()
+{
+    return std::cout.rdbuf()->pubsync();
+    
+    //std::cout << std::flush;
+    //return 0;
+}
 
 std::streamsize Log::xsputn(const char* s, std::streamsize n)
 {
@@ -128,6 +133,15 @@ int Log::overflow (int c)
     xsputn( (const char*)( &c ), 1 );
     return c;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+
+std::ostream& Log::endl()
+{
+    return std::cout << std::endl;
+}
+
 
 void Log::indentPush()
 {

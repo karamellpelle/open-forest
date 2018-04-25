@@ -37,15 +37,15 @@ void KeySet::load(const YAML::Node& yaml)
 
     batb->log << "console:    ";
     console = createKeyClicker( safeKey( createKey( yaml > "console" ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "escape:     ";
     escape = createKeyClicker( safeKey( createKey( yaml > "escape" ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "fullscreen: ";
     fullscreen = createKeyClicker( safeKey( createKey( yaml > "fullscreen" ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
 
 

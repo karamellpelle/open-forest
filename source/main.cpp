@@ -45,7 +45,6 @@ int main(int argc, char** argv)
         auto batb = std::make_unique<BATB>();
         batb->begin( file::dynamic_data( "BATB.yaml" ) ); 
 
-        
         // this is the application world
         run::World run;
 

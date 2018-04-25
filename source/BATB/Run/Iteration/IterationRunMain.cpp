@@ -94,7 +94,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 
     // cool
-    batb->log << "" << std::endl;
+    batb->log->endl();
     batb->log << u8"✨ M E N U ✨" << std::endl;
     {
         LogIndent indent( batb->log, u8"✅  " );
@@ -107,10 +107,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         
 
     // use bound controls name
-    batb->log << "" << std::endl;
+    batb->log->endl();
     batb->log << "use [" << batb->run->keys->console->nameEasy() << "] to toggle console" << std::endl;
     batb->log << "use [" << batb->run->keys->fullscreen->nameEasy() << "] to toggle fullscreen" << std::endl;
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     // notification
     std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n";

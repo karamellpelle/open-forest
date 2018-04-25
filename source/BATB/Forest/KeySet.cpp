@@ -41,23 +41,23 @@ void KeySet::load(const YAML::Node& yaml)
 
     batb->log << "forward:  ";
     forward = createKeyClicker( safeKey( createKey( yaml["forward"] ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "backward: ";
     backward = createKeyClicker( safeKey( createKey( yaml["backward"] ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "left:     ";
     left = createKeyClicker( safeKey( createKey( yaml["left"] ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "right:    ";
     right = createKeyClicker( safeKey( createKey( yaml["right"] ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     batb->log << "aim:      ";
     aim = safeKey( createKeyPointer( yaml > "aim" > "KeyPointer" ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
     ////////////////////////////////////////////////////////////////
 

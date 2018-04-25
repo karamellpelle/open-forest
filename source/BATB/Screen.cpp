@@ -130,7 +130,7 @@ void Screen::begin(const std::string& path)
         }
         batb->log << "window fullscreen: " << fullscreen;
         if ( fullscreen ) batb->log << " (overriding window size with display resolution (" << wth << "x" << hth << ")";
-        batb->log << "" << std::endl;
+        batb->log->endl();
 
 
         // title

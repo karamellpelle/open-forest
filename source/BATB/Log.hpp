@@ -36,8 +36,8 @@ public:
     virtual std::streamsize xsputn(const char* s, std::streamsize n) override;
     virtual int overflow (int c) override;
 
-    //std::ostream& endl();
-    //std::ostream& flush();
+    std::ostream& endl();
+    //std::ostream& flush(); // defined in std::ostream
 
     // TODO: tag messages
     //std::ostream& info();
@@ -55,6 +55,9 @@ public:
     std::string prefix() const; 
 
     static constexpr uint default_indent_wth = 4;
+
+protected:
+    virtual int sync() override; 
 
 private:
     

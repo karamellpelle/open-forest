@@ -39,7 +39,7 @@ void KeySet::load(const YAML::Node& yaml)
 
     batb->log << "map-view-full:  ";
     map_view_full = createKeyClicker( safeKey( createKey( yaml > "map-view-full" ) ) );
-    batb->log << "" << std::endl;
+    batb->log->endl();
 
 }
 
