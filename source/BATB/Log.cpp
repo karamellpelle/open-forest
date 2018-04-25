@@ -139,7 +139,9 @@ int Log::overflow (int c)
 
 std::ostream& Log::endl()
 {
-    return std::cout << std::endl;
+    xsputn("\n", 1 ); // make sure wee keep indentation implementation
+
+    return std::cout << std::flush;
 }
 
 

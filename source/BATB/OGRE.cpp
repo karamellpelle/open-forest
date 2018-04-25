@@ -394,11 +394,11 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
         std::string name = group.as<std::string>();
         
         batb->log << "OGRE: adding items to resource group '" << name << "':\n";
+
+        LogIndent indent( batb->log, "* " );
         // iterate over defined content for that group
         for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
         {
-            batb->log << "  ";
-
             YAML::Node resource = *j;
             if ( resource[ "type" ] && resource[ "path" ] )
             {
@@ -423,7 +423,7 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
                 batb->log << "(invalid item definition)";
             }
             
-            batb->log << "\n";
+            batb->log->endl();
         }
     }
 
