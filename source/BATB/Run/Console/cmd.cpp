@@ -18,6 +18,7 @@
 #include "BATB/Run.hpp"
 #include "BATB/Run/Console.hpp"
 #include "BATB/Run/Console/parse.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run/events.hpp"
 
 
@@ -50,10 +51,46 @@ bool cmd_echo(BATB* batb, std::string& in)
     
 }
 
-bool cmd_quit(BATB* batb, std::string& in)
+bool cmd_exit(BATB* batb, std::string& in)
 {
     batb->run->pushEvent( event::Do::Exit );
     return true;
+}
+
+bool cmd_notify(BATB* batb, std::string& in)
+{
+    // TODO: handle non-ordered command arguments. this is very ad hoc.
+    double duration = 0.0;
+    std::string message;
+    std::string w;
+    std::istringstream is;
+
+
+    // duration
+    w = word( in );
+    if ( w != "--duration" ) return false;
+
+    is.str( word( in ) );
+    if ( !(is >> duration) ) return false;
+
+
+    // message
+    w = word( in );
+    if ( w != "--message" ) return false;
+    if ( stringliteral( w, in ) )
+    {
+        message = w;
+    }
+    else
+    {
+        message = in;
+    }
+    
+    
+    // notify
+    batb->run->notify->message( message, duration );
+    return true;
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
