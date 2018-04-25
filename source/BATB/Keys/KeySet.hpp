@@ -34,7 +34,8 @@ namespace keys
 
 class Keys;
 
-// create Key's from bound Keys
+//
+// hold Key's
 // 
 // should typically be subclassed into a class having members
 // of each Key necessary. this subclass should typically have
@@ -43,9 +44,9 @@ class Keys;
 class KeySet
 {
 public:
-    KeySet(Keys* k) : keys_( k )          { }
+    KeySet(BATB* b) : batb( b )          { }
 
-    // TODO: shared_ptr's or only 1 object (delete below)
+    // TODO: shared_ptr<Key> or only 1 object (delete below)
     KeySet(const KeySet& k)               = delete;
     KeySet& operator=(const KeySet& k)    = delete;
     KeySet(KeySet&& k)                    = delete;
@@ -53,29 +54,50 @@ public:
 
 protected:
     // prims
-    KeyKeyboardButton* createKeyKeyboardButton(int code)                { return keys_->createKeyKeyboardButton( code ); }
-    KeyMouseButton*    createKeyMouseButton(int code)                   { return keys_->createKeyMouseButton( code ); }
-    KeyMouseAxisX*     createKeyMouseAxisX()                            { return keys_->createKeyMouseAxisX(); }
-    KeyMouseAxisY*     createKeyMouseAxisY()                            { return keys_->createKeyMouseAxisY(); }
-    KeyMouseScroll*    createKeyMouseScrollX()                          { return keys_->createKeyMouseScrollY(); }
-    KeyMouseScroll*    createKeyMouseScrollY()                          { return keys_->createKeyMouseScrollY(); }
+    KeyKeyboardButton* createKeyKeyboardButton(code::KeyboardButton code) { return batb->keys->createKeyKeyboardButton( code ); }
+    KeyMouseButton*    createKeyMouseButton(code::MouseButton code)       { return batb->keys->createKeyMouseButton( code );    }
+    KeyMouseAxis*      createKeyMouseAxis(code::MouseAxis code)           { return batb->keys->createKeyMouseAxis( code );      }
+    KeyMouseScroll*    createKeyMouseScroll(code::MouseScroll code)       { return batb->keys->createKeyMouseScroll( code );    }
     // cons
-    KeyClicker*        createKeyClicker(Key* k)                         { return keys_->createKeyClicker( k ); }
-    KeyAlpha*          createKeyAlpha(Key* k)                           { return keys_->createKeyAlpha( k ); }
-    KeyPointer*        createKeyPointer(Key* x, Key* y, Key* l, Key* r) { return keys_->createKeyPointer( x, y, l, r ); }
-    KeyPointer*        createKeyPointer()                               { return keys_->createKeyPointer(); }
+    KeyClicker*        createKeyClicker(Key* k)                           { return batb->keys->createKeyClicker( k );           }
+    KeyAlpha*          createKeyAlpha(Key* k)                             { return batb->keys->createKeyAlpha( k );             }
+    KeyPointer*        createKeyPointer(Key* x, Key* y, Key* l, Key* r)   { return batb->keys->createKeyPointer( x, y, l, r );  }
+    KeyPointer*        createKeyPointer()                                 { return batb->keys->createKeyPointer();              }
 
     // create Key from definition
-    Key*               createKey(const YAML::Node& yaml)                { return keys_->createKey( yaml ); }
+    Key*               createKey(const YAML::Node& yaml)                  { return batb->keys->createKey( yaml );               }
+    // prims
+    KeyKeyboardButton* createKeyKeyboardButton(const YAML::Node& y)       { return batb->keys->createKeyKeyboardButton( y );    }
+    KeyMouseButton*    createKeyMouseButton(const YAML::Node& y)          { return batb->keys->createKeyMouseButton( y );       }
+    KeyMouseAxis*      createKeyMouseAxis(const YAML::Node& y)            { return batb->keys->createKeyMouseAxis( y );         }
+    KeyMouseScroll*    createKeyMouseScroll(const YAML::Node& y)          { return batb->keys->createKeyMouseScroll( y );       }
+    // cons
+    KeyClicker*        createKeyClicker(const YAML::Node& y)              { return batb->keys->createKeyClicker( y );           }
+    KeyAlpha*          createKeyAlpha(const YAML::Node& y)                { return batb->keys->createKeyAlpha( y );             }
+    KeyPointer*        createKeyPointer(const YAML::Node& y)              { return batb->keys->createKeyPointer( y );           }
 
+    // helper: if nullptr, create the default of same type, if possible
+    template <typename K, typename... Args>
+    K*                 safeKey(K* , Args... );
 
     ////////////////////////////////////////////////////////////////////////////////
     //
 
-private:
-    Keys* keys_;
+    BATB* batb = nullptr;
 
 };
+
+template <typename K, typename... Args>
+inline K* KeySet::safeKey(K* key, Args... args)
+{
+    if ( key ) return key;
+
+    batb->log << "! WARNING: using empty Key instead";
+
+    // create 
+    return batb->keys->create<K>( args... );
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////

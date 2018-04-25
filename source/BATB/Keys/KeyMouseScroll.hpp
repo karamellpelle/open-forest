@@ -21,7 +21,6 @@
 #include "BATB/Value/Keys.hpp"
 #include "helpers/follow_value.hpp"
 
-
 namespace batb
 {
 
@@ -33,7 +32,7 @@ class KeyMouseScroll : public Key
 {
 
 public:
-    KeyMouseScroll(Keys* );
+    KeyMouseScroll(BATB* b, code::MouseScroll c);
 
     void    reset() override;
     void    step(tick_t ) override;
@@ -43,10 +42,13 @@ public:
     virtual std::string nameEasy() const override; // human readable
     virtual std::string nameGUI()  const override; // GUI widget
 
+    
     // update
     void    add(double n);
 
 private:
+    code::MouseScroll code_;
+
     //double scroll_n_      = 0.0;
     //double scroll_unit_   = 0.0;
 
@@ -56,35 +58,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-inline KeyMouseScroll::KeyMouseScroll(Keys* keys) : Key( keys )
-{
-    auto unit = value::keyMouseScrollUnit;
-    auto vel  = value::keyMouseScrollVel;
-
-    follow_.speed( vel / unit );
-
-}
-
-inline void KeyMouseScroll::reset()
-{
-    follow_.clear();
-}
-
-inline void KeyMouseScroll::step(tick_t t)
-{
-    follow_.step( t );
-}
-
-inline float_t KeyMouseScroll::alpha()
-{
-    //std::cout << "scroll! current: " << follow_.get() << ", ideal: " << follow_.ideal << "\r" << std::flush;
-    return follow_.get();
-}
-
-inline void KeyMouseScroll::add(double n)
-{
-    follow_.ideal += n / value::keyMouseScrollUnit;
-}
 
 } // namespace keys
 

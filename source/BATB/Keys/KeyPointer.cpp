@@ -24,6 +24,20 @@ namespace batb
 namespace keys
 {
 
+KeyPointer::KeyPointer(BATB* b, Key* x, Key* y, Key* l, Key* r) : Key( b )
+{
+    // create default if not provided
+    axis_x_        = x ? x : (Key*)( batb->keys->createKeyMouseAxis( code::MouseAxis::X ) );
+    axis_y_        = y ? y : (Key*)( batb->keys->createKeyMouseAxis( code::MouseAxis::Y ) );
+    clicker_left_  = batb->keys->createKeyClicker( l ? l : (Key*)( batb->keys->createKeyMouseButton( GLFW_MOUSE_BUTTON_LEFT ) ) );
+    clicker_right_ = batb->keys->createKeyClicker( r ? r : (Key*)( batb->keys->createKeyMouseButton( GLFW_MOUSE_BUTTON_LEFT ) ) );
+
+}
+
+KeyPointer::KeyPointer(BATB* b) : KeyPointer( b, nullptr, nullptr, nullptr, nullptr )
+{
+
+}
 
 void KeyPointer::step(tick_t t)
 {
@@ -42,6 +56,31 @@ void KeyPointer::step(tick_t t)
 
 }
 
+float_t KeyPointer::alpha()
+{
+    // TODO: implement something based on a mouse
+    // a KeyPointer is more a container
+    return 0.5;
+}
+
+void KeyPointer::reset()
+{
+    axis_x_->reset();
+    axis_y_->reset();
+    clicker_left_->reset();
+    clicker_right_->reset();
+}
+
+void KeyPointer::canDisable(bool b) 
+{
+    // all called; is this correct behaviour?
+    axis_x_->canDisable( b );
+    axis_y_->canDisable( b );
+    clicker_left_->canDisable( b );
+    clicker_right_->canDisable( b );
+}
+////////////////////////////////////////////////////////////////////////////////
+//
 
 bool KeyPointer::drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
 {

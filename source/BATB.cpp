@@ -133,7 +133,7 @@ void BATB::beginNonCore()
     forest->begin( file::directory( filepath() ) + "/BATB/Forest.yaml" );
 
     // load demo
-    demo->begin();
+    demo->begin( file::directory( filepath() ) + "/BATB/Demo.yaml" );
 
 }
 

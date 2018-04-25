@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Demo/KeySet.hpp"
+#include "helpers/yaml.hpp"
 
 
 namespace batb
@@ -26,21 +27,26 @@ namespace demo
 {
 
 
-KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
+KeySet::KeySet(BATB* b) : keys::KeySet( b )
 {
 
 }
 
-void KeySet::load(const std::string& path)
+void KeySet::load(const YAML::Node& yaml)
 {
 
     // TODO: release current pointers back to Keys
 
-    // TODO: parse keys from definition in file
+    batb->log << "map-view-full:  ";
+    map_view_full = createKeyClicker( safeKey( createKey( yaml > "map-view-full" ) ) );
+    batb->log << "" << std::endl;
 
-    // for now, hardcode:
-    map_view_full = createKeyClicker( createKeyMouseButton( keys::KeyMouseButton::Right ) );
-    scroll = createKeyMouseScrollY();
+}
+
+void KeySet::save(YAML::Node& yaml)
+{
+    // TODO!
+
 }
 
 void KeySet::reset()

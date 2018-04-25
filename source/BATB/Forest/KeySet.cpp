@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Forest/KeySet.hpp"
+#include "helpers/yaml.hpp"
 
 
 namespace batb
@@ -26,27 +27,48 @@ namespace forest
 {
 
 
-KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
+KeySet::KeySet(BATB* b) : keys::KeySet( b )
 {
 
 }
 
-void KeySet::load(const std::string& path)
+
+
+void KeySet::load(const YAML::Node& yaml)
 {
 
     // TODO: release current pointers back to Keys
 
-    // TODO: parse keys from definition in file
+    batb->log << "forward:  ";
+    forward = createKeyClicker( safeKey( createKey( yaml["forward"] ) ) );
+    batb->log << "" << std::endl;
 
-    // for now, hardcode:
-    forward = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_W ) );
-    backward = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_S ) );
-    left = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_A ) );
-    right = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_D ) );
-    aim = createKeyPointer();
+    batb->log << "backward: ";
+    backward = createKeyClicker( safeKey( createKey( yaml["backward"] ) ) );
+    batb->log << "" << std::endl;
+
+    batb->log << "left:     ";
+    left = createKeyClicker( safeKey( createKey( yaml["left"] ) ) );
+    batb->log << "" << std::endl;
+
+    batb->log << "right:    ";
+    right = createKeyClicker( safeKey( createKey( yaml["right"] ) ) );
+    batb->log << "" << std::endl;
+
+    batb->log << "aim:      ";
+    aim = safeKey( createKeyPointer( yaml > "aim" > "KeyPointer" ) );
+    batb->log << "" << std::endl;
+
+    ////////////////////////////////////////////////////////////////
 
     tmp0 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_V ) );
     tmp1 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_B ) );
+
+}
+
+void KeySet::save(YAML::Node& yaml)
+{
+
 }
 
 void KeySet::reset()

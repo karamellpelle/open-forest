@@ -35,7 +35,7 @@ class Demo : public ModuleBATB
 public:
     Demo(BATB* b);
 
-    void begin();
+    void begin(const std::string& );
     void end();
 
 

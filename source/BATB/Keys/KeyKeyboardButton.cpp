@@ -22,6 +22,12 @@ namespace batb
 
 namespace keys
 {
+float_t KeyKeyboardButton::alpha()
+{
+    if ( can_disable ) return batb->keys->getKey_( code_ ) ? 1.0 : 0.0;
+    
+    return batb->keys->getKey( code_ ) ? 1.0 : 0.0; 
+}
 ////////////////////////////////////////////////////////////////////////////////
 // names. default.
 

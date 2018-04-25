@@ -24,7 +24,7 @@ namespace batb
 namespace keys
 { 
 
-KeyClicker::KeyClicker(Keys* keys, Key* k) : Key( keys ), key_( k )
+KeyClicker::KeyClicker(BATB* b, Key* k) : Key( b ), key_( k )
 {
     key_->reset();
 }

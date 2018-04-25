@@ -4,7 +4,7 @@ nullptr no check for during read
 
 # TODO
 
-* Value reads values from Value.yaml file
+* Value reads values from Value.yaml file. 1 big file, or 1 per module?
 * TBTickerLine statusline in top of console :)
 * tb skin for Key::nameGUI()
 * tutorial for controls in forest.
@@ -12,9 +12,7 @@ nullptr no check for during read
 * make demo::World a subworld of run::World instead of a custom world
   of IterationRunDemo
 * TBMain setup
-* Toggle fullscreen Key
 * IterationRunDemo into BATB::Run
-* load Keys from YAML
 * callback for windows: close app
 * mouse and map view
 * create global variable 'batb'?
@@ -22,6 +20,7 @@ nullptr no check for during read
 * `using float_t = double_t;` in include
   - define precision of glm (vec, mat, etc) the same as float_t 
 * remove _emptylist_
+* better memory handling! use `shared_ptr`'s more.
 
 * OpenGL 3+, premultiplied colors by default
 * stb_image as individual module (currently using the one from nanovg..). used by nanovg, turbobadger
@@ -46,12 +45,14 @@ nullptr no check for during read
 ## game
 * wrap Iteratations into some class with shared_ptr to easily work with Iteration's and have control over their lifetimes
 
-## forest
+## Forest
 * `reset()` for objects in forest::World
 * use metric system for terrain and all models!!!
-* World::load -> World::begin. do something better than WorldLoader? it has to work with iterations loading on different threads
-* make AL sources for control punches play in 3D
+* World::load. do something better than WorldLoader? it has to work with iterations loading on different threads
+* let AL sources for control punches play in 3D, not 2D as it seems to be now
+
 ### controls
+* accelerated movement with arrow buttons
 * while showing map, make it possible to use mouse scroll wheel (?) to
   control the opacity of map. hence it is possible to read map while running,
   and also don't switch screen too much thus keeping orientation. this value
@@ -69,14 +70,8 @@ nullptr no check for during read
 ## demo
 * no al in demo file.
   - find out what to do with the easter egg. can Alure delete buffer on finish?
-* mouse and show map:
-  - right
-* accelerated movement with arrow buttons
-* restart Demo (ogre) from main menu
 
 ## Keys
-* read key from YAML
-* alpha() -> value() ?
 * KeyCombine: use children for alpha(), typically for things like Ctrl+Shift+X 
 * memory handling (create / remove )
 * Key constructor: `BATB*`
@@ -87,6 +82,7 @@ nullptr no check for during read
   - fade out widgets
   - handle keypress for infinity duration
   - play alert sound?
+* setup custom TBWidgets with no hardcoded paths
 * do not hardcode .tb.txt file paths. find out how to read our custom widgets.
   we should define and use OnInflate() actively.
 * create custom skin: fonts, windows, etc

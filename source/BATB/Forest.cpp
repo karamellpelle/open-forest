@@ -48,8 +48,13 @@ void Forest::begin(const std::string& path)
         config( path );
 
         // load associated keys 
-        keys->load( file::dynamic_data( "BATB/Forest/KeySet.yaml" ) );
-        batb->log << "KeySet loaded" << std::endl;
+        if ( auto keyset = yaml["KeySet"] )
+        {
+            batb->log << "loading KeySet: " << std::endl; std::cout << std::flush;
+            LogIndent indent( batb->log, "- " );
+
+            keys->load( keyset );
+        }
 
     }
 

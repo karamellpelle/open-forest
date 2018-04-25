@@ -22,20 +22,53 @@ namespace batb
 
 namespace keys
 {
+
+KeyMouseScroll::KeyMouseScroll(BATB* b, code::MouseScroll c) : Key( b ), code_( c )
+{
+    auto unit = value::keyMouseScrollUnit;
+    auto vel  = value::keyMouseScrollVel;
+
+    follow_.speed( vel / unit );
+
+}
+
+void KeyMouseScroll::reset()
+{
+    follow_.clear();
+}
+
+void KeyMouseScroll::step(tick_t t)
+{
+    follow_.step( t );
+}
+
+float_t KeyMouseScroll::alpha()
+{
+    //std::cout << "scroll! current: " << follow_.get() << ", ideal: " << follow_.ideal << "\r" << std::flush;
+    return follow_.get();
+}
+
+void KeyMouseScroll::add(double n)
+{
+    follow_.ideal += n / value::keyMouseScrollUnit;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // names. default.
 
 // unique identifier
 std::string KeyMouseScroll::name() const
 {
-    // TODO: think through
-    std::ostringstream os; os << "KeyMouseScroll";
+    std::ostringstream os; os << "KeyScrollAxis+";
+    if ( code_ == code::MouseScroll::X ) os << "X";
+    if ( code_ == code::MouseScroll::Y ) os << "Y";
+
+
     return os.str();
 }
 // human readable
 std::string KeyMouseScroll::nameEasy() const
 {
-    return "scroll wheel";
+    return "Scroll wheel";
 }
 
 // GUI widget

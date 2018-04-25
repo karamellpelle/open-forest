@@ -29,24 +29,20 @@ namespace keys
 class KeyMouseButton : public Key
 {
 public:
-    KeyMouseButton(Keys* keys, int c) : Key( keys ), code_( c )   { } 
+    KeyMouseButton(BATB* b, code::MouseButton c) : Key( b ), code_( c )   { } 
 
     void reset() override                 { }
     void step(tick_t ) override           { }
-    float_t alpha() override              { if ( can_disable ) return (keys->getMouseButton_( code_ ) ? 1.0 : 0.0);
-                                                          else return (keys->getMouseButton( code_ )  ? 1.0 : 0.0); } 
+    float_t alpha() override              { if ( can_disable ) return (batb->keys->getMouseButton_( code_ ) ? 1.0 : 0.0);
+                                                          else return (batb->keys->getMouseButton( code_ )  ? 1.0 : 0.0); } 
     
-    static constexpr int Left   = GLFW_MOUSE_BUTTON_LEFT;
-    static constexpr int Right  = GLFW_MOUSE_BUTTON_RIGHT;
-    static constexpr int Middle  = GLFW_MOUSE_BUTTON_MIDDLE;
-
     virtual std::string name()     const override; // unique identifier
     virtual std::string nameEasy() const override; // human readable
     virtual std::string nameGUI()  const override; // GUI widget
 
 private:
 
-    int code_ = 0;
+    code::MouseButton code_ = 0;
 };
 
 

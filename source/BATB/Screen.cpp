@@ -47,11 +47,6 @@ void Screen::begin(const std::string& path)
         // set configuration file
         config( path );
 
-    std::cout << "print yaml of Screen" << std::endl;
-        std::cout << yaml << std::endl;
-    for ( const auto& i : yaml )
-    {
-    }
         ////////////////////////////////////////////////////////////////////////////////
         // setup GLFW
         //

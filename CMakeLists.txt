@@ -406,6 +406,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBPanel.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBCommandline.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Keys/Code.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/Key.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/KeyAlpha.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Keys/KeyKeyboardButton.hpp"
@@ -479,6 +480,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/helpers/follow_value.hpp"
       "${MAIN_SOURCE_DIR}/helpers/helpers_gl.hpp"
       "${MAIN_SOURCE_DIR}/helpers/helpers_tinyxml2.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/yaml.hpp"
       "${MAIN_SOURCE_DIR}/include.hpp"
    )
 

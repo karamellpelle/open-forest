@@ -31,7 +31,7 @@ namespace keys
 class KeyClicker : public Key
 {
 public:
-    KeyClicker(Keys* keys, Key* c);
+    KeyClicker(BATB* keys, Key* c);
 
     void reset() override;
     void step(tick_t ) override;

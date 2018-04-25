@@ -31,21 +31,13 @@ namespace keys
 class KeyAlpha : public Key
 {
 public:
-    KeyAlpha(Keys* keys, Key* k) : KeyAlpha(keys, k, -1.0, 1.0 )                                                                { }
-    KeyAlpha(Keys* keys, Key* k, float_t a, float_t b) : KeyAlpha( keys, k, a, b, 0.5 )                                         { }
-    KeyAlpha(Keys* keys, Key* k, float_t a, float_t b, float_t c) : Key( keys ), key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
+    KeyAlpha(BATB* b, Key* k) : KeyAlpha( b, k, -1.0, 1.0 )                                                                { }
+    KeyAlpha(BATB* bt, Key* k, float_t a, float_t b) : KeyAlpha( bt, k, a, b, 0.5 )                                         { }
+    KeyAlpha(BATB* bt, Key* k, float_t a, float_t b, float_t c) : Key( bt ), key_( k ), a_( a ), b_( b ), clear_( c ), alpha_( c ) { }
 
 
     virtual void reset() override                 { alpha_ = clear_; }
-    virtual void step(tick_t tick) override
-    {
-        // FIXME: prevent too big dt, espcecially first time...
-        tick_t dt = tick - tick_prev_;           // assuming dt not too smal, i.e. when high frame rate and dt ~= 0...
-        float_t x = key_->alpha();
-        alpha_ +=  (tick_t)( dt * (tick_t)( a_ * (1.0 - x) + b_ * x ) );
-        alpha_ = clamp( alpha_, (float_t)0.0, (float_t)1.0 );
-        tick_prev_ = tick;
-    }
+    virtual void step(tick_t tick) override;
     virtual float_t alpha() override              { return alpha_; }
     virtual void canDisable(bool b) override      { key_->canDisable( b ); }
 
@@ -57,16 +49,8 @@ public:
 
     ////////////////////////////////////////////////////////
     //    settings
-    void set(float_t a, float_t b)
-    {
-        a_ = a;
-        b_ = b;
-    }
-    void set_clear(float_t clear)
-    {
-        clear_ = clear;
-    }
-
+    void set(float_t a, float_t b);
+    void set_clear(float_t clear);
 
 private:
     Key* const key_;

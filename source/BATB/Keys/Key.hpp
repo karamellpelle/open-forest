@@ -20,16 +20,16 @@
 #include <typeinfo>
 #include <typeindex>
 #include "BATB/Keys.hpp"
+#include "BATB/Keys/Code.hpp"
 
 
 namespace batb
 {
-
+class BATB;
 
 namespace keys
 {
 
-class Keys;
 
 // base Key class
 // abstracting a key as a continuous value in \RR
@@ -38,7 +38,7 @@ class Key
 friend class Keys;
 
 public:
-    Key(Keys* k) : keys( k )       { }
+    Key(BATB* b) : batb( b )        { }
     virtual ~Key()                  { }
 
     // TODO: if we are later going to use shared_ptr<KeyImpl>, 
@@ -54,6 +54,9 @@ public:
     virtual void step(tick_t )      { }
     virtual float_t alpha()         { return 0.0; }
 
+    
+    ////////////////////////////////////////////////////////////////
+    // name
     virtual std::string name() const;     // unique identifier
     virtual std::string nameEasy() const; // human readable
     virtual std::string nameGUI() const;  // GUI widget
@@ -68,8 +71,7 @@ public:
 
 
 protected:
-    Keys* keys = nullptr;
-    //std::shared_ptr<KeyImpl> impl_ = nullptr;
+    BATB* batb = nullptr;
 
     bool can_disable = true;  // all Key's should in general be disabled if requested by Keys
 };

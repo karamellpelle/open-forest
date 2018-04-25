@@ -1,1 +1,19 @@
-~
+KeySet:
+    forward:    
+        KeyKeyboardButton: { code: W }
+    backward:
+        KeyKeyboardButton: { code: S }
+    left:
+        KeyKeyboardButton: { code: A }
+    right:
+        KeyKeyboardButton: { code: D }
+    aim:
+        KeyPointer:
+          axis-x:
+            KeyMouseAxis: { axis: X }
+          axis-y:
+            KeyMouseAxis: { axis: Y }
+          left:
+            KeyMouseButton: { code: Y }
+          right:
+            KeyMouseButton: { code: T }

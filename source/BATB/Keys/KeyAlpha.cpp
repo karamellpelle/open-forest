@@ -22,6 +22,27 @@ namespace batb
 
 namespace keys
 {
+
+void KeyAlpha::step(tick_t tick) 
+{
+    // FIXME: prevent too big dt, espcecially first time...
+    tick_t dt = tick - tick_prev_;           // assuming dt not too smal, i.e. when high frame rate and dt ~= 0...
+    float_t x = key_->alpha();
+    alpha_ +=  (tick_t)( dt * (tick_t)( a_ * (1.0 - x) + b_ * x ) );
+    alpha_ = clamp( alpha_, (float_t)0.0, (float_t)1.0 );
+    tick_prev_ = tick;
+}
+
+void KeyAlpha::set(float_t a, float_t b)
+{
+    a_ = a;
+    b_ = b;
+}
+
+void KeyAlpha::set_clear(float_t clear)
+{
+    clear_ = clear;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // names. default.
 

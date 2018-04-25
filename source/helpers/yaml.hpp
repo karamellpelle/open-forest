@@ -15,41 +15,20 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_KEYSET_HPP
-#define BATB_RUN_KEYSET_HPP
-#include "BATB/Keys/KeySet.hpp"
+#ifndef HELPERS_YAML_HPP
+#define HELPERS_YAML_HPP
+#include "yaml-cpp/yaml.h"
 
-namespace batb
+
+// retrive YAML::Node in mappings in a safe way,
+// like so: yaml > "first" > "second"
+inline YAML::Node operator>(const YAML::Node& n, const std::string& ix)
 {
+    if ( !n.IsDefined() ) return n;
+    if ( !n.IsMap() )     return YAML::Node( YAML::NodeType::Null );
 
-
-namespace run
-{
-
-
-class KeySet : public keys::KeySet
-{
-public:
-    KeySet(BATB* b);
-
-    // define 'this' from map defined by file
-    void load(const YAML::Node& );
-    void save(YAML::Node& );
-
-    // set clean state
-    void reset();
-
-    /////////////////////////////////////////////////
-    // keys for Run to use
-    keys::KeyClicker* console = nullptr;
-    keys::KeyClicker* escape  = nullptr;
-    keys::KeyClicker* fullscreen  = nullptr;
-
-};
-
-} // namespace run
-
-} // namespace batb
+    return n[ix];
+}
 
 
 #endif

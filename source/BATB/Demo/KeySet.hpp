@@ -22,7 +22,6 @@
 namespace batb
 {
 
-class BATB;
 
 namespace demo
 {
@@ -34,16 +33,14 @@ public:
     KeySet(BATB* b);
 
     // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
+    void load(const YAML::Node& );
+    void save(YAML::Node& );
 
     void reset();
 
     keys::KeyClicker* map_view_full = nullptr;
-    keys::KeyMouseScroll* scroll = nullptr;
 
 
-    BATB* batb;
 };
 
 } // namespace demo

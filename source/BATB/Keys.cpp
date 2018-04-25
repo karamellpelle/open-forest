@@ -33,6 +33,24 @@ namespace batb
 namespace keys
 {
 
+// a convenient function to add a key
+// two different Key's with same physical mapping can be added,
+// since they may have different settings (fex. canDisable)
+template <typename KeyT>
+KeyT* push(std::vector<Key*>& set, KeyT* k)
+{
+    set.push_back( k ); 
+    return k; 
+} 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// these creates glfw codes (int) from string
+code::MouseButton map_mousecode(const std::string& ); 
+code::KeyboardButton map_keyboardcode(const std::string& );
+
+
+////////////////////////////////////////////////////////////////////////////////
 // the kananical Keys (needed for scroll)
 Keys* Keys::keysobj_ = nullptr;
 
@@ -51,15 +69,15 @@ void Keys::begin(const std::string& path)
         config( path );
 
         // retrieve GLFW window (needed for input)
-        window_ = batb->screen->glfw_window;
+        glfw_window_ = batb->screen->glfw_window;
 
         // cursor input mode is _NORMAL!
-        glfwSetInputMode( window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
+        glfwSetInputMode( glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
         cursor_free_ = false;
 
         // let scroll callback be able to reach this object (implies only 1 Keys in program)
         keysobj_ = this;
-        glfwSetScrollCallback( window_, scroll_callback_ );
+        glfwSetScrollCallback( glfw_window_, scroll_callback_ );
     }
 
     init( true );
@@ -119,13 +137,13 @@ void Keys::keyEnable(bool enable)
     {
         if ( enable )
         {
-            glfwSetCursorPos( window_, cursor_enable_x0_, cursor_enable_y0_ );
+            glfwSetCursorPos( glfw_window_, cursor_enable_x0_, cursor_enable_y0_ );
         }
         else
         {
             // save current state (i.e. cursor pos)
             double x1, y1;
-            glfwGetCursorPos( window_, &x1, &y1 );
+            glfwGetCursorPos( glfw_window_, &x1, &y1 );
 
             cursor_enable_x0_ = x1;
             cursor_enable_y0_ = y1;
@@ -143,13 +161,35 @@ void Keys::keyEnable(bool enable)
 ////////////////////////////////////////////////////////////////////////////////
 //
 
+// get keyboard button state
+code::ButtonState Keys::getKey(code::KeyboardButton k)
+{ 
+    return glfwGetKey( glfw_window_, k );
+}
+
+// get mouse button state
+code::ButtonState Keys::getMouseButton(code::MouseButton k)
+{ 
+    return glfwGetMouseButton( glfw_window_, k );
+}
+
+code::ButtonState Keys::getKey_(code::KeyboardButton k)                          
+{
+    return key_enable_ ? getKey( k ) : GLFW_RELEASE;
+}  
+
+code::ButtonState Keys::getMouseButton_(code::MouseButton k)
+{ 
+    return key_enable_ ? getMouseButton( k ) : GLFW_RELEASE; 
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 // get cursor pos, in pixels
 void Keys::getCursorPos(uint& x, uint& y)
 {
-    // TODO: use env instead of GLFW?
     double x_, y_;
-    glfwGetCursorPos( window_, &x_, &y_ );
+    glfwGetCursorPos( glfw_window_, &x_, &y_ );
     x = (uint)( x_ );
     y = (uint)( y_ );
 }
@@ -157,13 +197,12 @@ void Keys::getCursorPos(uint& x, uint& y)
 // get cursor pos, relative to screen shape 
 void Keys::getCursorPos(double& x, double& y)
 {
-    // TODO: use env instead of GLFW?
     int wth; int hth;
-    glfwGetFramebufferSize( window_, &wth, &hth );
+    glfwGetFramebufferSize( glfw_window_, &wth, &hth ); // FIXME: use Window instead?
     float_t scale = 1.0 / (float_t)( std::max( wth, hth ) );
 
     double x_, y_;
-    glfwGetCursorPos( window_, &x_, &y_ );
+    glfwGetCursorPos( glfw_window_, &x_, &y_ );
     x = (float_t)( x_ ) * scale;
     y = (float_t)( y_ ) * scale;
 }
@@ -186,7 +225,7 @@ void Keys::getCursorPos_(double& x, double& y)
 {
     if ( key_enable_ )
     {
-        glfwGetCursorPos( window_, &x, &y );
+        glfwGetCursorPos( glfw_window_, &x, &y );
     }
     else
     {
@@ -195,7 +234,7 @@ void Keys::getCursorPos_(double& x, double& y)
     }
 
     int wth; int hth;
-    glfwGetFramebufferSize( window_, &wth, &hth );
+    glfwGetFramebufferSize( glfw_window_, &wth, &hth ); // TODO: use Window instead?
     double scale = 1.0 / (double)( std::max( wth, hth ) );
     x *=  scale;
     y *=  scale;
@@ -208,15 +247,15 @@ void Keys::setCursorFree(bool free)
     {
         // get current
         double x1, y1;
-        glfwGetCursorPos( window_, &x1, &y1 );
+        glfwGetCursorPos( glfw_window_, &x1, &y1 );
 
         
-        glfwSetInputMode( window_, GLFW_CURSOR, 
+        glfwSetInputMode( glfw_window_, GLFW_CURSOR, 
             free ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL ); 
             // ^ FIXME: _NORMAL/_HIDDEN based on setting!
 
         // set back to previous
-        glfwSetCursorPos( window_, cursor_x0_, cursor_y0_ );
+        glfwSetCursorPos( glfw_window_, cursor_x0_, cursor_y0_ );
 
         // save previous
         cursor_x0_ = x1;
@@ -228,22 +267,22 @@ void Keys::setCursorFree(bool free)
 
 void Keys::charCalling(GLFWcharfun f)
 {
-    glfwSetCharCallback( window_, f );
+    glfwSetCharCallback( glfw_window_, f );
 }
 
 void Keys::keyCalling(GLFWkeyfun f)
 {
-    glfwSetKeyCallback( window_, f );
+    glfwSetKeyCallback( glfw_window_, f );
 }
 
 void Keys::mousebuttonCalling(GLFWmousebuttonfun f)
 {
-    glfwSetMouseButtonCallback( window_, f );
+    glfwSetMouseButtonCallback( glfw_window_, f );
 }
 
 void Keys::cursorposCalling(GLFWcursorposfun f)
 {
-    glfwSetCursorPosCallback( window_, f );
+    glfwSetCursorPosCallback( glfw_window_, f );
 }
 
 void Keys::scrollCalling(GLFWscrollfun f)
@@ -255,95 +294,288 @@ void Keys::scrollCalling(GLFWscrollfun f)
 ////////////////////////////////////////////////////////////////////////////////
 // create Key's
 // 
-// TODO: look see the same exist!
 
-KeyKeyboardButton* Keys::createKeyKeyboardButton(int code)
+// create the empty Key
+Key* Keys::createKey()
 {
-    return push( new KeyKeyboardButton( this, code ) );
+    return push( keys_, new Key( batb ) );
 }
 
-KeyMouseButton* Keys::createKeyMouseButton(int code)
+KeyKeyboardButton* Keys::createKeyKeyboardButton(code::KeyboardButton code)
 {
-    return push( new KeyMouseButton( this, code ) );
+    return push( keys_, new KeyKeyboardButton( batb, code ) );
 }
 
-KeyMouseAxisX* Keys::createKeyMouseAxisX()
+KeyMouseButton* Keys::createKeyMouseButton(code::MouseButton code)
 {
-    return push( new KeyMouseAxisX( this ) );
+    return push( keys_, new KeyMouseButton( batb, code ) );
 }
 
-KeyMouseAxisY* Keys::createKeyMouseAxisY()
+KeyMouseAxis* Keys::createKeyMouseAxis(code::MouseAxis code)
 {
-    return push( new KeyMouseAxisY( this ) );
+    return push( keys_, new KeyMouseAxis( batb, code ) );
 }
 
-KeyMouseScroll* Keys::createKeyMouseScrollY()
+KeyMouseScroll* Keys::createKeyMouseScroll(code::MouseScroll c)
 {
-    auto ret = push( new KeyMouseScroll( this ) );
+    auto ret = push( keys_, new KeyMouseScroll( batb, c ) );
 
     // also add to scrolls
-    scrolls_y_.push_back( ret );
+    if ( c == code::MouseScroll::X )
+    {
+        scrolls_x_.push_back( ret );
+    }
+    if ( c == code::MouseScroll::Y )
+    {
+        scrolls_y_.push_back( ret );
+    }
+    // (unknown code ignored, but still added)
+
     return ret;
 }
-
-KeyMouseScroll* Keys::createKeyMouseScrollX()
-{
-    auto ret = push( new KeyMouseScroll( this ) );
-
-    // also add to scrolls
-    scrolls_x_.push_back( ret );
-    return ret;
-}
-
 
 KeyClicker* Keys::createKeyClicker(Key* k)
 {
-    return push( new KeyClicker( this, k ) );
+    return push( keys_, new KeyClicker( batb, k ) );
 }
 
 KeyAlpha* Keys::createKeyAlpha(Key* k)
 {
-    return push( new KeyAlpha( this, k ) );
+    return push( keys_, new KeyAlpha( batb, k ) );
 }
 
 KeyPointer* Keys::createKeyPointer(Key* x, Key* y, Key* l, Key* r)
 {
-    return push( new KeyPointer( this, x, y, l, r ) );
+    return push( keys_, new KeyPointer( batb, x, y, l, r ) );
 }
 
 KeyPointer* Keys::createKeyPointer()
 {
-    return createKeyPointer( createKeyMouseAxisX(), createKeyMouseAxisY(), createKeyMouseButton( KeyMouseButton::Left ), createKeyMouseButton( KeyMouseButton::Right ) );
+    return push( keys_, new KeyPointer( batb ) );
 }
 
 Key* Keys::createKey(const YAML::Node& yaml)
 {
     using namespace YAML;
-   
-    // which kind of Key?
-    if ( Node key = yaml["KeyKeyboardButton"] )
+    //std::cout << "createKey()" << std::endl << yaml << std::endl << std::endl;
+  
+    if ( !yaml )
     {
-        int map_code_str(const std::string& ); // this creates glfw keys (int) from string
-
-        auto code_str = key["code"].as<std::string>( "" );
-        if ( code_str.empty() )
-        {
-            batb->log << "ERROR: no 'code' field"; 
-            return nullptr;
-        }
-        
-        auto glfw_code =  map_code_str( code_str ) ;
-        auto ret = createKeyKeyboardButton( glfw_code );
-        batb->log << "KeyKeyboardButton: { code: ";
-        if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
-        else                                   batb->log << code_str;
-        batb->log << " }";
-
-        return ret;
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
     }
 
-    batb->log << "(key not known)"; // TODO: more description
+    // which kind of Key?
+    if ( Node key = yaml["KeyKeyboardButton"] ) return createKeyKeyboardButton( key );
+    if ( Node key = yaml["KeyMouseButton"] )    return createKeyMouseButton( key );
+    if ( Node key = yaml["KeyMouseAxis"] )      return createKeyMouseAxis( key );
+    if ( Node key = yaml["KeyMouseScroll"] )    return createKeyMouseScroll( key );
+    if ( Node key = yaml["KeyClicker"] )        return createKeyClicker( key );
+    if ( Node key = yaml["KeyAlpha"] )          return createKeyAlpha( key );
+    if ( Node key = yaml["KeyPointer"] )        return createKeyPointer( key );
+
+
+    batb->log << "ERROR: unknown Key";
     return nullptr;
+}
+
+KeyKeyboardButton* Keys::createKeyKeyboardButton(const YAML::Node& yaml)
+{
+    if ( !yaml )
+    {
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
+    }
+
+    auto code_str = yaml["code"].as<std::string>( "" );
+    if ( code_str.empty() )
+    {
+        batb->log << "ERROR: no 'code' field in KeyKeyboardButton"; 
+        return nullptr;
+    }
+    
+    auto glfw_code =  map_keyboardcode( code_str ) ;
+    auto ret = createKeyKeyboardButton( glfw_code );
+    batb->log << "KeyKeyboardButton: { code: ";
+    if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
+    else                                   batb->log << code_str;
+    batb->log << " }";
+
+    return ret;
+}
+
+KeyMouseButton* Keys::createKeyMouseButton(const YAML::Node& yaml)
+{
+    if ( !yaml )
+    {
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
+    }
+
+    auto code_str = yaml["code"].as<std::string>( "" );
+    if ( code_str.empty() )
+    {
+        batb->log << "ERROR: no 'code' field in KeyMouseButton"; 
+        return nullptr;
+    }
+    
+    auto glfw_code =  map_mousecode( code_str ) ;
+    auto ret = createKeyMouseButton( glfw_code );
+    batb->log << "KeyMouseButton: { code: ";
+    if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
+    else                                   batb->log << code_str;
+    batb->log << " }";
+
+    return ret;
+}
+
+KeyMouseAxis* Keys::createKeyMouseAxis(const YAML::Node& yaml)
+{
+    if ( !yaml )
+    {
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
+    }
+
+    auto str = yaml["axis"].as<std::string>( "" );
+    if ( str.empty() )
+    {
+        batb->log << "ERROR: no 'axis' field in KeyMouseAxis"; 
+        return nullptr;
+    }
+    
+    if ( str == "X" )
+    {
+        batb->log << "KeyMouseAxis: { axis: X }";
+        return createKeyMouseAxis( code::MouseAxis::X );
+    }
+    if ( str == "Y" )
+    {
+        batb->log << "KeyMouseAxis: { axis: Y }";
+        return createKeyMouseAxis( code::MouseAxis::Y );
+    }
+
+    batb->log << "ERROR: no valid 'axis' field (" << str << ") in KeyMouseAxis";
+    return nullptr;
+
+}
+
+KeyMouseScroll* Keys::createKeyMouseScroll(const YAML::Node& yaml)
+{
+    if ( !yaml )
+    {
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
+    }
+      
+    auto str = yaml["axis"].as<std::string>( "" );
+    if ( str.empty() )
+    {
+        batb->log << "ERROR: no 'axis' field in KeyMouseScroll"; 
+        return nullptr;
+    }
+    
+    if ( str == "X" )
+    {
+        batb->log << "KeyMouseScroll: { axis: X }";
+        return createKeyMouseScroll( code::MouseScroll::X ); 
+    }
+    if ( str == "Y" )
+    {
+        batb->log << "KeyMouseScroll: { axis: Y }";
+        return createKeyMouseScroll( code::MouseScroll::Y ); 
+    }
+
+    batb->log << "ERROR: no valid 'axis' field (" << str << ") in KeyMouseScroll";
+    return nullptr;
+
+}
+KeyClicker* Keys::createKeyClicker(const YAML::Node& yaml)
+{
+    
+    auto child0 = createKey( yaml ); 
+    batb->log << ", in KeyMouseClicker";
+
+    return createKeyClicker( child0 );
+}
+
+KeyAlpha* Keys::createKeyAlpha(const YAML::Node& yaml)
+{
+    auto child0 = createKey( yaml ); 
+    batb->log << ", in KeyMouseAlpha";
+
+    return createKeyAlpha( child0 );
+
+}
+KeyPointer* Keys::createKeyPointer(const YAML::Node& yaml)
+{
+    if ( !yaml )
+    {
+        batb->log << "ERROR: YAML::Node does not exist";
+        return nullptr;
+    }
+    if ( !yaml.IsMap() )
+    {
+        batb->log << "ERROR: wrong type of YAML::Node (" << yaml.Type() << ")"; 
+        return nullptr;
+    }
+    // empty pointer OK, use default
+    Key* axis_x = nullptr;
+    Key* axis_y = nullptr;
+    Key* left = nullptr;
+    Key* right = nullptr;
+
+    // axis-x
+    batb->log << "[ ";
+    if ( auto child = yaml["axis-x"] )  axis_x = createKey( child );
+    if ( !axis_x )                      batb->log << " (using default axis_x)"; 
+    batb->log << " ]";
+
+    // axis-x
+    batb->log << "[ ";
+    if ( auto child = yaml["axis-y"] )  axis_y = createKey( child );
+    if ( !axis_y )                      batb->log << " (using default axis_y)"; 
+    batb->log << " ]";
+
+    // left
+    batb->log << "[ ";
+    if ( auto child = yaml["left"] )  left = createKey( child );
+    if ( !left )                      batb->log << " (using default left)"; 
+    batb->log << " ]";
+
+    // right
+    batb->log << "[ ";
+    if ( auto child = yaml["right"] )  right = createKey( child );
+    if ( !right )                      batb->log << " (using default right)"; 
+    batb->log << " ]";
+
+    batb->log << ", in KeyPointer";
+    return createKeyPointer( axis_x, axis_y, left, right );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -373,8 +605,28 @@ void Keys::scroll_callback_(GLFWwindow* win, double x, double y)
 
 }
 
+// map names into GLFW mouse button
+code::MouseButton map_mousecode(const std::string& name)
+{
+    if ( name.compare( "1" ) == 0)      return GLFW_MOUSE_BUTTON_1;
+    if ( name.compare( "2" ) == 0)      return GLFW_MOUSE_BUTTON_2;
+    if ( name.compare( "3" ) == 0)      return GLFW_MOUSE_BUTTON_3;
+    if ( name.compare( "4" ) == 0)      return GLFW_MOUSE_BUTTON_4;
+    if ( name.compare( "5" ) == 0)      return GLFW_MOUSE_BUTTON_5;
+    if ( name.compare( "6" ) == 0)      return GLFW_MOUSE_BUTTON_6;
+    if ( name.compare( "7" ) == 0)      return GLFW_MOUSE_BUTTON_7;
+    if ( name.compare( "8" ) == 0)      return GLFW_MOUSE_BUTTON_8;
+    if ( name.compare( "LAST" ) == 0)   return GLFW_MOUSE_BUTTON_LAST;
+    if ( name.compare( "LEFT" ) == 0)   return GLFW_MOUSE_BUTTON_LEFT;
+    if ( name.compare( "RIGHT" ) == 0)  return GLFW_MOUSE_BUTTON_RIGHT;
+    if ( name.compare( "MIDDLE" ) == 0) return GLFW_MOUSE_BUTTON_MIDDLE;
+
+    return GLFW_MOUSE_BUTTON_LAST;
+}
+
+
 // map names into GLFW keyboar key
-int map_code_str(const std::string& name)
+code::KeyboardButton map_keyboardcode(const std::string& name)
 {
     if ( name.compare( "UNKNOWN" ) == 0 )      return GLFW_KEY_UNKNOWN;
     if ( name.compare( "SPACE" ) == 0 )        return GLFW_KEY_SPACE;

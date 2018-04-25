@@ -26,51 +26,23 @@ namespace keys
 {
 
 
-class KeyMouseAxisX : public Key
+class KeyMouseAxis : public Key
 {
 
 public:
-    KeyMouseAxisX(Keys* keys) : Key( keys ) { }
+    KeyMouseAxis(BATB* b, code::MouseAxis c) : Key( b ), code_( c ) { }
 
     void reset() override                   { }
     void step(tick_t ) override             { }
-    float_t alpha() override
-    {
-        double x, y;
-        if ( can_disable )
-            keys->getCursorPos_( x, y );
-        else
-            keys->getCursorPos( x, y ); 
-        return x;
-    }
+    float_t alpha() override;
 
     virtual std::string name()     const override; // unique identifier
     virtual std::string nameEasy() const override; // human readable
     virtual std::string nameGUI()  const override; // GUI widget
 
-};
+private:
+    code::MouseAxis code_;
 
-class KeyMouseAxisY: public Key
-{
-
-public:
-    KeyMouseAxisY(Keys* keys) : Key( keys ) { }
-
-    void reset() override             { }
-    void step(tick_t ) override       { }
-    float_t alpha() override
-    {
-        double x, y;
-        if ( can_disable )
-            keys->getCursorPos_( x, y );
-        else
-            keys->getCursorPos( x, y ); 
-        return y;
-    }
-
-    virtual std::string name()     const override; // unique identifier
-    virtual std::string nameEasy() const override; // human readable
-    virtual std::string nameGUI()  const override; // GUI widget
 
 };
 

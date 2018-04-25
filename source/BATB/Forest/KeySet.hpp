@@ -22,7 +22,6 @@
 
 namespace batb
 {
-class BATB;
 
 namespace forest
 {
@@ -34,8 +33,8 @@ public:
     KeySet(BATB* b);
 
     // define 'this' from map defined by file
-    void load(const std::string& filepath);
-    void save(const std::string& filepath);
+    void load(const YAML::Node& );
+    void save(YAML::Node& );
 
     void reset();
 
@@ -47,8 +46,6 @@ public:
 
     keys::KeyClicker* tmp0     = nullptr;
     keys::KeyClicker* tmp1     = nullptr;
-
-    BATB* batb;
 };
 
 } // namespace forest

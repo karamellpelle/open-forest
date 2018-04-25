@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Run/KeySet.hpp"
+#include "helpers/yaml.hpp"
 
 
 namespace batb
@@ -25,31 +26,35 @@ namespace batb
 namespace run
 {
 
-KeySet::KeySet(BATB* b) : keys::KeySet( b->keys.get() ), batb( b )
+KeySet::KeySet(BATB* b) : keys::KeySet( b )
 {
 
 }
 
-void KeySet::load(YAML::Node& keyset)
+void KeySet::load(const YAML::Node& yaml)
 {
     // TODO: release current pointers back to Keys!
 
     batb->log << "console:    ";
-    if ( auto key = createKey( keyset["console"] ) ) console = createKeyClicker( key );
+    console = createKeyClicker( safeKey( createKey( yaml > "console" ) ) );
     batb->log << "" << std::endl;
 
     batb->log << "escape:     ";
-    if ( auto key = createKey( keyset["escape"] ) ) escape = createKeyClicker( key );
+    escape = createKeyClicker( safeKey( createKey( yaml > "escape" ) ) );
     batb->log << "" << std::endl;
 
     batb->log << "fullscreen: ";
-    if ( auto key = createKey( keyset["fullscreen"] ) ) fullscreen = createKeyClicker( key );
+    fullscreen = createKeyClicker( safeKey( createKey( yaml > "fullscreen" ) ) );
     batb->log << "" << std::endl;
 
 
 
 }
 
+void KeySet::save(YAML::Node& yaml)
+{
+
+}
 
 void KeySet::reset()
 {

@@ -15,39 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_RUN_KEYSET_HPP
-#define BATB_RUN_KEYSET_HPP
-#include "BATB/Keys/KeySet.hpp"
+#ifndef BATB_KEYS_CODE_HPP
+#define BATB_KEYS_CODE_HPP
+#include "include.hpp"
+#include <GLFW/glfw3.h>
 
 namespace batb
 {
-
-
-namespace run
+namespace keys
 {
 
-
-class KeySet : public keys::KeySet
+namespace code
 {
-public:
-    KeySet(BATB* b);
 
-    // define 'this' from map defined by file
-    void load(const YAML::Node& );
-    void save(YAML::Node& );
+// these are GLFW codes
+using KeyboardButton = int;
+using MouseButton = int;
+using ButtonState = int;
 
-    // set clean state
-    void reset();
 
-    /////////////////////////////////////////////////
-    // keys for Run to use
-    keys::KeyClicker* console = nullptr;
-    keys::KeyClicker* escape  = nullptr;
-    keys::KeyClicker* fullscreen  = nullptr;
-
+// these are custom
+enum class MouseScroll
+{
+    X,
+    Y
+};
+enum class MouseAxis
+{
+    X,
+    Y
 };
 
-} // namespace run
+
+
+} // namespace code
+
+
+} // namespace keys
 
 } // namespace batb
 

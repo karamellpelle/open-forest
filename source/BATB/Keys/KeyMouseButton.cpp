@@ -35,18 +35,19 @@ std::string KeyMouseButton::name() const
 // human readable
 std::string KeyMouseButton::nameEasy() const
 {
-    if ( code_ == Left ) return "left click";
-    if ( code_ == Middle ) return "middle click";
-    if ( code_ == Right ) return "right click";
-
-    if ( code_ == GLFW_MOUSE_BUTTON_1 ) return "mouse button 0";
-    if ( code_ == GLFW_MOUSE_BUTTON_2 ) return "mouse button 1";
-    if ( code_ == GLFW_MOUSE_BUTTON_3 ) return "mouse button 2";
-    if ( code_ == GLFW_MOUSE_BUTTON_4 ) return "mouse button 3";
-    if ( code_ == GLFW_MOUSE_BUTTON_5 ) return "mouse button 4";
-    if ( code_ == GLFW_MOUSE_BUTTON_6 ) return "mouse button 5";
-    if ( code_ == GLFW_MOUSE_BUTTON_7 ) return "mouse button 6";
-    if ( code_ == GLFW_MOUSE_BUTTON_8 ) return "mouse button 7";
+    if ( code_ == GLFW_MOUSE_BUTTON_LEFT )   return "Left click";
+    if ( code_ == GLFW_MOUSE_BUTTON_MIDDLE ) return "Middle click";
+    if ( code_ == GLFW_MOUSE_BUTTON_RIGHT )  return "Right click";
+    
+    // some of these are overlapping above
+    if ( code_ == GLFW_MOUSE_BUTTON_1 )      return "mouse button 1";
+    if ( code_ == GLFW_MOUSE_BUTTON_2 )      return "mouse button 2";
+    if ( code_ == GLFW_MOUSE_BUTTON_3 )      return "mouse button 3";
+    if ( code_ == GLFW_MOUSE_BUTTON_4 )      return "mouse button 4";
+    if ( code_ == GLFW_MOUSE_BUTTON_5 )      return "mouse button 5";
+    if ( code_ == GLFW_MOUSE_BUTTON_6 )      return "mouse button 6";
+    if ( code_ == GLFW_MOUSE_BUTTON_7 )      return "mouse button 7";
+    if ( code_ == GLFW_MOUSE_BUTTON_8 )      return "mouse button 8";
 
     return "(unknown mouse button)";
 }

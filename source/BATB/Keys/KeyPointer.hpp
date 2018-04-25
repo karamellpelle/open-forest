@@ -33,36 +33,14 @@ class KeyPointer : public Key
 {
 
 public:
-    KeyPointer(Keys* keys, Key* x, Key* y, Key* l, Key* r) : Key( keys )
-    {
-        axis_x_ = x;
-        axis_y_ = y;
-        clicker_left_ = keys->createKeyClicker( l );
-        clicker_right_ = keys->createKeyClicker( r );
-    }
+    KeyPointer(BATB* keys, Key* x, Key* y, Key* l, Key* r);
+    KeyPointer(BATB* keys);
 
-    void reset() override
-    {
-        axis_x_->reset();
-        axis_y_->reset();
-        clicker_left_->reset();
-        clicker_right_->reset();
-
-    }
+    void reset() override;
     void step(tick_t ) override;
-    float_t alpha() override
-    {
-        // TODO: implement something based on a mouse
-        return 0.5;
-    }
-    virtual void canDisable(bool b) override 
-    {
-        // all called; is this correct behaviour?
-        axis_x_->canDisable( b );
-        axis_y_->canDisable( b );
-        clicker_left_->canDisable( b );
-        clicker_right_->canDisable( b );
-    }
+    float_t alpha() override;
+
+    virtual void canDisable(bool b) override;
 
     ////////////////////////////////////////////////////////////////
 

@@ -22,48 +22,46 @@ namespace batb
 
 namespace keys
 {
+
+float_t KeyMouseAxis::alpha()
+{
+    double x, y;
+    if ( can_disable )
+        batb->keys->getCursorPos_( x, y );
+    else
+        batb->keys->getCursorPos( x, y ); 
+
+    if ( code_ == code::MouseAxis::X ) return x;
+    if ( code_ == code::MouseAxis::Y ) return y;
+    return 0.0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // names. default.
 
 // unique identifier
-std::string KeyMouseAxisX::name() const
+std::string KeyMouseAxis::name() const
 {
-    // TODO: think through
-    std::ostringstream os; os << "KeyMouseAxisX";
+    std::ostringstream os; os << "KeyMouseAxis+";
+    if ( code_ == code::MouseAxis::X ) os << "X";
+    if ( code_ == code::MouseAxis::Y ) os << "Y";
+
+
     return os.str();
 }
 // human readable
-std::string KeyMouseAxisX::nameEasy() const
+std::string KeyMouseAxis::nameEasy() const
 {
-    return "mouse";
+    return "Mouse";
 }
 
 // GUI widget
-std::string KeyMouseAxisX::nameGUI() const
+std::string KeyMouseAxis::nameGUI() const
 {
-    std::ostringstream os; os << "<widget TBButton: text: 'mouse'>";
+    std::ostringstream os; os << "<widget TBButton: text: 'mouse'>"; // TODO: image
     return os.str();
 }
 
-// unique identifier
-std::string KeyMouseAxisY::name() const
-{
-    std::ostringstream os; os << "KeyMouseAxisY";
-    return os.str();
-}
-// human readable
-std::string KeyMouseAxisY::nameEasy() const
-{
-    return "mouse";
-}
-
-// GUI widget
-std::string KeyMouseAxisY::nameGUI() const
-{
-    // TODO: image
-    std::ostringstream os; os << "<widget TBButton: text: 'mouse'>";
-    return os.str();
-}
 
 } // namespace keys
 

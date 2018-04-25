@@ -107,8 +107,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         
 
     // use bound controls name
-    std::cout << std::endl << "use [" << batb->run->keys->console->nameEasy() << "] to toggle console" << std::endl;
-    std::cout << std::endl << "use [" << batb->run->keys->fullscreen->nameEasy() << "] to toggle fullscreen" << std::endl;
+    batb->log << "" << std::endl;
+    batb->log << "use [" << batb->run->keys->console->nameEasy() << "] to toggle console" << std::endl;
+    batb->log << "use [" << batb->run->keys->fullscreen->nameEasy() << "] to toggle fullscreen" << std::endl;
+    batb->log << "" << std::endl;
 
     // notification
     std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n";

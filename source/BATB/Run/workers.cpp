@@ -73,7 +73,7 @@ void LoadWorker<BATB>::operator()(Work& work)
 
         // load demo
         work.state( "Demo" );
-        batb->demo->begin();
+        batb->demo->begin( file::directory( batb->filepath() ) + "/BATB/Demo.yaml" );
 
 
 #ifdef LOAD_PROXY

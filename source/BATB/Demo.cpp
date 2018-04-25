@@ -38,17 +38,23 @@ Demo::Demo(BATB* b) : ModuleBATB( b )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
-void Demo::begin()
+void Demo::begin(const std::string& path)
 {
-    batb->log << "batb->demo->begin()" << std::endl;
+    batb->log << "batb->demo->begin( " << path << " )" << std::endl;
     LogIndent indent( batb->log, "* " );
     
     if ( init_empty() )
     {
-        //config( path );
+        config( path );
+
         // load associated keys 
-        keys->load( file::dynamic_data( "BATB/Demo/KeySet.yaml" ) );
-        batb->log << "KeySet loaded" << std::endl;
+        if ( auto keyset = yaml["KeySet"] )
+        {
+            batb->log << "loading KeySet: " << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            keys->load( keyset );
+        }
 
     }
 
