@@ -49,9 +49,6 @@ TBMain::TBMain(BATB* b) : batb( b )
         batb->log << "TBMain: could not read " << path << std::endl;
     }
 
-    // set TB window settings:
-    //SetSettings( tb::WINDOW_SETTINGS_RESIZABLE );
-    //SetText( "TBMain" );
 }
 
 void TBMain::step(World& run)
@@ -60,7 +57,6 @@ void TBMain::step(World& run)
     auto hth = run.scene.hth;
 
     // span out this layout to the whole screen
-    // FIXME: fill to root automatically
     SetRect( tb::TBRect(0, 0, wth, hth) );
 }
 

@@ -64,20 +64,19 @@ void Screen::begin(const std::string& path)
         // TODO: print GL info if verbose setting in yaml
 
 
+        batb->log << "GLFW window hints:" << std::endl;
+
         // set all hints to defaults
         glfwDefaultWindowHints();
+
         {
-            batb->log << "GLFW window hints:" << std::endl;
             LogIndent indent( batb->log, "- " );
 
             // set hints to window
             // http://www.glfw.org/docs/latest/window.html#window_hints
             // TODO: parse GLFW hints from yaml
-            //glfwWindowHint( GLFW_CLIENT_API, GLFW_OPENGL_ES_API );
-            //glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_CORE_PROFILE /* GLFW_COMPAT_PROFILE */ ); // OpenGL 3.2+
-            //glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
-            //glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
-            bool debugctx = true;
+
+            bool debugctx = yaml["debug"].as<bool>( true );
             glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, debugctx );     // debug symbols (?) 
             batb->log << "GLFW_OPENGL_DEBUG_CONTEXT = " << debugctx << std::endl;
 
