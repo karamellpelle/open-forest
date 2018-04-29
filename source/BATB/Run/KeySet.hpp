@@ -18,6 +18,15 @@
 #ifndef BATB_RUN_KEYSET_HPP
 #define BATB_RUN_KEYSET_HPP
 #include "BATB/Keys/KeySet.hpp"
+#include "BATB/Keys/Key.hpp"
+#include "BATB/Keys/KeyAlpha.hpp"
+#include "BATB/Keys/KeyClicker.hpp"
+#include "BATB/Keys/KeyKeyboardButton.hpp"
+#include "BATB/Keys/KeyMouseAxis.hpp"
+#include "BATB/Keys/KeyMouseButton.hpp"
+#include "BATB/Keys/KeyMouseScroll.hpp"
+#include "BATB/Keys/KeyPointer.hpp"
+#include "BATB/Keys/KeySet.hpp"
 
 namespace batb
 {

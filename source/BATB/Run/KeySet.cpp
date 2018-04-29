@@ -33,18 +33,20 @@ KeySet::KeySet(BATB* b) : keys::KeySet( b )
 
 void KeySet::load(const YAML::Node& yaml)
 {
+    using namespace keys;
+
     // TODO: release current pointers back to Keys!
 
     batb->log << "console:    ";
-    console = createKeyClicker( safeKey( createKey( yaml > "console" ) ) );
+    console = create<KeyClicker>( createSafeKey( yaml > "console" ) );
     batb->log->endl();
 
     batb->log << "escape:     ";
-    escape = createKeyClicker( safeKey( createKey( yaml > "escape" ) ) );
+    escape = create<KeyClicker>( createSafeKey( yaml > "escape" ) );
     batb->log->endl();
 
     batb->log << "fullscreen: ";
-    fullscreen = createKeyClicker( safeKey( createKey( yaml > "fullscreen" ) ) );
+    fullscreen = create<KeyClicker>( createSafeKey( yaml > "fullscreen" ) );
     batb->log->endl();
 
 

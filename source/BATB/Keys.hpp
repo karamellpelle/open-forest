@@ -93,33 +93,23 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // let's create a Key!
     //
-    // prims
-    Key*               createKey();
-    KeyKeyboardButton* createKeyKeyboardButton(code::KeyboardButton );
-    KeyMouseButton*    createKeyMouseButton(code::MouseButton );
-    KeyMouseAxis*      createKeyMouseAxis(code::MouseAxis );
-    KeyMouseScroll*    createKeyMouseScroll(code::MouseScroll );
-    // cons
-    KeyClicker*        createKeyClicker(Key* k);
-    KeyAlpha*          createKeyAlpha(Key* k);
-    KeyPointer*        createKeyPointer(Key* x, Key* y, Key* l, Key* r);
-    KeyPointer*        createKeyPointer();
-
-    // create Key from definition
-    Key*               createKey(const YAML::Node& );
-    Key*               createSafeKey(const YAML::Node& );
-    KeyKeyboardButton* createKeyKeyboardButton(const YAML::Node& );
-    KeyMouseButton*    createKeyMouseButton(const YAML::Node& );
-    KeyMouseAxis*      createKeyMouseAxis(const YAML::Node& );
-    KeyMouseScroll*    createKeyMouseScroll(const YAML::Node& );
-    // cons
-    KeyClicker*        createKeyClicker(const YAML::Node& );
-    KeyAlpha*          createKeyAlpha(const YAML::Node& );
-    KeyPointer*        createKeyPointer(const YAML::Node& );
 
     // create by constructor (=> K is subclass of Key)
     template <typename K, typename... Args>
     K*                 create(Args... );
+    // create by constructor, but safe, that is, return the one with default constructor
+    // instead of nullptr if fail
+    template <typename K, typename... Args>
+    K*                 createSafe(Args... );
+
+    ////////////////////////////////////////////////////////////////
+
+    // create Key from definition
+    // (I was not able to create these as template specializations of the two above
+    // functions. c++ templates are a mess :( )
+    Key* createKey(const YAML::Node& );
+    Key* createSafeKey(const YAML::Node& );
+
 
     // TODO: 
     //  * implement this when the user can change control mappings in real time
@@ -127,6 +117,7 @@ public:
     //    other places, since removing it will prevent it from being stepped
     void               removeKey(Key* ) { }
 
+    ////////////////////////////////////////////////////////////////
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +128,17 @@ public:
     code::ButtonState getMouseButton_(code::MouseButton );
 
 private:
+    // these helps us parse YAML nodes
+    // prims
+    //Key*               createKey(const YAML::Node& );     
+    KeyKeyboardButton* createKeyKeyboardButton(const YAML::Node& );
+    KeyMouseButton*    createKeyMouseButton(const YAML::Node& );
+    KeyMouseAxis*      createKeyMouseAxis(const YAML::Node& );
+    KeyMouseScroll*    createKeyMouseScroll(const YAML::Node& );
+    // cons
+    KeyClicker*        createKeyClicker(const YAML::Node& );
+    KeyAlpha*          createKeyAlpha(const YAML::Node& );
+    KeyPointer*        createKeyPointer(const YAML::Node& );
 
     // the input context (GLFW window)
     GLFWwindow* glfw_window_ = nullptr;
@@ -170,6 +172,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //  
 
+// 
+
 template <typename K, typename... Args>
 inline K* Keys::create(Args... args)
 {
@@ -177,6 +181,49 @@ inline K* Keys::create(Args... args)
     keys_.push_back( ret ); 
     return ret; 
 }
+
+
+// KeyMouseScroll needs special care; make a template specialization
+template <>
+inline KeyMouseScroll* Keys::create<KeyMouseScroll>(code::MouseScroll c)
+{
+    auto ret = create<KeyMouseScroll>( c );
+
+    // also add to scrolls
+    if ( c == code::MouseScroll::X )
+    {
+        scrolls_x_.push_back( ret );
+    }
+    if ( c == code::MouseScroll::Y )
+    {
+        scrolls_y_.push_back( ret );
+    }
+    // (unknown code ignored, but still added)
+
+    return ret;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// create by constructor, but safe, that is, return the one with default cons-
+// tructor if failure
+template <typename K, typename... Args>
+inline K* Keys::createSafe(Args... args)
+{
+    auto key = create<K>( args... );
+    if ( key ) return key;
+
+    batb->log << "! WARNING: using empty constructor instead";
+
+    // create 
+    return create<K>();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 } // namespace keys

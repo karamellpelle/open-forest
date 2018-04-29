@@ -21,10 +21,9 @@
 
 namespace batb
 {
-
-
 namespace forest
 {
+
 
 
 KeySet::KeySet(BATB* b) : keys::KeySet( b )
@@ -37,32 +36,38 @@ KeySet::KeySet(BATB* b) : keys::KeySet( b )
 void KeySet::load(const YAML::Node& yaml)
 {
 
+    using namespace keys;
+
     // TODO: release current pointers back to Keys
 
     batb->log << "forward:  ";
-    forward = createKeyClicker( safeKey( createKey( yaml["forward"] ) ) );
+    forward = create<KeyClicker>( createSafeKey( yaml > "forward" ) );
     batb->log->endl();
 
     batb->log << "backward: ";
-    backward = createKeyClicker( safeKey( createKey( yaml["backward"] ) ) );
+    backward = create<KeyClicker>( createSafeKey( yaml > "backward" ) );
     batb->log->endl();
 
     batb->log << "left:     ";
-    left = createKeyClicker( safeKey( createKey( yaml["left"] ) ) );
+    left = create<KeyClicker>( createSafeKey( yaml > "left" ) );
     batb->log->endl();
 
     batb->log << "right:    ";
-    right = createKeyClicker( safeKey( createKey( yaml["right"] ) ) );
+    right = create<KeyClicker>( createSafeKey( yaml > "right" ) );
     batb->log->endl();
 
     batb->log << "aim:      ";
-    aim = safeKey( createKeyPointer( yaml > "aim" > "KeyPointer" ) );
+    aim = create<KeyPointer>( createKey( yaml > "aim" > "KeyPointer" > "axis-x" ),
+                              createKey( yaml > "aim" > "KeyPointer" > "axis-y" ),
+                              createKey( yaml > "aim" > "KeyPointer" > "left" ),
+                              createKey( yaml > "aim" > "KeyPointer" > "right" )
+                            );
     batb->log->endl();
 
     ////////////////////////////////////////////////////////////////
 
-    tmp0 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_V ) );
-    tmp1 = createKeyClicker( createKeyKeyboardButton( GLFW_KEY_B ) );
+    tmp0 = create<KeyClicker>( create<KeyKeyboardButton>( GLFW_KEY_V ) );
+    tmp1 = create<KeyClicker>( create<KeyKeyboardButton>( GLFW_KEY_B ) );
 
 }
 

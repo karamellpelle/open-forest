@@ -4,6 +4,9 @@ nullptr no check for during read
 
 # TODO
 
+* padding for TBNotify
+* getKey -> getKeyboardButton in Keys
+* use Keys::create<KeyT>( cons ) in Keys.cpp
 * Value reads values from Value.yaml file. 1 big file, or 1 per module?
 * TBTickerLine statusline in top of console :)
 * tb skin for Key::nameGUI()
@@ -52,6 +55,7 @@ nullptr no check for during read
 * let AL sources for control punches play in 3D, not 2D as it seems to be now
 
 ### controls
+* add more settings in the "KeySet" YAML::Node than the ones used to create the Key's, for example camera movement speed and map scroll speed
 * accelerated movement with arrow buttons
 * while showing map, make it possible to use mouse scroll wheel (?) to
   control the opacity of map. hence it is possible to read map while running,
@@ -72,6 +76,7 @@ nullptr no check for during read
   - find out what to do with the easter egg. can Alure delete buffer on finish?
 
 ## Keys
+* configure more details from YAML::Node, like KeyMouseScroll speed and KeyAlpha values.
 * KeyCombine: use children for alpha(), typically for things like Ctrl+Shift+X 
 * memory handling (create / remove )
 * Key constructor: `BATB*`

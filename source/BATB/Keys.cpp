@@ -33,17 +33,6 @@ namespace batb
 namespace keys
 {
 
-// a convenient function to add a key
-// two different Key's with same physical mapping can be added,
-// since they may have different settings (fex. canDisable)
-template <typename KeyT>
-KeyT* push(std::vector<Key*>& set, KeyT* k)
-{
-    set.push_back( k ); 
-    return k; 
-} 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // these creates glfw codes (int) from string
 code::MouseButton map_mousecode(const std::string& ); 
@@ -292,67 +281,9 @@ void Keys::scrollCalling(GLFWscrollfun f)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// create Key's
-// 
+// create Key's from YAML::Node
+//
 
-// create the empty Key
-Key* Keys::createKey()
-{
-    return push( keys_, new Key( batb ) );
-}
-
-KeyKeyboardButton* Keys::createKeyKeyboardButton(code::KeyboardButton code)
-{
-    return push( keys_, new KeyKeyboardButton( batb, code ) );
-}
-
-KeyMouseButton* Keys::createKeyMouseButton(code::MouseButton code)
-{
-    return push( keys_, new KeyMouseButton( batb, code ) );
-}
-
-KeyMouseAxis* Keys::createKeyMouseAxis(code::MouseAxis code)
-{
-    return push( keys_, new KeyMouseAxis( batb, code ) );
-}
-
-KeyMouseScroll* Keys::createKeyMouseScroll(code::MouseScroll c)
-{
-    auto ret = push( keys_, new KeyMouseScroll( batb, c ) );
-
-    // also add to scrolls
-    if ( c == code::MouseScroll::X )
-    {
-        scrolls_x_.push_back( ret );
-    }
-    if ( c == code::MouseScroll::Y )
-    {
-        scrolls_y_.push_back( ret );
-    }
-    // (unknown code ignored, but still added)
-
-    return ret;
-}
-
-KeyClicker* Keys::createKeyClicker(Key* k)
-{
-    return push( keys_, new KeyClicker( batb, k ) );
-}
-
-KeyAlpha* Keys::createKeyAlpha(Key* k)
-{
-    return push( keys_, new KeyAlpha( batb, k ) );
-}
-
-KeyPointer* Keys::createKeyPointer(Key* x, Key* y, Key* l, Key* r)
-{
-    return push( keys_, new KeyPointer( batb, x, y, l, r ) );
-}
-
-KeyPointer* Keys::createKeyPointer()
-{
-    return push( keys_, new KeyPointer( batb ) );
-}
 
 Key* Keys::createKey(const YAML::Node& yaml)
 {
@@ -384,6 +315,19 @@ Key* Keys::createKey(const YAML::Node& yaml)
     return nullptr;
 }
 
+Key* Keys::createSafeKey(const YAML::Node& yaml)
+{
+    // using the one above
+    auto key = createKey( yaml );
+    if ( key ) return key;
+
+    batb->log << "! WARNING: using empty constructor instead";
+
+    // create from empty constructor
+    return create<Key>();
+}
+
+
 KeyKeyboardButton* Keys::createKeyKeyboardButton(const YAML::Node& yaml)
 {
     if ( !yaml )
@@ -405,7 +349,7 @@ KeyKeyboardButton* Keys::createKeyKeyboardButton(const YAML::Node& yaml)
     }
     
     auto glfw_code =  map_keyboardcode( code_str ) ;
-    auto ret = createKeyKeyboardButton( glfw_code );
+    auto ret = create<KeyKeyboardButton>( glfw_code );
     batb->log << "KeyKeyboardButton: { code: ";
     if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
     else                                   batb->log << code_str;
@@ -435,7 +379,7 @@ KeyMouseButton* Keys::createKeyMouseButton(const YAML::Node& yaml)
     }
     
     auto glfw_code =  map_mousecode( code_str ) ;
-    auto ret = createKeyMouseButton( glfw_code );
+    auto ret = create<KeyMouseButton>( glfw_code );
     batb->log << "KeyMouseButton: { code: ";
     if   ( glfw_code == GLFW_KEY_UNKNOWN ) batb->log << "UNKNOWN (" << code_str << ")"; // maybe this should be ERROR instead?
     else                                   batb->log << code_str;
@@ -467,12 +411,12 @@ KeyMouseAxis* Keys::createKeyMouseAxis(const YAML::Node& yaml)
     if ( str == "X" )
     {
         batb->log << "KeyMouseAxis: { axis: X }";
-        return createKeyMouseAxis( code::MouseAxis::X );
+        return create<KeyMouseAxis>( code::MouseAxis::X );
     }
     if ( str == "Y" )
     {
         batb->log << "KeyMouseAxis: { axis: Y }";
-        return createKeyMouseAxis( code::MouseAxis::Y );
+        return create<KeyMouseAxis>( code::MouseAxis::Y );
     }
 
     batb->log << "ERROR: no valid 'axis' field (" << str << ") in KeyMouseAxis";
@@ -503,12 +447,12 @@ KeyMouseScroll* Keys::createKeyMouseScroll(const YAML::Node& yaml)
     if ( str == "X" )
     {
         batb->log << "KeyMouseScroll: { axis: X }";
-        return createKeyMouseScroll( code::MouseScroll::X ); 
+        return create<KeyMouseScroll>( code::MouseScroll::X ); 
     }
     if ( str == "Y" )
     {
         batb->log << "KeyMouseScroll: { axis: Y }";
-        return createKeyMouseScroll( code::MouseScroll::Y ); 
+        return create<KeyMouseScroll>( code::MouseScroll::Y ); 
     }
 
     batb->log << "ERROR: no valid 'axis' field (" << str << ") in KeyMouseScroll";
@@ -521,7 +465,7 @@ KeyClicker* Keys::createKeyClicker(const YAML::Node& yaml)
     auto child0 = createKey( yaml ); 
     batb->log << ", in KeyMouseClicker";
 
-    return createKeyClicker( child0 );
+    return create<KeyClicker>( child0 );
 }
 
 KeyAlpha* Keys::createKeyAlpha(const YAML::Node& yaml)
@@ -529,7 +473,7 @@ KeyAlpha* Keys::createKeyAlpha(const YAML::Node& yaml)
     auto child0 = createKey( yaml ); 
     batb->log << ", in KeyMouseAlpha";
 
-    return createKeyAlpha( child0 );
+    return create<KeyAlpha>( child0 );
 
 }
 KeyPointer* Keys::createKeyPointer(const YAML::Node& yaml)
@@ -575,7 +519,7 @@ KeyPointer* Keys::createKeyPointer(const YAML::Node& yaml)
     batb->log << " ]";
 
     batb->log << ", in KeyPointer";
-    return createKeyPointer( axis_x, axis_y, left, right );
+    return create<KeyPointer>( axis_x, axis_y, left, right );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

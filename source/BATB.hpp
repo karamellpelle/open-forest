@@ -78,7 +78,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     // core part of BATB.
     // we need a minimum part of BATB to start running Iteration's: the core part.
-    // core will be fully initialized by 'void begin(const YAML::Node& )'.
+    // core will be fully initialized by 'void BATB::begin(const YAML::Node& )'.
     std::unique_ptr<value::Value>     value;
     std::unique_ptr<screen::Screen>   screen;
     std::unique_ptr<time::Time>       time;
@@ -91,7 +91,7 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // non-core part of BATB.
-    // this part is initialized later, for example by 'void begin_noncore()'
+    // this part is initialized later, for example by 'void BATB::beginNonCore()'
     std::unique_ptr<ogre::OGRE>       ogre;
     std::unique_ptr<run::Run>         run;
     std::unique_ptr<forest::Forest>   forest;

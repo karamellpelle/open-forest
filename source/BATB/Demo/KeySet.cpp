@@ -34,11 +34,12 @@ KeySet::KeySet(BATB* b) : keys::KeySet( b )
 
 void KeySet::load(const YAML::Node& yaml)
 {
+    using namespace keys;
 
     // TODO: release current pointers back to Keys
 
     batb->log << "map-view-full:  ";
-    map_view_full = createKeyClicker( safeKey( createKey( yaml > "map-view-full" ) ) );
+    map_view_full = create<KeyClicker>( createSafeKey( yaml > "map-view-full" ) );
     batb->log->endl();
 
 }

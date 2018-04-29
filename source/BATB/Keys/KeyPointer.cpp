@@ -16,6 +16,9 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Keys/KeyPointer.hpp"
+#include "BATB/Keys/KeyMouseButton.hpp"
+#include "BATB/Keys/KeyMouseAxis.hpp"
+#include "BATB/Keys/KeyClicker.hpp"
 
 
 namespace batb
@@ -27,10 +30,10 @@ namespace keys
 KeyPointer::KeyPointer(BATB* b, Key* x, Key* y, Key* l, Key* r) : Key( b )
 {
     // create default if not provided
-    axis_x_        = x ? x : (Key*)( batb->keys->createKeyMouseAxis( code::MouseAxis::X ) );
-    axis_y_        = y ? y : (Key*)( batb->keys->createKeyMouseAxis( code::MouseAxis::Y ) );
-    clicker_left_  = batb->keys->createKeyClicker( l ? l : (Key*)( batb->keys->createKeyMouseButton( GLFW_MOUSE_BUTTON_LEFT ) ) );
-    clicker_right_ = batb->keys->createKeyClicker( r ? r : (Key*)( batb->keys->createKeyMouseButton( GLFW_MOUSE_BUTTON_LEFT ) ) );
+    axis_x_        = x ? x : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::X ) );
+    axis_y_        = y ? y : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::Y ) );
+    clicker_left_  = batb->keys->create<KeyClicker>( l ? l : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
+    clicker_right_ = batb->keys->create<KeyClicker>( r ? r : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
 
 }
 

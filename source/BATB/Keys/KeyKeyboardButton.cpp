@@ -44,7 +44,7 @@ std::string KeyKeyboardButton::nameEasy() const
 // GLFW don't handle these properly!
     switch ( code_ )
     {
-        case GLFW_KEY_SPACE:         return "space";
+        case GLFW_KEY_SPACE:         return "Space";
         case GLFW_KEY_APOSTROPHE:    return "'";
         case GLFW_KEY_COMMA:         return ",";
         case GLFW_KEY_MINUS:         return "-";

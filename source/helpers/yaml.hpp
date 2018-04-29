@@ -20,7 +20,7 @@
 #include "yaml-cpp/yaml.h"
 
 
-// retrive YAML::Node in mappings in a safe way,
+// working with nodes of type Map, in a safe way
 // like so: yaml > "first" > "second"
 inline YAML::Node operator>(const YAML::Node& n, const std::string& ix)
 {
@@ -29,6 +29,19 @@ inline YAML::Node operator>(const YAML::Node& n, const std::string& ix)
 
     return n[ix];
 }
+
+// working with nodes of type Sequence, in a safe way
+// like so: yaml > 0 > 7
+inline YAML::Node operator>(const YAML::Node& n, size_t ix)
+{
+    if ( !n.IsDefined() ) return n;
+    if ( !n.IsSequence() )     return YAML::Node( YAML::NodeType::Null );
+
+    return n[ix];
+}
+
+// now, these can be combined:
+// yaml > "results" > 2 
 
 
 #endif
