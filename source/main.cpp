@@ -90,7 +90,9 @@ int main(int argc, char** argv)
             // end frame for iteration
             batb->frameEnd();
         }
-        
+
+        batb->log << "IterationStack empty. " << batb->screen->frameCount() << " screen frames rendered.\n";
+
         ////////////////////////////////////////////////////////////////////////////////
         
 #ifndef LOAD_NONCOREBATB_ON_MAIN_THREAD

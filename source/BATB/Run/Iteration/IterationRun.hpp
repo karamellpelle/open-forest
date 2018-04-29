@@ -46,9 +46,6 @@ public:
     // implementation of 'iterate_run'
     virtual IterationStack iterate(World& ) final;
 
-    // also, each subclass should typically create a non-virtual method:
-    // void iterate_begin(World& );
-
     BATB* batb = nullptr;
 
 protected:

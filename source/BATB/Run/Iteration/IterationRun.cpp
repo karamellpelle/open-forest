@@ -21,6 +21,7 @@
 #include "BATB/Run/Notify.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/Console.hpp"
+#include "BATB/Run/events.hpp"
 #include "BATB/Value/Run.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/OGRE.hpp"
@@ -42,55 +43,39 @@ IterationRun::IterationRun(BATB* b) : batb( b )
 
 }
 
-IterationStack IterationRun::iterate(World& world)
+IterationStack IterationRun::iterate(World& run)
 {
-    ////////////////////////////////////////    
-    // begin new frame
-    ////////////////////////////////////////
 debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
-    // set current tick for world.
-    world.tick = batb->time->get();
-
-    // setup scene for this frame
-    begin( world.scene );
-
-    // step all Key's, before 'iterate_run' implementation
-    batb->keys->step( world.tick );
-
-    // setup Ogre for a new frame
-    batb->ogre->frameBegin(); 
-
-    // begin frame for AL
-    batb->al->frameBegin();
-
-    if ( batb->run->initialized() )
-    {
-        // sets tick and 
-        // TODO: only uses Scene
-        batb->run->notify->step( world );
-
-    }
-
     ////////////////////////////////////////////////////////////////////////////////
-    // actual iteration, implemented by subclass
-debug::gl::msg("iterate_run()");
-    auto ret = iterate_run( world );
-    ////////////////////////////////////////////////////////////////////////////////
+    // begin new framw
+    //
 
-    //batb.run.notifier.frameEnd(); or remove?
+    ////////////////////////////////////////////////////////////////
+    // Event
 
+    // free old events
+    run.events.step();
     
-    // end AL frame
-    batb->al->frameEnd();
+    // move all events from run::Run over to run::World. this is not really
+    // correct behaviour - events should be copied - because Run (and IterationRun's)
+    // works on any run::World. however, events can not be doubled (yet). (that's 
+    // because EventList::step() decreases the Event's frame lifes
+    //
+    // in practice this is no since we will only work on 1 run::World each frame
+    run.events.take( *batb->run->events );
 
-    // end Ogre frame
-    batb->ogre->frameEnd();
+    ////////////////////////////////////////////////////////////////
 
-    // output and step GUI (_every_ frame!)
-    batb->gui->output( world.scene );
-    batb->gui->step( world.tick );
+    // set current tick for world (the tick of this frame)
+    run.tick = batb->time->get();
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // various stepping, before 'iterate_run'. this is done before the subclass' 
+    // 'iteration_run()' because
+    //
+
+    batb->keys->step( run.tick );
 
     if ( batb->run->initialized() )
     {
@@ -99,14 +84,14 @@ debug::gl::msg("iterate_run()");
         if ( batb->run->keys->console->click() )
         {
             // note that 'keys.console' can not be disabled
-            if ( batb->run->keys->console->toggle() ) batb->run->console->open( world ); else batb->run->console->close( world );
+            if ( batb->run->keys->console->toggle() ) batb->run->console->open( run ); else batb->run->console->close( run );
         }
 
         // update Console
-        batb->run->console->step( world );
+        batb->run->console->step( run );
 
         // update Notify
-        batb->run->notify->step( world );
+        batb->run->notify->step( run );
 
         ////////////////////////////////////////////////////////////////
 
@@ -118,8 +103,55 @@ debug::gl::msg("iterate_run()");
         }
     }
 
+    // signalize if screen wants to quit
+    if ( batb->screen->closing() )
+    {
+        run.events.push( event::Do::Exit );
+        // and clear close flag of screen to prevent events every frame
+        // however, it doesn't matter because events have a short lifetime
+        batb->screen->closingClear();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
-    ++world.frames;
+
+    // setup scene for this frame
+    begin( run.scene );
+
+    // setup Ogre for a new frame
+    batb->ogre->frameBegin(); 
+
+    // begin frame for AL
+    batb->al->frameBegin();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // iterate run::World - our application wworldorld
+    // actual behaviour defined by subclass of this
+
+debug::gl::msg("iterate_run()");
+    auto ret = iterate_run( run );
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    
+    // end AL frame
+    batb->al->frameEnd();
+
+    // end Ogre frame
+    batb->ogre->frameEnd();
+
+    // output and step GUI (_every_ frame!)
+    batb->gui->output( run.scene );
+    batb->gui->step( run.tick );
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // end frame
+    //
+
+    ++run.frames;
+
 
     return ret;
 }

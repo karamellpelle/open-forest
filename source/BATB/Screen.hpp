@@ -57,6 +57,9 @@ public:
     GLuint getFBO() const                           { return fbo_; }
     GLuint setFBO(GLuint );
     void fullscreen(bool ); 
+    bool closing();
+    void closingClear();
+
     ////////////////////////////////////////////////////////////////
     // ...
 

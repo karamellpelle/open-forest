@@ -68,22 +68,29 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // push events
+    // TODO: shared_ptr
     template <typename T>
-    void pushEvent(const T& d)
-    {
-        events->push( d );
-    }
-    template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
-    void pushEvent(T* d, const D& del = D())
-    {
-        events->push( d, del );
-    }
-
+    void pushEvent(const T& d);
+    template <typename T, typename D = std::default_delete<T>> // TODO enable_if T is_pointer
+    void pushEvent(T* d, const D& del = D());
 
     // events to move over to world
     std::unique_ptr<EventList> events;
 
 };
+
+template <typename T>
+inline void Run::pushEvent(const T& d)
+{
+    events->push( d );
+}
+
+template <typename T, typename D> 
+inline void Run::pushEvent(T* d, const D& del)
+{
+    events->push( d, del );
+}
+
 
 } // namespace run
 

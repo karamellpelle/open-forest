@@ -17,6 +17,7 @@
 //
 #ifndef BATB_FOREST_WORLD_HPP
 #define BATB_FOREST_WORLD_HPP
+#include "BATB/Forest.hpp"
 #include "BATB/Forest/Camera.hpp"
 #include "BATB/Forest/Terrain.hpp"
 #include "BATB/Forest/Map.hpp"
@@ -24,6 +25,7 @@
 #include "BATB/Forest/Runner.hpp"
 #include "BATB/Forest/Weather.hpp"
 #include "BATB/Event.hpp"
+#include "BATB.hpp"
 #include "AL/alure2.h"
 
 

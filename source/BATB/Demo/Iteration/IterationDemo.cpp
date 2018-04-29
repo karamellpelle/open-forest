@@ -18,6 +18,7 @@
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
 #include "BATB/Demo/World.hpp"
 #include "BATB/Run/World.hpp"
+#include "BATB/Demo.hpp"
 
 namespace batb
 {
@@ -33,6 +34,11 @@ IterationDemo::IterationDemo(BATB* b) : batb( b )
 
 IterationStack IterationDemo::iterate(World& demo)
 {
+    // free old events
+    demo.events.step();
+    
+    // transfer events from Demo to demo::World
+    demo.events.take( *batb->demo->events );
 
     // demo-tick is run-tick:
     demo.tick = demo.run.tick;

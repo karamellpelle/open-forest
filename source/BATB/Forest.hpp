@@ -43,6 +43,7 @@ public:
 
 
     std::unique_ptr<KeySet> keys;
+    std::unique_ptr<EventList> events;
 
 private:
 

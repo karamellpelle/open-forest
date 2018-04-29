@@ -29,10 +29,16 @@ namespace event
 
 enum class Do
 {
+    // start Demo (showing the forest capabilities)
     DemoForest,
+    // toggle NanoVG
     NanoVG,
+    // start old 
     Old,
+    // exit application
     Exit,
+    // pop current iteration (exit for IterationRunMain, jump back for IterationRunDemo
+    PopIteration
 };
 
 

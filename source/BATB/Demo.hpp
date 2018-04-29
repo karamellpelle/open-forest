@@ -41,7 +41,7 @@ public:
 
     std::unique_ptr<KeySet> keys;
 
-    //EventList events;
+    std::unique_ptr<EventList> events;
 private:
 
 

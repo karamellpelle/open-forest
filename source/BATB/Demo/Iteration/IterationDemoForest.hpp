@@ -18,11 +18,9 @@
 #ifndef BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
-#include "BATB/Demo/BeginEvents.hpp"
 #include "BATB/Demo/Output.hpp"
 #include "BATB/Demo/CourseCurve.hpp"
 #include "BATB/Forest/Output.hpp"
-#include "BATB/Forest/BeginEvents.hpp"
 #include "BATB/Forest/ModifyCamera.hpp"
 #include "BATB/Forest/ModifyRunner.hpp"
 #include "BATB/Forest/ModifyControlCamera.hpp"
@@ -63,10 +61,8 @@ private:
     void modifyRunnerDemo(demo::World& );
 
     demo::Output outputDemo;
-    demo::BeginEvents beginEventsDemo;
 
     forest::Output output;
-    forest::BeginEvents beginEvents;
     forest::ModifyCamera modifyCamera;
     forest::ModifyRunner modifyRunner;
     forest::ModifyControlCamera modifyControlCamera;
@@ -78,14 +74,6 @@ private:
     uint curve_i = 0;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//  
-
-void begin(IterationDemoForest& );
-
-
-void end(IterationDemoForest& );
 
 
 

@@ -38,7 +38,7 @@ namespace run
 {
 
 
-IterationRunMain::IterationRunMain(BATB* b) : IterationRun( b ), beginEvents( b )
+IterationRunMain::IterationRunMain(BATB* b) : IterationRun( b )
 {
 
 }
@@ -128,16 +128,13 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     ////////////////////////////////////////////////////////////////////////////////
     // *** output ***
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // grab and clean up events (must be done between output and step!)
-    beginEvents( run );
-    ////////////////////////////////////////////////////////////////////////////////
-
+    // (all output here are from GUI)
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
     
 
+    // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );
     demo::nanovg::demo_iterate( batb, false, false );
 
@@ -146,14 +143,16 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // escape quits main (exit)
     //if ( batb.run.keys.escape->click() )  run.events.push( event::Do::Exit );
-
-    // test scrool
-    //double a = batb->demo->keys->scroll->alpha();
-    //std::cout << "scroll! current: " << a << "\r" << std::flush;
-
+    
 #ifdef DEMO_FOREST_DIRECT
     run.events.push( event::Do::DemoForest );
 #endif
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // otherwise we doesn't do much about our world 'run' here; the more important stuff are done
+    // by our parent class 'IterationRun::iterate()', and iterating subworlds (i.e. IterationDemoForest)).
+    // instead we look at events and controls the gameflow thereafter.
+    
 
     // think: look at events and handle thereafter
     for ( auto& event : run.events )
@@ -187,7 +186,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
                     // demo world created, make sure IterationRunDemo works on that
                     // for non-demo world, that world should be a 
-                    // TODO: make demo world a subworld of run world and remove this:
+                    // TODO: make demo world a subworld of run world and remove this!!
                     iterationRunDemo->demoWorld( demo );
 
                     return { game::begin_iteration( iterationRunDemo ), 

@@ -36,15 +36,19 @@ class Notify
 public:
     Notify(BATB* b) : batb( b ) { }
 
-    void step(World& );
-
+    // setup
     void begin();
     void end();
+
+    // step
+    void step(World& );
 
     // hide and clear
     void clear();
 
+    ////////////////////////////////////////////////////////////////
     // show message
+
     bool message(const NotifyMessage& msg);           // add a notification message
     bool message(const std::string& , tick_t = 0.0);  // add a plain notification message
 

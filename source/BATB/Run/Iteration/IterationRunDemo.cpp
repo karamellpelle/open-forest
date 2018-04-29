@@ -18,6 +18,7 @@
 #include "BATB/Run.hpp"
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/Iteration/IterationRunDemo.hpp"
+#include "BATB/Run/events.hpp"
 #include "BATB/Demo.hpp"
 #include "BATB/Demo/Iteration/IterationDemoForest.hpp"
 #include "OgreCamera.h"
@@ -49,9 +50,9 @@ void IterationRunDemo::demoWorld(demo::World* demo)
 
 void IterationRunDemo::iterate_begin(World& run)
 {
-    // stack_ is set up previously.  that means iterations of 
-    // demo::World will continue where it was the last time.
-    // but we have to restart the iteration at stack
+    // IterationStack for demo::World was previously set up.  that means 
+    // iterations of demo::World will continue where it was the last time,
+    // but we have to restart (i.e. 'iterate_begin') the previous iteration
     
     if ( !stack_.empty() )
     {
@@ -67,19 +68,49 @@ IterationStack IterationRunDemo::iterate_run(World& run)
 
     // this Run-Iteration decides to go back or not 
     // (IterationDemoForest runs forever)
-    // TODO: look at events, see if we shall exit or not 
-    if ( batb->run->keys->escape->click() )
-    {
-        // set back cursor
-        batb->keys->setCursorFree( false );
 
-        return _emptylist_;
-    }
-    else
+    
+    ////////////////////////////////////////////////////////////////
+    // do
+    if ( batb->run->keys->escape->click() )  run.events.push( event::Do::PopIteration );
+
+
+
+    ////////////////////////////////////////////////////////////////
+    // think
+
+    // think: look at events and handle thereafter
+    for ( auto& event : run.events )
     {
-        return { this };
+        if ( auto* next = eat<event::Do>( event ) )
+        {
+            switch ( *next )
+            {
+            case event::Do::Exit:
+            {
+                // set back cursor
+                batb->keys->setCursorFree( false );
+
+                // keep this event, making IterationRunMain exit too
+                event->keepAlive();
+                
+                // finish this iteration, IterationRunMain
+                return _emptylist_;
+            }
+            case event::Do::PopIteration:
+            {
+                // set back cursor
+                batb->keys->setCursorFree( false );
+
+                // finish this iteration, IterationRunMain
+                return _emptylist_;
+            }
+            }
+        }
     }
 
+    // continue
+    return { this };
 
 }
 ////////////////////////////////////////////////////////////////////////////////

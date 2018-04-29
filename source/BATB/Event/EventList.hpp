@@ -29,10 +29,9 @@ namespace batb
 class EventList : public std::list<std::shared_ptr<EventBase>> // private inheritance?
 {
 friend class EventEaterSet;
-friend void events_step(EventList& );
 
 public:
-    // push new event (copy data)
+    // push event, copying given data 'd' (very suitable for small classes for example enum's)
     template <typename T>
     void push(const T& d, uint frames = 1) // enable_if is_reference
     {
@@ -44,28 +43,32 @@ public:
         }
     }
 
-    // push new event (point to data)
+    // push event, with pointer to data 'ptr_d' and releasing when finished 
+    // (delete pointer with if releaser not given) 
     template <typename T, typename D = std::default_delete<T>> // enable_if is_pointer
-    void push(T* d, const D& del = D(), uint frames = 1)
+    void push(T* ptr_d, const D& del = D(), uint frames = 1)
     {
         if ( frames )
         {
-            auto ptr = std::make_shared<EventDataPoint<T>>( d, del );
+            auto ptr = std::make_shared<EventDataPoint<T>>( ptr_d, del );
             ptr->frames( frames );
             push_back( ptr );
         }
     }
     
-    // NOTE: it is not allowed (yet) to copy events from one EventList to another.
-    //       because the function 'events_step' below will decrease frame life more
-    //       than once each frame, if events_step more than once each frame.
-    //       hence only use 'take'
-    //
     // push events from event list
+    //template <>
     //void push(const EventList& es)
     //{
     //    std::copy( es.begin(), es.end(), std::back_inserter( );
     //}
+    // NOTE: it is not allowed (yet) to copy events from one EventList to another.
+    //       because the function 'EventList::step' below will decrease frame life more
+    //       than once each frame if we step events more than once each. therefore
+    //       we create this function 'take'. this is something similar to 'std::move'
+    //       although we don't invalidate the other object, we only move the events
+    //       from the other object into this
+    //
 
     // push and clear
     void take(EventList& es)
@@ -74,37 +77,38 @@ public:
         es.clear();
     }
 
+    void step();
 
     // TODO?
-    void set_tick(tick_t t) { tick_ = t; }
-    void set_frame(uint n) { frame_ = n; }
+    void tick(tick_t t) { tick_ = t; }
+    void frame(uint n)  { frame_ = n; }
 
 private:
     tick_t tick_ = 0.0;
     uint frame_ = 0;
 
 
-    static bool step_lifes(const std::shared_ptr<EventBase>& event)
-    {
-        // we are not allowed to modify e (cppreference.com of list::remove_if)
-        // but we can surely modify the object it points to!
-        auto& lifes = event->frame_lifes;
-
-        lifes = lifes == 0 ? 0 : lifes - 1; // but lifes should never be empty!
-
-        // remove iff current frame is the last frame for event
-        return lifes == 0;
-    }
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-inline void events_step(EventList& list)
+// step and remove dead events
+inline void EventList::step()
 {
-    // free mem iff frame_lifes == 0
-    //events_.remove_if( [](auto e) { return e->frame_lifes == 0; } ); // c++14
-    list.remove_if( EventList::step_lifes );
+    auto pred = [](const std::shared_ptr<EventBase>& e)
+    {
+        // we are not allowed to modify e (see cppreference.com of list::remove_if)
+        // but we can surely modify the object it points to!
+        e->frame_lifes = e->frame_lifes == 0 ? 0 : e->frame_lifes - 1;
+
+        // remove iff current frame is the last frame for event
+        return e->frame_lifes == 0;
+
+    };
+
+    // step and/or remove (including free memory, cf. shared_ptr) events
+    remove_if( pred );
 
 }
 

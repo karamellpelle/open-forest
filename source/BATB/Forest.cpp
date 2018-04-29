@@ -32,6 +32,7 @@ namespace forest
 Forest::Forest(BATB* b) : ModuleBATB( b )
 {
     keys = std::make_unique<KeySet>( b );
+    events           = std::make_unique<EventList>();
 }
 
 

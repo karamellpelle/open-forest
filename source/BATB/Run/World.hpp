@@ -33,21 +33,22 @@ namespace run
 class World
 {
 public:
-    // rendering target:
+    // our graphics rendering target
     Scene scene;
-
-    //run::Network network;
     
-    // current player (of open-forest program)
+    // our network connection. TODO.
+    //Network network; 
+    
+    // current player of this world
     Player* player;
 
-    // events
+    // world events
     EventList events;
 
     // tick of world
     tick_t tick;
 
-    // number of frames iterated (by IterationRun...)
+    // number of frames iterated (by (subclasses of) IterationRun)
     uint frames = 0;
     
 };

@@ -18,7 +18,6 @@
 #ifndef BATB_RUN_ITERATION_ITERATIONRUNMAIN_HPP
 #define BATB_RUN_ITERATION_ITERATIONRUNMAIN_HPP
 #include "BATB/Run/Iteration/IterationRun.hpp"
-#include "BATB/Run/BeginEvents.hpp"
 
 
 namespace batb
@@ -49,18 +48,14 @@ public:
 
     TBMain* tb_main   = nullptr;
 
+    // FIXME: add demo::World as subworld to run::World and remove this,
+    // because Iteration's works on any world, not a specific world!
     demo::World* demo = nullptr; 
-    // should this be here, ideally? IterationRunMain creates demo::Wolrd 
-    // and launches IterationRunDemo, so probably. otherwise it should
-    // be part of IterationRunDemo.
-    // this means IterationRunMain is reused.
 
 private:
     // this creates a new demo world for us.
     // demo world should maybe be a subworld of run world.
     demo::World* newDemoWorld(run::World* );
-
-    BeginEvents beginEvents;
 
 
 

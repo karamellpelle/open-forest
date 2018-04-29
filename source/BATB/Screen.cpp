@@ -298,6 +298,17 @@ void Screen::fullscreen(bool full)
     }
 }
 
+bool Screen::closing()
+{
+    return glfwWindowShouldClose( glfw_window );
+}
+
+void Screen::closingClear()
+{
+    glfwSetWindowShouldClose( glfw_window, GLFW_FALSE);
+}
+
+
 } // namespace screen
 } // namespace batb
 

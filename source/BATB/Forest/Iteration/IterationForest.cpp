@@ -30,20 +30,21 @@ IterationForest::IterationForest(BATB* b) : batb( b )
 
 }
 
-IterationStack IterationForest::iterate(World& world)
+IterationStack IterationForest::iterate(World& forest)
 {
+    // update events
+    forest.events.step();
+
+    // transfer events from Forest into forest::World
+    forest.events.take( *batb->forest->events );
+
     ////////////////////////////////////////
     // actual iteration, implemented by subclass
     ////////////////////////////////////////
-    auto ret = iterate_forest( world );
- 
-
-    // TODO: finish up, free mem (events, ...)
-    //
-    events_step( world.events );
+    auto ret = iterate_forest( forest );
 
     // count number of IterationForest-iterations
-    ++world.frames;
+    ++forest.frames;
 
     return ret;
 }

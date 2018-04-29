@@ -49,9 +49,11 @@ public:
     void initState();
 
 
+    // nanovg drawing begin end
     void nanovgBegin();
     NVGcontext* nanovgBegin(const Scene& );
     void nanovgEnd();  
+    // nanovg helpers
     void nanovgNormalize(const Scene& );
     int nanovgFont(const std::string& , const std::string& );
     NVGcontext* nvg_context = nullptr;
@@ -63,6 +65,7 @@ public:
     // GL state for turbobadger
     void turbobadgerBegin();
     void turbobadgerEnd();
+
 
 private:
     //std::map<std::string, int> nanovg_fonts_;

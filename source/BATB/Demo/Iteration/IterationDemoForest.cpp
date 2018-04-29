@@ -50,9 +50,13 @@ namespace demo
 
 
 IterationDemoForest::IterationDemoForest(BATB* b) : 
-    IterationDemo( b ), outputDemo( b ), beginEventsDemo( b ), output( b ), beginEvents( b ),
-    modifyCamera( b ), modifyRunner( b ),
-    modifyControlCamera( b ), modifyControlRunner( b ), stepDT( b )
+    IterationDemo( b ), 
+    outputDemo( b ), 
+    output( b ), 
+    modifyCamera( b ), 
+    modifyRunner( b ),
+    modifyControlCamera( b ), 
+    modifyControlRunner( b ), stepDT( b )
 {
 
 }
@@ -131,14 +135,6 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // clean up and retrieve events outside of World
-    //
-    beginEventsDemo( demo );      // demo::World
-    beginEvents( forest );        // forest::World
-    // (we ignore run::Events in IterationDemoForest)
-    
-    
     ////////////////////////////////////////////////////////////////////////////////
     // control objects
 

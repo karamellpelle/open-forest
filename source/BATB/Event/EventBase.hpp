@@ -40,10 +40,14 @@ friend class EventDataCopy;
 template <typename T_>
 friend class EventDataPoint;
 friend class EventList;
+friend class Event;
 
 public:
     const std::type_index& type() const { return type_; }
     void* data() const { return data_; }
+
+    // make it live through through this step too (cf. EventList::step())
+    void keepAlive()    { ++frame_lifes; }
 
 private:
     EventBase(const std::type_index& t, void* d) : type_( t ), data_( d ) { }
@@ -64,7 +68,6 @@ private:
     uint frame = 0;
     tick_t tick = 0.0;
     // ...
-
 
     // mem
     // should be non-empty. 1 means it only lives through current frame
@@ -132,6 +135,9 @@ public:
     Event(Event&& ) = default;
 
     Event(const std::shared_ptr<EventBase>& b) : base_( b ) { } // public for EventList. the whole event implementation should instead be redesigned at bit
+
+    // make it live through through this step too (cf. EventList::step())
+    void keepAlive()    { ++base_->frame_lifes; }
 
 private:
     std::shared_ptr<EventBase> base_;
