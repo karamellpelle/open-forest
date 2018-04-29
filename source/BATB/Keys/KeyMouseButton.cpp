@@ -55,6 +55,8 @@ std::string KeyMouseButton::nameEasy() const
 // GUI widget
 std::string KeyMouseButton::nameGUI() const
 {
+    // TODO: icons for every mouse button:
+    // "<widget TBButton: skin: Key.mousebutton-right'" << nameEasy() << "'>";
     std::ostringstream os; os << "<widget TBButton: text: '" << nameEasy() << "'>";
     return os.str();
 }

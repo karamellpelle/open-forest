@@ -256,7 +256,7 @@ elements
 		bitmap editfield.png
 		cut 12
 		expand 4
-		padding 4
+		padding 0
 		strong-overrides
 			element TBEditField.search
 				condition: target: this, property: edit-type, value: "search"

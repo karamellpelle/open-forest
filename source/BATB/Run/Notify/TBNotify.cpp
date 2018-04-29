@@ -90,7 +90,13 @@ void TBNotifyMessage::message(NotifyMessage* msg)
     {
         // set text
         tb_editfield->SetText( msg->str.c_str() );
-        tb_editfield->SetTextAlign( TB_TEXT_ALIGN_CENTER );
+
+        // SetTextAlign only works on selections, or TBBlock (i.e. line) of 
+        // current position (i.e. beginning), see tb_style_edit.h . 
+        // hence we have to select all before aligning
+        tb_editfield->GetStyleEdit()->selection.SelectAll();
+        tb_editfield->GetStyleEdit()->SetAlign( TB_TEXT_ALIGN_CENTER );
+        tb_editfield->GetStyleEdit()->selection.SelectNothing();
 
     }
     else
