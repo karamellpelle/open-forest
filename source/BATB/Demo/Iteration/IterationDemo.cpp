@@ -37,11 +37,11 @@ IterationStack IterationDemo::iterate(World& demo)
     // free old events
     demo.events.step();
     
-    // transfer events from Demo to demo::World
-    demo.events.take( *batb->demo->events );
-
     // demo-tick is run-tick:
     demo.tick = demo.run.tick;
+
+    // transfer events from Demo to demo::World
+    demo.events.take( *batb->demo->events );
 
     ////////////////////////////////////////
     // actual iteration, implemented by subclass

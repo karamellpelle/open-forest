@@ -121,6 +121,15 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 {
     auto& forest = *(demo.forest);
 
+    ////////////////////////////////////////////////////////////////
+    // since we are not running IterationForest-Iteration's directly:
+    // update events (Forest)
+    forest.events.step();
+
+    // transfer events from Forest into forest::World
+    forest.events.take( *batb->forest->events );
+
+
     ////////////////////////////////////////////////////////////////////////////////
     // *** output ***
 
@@ -134,16 +143,6 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
-
-    ////////////////////////////////////////////////////////////////
-    // since we are not running IterationForest directly, we have to to clear the
-    // events here
-
-    // update events
-    forest.events.step();
-
-    // transfer events from Forest into forest::World
-    forest.events.take( *batb->forest->events );
 
     ////////////////////////////////////////////////////////////////////////////////
     // control objects

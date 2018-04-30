@@ -51,22 +51,9 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     // begin new framw
     //
 
-    ////////////////////////////////////////////////////////////////
-    // Event
-
     // free old events
     run.events.step();
     
-    // move all events from run::Run over to run::World. this is not really
-    // correct behaviour - events should be copied - because Run (and IterationRun's)
-    // works on any run::World. however, events can not be doubled (yet). (that's 
-    // because EventList::step() decreases the Event's frame lifes
-    //
-    // in practice this is no since we will only work on 1 run::World each frame
-    run.events.take( *batb->run->events );
-
-    ////////////////////////////////////////////////////////////////
-
     // set current tick for world (the tick of this frame)
     run.tick = batb->time->get();
 
@@ -112,7 +99,16 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
         batb->screen->closingClear();
     }
 
+    // move all events from run::Run over to run::World. this is not really
+    // correct behaviour - events should be copied - because Run (and IterationRun's)
+    // works on any run::World. however, events can not be doubled (yet). (that's 
+    // because EventList::step() decreases the Event's frame lifes
+    //
+    // in practice this is no since we will only work on 1 run::World each frame
+    run.events.take( *batb->run->events );
+
     ////////////////////////////////////////////////////////////////////////////////
+    // setup output frame
 
     // setup scene for this frame
     begin( run.scene );
@@ -124,15 +120,14 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     batb->al->frameBegin();
 
     ////////////////////////////////////////////////////////////////////////////////
-    // iterate run::World - our application wworldorld
+    // iterate run::World - our application world
     // actual behaviour defined by subclass of this
-
 debug::gl::msg("iterate_run()");
     auto ret = iterate_run( run );
 
 
     ////////////////////////////////////////////////////////////////////////////////
-
+    // end output frame
     
     // end AL frame
     batb->al->frameEnd();
@@ -145,14 +140,13 @@ debug::gl::msg("iterate_run()");
     batb->gui->step( run.tick );
 
 
-
     ////////////////////////////////////////////////////////////////////////////////
     // end frame
     //
 
     ++run.frames;
 
-
+    // subclass defines next iteration top (thinks)
     return ret;
 }
 
