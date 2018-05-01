@@ -34,13 +34,31 @@ namespace tb
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-
-// without this, TBNotify is never read (g_widgets_reader->LoadNodeTree( this, &node )):
-TB_WIDGET_FACTORY(TBNotifyMessage, TBValue::TYPE_STRING, WIDGET_Z_TOP) { std::cout << "inflating TBNotifyMessage!"<<std::endl;}
-
-////////////////////////////////////////////////////////////////////////////////
 // TBNotify
 //
+
+class TBNotifyMessageAnimation : public TBAnimationObject
+{
+public:
+    TBNotifyMessageAnimation(TBNotifyMessage* t);
+
+    enum class Type { Null, Begin, End };
+    void type(Type t);
+
+    void OnAnimationStart();
+    void OnAnimationUpdate(float progress);
+    void OnAnimationStop(bool aborted);
+
+
+private:
+    Type type_ = Type::Null;
+    TBNotifyMessage* target_ = nullptr;
+
+    PreferredSize pref_0_;
+    PreferredSize pref_1_;
+    LayoutParams lp_;
+
+};
 
 
 TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b->run->notify.get() )
@@ -77,6 +95,215 @@ TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b-
 
 
 
+
+void TBNotify::step(World& run)
+{
+    auto wth = run.scene.wth;
+    auto hth = run.scene.hth;
+
+    // span out this layout to the whole screen
+    SetRect( tb::TBRect(0, 0, wth, hth) );
+
+    tick_t tick = batb->time->get();
+    
+
+    auto i = std::begin( tb_notify_messages_ );
+    while ( i != std::end( tb_notify_messages_ ) )
+    {
+        TBNotifyMessage* tbmsg = *i;
+        bool remove = false;
+
+        auto message = tbmsg->notifymessage;
+        tick_t ts = message->tick + message->duration;
+
+        // duration specifies minimum time
+        if ( ts <= tick ) 
+        {
+            if ( message->key )
+            {
+                if ( message->key->is_down() )
+                {
+                    remove = true;
+                }
+            }
+            else
+            {
+                remove = true;
+            }
+        }
+        
+        // remove if this message is up and running
+        // FIXME: make sure message is up
+        if ( tbmsg->isActive() && remove )
+        {
+            // remove the actual message from Notify
+            message->finish();
+
+            // TBWidget::Die() calls delete for us unless a TBWidgetListener stops that process
+            // we stop the process, animate removal, remove it from TBNotify, and deletes it
+            // if we not let a TBWidgetListener stop the process, we must remove it from TBNotify
+            // first, otherwise we get an assertion error.
+            //
+            // another way to do it is to create an animation which calls Die() on end, cf.
+            // TBWidgetAnimationOpacity
+            tbmsg->Die(); 
+
+            // erase our reference. it's still a child of this TBLayout.
+            i = tb_notify_messages_.erase( i );    
+        }
+        else
+        {
+            ++i;
+        }
+    }
+
+}
+
+
+void TBNotify::push(NotifyMessage* m)
+{
+    constexpr const char* path = "static://BATB/Run/notifymessage.tb.txt";  
+
+    // read widget from TBNode in file.
+    TBNode node;
+    if ( node.ReadFile( path ) )
+    {
+        // find a TBNotifyMessage definition in file
+        for (TBNode* child = node.GetFirstChild(); child; child = child->GetNext())
+        {
+              if ( std::string( "TBNotifyMessage" ).compare( child->GetName() ) == 0 )
+              {
+                  // TODO: look at id and compare to NotifyMessage type (warning, tip, etc, new chat, song etc).
+
+                  auto ptr = new_widget<TBNotifyMessage>( this, child );
+
+                  // witdh and height are defined in the layout parameters in .tb.txt
+                  // here is how:
+                  //tb::LayoutParams lp;
+                  //lp.min_w = lp.max_w = lp.pref_w = 440;
+                  //lp.min_h = 80;
+                  //SetLayoutParams( lp );
+
+                  // pass arguments to TBNotifyMessage (has empty constructor)
+                  ptr->tb_notify = this;
+                  ptr->message( m );
+
+                  // keep reference to our new TBNotifyMessage
+                  tb_notify_messages_.push_back( ptr );
+                  
+                  // child created, all done
+                  return;
+
+              }
+        }
+        batb->log << "TBNotify: no TBNotifyMessage defined in " << path << std::endl;
+    }
+    else
+    {
+        batb->log << "TBNotify: could not read " << path << std::endl;
+    }
+
+    
+
+    
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// TBNotifyMessage
+
+
+// without this, TBNotify is never read (g_widgets_reader->LoadNodeTree( this, &node )):
+TB_WIDGET_FACTORY(TBNotifyMessage, TBValue::TYPE_STRING, WIDGET_Z_TOP) { }
+
+
+TBNotifyMessage::TBNotifyMessage()
+{
+    // listen to itself: what happens - born og dying?
+    AddListener( this );
+}
+
+TBNotifyMessage::~TBNotifyMessage()
+{
+    // listen to itself: what happens - born og dying?
+    RemoveListener( this );
+}
+
+void TBNotifyMessage::begin()
+{
+    // remove from TBNotify
+    active_ = true;
+
+}
+
+void TBNotifyMessage::end()
+{
+    // remove from TBNotify
+    auto* parent = GetParent();
+    parent->RemoveChild( this );
+
+    // :)
+    delete this;
+}
+
+bool TBNotifyMessage::isActive() const
+{
+    return active_; 
+}
+
+void TBNotifyMessage::OnInflate(const INFLATE_INFO &info)
+{
+    TBWidget::OnInflate( info );
+
+    // read custom properties
+
+    // read fade in/out ticks
+    time_fadein = info.node->GetValueFloat( "fade-in", time_fadein );
+    time_fadeout = info.node->GetValueFloat( "fade-out", time_fadeout );
+
+    // since 'OnAdded()' is called before 'OnInflate()', we have to start animation
+    // here, after time properties has been read
+    auto anim = new TBNotifyMessageAnimation( this );
+    anim->type( TBNotifyMessageAnimation::Type::Begin );
+
+    TBAnimationManager::StartAnimation( anim, ANIMATION_CURVE_SMOOTH, time_fadein );
+
+}
+
+
+void TBNotifyMessage::OnWidgetAdded(TBWidget *parent, TBWidget *child)
+{
+    //std::cout << "widget added :)" << std::endl;
+    
+}
+bool TBNotifyMessage::OnWidgetDying(TBWidget* w)
+{
+    //std::cout << "widget is dying!" << std::endl;
+
+    // this signalizes message handled, and prevents deletion of widget
+    return true;
+}
+
+void TBNotifyMessage::OnDie()
+{
+    active_ = false;
+
+    // start Die animation
+    auto anim = new TBNotifyMessageAnimation( this );
+    anim->type( TBNotifyMessageAnimation::Type::End );
+
+    TBAnimationManager::StartAnimation( anim, ANIMATION_CURVE_SMOOTH, time_fadeout );
+
+}
+
+void TBNotifyMessage::OnAdded()
+{
+    //std::cout << "widget OnAdded()" << std::endl;
+    // start born animation
+    // NOTE: this has been moved into OnInflate() since this callback OnAdded()
+    // is called before OnInflate(). we need the 'time_fadein' property.
+}
+
 void TBNotifyMessage::message(NotifyMessage* msg)
 {
     
@@ -107,133 +334,94 @@ void TBNotifyMessage::message(NotifyMessage* msg)
 }
 
 
-void TBNotify::step(World& run)
+////////////////////////////////////////////////////////////////////////////////
+// TBNotifyMessageAnimation
+//
+
+TBNotifyMessageAnimation::TBNotifyMessageAnimation(TBNotifyMessage* t) : target_( t )
 {
-    auto wth = run.scene.wth;
-    auto hth = run.scene.hth;
 
-    // span out this layout to the whole screen
-    // FIXME: fill to root automatically, SetGravity all
-    SetRect( tb::TBRect(0, 0, wth, hth) );
+}
 
-    tick_t tick = batb->time->get();
-    
+void TBNotifyMessageAnimation::OnAnimationStart()
+{
+    // TBRect:        current size (and position relative to parent)
+    // LayoutParams:  the size behaviour
+    // PreferredSize: the actual, computed preferred size. 
 
-    auto i = std::begin( tb_notify_messages_ );
-    while ( i != std::end( tb_notify_messages_ ) )
+    pref_0_ = target_->GetPreferredSize();  
+    pref_1_ = target_->GetPreferredSize();  
+    // ^ TODO: use GetRect()?
+    lp_ = *target_->GetLayoutParams();  
+
+    if ( type_ == Type::Begin )
     {
-        TBNotifyMessage* tbmsg = *i;
-        bool remove = false;
+        // start at 0 opacity
+        target_->SetOpacity( 0.0 );
 
-        auto message = tbmsg->notifymessage;
-        tick_t ts = message->tick + message->duration;
+        // 0 -> 1
+        pref_0_.pref_h = 0;
+    }
+    if ( type_ == Type::End )
+    {
+        // 0 -> 1
+        pref_1_.max_h = 0;
 
-        // duration specifies minimum time
-        if ( ts <= tick ) 
-        {
-            if ( message->key )
-            {
-                if ( message->key->is_down() )
-                {
-                    remove = true;
-                }
-            }
-            else
-            {
-                remove = true;
-            }
-        }
-        if ( remove )
-        {
-            message->finish();
-
-            // TODO: animate
-            RemoveChild( tbmsg );
-            delete tbmsg;
-
-            i = tb_notify_messages_.erase( i );    
-        }
-        else
-        {
-            ++i;
-        }
     }
 
 }
 
-
-void TBNotifyMessage::OnInflate(const INFLATE_INFO &info)
+void TBNotifyMessageAnimation::OnAnimationUpdate(float a)
 {
-    // shall we read custom properties?
-    // not now.
-    TBWidget::OnInflate( info );
-}
+    float h = 0.0;
 
-void TBNotify::push(NotifyMessage* m)
-{
-    constexpr const char* path = "static://BATB/Run/notifymessage.tb.txt";  
-
-    // read file as node tree, letting us parse custom nodes for this widget.
-    // see tb_widgets_reader.[hc]pp
-    TBNode node;
-    if ( node.ReadFile( path ) )
+    if ( type_ == Type::Begin )
     {
-        // find a TBNotifyMessage definition in file
-        for (TBNode* child = node.GetFirstChild(); child; child = child->GetNext())
-        {
-              if ( std::string( "TBNotifyMessage" ).compare( child->GetName() ) == 0 )
-              {
-                  // TODO: look at id and compare to NotifyMessage type (warning, tip, etc, new chat, song etc).
+        float h0 = (float)( pref_0_.pref_h );
+        float h1 = (float)( pref_1_.pref_h );
+        h = (1.0f - a) * h0 + a * h1;
 
-                  auto ptr = new_widget<TBNotifyMessage>( this, child );
-
-                  ptr->tb_notify = this;
-                  ptr->message( m );
-
-                  // witdh and height are defined in the layout parameters in .tb.txt
-                  // here is how:
-                  //tb::LayoutParams lp;
-                  //lp.min_w = lp.max_w = lp.pref_w = 440;
-                  //lp.min_h = 80;
-                  //SetLayoutParams( lp );
-
-
-                  tb_notify_messages_.push_back( ptr );
-                  
-                  // child created, all done
-                  return;
-
-              }
-        }
-        batb->log << "TBNotify: no TBNotifyMessage defined in " << path << std::endl;
+        target_->SetOpacity( a );
     }
-    else
+    if ( type_ == Type::End )
     {
-        batb->log << "TBNotify: could not read " << path << std::endl;
+        float h0 = (float)( pref_0_.max_h );
+        float h1 = (float)( pref_1_.max_h );
+        h = (1.0f - a) * h0 + a * h1;
+
+        target_->SetOpacity( 1.0f - a );
     }
 
-    
+    // set height
+    lp_.SetHeight( (int)( h ) );
+    target_->SetLayoutParams( lp_ ); // <- this calls InvalidateLayout
 
-    
-    
+
 }
 
+void TBNotifyMessageAnimation::OnAnimationStop(bool aborted)
+{
 
+    if ( type_ == Type::Begin )
+    {
+        target_->SetOpacity( 1.0 );
 
-//void TBNotify::OnFocusChanged(bool focus)
-//{
-//    if ( focus )
-//    {
-//        // hopefully, this does not mess up (see TBWidgets::SetFocus())
-//        SetFocusRecursive( tb::WIDGET_FOCUS_REASON_UNKNOWN );
-//    }
-//}
-//
-//bool TBNotify::OnEvent(const tb::TBWidgetEvent& event)
-//{
-//
-//}
-//
+        // the target is offically up and running
+        target_->begin();
+    }
+    if ( type_ == Type::End )
+    {
+        // all over
+        target_->end();
+        target_ = nullptr; 
+    }
+}
+
+void TBNotifyMessageAnimation::type(Type t)
+{
+    type_ = t;
+}
+
 
 
 } // namespace tb

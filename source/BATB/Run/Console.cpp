@@ -97,7 +97,9 @@ void Console::open(World& run)
     tb::TBRect rect0 = tb_console->GetRect();
     tb::TBRect rect1( 0, 0, wth, hth ); // 'step' above will correct wth (however, not hth)
     if ( auto anim = new tb::TBWidgetAnimationRect( tb_console, rect0, rect1 ) )
-            tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+    {
+        tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+    }
 
     // set focus 
     tb_console->SetIsFocusable( true );
@@ -121,7 +123,9 @@ void Console::close(World& run)
     tb::TBRect rect0 = tb_console->GetRect();
     tb::TBRect rect1( 0, 0, wth, 0 ); // 'step' above corrects wth
     if ( auto anim = new tb::TBWidgetAnimationRect( tb_console, rect0, rect1 ) )
-            tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+    {
+        tb::TBAnimationManager::StartAnimation( anim, tb::ANIMATION_CURVE_SLOW_DOWN, 1000.0 * value::runConsoleOpenTicks );
+    }
 
     // unfocus input field
     tb::TBWidget::focused_widget = nullptr;

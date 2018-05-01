@@ -1,9 +1,11 @@
-# fruxo
-nullptr no check for during read
-
-
 # TODO
 
+* better reading custom TB widgets. read custom props for for example console
+* let cmd's use boost program_options
+* Notify and message Key
+  - remove Key from NotifyMessage and put into TBNotify. this key should call message->finish() on
+    first NotifyMessage. 
+  - implement TBNotifyStep and message lifetimes
 * move event (BeginEvents class) from Demo to demo::World. also Forest
 * rewrite Event. use C++14. handle memory better.
 * find better, consequent names. for example the name 'begin' is used for setup a permanent object (ex: `BATB::begin( filepath )`) but also set up a frame (ex: `begin( run.scene )`
@@ -125,3 +127,34 @@ events may come from the outside (i.e. BATB and its modules (for example Screen 
 * variables (including public and protected of classes): `my_variable`
 * private member variables (not methods): `my_variable_`
 * enum elements: `EnumItem`
+
+## GUI
+* customs widgets should be implemented with default, empty constructor in order to make it read from a .tb.txt file.
+  other arguments to the widget should given afterwards
+
+## subworlds / events output and step
+iterate world = do
+   output subworld
+   output world
+   update events (world + subworld)
+   step world
+   step subworld
+   take events
+   think
+
+iterate world = do
+    update events
+    step world
+    take events : XXX -> xxx::World 
+    iterate stack subworld (output subworld, step subworld, think subworld)
+    output world
+
+    think
+
+iterate world = do
+    update events
+    output subworld
+    output world
+    
+    step subworld
+    take events 

@@ -46,23 +46,47 @@ class TBNotify;
 ////////////////////////////////////////////////////////////////////////////////
 // this is a widget showing notifications
 //
-class TBNotifyMessage : public TBWidget
-//class TBNotifyMessage : public tb::TBWindow
+class TBNotifyMessage : public TBWidget, public TBWidgetListener
 {
 
 public:
     TBOBJECT_SUBCLASS( TBNotifyMessage, tb::TBWidget );
 
-    TBNotifyMessage() = default;
+    TBNotifyMessage();
+    ~TBNotifyMessage() override;
+    
+    // animation ready; message born
+    void begin();
+    // animation ready; notify dead
+    void end();
+    // is this up and running?
+    bool isActive() const;
     
     void OnInflate(const INFLATE_INFO& ) override;
 
+    void OnAdded() override;
+    void OnDie() override;
+    // we need to listen to the Die message in order to prevent delete,
+    // hence we can animate dead widgets too.
+    // TBNotify can't be listener because a listener is not allowed to be added to
+    // more than 1 widget (otherwise TBNotify need to be a global listener)
+    void OnWidgetAdded(TBWidget *parent, TBWidget *child) override;
+    bool OnWidgetDying(TBWidget* ) override;
+    
     // set message
     void message(batb::run::NotifyMessage* );
 
     batb::run::NotifyMessage* notifymessage = nullptr;
     TBNotify* tb_notify                     = nullptr;
     TBEditField* tb_editfield               = nullptr;
+
+    // time in TB units (millisecounds)
+    double time_fadein = 0.0;
+    double time_fadeout = 0.0;
+
+private:
+    bool active_ = false;
+
 };
 
 
@@ -85,6 +109,7 @@ public:
     void push(batb::run::NotifyMessage* );
 
     batb::BATB* batb;
+
 
 private:
     std::list<TBNotifyMessage*> tb_notify_messages_; // TODO: look at children of tb

@@ -1,8 +1,11 @@
 TBNotifyMessage: id: notify-normal
 
+	# animation time in TB-unit (milliseconds)
+	fade-in: 400.0
+	fade-out: 500.0
+
 	# custom skin for (normal) notifications
 	skin Notify.normal
-
 	# layout parameters.
 	# width is fixed; height has a minimum and is allowed to grow
 	lp: min-width: 440, max-width: 440, pref-width: 440, min-height: 80

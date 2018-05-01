@@ -32,7 +32,8 @@ class Notify;
 
 
 
-// a message to the user
+// representing a message to the user.
+// it is presented to the user by a GUI widget, not here
 class NotifyMessage
 {
 friend class Notify;
