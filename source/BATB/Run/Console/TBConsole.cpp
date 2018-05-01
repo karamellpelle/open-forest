@@ -104,9 +104,13 @@ bool TBConsole::OnEvent(const tb::TBWidgetEvent& event)
             std::string str = tbstr.CStr();
 
             // save to history
-            // TODO: only push if not equal to previous
-            history_.push_back( str );
-            history_ix_ = history_.size();
+            // (only if non-empty and not previous command)
+            std::string prev = history_ix_ == 0 ? std::string() : history_[history_ix_ - 1];
+            if ( !( str.empty() || str == prev ) )
+            {
+                history_.push_back( str );
+                history_ix_ = history_.size();
+            }
 
             history_current_.clear();
 
