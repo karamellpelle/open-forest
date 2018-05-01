@@ -118,7 +118,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
                               << "use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
     //batb->run->notify->message( os.str(), 10.0 );
-    batb->run->notify->message( os.str(), 1.0 );
+    batb->run->notify->message( os.str(), 8.0 );
 
 }
 

@@ -84,8 +84,11 @@ public:
     double time_fadein = 0.0;
     double time_fadeout = 0.0;
 
+    tick_t tick     = 0;
+
 private:
     bool active_ = false;
+
 
 };
 
@@ -112,6 +115,8 @@ public:
 
 
 private:
+    void add(TBNotifyMessage* );
+    void remove(TBNotifyMessage* );
     std::list<TBNotifyMessage*> tb_notify_messages_; // TODO: look at children of tb
     batb::run::Notify* notify_ = nullptr;
     tick_t tick_ = 0;

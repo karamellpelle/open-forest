@@ -39,10 +39,19 @@ class NotifyMessage
 friend class Notify;
 
 public:
+    enum class Type { Normal };
+
+
     NotifyMessage() = default;
     NotifyMessage(const std::string& s) : str( s ) { }
     NotifyMessage(const std::string& s, tick_t d) : str( s ), duration( d ) { }
 
+    bool isOKAllowed()
+    {
+        return ok_allowed || duration == 0.0;
+    }
+
+    // signalize OK
     void finish() { finished_ = true; }
     
     // the massage string
@@ -50,15 +59,14 @@ public:
     std::string str;
 
 
-    tick_t tick     = 0;
-    tick_t duration = 0;
+    tick_t duration = 0.0;
+    Type type = Type::Normal;
+    bool ok_allowed = true;
 
-    // TODO: types. for example tip, warning, private message, next song playing etc.
-    bool alert      = false;
-    keys::Key* key  = nullptr;
-    // etc.
-
+    // TODO: callbacks, etc.
+    
 private:
+
     bool finished_ = false;
 
 };

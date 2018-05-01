@@ -49,6 +49,10 @@ void KeySet::load(const YAML::Node& yaml)
     fullscreen = create<KeyClicker>( createSafeKey( yaml > "fullscreen" ) );
     batb->log->endl();
 
+    batb->log << "notify-ok:  ";
+    notify_ok = create<KeyClicker>( createSafeKey( yaml > "notify-ok" ) );
+    batb->log->endl();
+
 
 
 }

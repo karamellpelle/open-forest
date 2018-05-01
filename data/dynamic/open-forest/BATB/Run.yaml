@@ -6,3 +6,5 @@ KeySet:
         KeyKeyboardButton: { code: SPACE }
     escape: 
         KeyKeyboardButton: { code: ESCAPE }
+    notify-ok: 
+        KeyKeyboardButton: { code: ENTER }

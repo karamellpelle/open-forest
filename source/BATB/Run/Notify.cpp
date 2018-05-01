@@ -79,11 +79,8 @@ void Notify::step(World& run)
     tb_notify_->step( run );
 }
 
-bool Notify::message(const NotifyMessage& m)
+bool Notify::message(const NotifyMessage& msg)
 {
-    NotifyMessage msg = m;
-    msg.tick = batb->time->get();
-
     messages_.push_back( msg );
     NotifyMessage* ptr = &messages_.back();
 

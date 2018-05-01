@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Run.hpp"
+#include "BATB/Run/KeySet.hpp"
 #include "BATB/Run/World.hpp"
 #include "BATB/Run/Notify.hpp"
 #include "BATB/Run/Notify/TBNotify.hpp"
@@ -101,60 +102,51 @@ void TBNotify::step(World& run)
     auto wth = run.scene.wth;
     auto hth = run.scene.hth;
 
-    // span out this layout to the whole screen
+    // make sure TBNotify fills whole screen
     SetRect( tb::TBRect(0, 0, wth, hth) );
 
+    // current tick
     tick_t tick = batb->time->get();
-    
+   
+    // remove (first removable) notification if user wants it
+    if ( batb->run->keys->notify_ok->click() )
+    {
+        auto i = std::begin( tb_notify_messages_ );
+        while ( i != std::end( tb_notify_messages_ ) )
+        {
+            auto* tbmsg = *i;
+            if ( tbmsg->notifymessage->isOKAllowed() )
+            {
+                remove( *i ); 
+
+                // erase our reference. it's still a child of this TBLayout.
+                i = tb_notify_messages_.erase( i );    
+                break;
+            }
+          
+            ++i;
+        }
+    }
 
     auto i = std::begin( tb_notify_messages_ );
     while ( i != std::end( tb_notify_messages_ ) )
     {
         TBNotifyMessage* tbmsg = *i;
-        bool remove = false;
-
-        auto message = tbmsg->notifymessage;
-        tick_t ts = message->tick + message->duration;
 
         // duration specifies minimum time
-        if ( ts <= tick ) 
+        if ( tbmsg->tick + tbmsg->notifymessage->duration <= tick ) 
         {
-            if ( message->key )
+            if ( tbmsg->isActive() )
             {
-                if ( message->key->is_down() )
-                {
-                    remove = true;
-                }
-            }
-            else
-            {
-                remove = true;
+                remove( *i ); 
+
+                // erase our reference. it's still a child of this TBLayout.
+                i = tb_notify_messages_.erase( i );    
+                continue; 
             }
         }
         
-        // remove if this message is up and running
-        // FIXME: make sure message is up
-        if ( tbmsg->isActive() && remove )
-        {
-            // remove the actual message from Notify
-            message->finish();
-
-            // TBWidget::Die() calls delete for us unless a TBWidgetListener stops that process
-            // we stop the process, animate removal, remove it from TBNotify, and deletes it
-            // if we not let a TBWidgetListener stop the process, we must remove it from TBNotify
-            // first, otherwise we get an assertion error.
-            //
-            // another way to do it is to create an animation which calls Die() on end, cf.
-            // TBWidgetAnimationOpacity
-            tbmsg->Die(); 
-
-            // erase our reference. it's still a child of this TBLayout.
-            i = tb_notify_messages_.erase( i );    
-        }
-        else
-        {
-            ++i;
-        }
+        ++i;
     }
 
 }
@@ -175,7 +167,7 @@ void TBNotify::push(NotifyMessage* m)
               {
                   // TODO: look at id and compare to NotifyMessage type (warning, tip, etc, new chat, song etc).
 
-                  auto ptr = new_widget<TBNotifyMessage>( this, child );
+                  auto tbmsg = new_widget<TBNotifyMessage>( this, child );
 
                   // witdh and height are defined in the layout parameters in .tb.txt
                   // here is how:
@@ -185,12 +177,12 @@ void TBNotify::push(NotifyMessage* m)
                   //SetLayoutParams( lp );
 
                   // pass arguments to TBNotifyMessage (has empty constructor)
-                  ptr->tb_notify = this;
-                  ptr->message( m );
+                  tbmsg->tb_notify = this;
+                  tbmsg->message( m );
+                  tbmsg->tick = batb->time->get();
 
-                  // keep reference to our new TBNotifyMessage
-                  tb_notify_messages_.push_back( ptr );
-                  
+                  add( tbmsg );
+
                   // child created, all done
                   return;
 
@@ -209,6 +201,28 @@ void TBNotify::push(NotifyMessage* m)
     
 }
 
+void TBNotify::add(TBNotifyMessage* tbmsg)
+{
+
+      // keep reference to our new TBNotifyMessage
+      tb_notify_messages_.push_back( tbmsg );
+}
+      
+void TBNotify::remove(TBNotifyMessage* tbmsg)
+{
+      // remove the actual message from Notify
+      tbmsg->notifymessage->finish();
+
+      // TBWidget::Die() calls delete for us unless a TBWidgetListener stops that process
+      // we stop the process, animate removal, remove it from TBNotify, and deletes it
+      // if we not let a TBWidgetListener stop the process, we must remove it from TBNotify
+      // first, otherwise we get an assertion error.
+      //
+      // another way to do it is to create an animation which calls Die() on end, cf.
+      // TBWidgetAnimationOpacity
+      tbmsg->Die(); 
+
+}
 ////////////////////////////////////////////////////////////////////////////////
 // TBNotifyMessage
 
