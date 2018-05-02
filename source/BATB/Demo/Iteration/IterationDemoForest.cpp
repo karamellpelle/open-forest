@@ -83,12 +83,15 @@ void IterationDemoForest::iterate_begin(World& demo)
     // ensure we can use Key's
     batb->gui->lockKeys( false );
 
-#if 0
+
     ////////////////////////////////////////////////////////////////////////////////
-    // add a runner
-    demo.runner = forest.addRunner( run.player ); 
-    demo.runner->reset( glm::vec2( 0, 0 ) );
-#endif
+    // add a runner, if first time
+
+    if ( !demo.runner )
+    {
+        demo.runner = forest.addRunner( run.player ); 
+        demo.runner->reset( glm::vec2( 0, 0 ) );
+    }
 
     // if we have no Course, create one
     if ( demo.course.empty() )
@@ -112,6 +115,8 @@ void IterationDemoForest::iterate_begin(World& demo)
         // set controllers (Keys)
         modifyRunner.runner( demo.runner );
         modifyControlRunner.modifier( &modifyRunner );
+
+        // move camera by ModifyControlCamera (manual movement)
         modifyControlCamera.modifier( &modifyCamera );
     }
 }
@@ -120,6 +125,7 @@ void IterationDemoForest::iterate_begin(World& demo)
 IterationStack IterationDemoForest::iterate_demo(World& demo)
 {
     auto& forest = *(demo.forest);
+    auto tick = demo.tick;
 
     ////////////////////////////////////////////////////////////////
     // since we are not running IterationForest-Iteration's directly:
@@ -151,7 +157,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     modifyRunnerDemo( demo );
 
     // use Keys to control objects in forest::World
-    modifyControlCamera( forest );
+    modifyControlCamera( forest, tick );
     modifyControlRunner( forest );
 
   
@@ -164,12 +170,11 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
 
-    tick_t tick_next = demo.tick;
-    forest.tick = forest.tick + value::dt_max <= tick_next ? // prevent too many dt steps
-                  tick_next - value::dt_max : forest.tick;
+    forest.tick = forest.tick + value::dt_max <= tick ? // prevent too many dt steps
+                  tick - value::dt_max : forest.tick;
 
     // make a dt-step of forest::World
-    while ( forest.tick + value::dt <= tick_next )
+    while ( forest.tick + value::dt <= tick )
     {
         // step World
         stepDT( forest, value::dt );
@@ -179,8 +184,6 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
         {
             if ( auto e = eat<forest::event::ProximityControl>( ev ) )
             {
-                auto eps = std::sqrt( e->epseps );
-
                 //std::cout << std::setprecision( 2 ) << std::fixed << "\r"
                 //          << "proximity of control " << e->control->definition.code << ": "
                 //          << eps
@@ -188,7 +191,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 
                 // punch if close enough to control
                 constexpr float_t punch_d = 25.0;
-                if ( eps < punch_d )
+                if ( e->epseps < punch_d * punch_d )
                 {
                     if ( e->runner->control0 != e->control && 
                          e->control->definition.type != forest::ControlDefinition::Type::Start )
@@ -265,6 +268,7 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
 }
 
 
+// "AI" in our demo
 void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
 {
     constexpr uint m = 16;

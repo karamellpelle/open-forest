@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_MODIFYCONTROLCAMERA_HPP
 #define BATB_FOREST_MODIFYCONTROLCAMERA_HPP
 #include "include.hpp"
+#include "helpers/time_value.hpp"
 
 namespace batb
 {
@@ -36,10 +37,11 @@ class ModifyCamera;
 class ModifyControlCamera 
 {
 public:
-    ModifyControlCamera(BATB* b) : batb( b )    { }
+    ModifyControlCamera(BATB* b);
 
-    void operator()(World& );
+    void operator()(World& , tick_t );
 
+    // camera move interface. FIXME!
     void modifier(ModifyCamera* );
 
     // free (continuous movement)
@@ -62,6 +64,12 @@ private:
 
     DTMovable* following_ = nullptr;
     DTMovable* attached_ = nullptr;
+
+
+    tick_t tick_ = 0.0;
+
+    timed_value<float_t> x_speed_;
+    timed_value<float_t> z_speed_;
 };
 
 

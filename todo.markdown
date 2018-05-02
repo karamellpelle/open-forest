@@ -1,5 +1,6 @@
 # TODO
 
+* 
 * clean up events during shutdown
 * better reading custom TB widgets. read custom props for for example console
 * let cmd's use boost program_options

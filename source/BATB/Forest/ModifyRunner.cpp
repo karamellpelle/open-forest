@@ -68,8 +68,7 @@ void ModifyRunner::operator()(World& forest)
 
 
         // set velocity, based on Terrain, 
-        // TODO: later use Terrain more active, like running
-        //       slow in heavy terrain
+        // TODO: later use Terrain more active, like running slow in mosses, green parts of map, etc
         float_t incline = std::min( (float_t)( 0.95 ) /* prevent standing still */, forest.terrain.incline( runner_->move.aim ) );
         float_t speed = (1.0 - incline) * speed_            // TODO: ensure 1.0 - 'incline' is OK
                         * value::forestModifyRunnerSpeed;

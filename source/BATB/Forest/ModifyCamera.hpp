@@ -32,15 +32,13 @@ namespace forest
 class DTMovable;
 class World;
 
+// interface to move camera
 class ModifyCamera 
 {
 public:
     ModifyCamera(BATB* b) : batb( b )    { }
 
     void operator()(World& );
-
-    // connect to  (continuous movement)
-    //void attach(DTMovable* , tick_t = 0.0);
 
     ////////////////////////////////////////////////////////////////////////////////
     //

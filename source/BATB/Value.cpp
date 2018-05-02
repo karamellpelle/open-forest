@@ -82,8 +82,8 @@ bool Value::set(const std::string& name, const std::string& v)
     TRY_SET_VALUE( runConsoleOpacity );
     TRY_SET_VALUE( forestAimX );
     TRY_SET_VALUE( forestAimY );
-    TRY_SET_VALUE( forestMoveX );
-    TRY_SET_VALUE( forestMoveZ );
+    //TRY_SET_VALUE( forestMoveX );
+    //TRY_SET_VALUE( forestMoveZ );
     TRY_SET_VALUE( forestProximityControl );
     TRY_SET_VALUE( forestProximityRunner );
     TRY_SET_VALUE( forestTraceD );
@@ -107,8 +107,8 @@ bool Value::get(const std::string& name, std::string& v)
     TRY_GET_VALUE( runConsoleOpacity );
     TRY_GET_VALUE( forestAimX );
     TRY_GET_VALUE( forestAimY );
-    TRY_GET_VALUE( forestMoveX );
-    TRY_GET_VALUE( forestMoveZ );
+    //TRY_GET_VALUE( forestMoveX );
+    //TRY_GET_VALUE( forestMoveZ );
     TRY_GET_VALUE( forestProximityControl );
     TRY_GET_VALUE( forestProximityRunner );
     TRY_GET_VALUE( forestTraceD );

@@ -31,9 +31,14 @@ namespace forest
 // this class should probably be changed to some better types for 
 // physics, but I am not a physist so I don't know !
 //
+// a nice thing is to allocate all DTMovable's in dedicated memory in order
+// to step the physics all at once. world elements, like Runner's, should then
+// hold pointers to their DTMovables
+//
 // z axis is forward
 //
 // TODO: dmat4 for better precision i a big world?
+//
 
 class DTMovable : public Aim
 {
@@ -67,6 +72,7 @@ public:
 
     bool computed = false;
 
+    // TODO: prev aim?
 };
 
 

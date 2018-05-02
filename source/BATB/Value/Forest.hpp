@@ -27,8 +27,12 @@ namespace value
 
 extern float_t forestAimX;
 extern float_t forestAimY;
-extern float_t forestMoveX;
-extern float_t forestMoveZ;
+extern float_t forestCameraMoveXTicks;
+extern float_t forestCameraMoveXMin;
+extern float_t forestCameraMoveXMax;
+extern float_t forestCameraMoveZTicks;
+extern float_t forestCameraMoveZMin;
+extern float_t forestCameraMoveZMax;
 
 extern float_t forestProximityControl;
 extern float_t forestProximityRunner;

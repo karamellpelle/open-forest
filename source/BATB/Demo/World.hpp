@@ -31,14 +31,6 @@ namespace demo
 {
 
 
-//class ControlPoint
-//{
-//public:
-//    ControlPoint(const glm::vec2& v) : point( v ) { }
-//
-//    forest::Control* control = nullptr;
-//    glm::vec2 point;
-//};
 
 
 class World

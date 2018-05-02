@@ -47,8 +47,14 @@ float_t runConsoleOpacity        = 0.55;
 
 float_t forestAimX               = 4.0;
 float_t forestAimY               = 4.0;
-float_t forestMoveX              = 78.0;
-float_t forestMoveZ              = 78.0;
+float_t forestMoveX              = 4000.0;
+float_t forestMoveZ              = 4000.0;
+float_t forestCameraMoveXTicks   = 6.0;
+float_t forestCameraMoveXMin     = 78.0;
+float_t forestCameraMoveXMax     = 144.0;
+float_t forestCameraMoveZTicks   = 10.0;
+float_t forestCameraMoveZMin     = 32.0;
+float_t forestCameraMoveZMax     = 4000.0;
 
 float_t forestProximityControl   = 8000.0;
 float_t forestProximityRunner    = 8000.0;

@@ -23,6 +23,8 @@
 #include "BATB/Value/Forest.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
+#include "BATB/Run.hpp"
+#include "BATB/Run/KeySet.hpp"
 
 namespace batb
 {
@@ -30,14 +32,22 @@ namespace batb
 namespace forest
 {
 
+ModifyControlCamera::ModifyControlCamera(BATB* b) : batb( b ), x_speed_( value::forestCameraMoveXMax ), z_speed_( value::forestCameraMoveZMax )
+{
+    // magic numbers
+    x_speed_.time( value::forestCameraMoveXTicks );
+    z_speed_.time( value::forestCameraMoveZTicks );
+}
 
 void ModifyControlCamera::modifier(ModifyCamera* mod)
 {
     modifier_ = mod;
 }
 
-void ModifyControlCamera::operator()(World& forest)
+void ModifyControlCamera::operator()(World& forest, tick_t tick)
 {
+    // TODO: move Camera by using the 'ModifyCamera' interface!
+
     Camera& camera = forest.camera;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -56,16 +66,30 @@ void ModifyControlCamera::operator()(World& forest)
 
     ////////////////////////////////////////////////////////////////////////////////
     // move camera from keys. this should modify Runner
+
+    // clear timed value
+    if ( batb->forest->keys->left->pressed() || batb->forest->keys->right->pressed() )
+    {
+        x_speed_.clear( tick );
+    }
+    if ( batb->forest->keys->forward->pressed() || batb->forest->keys->backward->pressed() )
+    {
+        z_speed_.clear( tick );
+    }
+
     float_t move_x = (batb->forest->keys->left->press()  ? (1.0)  : (0.0)) +
                      (batb->forest->keys->right->press() ? (-1.0) : (0.0));
     float_t move_z = (batb->forest->keys->forward->press()  ? (1.0)  : (0.0)) +
                      (batb->forest->keys->backward->press() ? (-1.0) : (0.0));
+
+    float_t x_speed = std::max( value::forestCameraMoveXMin, x_speed_( tick ) ) * move_x; 
+    float_t z_speed = std::max( value::forestCameraMoveZMin, z_speed_( tick ) ) * move_z; 
+
+    // set 'vel' vector of DTMovable, by using direction 'aim' and x and z speed
     auto& vel = camera.move.vel;
-    auto& x_ = aim[0];
-    auto& z_ = aim[2];
-    vel  = (move_x * value::forestMoveX) * x_ + 
-           (move_z * value::forestMoveZ) * z_;
-       
+    vel  = x_speed * aim[0] +    // x direction
+           z_speed * aim[2];     // z direction
+
 }
 
 

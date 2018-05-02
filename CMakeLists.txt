@@ -472,6 +472,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/game/iterate.hpp"
       "${MAIN_SOURCE_DIR}/helpers/bezier.hpp"
       "${MAIN_SOURCE_DIR}/helpers/follow_value.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/time_value.hpp"
       "${MAIN_SOURCE_DIR}/helpers/helpers_gl.hpp"
       "${MAIN_SOURCE_DIR}/helpers/helpers_tinyxml2.hpp"
       "${MAIN_SOURCE_DIR}/helpers/yaml.hpp"
