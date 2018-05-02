@@ -374,7 +374,7 @@ void TBNotifyMessageAnimation::OnAnimationStart()
         target_->SetOpacity( 0.0 );
 
         // 0 -> 1
-        pref_0_.pref_h = 0;
+        //pref_0_.pref_h = 0;
     }
     if ( type_ == Type::End )
     {
@@ -387,28 +387,27 @@ void TBNotifyMessageAnimation::OnAnimationStart()
 
 void TBNotifyMessageAnimation::OnAnimationUpdate(float a)
 {
-    float h = 0.0;
 
     if ( type_ == Type::Begin )
     {
-        float h0 = (float)( pref_0_.pref_h );
-        float h1 = (float)( pref_1_.pref_h );
-        h = (1.0f - a) * h0 + a * h1;
 
         target_->SetOpacity( a );
     }
     if ( type_ == Type::End )
     {
+        float h = 0.0;
+
         float h0 = (float)( pref_0_.max_h );
         float h1 = (float)( pref_1_.max_h );
         h = (1.0f - a) * h0 + a * h1;
 
         target_->SetOpacity( 1.0f - a );
+
+        // set height
+        lp_.SetHeight( (int)( h ) );
+        target_->SetLayoutParams( lp_ ); // <- this calls InvalidateLayout
     }
 
-    // set height
-    lp_.SetHeight( (int)( h ) );
-    target_->SetLayoutParams( lp_ ); // <- this calls InvalidateLayout
 
 
 }
