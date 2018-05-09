@@ -72,9 +72,10 @@ void demo_on(bool b)
     on_ = b;
 }
 
-void demo_toggle()
+bool demo_toggle()
 {
     on_ = !on_;
+    return on_;
 }
 
 void demo_iterate(BATB* batb, bool premult, bool blowup)

@@ -93,7 +93,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // make GUI visible
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
-
+/*
     // cool
     batb->log->endl();
     batb->log << u8"✨ M E N U ✨" << std::endl;
@@ -112,13 +112,14 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     batb->log << "use [" << batb->run->keys->console->nameEasy() << "] to toggle console" << std::endl;
     batb->log << "use [" << batb->run->keys->fullscreen->nameEasy() << "] to toggle fullscreen" << std::endl;
     batb->log->endl();
+*/
 
     // notification
     std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n"
                               << "use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
     //batb->run->notify->message( os.str(), 10.0 );
-    batb->run->notify->message( os.str(), 8.0 );
+    batb->run->notify->message( os.str(), 4.0 );
 
 }
 
@@ -207,9 +208,11 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
             case event::Do::NanoVG:
             {
                 // nanovg on/off
-                demo::nanovg::demo_toggle();
+                if ( ! demo::nanovg::demo_toggle() )
+                {
+                    batb->run->notify->message( "NanoVG off", 3.0 );
+                }
 
-                batb->run->notify->message( "FYI: NanoVG toggled", 5.0 );
                 break;
             }
             case event::Do::Old:

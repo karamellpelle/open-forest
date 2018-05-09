@@ -34,6 +34,7 @@ namespace batb
 namespace gui
 {
 
+// current time (given by BATB::GUI)
 static double tbsystem_time = 0.0;
 
 
@@ -41,7 +42,7 @@ static double tbsystem_time = 0.0;
 // set time for TBSystem:
 void tbsystem_ms(double t)
 {
-    // TODO: connect to BATB and use time there
+    // BATB::GUI sets the time for TBSystem
     tbsystem_time = t;   
 
 }
@@ -82,8 +83,6 @@ void TBSystem::RescheduleTimer(double fire_time)
 
 double TBSystem::GetTimeMS()
 {
-    // TODO: connect to BATB and use time there
-
     return batb::gui::tbsystem_time;
 }
 

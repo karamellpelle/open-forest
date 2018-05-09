@@ -45,6 +45,16 @@ Widget* new_widget(TBWidget* parent, TBNode* node)
     return ret;
 }
 
+template <typename Widget>
+Widget* new_widget(TBNode* node)
+{
+    // ad hoc
+    auto* parent = new TBWidget();
+    Widget* ret = new_widget<Widget>( parent, node );
+    parent->RemoveChild( ret );
+
+    return ret;
+}
 
 
 } // namespace tb

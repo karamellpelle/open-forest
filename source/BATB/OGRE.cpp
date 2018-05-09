@@ -66,7 +66,7 @@ debug::gl::msg( "OGRE_NEW LogManager" );
         ogre_logmanager->createLog( logpath, true, false, false );
         // set detail level 
         ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
-        batb->log << "Ogre::LogManager created at " << logpath << std::endl;
+        batb->log << "Ogre::LogManager writing to " << logpath << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////

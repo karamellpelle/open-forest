@@ -36,7 +36,7 @@ void demo_end(BATB* );
 
 void demo_on(bool b);
 
-void demo_toggle();
+bool demo_toggle();
 
 void demo_iterate(BATB* , bool premult, bool blowup);
 

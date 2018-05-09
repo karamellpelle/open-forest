@@ -17,6 +17,7 @@
 //
 #include "BATB/Run.hpp"
 #include "BATB/Run/KeySet.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Run/Iteration/IterationRunDemo.hpp"
 #include "BATB/Run/events.hpp"
 #include "BATB/Demo.hpp"
@@ -56,6 +57,10 @@ void IterationRunDemo::iterate_begin(World& run)
     
     if ( !stack_.empty() )
     {
+        // notify message
+        std::ostringstream msg; msg << "use " << batb->run->keys->escape->nameGUI() << " to go back";
+        batb->run->notify->message( msg.str(), 4.0 );
+
         stack_.front()->iterate_begin( *demo_ );
     }
 }

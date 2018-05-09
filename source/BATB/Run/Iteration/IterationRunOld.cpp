@@ -16,7 +16,9 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/old/old.hpp"
+#include "BATB/Run.hpp"
 #include "BATB/Run/Iteration.hpp"
+#include "BATB/Run/Notify.hpp"
 
 namespace batb
 {
@@ -48,6 +50,10 @@ void IterationRunOld::iterate_begin(World& world)
 #ifdef BATB_BUILD_OLD
     old::begin();
 #else
+    // notify message
+    std::ostringstream msg; msg << "feature not in build: BATB_BUILD_OLD";
+    batb->run->notify->message( msg.str(), 3.0 );
+
     batb->log << "could not start old: code is not built into open-forest (BATB_BUILD_OLD)" << std::endl;
 #endif
 
