@@ -322,6 +322,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Time.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Value.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Value/values.cpp"
+      "${MAIN_SOURCE_DIR}/helpers/glfw.cpp"
       "${MAIN_SOURCE_DIR}/Module.cpp"
       "${MAIN_SOURCE_DIR}/File.cpp"
       "${MAIN_SOURCE_DIR}/main.cpp"
@@ -477,6 +478,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/helpers/helpers_tinyxml2.hpp"
       "${MAIN_SOURCE_DIR}/helpers/yaml.hpp"
       "${MAIN_SOURCE_DIR}/helpers/tb.hpp"
+      "${MAIN_SOURCE_DIR}/helpers/glfw.hpp"
       "${MAIN_SOURCE_DIR}/include.hpp"
    )
 

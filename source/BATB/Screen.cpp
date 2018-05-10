@@ -17,6 +17,8 @@
 //
 #include "BATB/Screen.hpp"
 #include "BATB/Time.hpp"
+#include "helpers/glfw.hpp"
+
 
 extern "C"
 {
@@ -61,39 +63,19 @@ void Screen::begin(const std::string& path)
 
         ////////////////////////////////////////////////////////////////////////////////
         // screen
-        // TODO: print GL info if verbose setting in yaml
 
+        bool debugctx = yaml["debug"].as<bool>( false );
+        glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, debugctx );     // debug symbols (?) 
+        batb->log << "debug context       = " << debugctx << std::endl;
 
-        batb->log << "GLFW window hints:" << std::endl;
-
-        // set all hints to defaults
-        glfwDefaultWindowHints();
-
+        // multisamples
+        uint samples = 0;
+        if ( YAML::Node node = yaml[ "multisamples" ] )
         {
-            LogIndent indent( batb->log, "- " );
-
-            // set hints to window
-            // http://www.glfw.org/docs/latest/window.html#window_hints
-            // TODO: parse GLFW hints from yaml
-
-            bool debugctx = yaml["debug"].as<bool>( true );
-            glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, debugctx );     // debug symbols (?) 
-            batb->log << "GLFW_OPENGL_DEBUG_CONTEXT = " << debugctx << std::endl;
-
-            // decorate window?
-            bool decorate = yaml["decorate"].as<bool>( false );
-            glfwWindowHint( GLFW_DECORATED, decorate );               
-            batb->log << "GLFW_DECORATED            = " << decorate << std::endl;
-
-            // multisamples
-            uint samples = 0;
-            if ( YAML::Node node = yaml[ "multisamples" ] )
-            {
-                samples = node.as<uint>( samples );
-                glfwWindowHint( GLFW_SAMPLES, samples ); 
-            }
-            batb->log << "GLFW_SAMPLES              = " << samples << std::endl;
+            samples = node.as<uint>( samples );
+            glfwWindowHint( GLFW_SAMPLES, samples ); 
         }
+        batb->log << "multisamples        = " << samples << std::endl;
 
         // size
         uint wth = 640;
@@ -103,7 +85,7 @@ void Screen::begin(const std::string& path)
             wth = node[ "wth" ].as<uint>( wth );
             hth = node[ "hth" ].as<uint>( hth );
         }
-        batb->log << "window size: " << wth << "x" << hth << std::endl;
+        batb->log << "window size         = " << wth << "x" << hth << std::endl;
 
 
         // fullscreen
@@ -127,10 +109,9 @@ void Screen::begin(const std::string& path)
                 }
             }
         }
-        batb->log << "window fullscreen: " << fullscreen;
+        batb->log << "window fullscreen   = " << fullscreen;
         if ( fullscreen ) batb->log << " (overriding window size with display resolution (" << wth << "x" << hth << ")";
         batb->log->endl();
-
 
         // title
         std::string title = "";
@@ -138,8 +119,35 @@ void Screen::begin(const std::string& path)
         {
             title = node.as<std::string>( title );
         }
-        batb->log << "window title: " << title << std::endl;
+        batb->log << "window title        = " << title << std::endl;
 
+        // set addioninal windown hints
+        // http://www.glfw.org/docs/latest/window.html#window_hints
+        if ( YAML::Node node = yaml[ "glfw-hints" ] )
+        {
+            batb->log << "GLFW hints:" << std::endl;
+            LogIndent indent( batb->log, "- " );
+            
+            for (auto p : node)
+            {
+                auto hint = p.first.as<std::string>();
+                auto value = p.second.as<std::string>("");
+
+                constexpr uint padding = 30;
+                std::string pad( hint.size() < padding ? (padding - hint.size()) : 0, ' ' );
+
+                batb->log << hint << pad << " = " << value;
+
+                if ( glfw_set_windowhint( hint, value ) )
+                {
+                    batb->log->endl();
+                }
+                else
+                {
+                    batb->log << " (WARNING: could not set)" << std::endl;
+                }
+            }
+        }
         
         // NOTE: error in implementation of glfw, according to valgrind:
         glfw_window = glfwCreateWindow( wth, hth, title.c_str(), glfw_monitor, 0 );
@@ -168,6 +176,8 @@ void Screen::begin(const std::string& path)
             os << "Screen: could not init GLEW (" << glewGetErrorString( err ) << ")";
             throw std::runtime_error( os.str() );
         }
+
+        // TODO: print GL info if verbose setting in yaml
 
     }
 
