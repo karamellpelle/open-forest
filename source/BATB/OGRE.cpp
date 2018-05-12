@@ -26,7 +26,7 @@
 #include "OgreCamera.h"
 #include "OgreResourceGroupManager.h"
 #include "OgreSceneManager.h"
-#include "OgreWindowEventUtilities.h"
+//#include "OgreWindowEventUtilities.h"
 #include "RenderSystems/GL/include/OgreGLRenderSystem.h"
 
 
@@ -114,6 +114,9 @@ debug::gl::msg( os.str() );
 debug::gl::msg( "ogre_root->getRenderSystemByName" );
         ogre_rendersystem_name_ = yaml["ogre_rendersystem"] ? yaml["ogre_rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
         ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
+        
+        // TODO. see Samples/Common/src/Cocoa/OgreController.mm
+	//mRoot->setRenderSystem(mRoot->getAvailableRenderers()->front());
 
         // set our Ogre render system
         if ( ogre_rendersystem )
@@ -187,7 +190,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         // Ogre GL context
         // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
         //       OGRE in another GL context (background thread)
-        glcontextglfw_.begin();
+        //glcontextglfw_.begin();
 
     }
     ////////////////////////////////////////////////////////////////////////////////
@@ -226,9 +229,9 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
-        glcontextglfw_.setCurrent();
+        //glcontextglfw_.setCurrent();
     
-        glcontextglfw_.end();
+        //glcontextglfw_.end();
 
     }
    
@@ -367,7 +370,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     {
         sceneBegin( scene );
 
-        Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW! (?)
+        //Ogre::WindowEventUtilities::messagePump(); // TODO: remove this, since we use GLFW! (?)
         
 debug::gl::msg( "ogre_root->renderOneFrame();" );
         ogre_root->renderOneFrame();
@@ -410,7 +413,9 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
                 // add resource item
                 try
                 {
-                    ogre_root->addResourceLocation(  file::static_data( path ), type, name );
+                    //ogre_root->addResourceLocation(  file::static_data( path ), type, name );
+	            //Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mResourcePath, std::string("FileSystem"), ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, false);
+	            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(  file::static_data( path ), type, name );
                 }
                 catch (Ogre::Exception& e)
                 {
@@ -446,7 +451,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     //
     Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( ogre_rendersystem );
 
-    rs->_switchContext( &glcontextglfw_ );
+    //rs->_switchContext( &glcontextglfw_ );
 
 }
 

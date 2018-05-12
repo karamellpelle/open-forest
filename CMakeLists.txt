@@ -16,7 +16,7 @@
 # 
 # interesting variables (https://cmake.org/Wiki/CMake_Useful_Variables):
 #
-# CMAKE_BINARY_DIR:         top level out-of-source build folder (i.e. ./build)
+# CMAKE_BINARY_DIR:         top level out-of-source build folder, folder where 'cmake' was invoked (i.e. ./build/cmake)
 # CMAKE_CURRENT_BINARY_DIR: sub-CMakeLists.txt out-of-source build folder (for example ./build/libs/glfw)
 # CMAKE_SOURCE_DIR:         top level source folder (i.e. ./)
 # CMAKE_CURRENT_SOURCE_DIR: sub-CMakeLists.txt source folder (for example ./libs/glfw)
@@ -34,7 +34,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ################################################################################
 # set up RPATH (paths used for dynamic linkage)
-# https://cmake.org/Wiki/CMake_RPATH_handling#CMake_and_the_RPATH
+# https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/RPATH-handling
 # https://blog.kitware.com/upcoming-in-cmake-2-8-12-osx-rpath-support/
 set( CMAKE_MACOSX_RPATH TRUE )
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
@@ -175,53 +175,59 @@ add_subdirectory( ${LIBS_SOURCE_DIR}/yaml-cpp )
 
 ################################################################################
 # build Ogre
-# see http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Building+Ogre+With+CMake
 # also, 'cmake -LAH' can be used to lists CMake-values for the Ogre CMake project
 #
-# NOTE: if CMAKE_BUILD_TYPE not set, the Ogre subdirectory will set this to RelWithDebInfo.
-#       see the following snippet of the Ogre CMakeLists.txt:
-#
-#         if (CMAKE_BUILD_TYPE STREQUAL "")
-#           # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This screws up
-#           # differentiation between debug and release builds.
-#           set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: None (CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
-#         endif ()
-#
-# TODO: 
-#   * OGRE_CONFIG_ENABLE_GL_STATE_CACHE_SUPPORT ?
-set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                    # prevent "RelWithDebInfo" 
-set( OGRE_BUILD_COMPONENT_OVERLAY             ON CACHE BOOL "" FORCE)   # overlay component
-set( OGRE_BUILD_COMPONENT_PAGING              ON CACHE BOOL "" FORCE)   # paging component
-set( OGRE_BUILD_COMPONENT_PROPERTY            ON CACHE BOOL "" FORCE)   # property component
-set( OGRE_BUILD_COMPONENT_RTSSHADERSYSTEM     ON CACHE BOOL "" FORCE)   # rtsshader componentCMAKE_CURRENT_SOURCE_DIR
-set( OGRE_BUILD_COMPONENT_TERRAIN             ON CACHE BOOL "" FORCE)   # terrain component
-set( OGRE_BUILD_COMPONENT_VOLUME              ON CACHE BOOL "" FORCE)   # volume component
-set( OGRE_BUILD_COMPONENT_BSP                 ON CACHE BOOL "" FORCE)   # bsp component
-#set( OGRE_BUILD_PLUGIN_CG                     ON CACHE BOOL "" FORCE)   # Cg plugin
-set( OGRE_BUILD_PLUGIN_OCTREE                 ON CACHE BOOL "" FORCE)   # octree plugin
-set( OGRE_BUILD_PLUGIN_PCZ                    ON CACHE BOOL "" FORCE)   # PCZ plugin
-set( OGRE_BUILD_PLUGIN_PFX                    ON CACHE BOOL "" FORCE)   # PFX plugin
-set( OGRE_BUILD_RENDERSYSTEM_GL               ON CACHE BOOL "" FORCE)   # GL-rendering
-set( OGRE_BUILD_RENDERSYSTEM_GL3Plus          ON CACHE BOOL "" FORCE)   # GL3+-rendering # FIXME: does not seem to exists
-#set( OGRE_BUILD_RENDERSYSTEM_GL3PLUS          ON CACHE BOOL "" FORCE)   # GL3+-rendering # FIXME: use this (capital letters)
-#set( OGRE_BUILD_RENDERSYSTEM_GLES2            ON CACHE BOOL "" FORCE)   # GLES2-rendering.
-#set( OGRE_CONFIG_THREADS 2                    ON CACHE BOOL "" FORCE)   # thread setting 2, default. see doc...
-#set( OGRE_FULL_RPATH                          ON CACHE BOOL "" FORCE)   # compile RPATH. FIXME.
-set( OGRE_BUILD_SAMPLES                       OFF CACHE BOOL "" FORCE)  # build OGRE samples
-set( OGRE_BUILD_TOOLS                         ON CACHE BOOL "" FORCE)   # build OGRE tools
-#set( OGRE_CONFIG_DOUBLE                       ON CACHE BOOL "" FORCE)   # use 'double' as fp type
-set( OGRE_INSTALL_DOCS                        OFF CACHE BOOL "" FORCE)  # install documentation
-set( OGRE_INSTALL_SAMPLES                     OFF CACHE BOOL "" FORCE)  # install samples
-set( OGRE_INSTALL_TOOLS                       OFF CACHE BOOL "" FORCE)  # install tools
-set( OGRE_STATIC                              OFF CACHE BOOL "" FORCE)  # build OGRE as a static lib.
+#set( CMAKE_BUILD_TYPE "None" CACHE STRING "" FORCE )                    # prevent "RelWithDebInfo" 
+
+set( OGRE_BUILD_COMPONENT_BITES       OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_HLMS        ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_JAVA        OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_MESHLODGE   ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_OVERLAY     ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_PAGING      ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_PROPERTY    ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_PYTHON      OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_RTSHADERS   ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_TERRAIN     ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_COMPONENT_VOLUME      ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_DEPENDENCIES          OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_LIBS_AS_FRAMEWORKS    ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_BSP            ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_EXRCODEC       ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_FREEIMAGE      ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_OCTREE         ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_PCZ            ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_PFX            ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_PLUGIN_STBI           ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_RENDERSYSTEM_GL       ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_RENDERSYSTEM_GL3PLU   ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_RENDERSYSTEM_GLES2    OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_SAMPLES               OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_TESTS                 OFF CACHE BOOL "" FORCE )
+set( OGRE_BUILD_TOOLS                 ON CACHE BOOL "" FORCE )
+set( OGRE_CONFIG_ENABLE_QUAD_BUFFER   OFF CACHE BOOL "" FORCE )
+set( OGRE_CONFIG_THREADS              3 CACHE BOOL "" FORCE )
+set( OGRE_CONFIG_THREAD_PROVIDER      std CACHE BOOL "" FORCE )
+set( OGRE_COPY_DEPENDENCIES           ON CACHE BOOL "" FORCE )
+set( OGRE_ENABLE_PRECOMPILED_HEADER   ON CACHE BOOL "" FORCE )
+set( OGRE_GLSUPPORT_USE_EGL           OFF CACHE BOOL "" FORCE )
+set( OGRE_INSTALL_CMAKE               ON CACHE BOOL "" FORCE )
+set( OGRE_INSTALL_DEPENDENCIES        ON CACHE BOOL "" FORCE )
+set( OGRE_INSTALL_DOCS                ON CACHE BOOL "" FORCE )
+set( OGRE_INSTALL_SAMPLES             ON CACHE BOOL "" FORCE )
+set( OGRE_INSTALL_TOOLS               OFF CACHE BOOL "" FORCE )
+set( OGRE_RESOURCEMANAGER_STRICT      2 CACHE BOOL "" FORCE )
+set( OGRE_STATIC                      OFF CACHE BOOL "" FORCE )
 
 # set release build for Ogre3D (should be faster)
 # http://stackoverflow.com/questions/30985215/passing-variables-down-to-subdirectory-only 
 # http://stackoverflow.com/questions/24460486/cmake-build-type-not-being-used-in-cmakelists-txt/24470998#24470998
-set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
-set( CMAKE_BUILD_TYPE "Release" )
-add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/open-forest-ogre" )
-set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
+#set( CMAKE_BUILD_TYPE_COPY "${CMAKE_BUILD_TYPE}" )
+#set( CMAKE_BUILD_TYPE "Release" )
+#add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/open-forest-ogre" )
+#set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_COPY} )
+
+add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/ogre" )
 
 
 ################################################################################
@@ -298,7 +304,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Keys/Key.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Log.cpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
+      #"${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Player.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run/Console.cpp"
@@ -611,12 +617,12 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES OgreMain )
     list( APPEND BATB_LIBRARIES OgreTerrain )
     list( APPEND BATB_LIBRARIES OgrePaging )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/OgreMain/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/Components/Paging/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre/Components/Terrain/include" )
-    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/open-forest-ogre" )
-    target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/open-forest-ogre/include" ) # we need the build generated OgreBuildSettings.h
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
+    target_include_directories( open-forest PRIVATE "${CMAKE_BINARY_DIR}/include" ) # we need the build generated XXXX
+    target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/ogre/include" ) # we need the build generated YYYY
     # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
 
 
@@ -624,7 +630,7 @@ if ( BATB_BUILD )
         list( APPEND BATB_LIBRARIES RenderSystem_GL )
     endif()
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
-        #list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus ) #GL3Plus is not working for me yet... FIXME: user capital letters
+        list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus )
     endif()
 
 

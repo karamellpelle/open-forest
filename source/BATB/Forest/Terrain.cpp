@@ -28,7 +28,7 @@
 #include "OgreViewport.h"
 #include "OgreSceneManager.h"
 #include "OgreRenderWindow.h"
-#include "OgreWindowEventUtilities.h"
+//#include "OgreWindowEventUtilities.h"
 #include "OgreResourceGroupManager.h"
 
 #include "OgreTerrain.h"

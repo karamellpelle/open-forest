@@ -20,3 +20,7 @@
 [submodule "libs/open-forest-ogre"]
 	path = libs/open-forest-ogre
 	url = https://github.com/karamellpelle/open-forest-ogre.git
+[submodule "libs/ogre"]
+	path = libs/ogre
+	url = https://github.com/karamellpelle/ogre.git
+	branch = master

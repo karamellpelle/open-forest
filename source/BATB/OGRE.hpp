@@ -18,7 +18,7 @@
 #ifndef BATB_OGRE_OGRE_HPP
 #define BATB_OGRE_OGRE_HPP
 #include "BATB/ModuleBATB.hpp"
-#include "BATB/OGRE/GLContextGLFW.hpp"
+//#include "BATB/OGRE/GLContextGLFW.hpp"
 
 
 // forward declare Ogre classes
@@ -29,6 +29,9 @@ namespace Ogre
     class Root;
     class RenderWindow;
     class RenderTarget;
+    class Camera;
+    class Viewport;
+    class RenderSystem;
 }
 
 
@@ -46,7 +49,8 @@ namespace ogre
 class OGRE : public ModuleBATB
 {
 public:
-    OGRE(BATB* b) : ModuleBATB( b ), glcontextglfw_( b ) { }
+    //OGRE(BATB* b) : ModuleBATB( b ), glcontextglfw_( b ) { }
+    OGRE(BATB* b) : ModuleBATB( b ) { }
 
     // setup
     void begin(const std::string& );
@@ -96,7 +100,7 @@ private:
     std::string ogre_rendersystem_name_ = "OpenGL Rendering Subsystem";
 
     // FIXME: differate between GL an GL3Plus
-    GLContextGLFW glcontextglfw_;
+    //GLContextGLFW glcontextglfw_;
     void set_glfwcontext_();
 
     bool enabled_ = true;
