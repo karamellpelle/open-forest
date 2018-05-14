@@ -36,7 +36,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set up RPATH (paths used for dynamic linkage)
 # https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/RPATH-handling
 # https://blog.kitware.com/upcoming-in-cmake-2-8-12-osx-rpath-support/
-set( CMAKE_MACOSX_RPATH TRUE )
+# https://www.mikeash.com/pyblog/friday-qa-2009-11-06-linking-and-install-names.html
+set( CMAKE_MACOSX_RPATH TRUE )            # all dylib targets use @rpath for the directory portion of install_name 
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
 ################################################################################
@@ -304,7 +305,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Keys/Key.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Log.cpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE.cpp"
-      #"${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Player.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run/Console.cpp"
@@ -617,6 +618,7 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES OgreMain )
     list( APPEND BATB_LIBRARIES OgreTerrain )
     list( APPEND BATB_LIBRARIES OgrePaging )
+    # FIXME: use Framework folders in build tree
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
@@ -634,6 +636,7 @@ if ( BATB_BUILD )
     endif()
 
 
+    # FIXME: clean up
     # link hazzle on macOS
     if ( APPLE )
         # fix a link error (add AGL)

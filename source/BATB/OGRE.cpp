@@ -18,6 +18,7 @@
 #include "BATB/OGRE.hpp"
 #include "BATB/Scene.hpp"
 #include "BATB/GL.hpp"
+#include "BATB/Screen.hpp"
 #include "OgreLogManager.h"
 #include "OgreLog.h"
 #include "OgreRoot.h"
@@ -26,7 +27,6 @@
 #include "OgreCamera.h"
 #include "OgreResourceGroupManager.h"
 #include "OgreSceneManager.h"
-//#include "OgreWindowEventUtilities.h"
 #include "RenderSystems/GL/include/OgreGLRenderSystem.h"
 
 
@@ -52,11 +52,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
         // set configuration file
         config( path );
-        //LogIndent( batb->log, "Ogre::begin()", "-> " );
 
         ////////////////////////////////////////////////////////////////////////////////
         // setup Ogre
-        //
+        // https://ogrecave.github.io/ogre/api/1.11/
+        // see libs/ogre/Samples/Common/src/Cocoa/OgreController.mm
         
         // control the log output from Ogre by creating the LogManager ourselves,
         // before creating Ogre::Root
@@ -74,7 +74,7 @@ debug::gl::msg( "OGRE_NEW LogManager" );
 debug::gl::msg( "OGRE_NEW Root" );
         ogre_root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
         batb->log << "Ogre::Root created" << std::endl;
-       
+
         ////////////////////////////////////////////////////////////////////////////////
         // add plugins (ogre_rendersystem, scene managers, ...)
         batb->log << "loading plugins:" << std::endl;
@@ -107,6 +107,8 @@ debug::gl::msg( os.str() );
             batb->log->indentPop();
             throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
         }
+
+//#if 0
         ////////////////////////////////////////////////////////////////////////////////
         // set ogre_rendersystem for Ogre
 
@@ -115,8 +117,6 @@ debug::gl::msg( "ogre_root->getRenderSystemByName" );
         ogre_rendersystem_name_ = yaml["ogre_rendersystem"] ? yaml["ogre_rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
         ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
         
-        // TODO. see Samples/Common/src/Cocoa/OgreController.mm
-	//mRoot->setRenderSystem(mRoot->getAvailableRenderers()->front());
 
         // set our Ogre render system
         if ( ogre_rendersystem )
@@ -131,6 +131,11 @@ debug::gl::msg( "ogre_root->setRenderSystem" );
             batb->log->indentPop();
             throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre_rendersystem_name_ );
         }
+//#endif
+       
+        // xx
+	//ogre_root->setRenderSystem(ogre_root->getAvailableRenderers().front());
+	ogre_root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "Copy");
 
         ////////////////////////////////////////////////////////////////////////////////    
         // initialize Root, using our defined RenderSystem
@@ -167,7 +172,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
 
 #ifdef BATB_BUILD_PLATFORM_MACOS
         // defaults to "carbon", it segfaults if not set
-        params["macAPI"] = "cocoa";
+        //params["macAPI"] = "cocoa";
 
         // let the created RenderWindow use current context
         //
@@ -230,6 +235,7 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
         // since Ogre steal our GLXContext we have to rebind it after 
         // Ogre shutdown
         //glcontextglfw_.setCurrent();
+        glfwMakeContextCurrent( batb->screen->glfw_window );
     
         //glcontextglfw_.end();
 
