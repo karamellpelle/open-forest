@@ -65,13 +65,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 void GLContextGLFW::setCurrent()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-    //
-    // TODO: other platforms...
-    // TODO: cant we just do glfwMakeContextCurrent( batb.env.window ) ??
 #ifdef GLFW_EXPOSE_NATIVE_GLX
+    // TODO: can we just do glfwMakeContextCurrent( batb.env.window ) ??
     ::Display* display = glfwGetX11Display();
-    ::Window drawable = glfwGetX11Window( batb.env.window );
-    ::GLXContext context = glfwGetGLXContext( batb.env.window );
+    ::Window drawable = glfwGetX11Window( batb->screen->glfw_window );
+    ::GLXContext context = glfwGetGLXContext( batb->screen->glfw_window );
     glXMakeCurrent( display, drawable, context );
 #endif
 

@@ -53,9 +53,8 @@ int main(int argc, char** argv)
 
 #ifdef LOAD_NONCOREBATB_ON_MAIN_THREAD
         ////////////////////////////////////////////////////////////////////////////////
-        // load resources in main thread
-        // this does not segfault during shutdown, but on the other side,
-        // no unloading of batb is done :)
+        // load non core BATB in main thread
+        // this does not segfault during shutdown.
         batb->beginNonCore();
         run::IterationStack stack =
         {
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
             batb->frameEnd();
         }
 
-        batb->log << "IterationStack empty. " << batb->screen->frameCount() << " screen frames rendered.\n";
+        batb->log << "IterationStack empty. " << run.frames << " frames iterated.\n";
 
         ////////////////////////////////////////////////////////////////////////////////
         
