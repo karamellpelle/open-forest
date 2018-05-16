@@ -69,27 +69,24 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         ////////////////////////////////////////////////////////////////////////////////
         // setup Ogre
         // https://ogrecave.github.io/ogre/api/1.11/
-        // see libs/ogre/Samples/Common/src/Cocoa/OgreController.mm
         
-        // control the log output from Ogre by creating the LogManager ourselves,
-        // before creating Ogre::Root
+        // control the log output from Ogre by creating our own LogManager before Root
 debug::gl::msg( "OGRE_NEW LogManager" );
         ogre_logmanager = OGRE_NEW Ogre::LogManager();
         auto logpath = file::tmp( "openforest-ogre.log" );
         ogre_logmanager->createLog( logpath, true, false, false );
-        // set detail level 
-        ogre_logmanager->setLogDetail( Ogre::LL_BOREME );
+        ogre_logmanager->setLogDetail( Ogre::LL_BOREME ); // detail level
         batb->log << "Ogre::LogManager writing to " << logpath << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////
-        // create Ogre ogre_root object
+        // create Root object
 debug::gl::msg( "OGRE_NEW Root" );
         ogre_root = OGRE_NEW Ogre::Root( "", "", "" ); // no files for plugin, config, log
         batb->log << "Ogre::Root created" << std::endl;
 
         ////////////////////////////////////////////////////////////////////////////////
-        // add plugins (ogre_rendersystem, scene managers, ...)
+        // add plugins (RenderSystem's, SceneManager's, ...)
         batb->log << "loading plugins:" << std::endl;
         if ( YAML::Node plugins = yaml[ "plugins" ] )
         {
@@ -121,22 +118,21 @@ debug::gl::msg( os.str() );
             throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
         }
 
-//#if 0
+
         ////////////////////////////////////////////////////////////////////////////////
         // set ogre_rendersystem for Ogre
 
-        // pick defined RenderSystem, default "OpenGL Rendering Subsystem"
+        // pick RenderSystem defined in yaml. default "OpenGL Rendering Subsystem".
 debug::gl::msg( "ogre_root->getRenderSystemByName" );
-        ogre_rendersystem_name_ = yaml["ogre_rendersystem"] ? yaml["ogre_rendersystem"].as<std::string>() : "OpenGL Rendering Subsystem";
+        ogre_rendersystem_name_ = yaml["ogre_rendersystem"].as<std::string>( "OpenGL Rendering Subsystem" );
         ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
-        
 
         // set our Ogre render system
         if ( ogre_rendersystem )
         {
 debug::gl::msg( "ogre_root->setRenderSystem" );
             ogre_root->setRenderSystem( ogre_rendersystem );
-            batb->log << "rendersystem registered: " << ogre_rendersystem_name_ << std::endl;
+            batb->log << "RenderSystem used: " << ogre_rendersystem_name_ << std::endl;
         }
         else
         {
@@ -148,7 +144,7 @@ debug::gl::msg( "ogre_root->setRenderSystem" );
        
         // xx
 	//ogre_root->setRenderSystem(ogre_root->getAvailableRenderers().front());
-	ogre_root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "Copy");
+	//ogre_root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "Copy"); // see OgreController.mm
 
         ////////////////////////////////////////////////////////////////////////////////    
         // initialize Root, using our defined RenderSystem
@@ -184,26 +180,36 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         id win = glfwGetCocoaWindow( batb->screen->glfw_window );
         id ctx = glfwGetNSGLContext( batb->screen->glfw_window );
 
-        // let RenderWindow use our NSWindow. 
+        // let RenderWindow use our NSWindow. without this, Ogre creates a new CocoaWindow :)
         params["externalWindowHandle"] = std::to_string( (unsigned long)( win ) );
         // let RenderWindow use our NSOpenGLContext. 
         params["externalGLContext"] = std::to_string( (unsigned long)( ctx ) );  
 
 #endif
+        ////////////////////////////////////////////////////////////////////////////////
         // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
         //                                -> XXXWindow::create(). and this creates the XXXContext class too.
         ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 100, 100, false, &params );
+        // don't let Ogre swap our GLFWwindow; prevent flickering. this should work since 
+        // RenderSystem::_swapAllRenderTargetBuffers() only swaps auto updated windows. however, 
+        // RenderTarget::setAutoUpdated() and RenderTarget::isAutoUpdated() are virtual functions,
+        // so this may not work for all Ogre::XXXWindow's. it works with CocoaWindow.
+        ogre_renderwindow->setAutoUpdated( false );
         ogre_renderwindow->setVisible(true);
         batb->log << "RenderWindow created" << std::endl;
 
         ////////////////////////////////////////////////////////////////////////////////
+        // TODO: remove?
         // Ogre GL context
         // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
         //       OGRE in another GL context (background thread)
         //glcontextglfw_.begin();
 
-        // emulating OgreRoot::startRendering(), the closed rendering loop of Ogre
-        //mActiveRenderer->_initRenderTargets();
+        ////////////////////////////////////////////////////////////////////////////////
+        // now emuluate OgreRoot::startRendering(), the closed rendering loop of Ogre.
+        // the rest of that functions definition is implemented in frameBegin()/frameEnd()
+        // below.
+        ogre_root->getRenderSystem()->_initRenderTargets();
         // Clear event times
         ogre_root->clearEventTimes();
 
@@ -257,7 +263,6 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
 void OGRE::frameBegin()
 {
-    Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
     
     if ( init_nonempty() )
     {
@@ -288,11 +293,9 @@ void OGRE::frameBegin()
 
 void OGRE::frameEnd()
 {
-    // look at Ogre::Root::startRendering()
-    Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
-    
     if ( init_nonempty() )
     {
+        // ensure we are allow to touch Ogre (OGRE is part of non-core BATB)
         if ( enabled_ )
         {
             batb->gl->ogreBegin();
@@ -302,9 +305,6 @@ void OGRE::frameEnd()
             // Root::renderOneFrame() > Root::_updateAllRenderTargets()
             bool b;
 
-            // void RenderTarget::updateImpl(void)
-            //ogre_rendertarget->_endUpdate();
-
             ////////////////////////////////////////////////////////////////
             // see Root::_updateAllRenderTargets()
 
@@ -313,7 +313,7 @@ void OGRE::frameEnd()
             // give client app opportunity to use queued GPU time
             b = ogre_root->_fireFrameRenderingQueued();
             // block for final swap
-            //ogre_root->getRenderSystem()->_swapAllRenderTargetBuffers();
+            ogre_root->getRenderSystem()->_swapAllRenderTargetBuffers();
 
             // This belongs here, as all render targets must be updated before events are
             // triggered, otherwise targets could be mismatched.  This could produce artifacts,
