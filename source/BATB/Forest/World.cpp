@@ -164,8 +164,15 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     // set terrain
     forest.terrain.ogre_scenemgr = forest.ogre_scenemgr;
     forest.terrain.ogre_viewport = forest.ogre_viewport;
+
+
+    ////////////////////////////////////////////////////////////////
+    // this one does very much of the terrain rendering setup!
     //forest.terrain.load( yaml[ "Terrain" ] );
     forest.terrain.load( YAML::Node() );
+    //
+    //
+    ////////////////////////////////////////////////////////////////
 
 
     // TODO: before terrain.load!

@@ -105,7 +105,7 @@ debug::gl::msg( os.str() );
                 }
                 catch (Ogre::Exception& e)
                 {
-                    batb->log << " (ERROR: " << e.what() << " )";
+                    batb->log << " (WARNING: " << e.what() << " )";
                 }
 
                 batb->log->endl();
@@ -189,7 +189,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         ////////////////////////////////////////////////////////////////////////////////
         // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
         //                                -> XXXWindow::create(). and this creates the XXXContext class too.
-        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 100, 100, false, &params );
+        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 0, 0, false, &params );
         // don't let Ogre swap our GLFWwindow; prevent flickering. this should work since 
         // RenderSystem::_swapAllRenderTargetBuffers() only swaps auto updated windows. however, 
         // RenderTarget::setAutoUpdated() and RenderTarget::isAutoUpdated() are virtual functions,
@@ -432,6 +432,10 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
     // FIXME: necessary?
     batb->gl->ogreBegin();
 
+    {
+    batb->log << "OGRE: adding resources:\n";
+    LogIndent indent( batb->log, "* " );
+
     // iterate over group names
     for (auto i = std::begin( yaml ); i != std::end( yaml ); ++i )
     {
@@ -440,9 +444,9 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
         YAML::Node group = i->first;
         std::string name = group.as<std::string>();
         
-        batb->log << "OGRE: adding items to resource group '" << name << "':\n";
+        batb->log << "'" << name << "':\n";
+        LogIndent indent( batb->log, "- " );
 
-        LogIndent indent( batb->log, "* " );
         // iterate over defined content for that group
         for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
         {
@@ -461,22 +465,30 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
 	            //Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mResourcePath, std::string("FileSystem"), ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, false);
 	            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(  file::static_data( path ), type, name );
                 }
-                catch (Ogre::Exception& e)
+                catch (std::exception& e)
                 {
-                    batb->log << " (" << e.what() << ")";
+                    batb->log << "WARNING: " << e.what();
                 }
 
             }
             else
             {
-                batb->log << "(invalid item definition)";
+                batb->log << "WARNING: invalid item definition";
             }
             
             batb->log->endl();
         }
     }
+    }
 
-    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    try
+    {
+        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    }
+    catch (std::exception& e)
+    {
+        batb->log << "OGRE: WARNING: initialiseAllResourceGroups(): " << e.what() << std::endl;
+    }
 
     batb->gl->ogreEnd();
 }
