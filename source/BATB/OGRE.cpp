@@ -202,6 +202,11 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         //       OGRE in another GL context (background thread)
         //glcontextglfw_.begin();
 
+        // emulating OgreRoot::startRendering(), the closed rendering loop of Ogre
+        //mActiveRenderer->_initRenderTargets();
+        // Clear event times
+        ogre_root->clearEventTimes();
+
     }
     ////////////////////////////////////////////////////////////////////////////////
     
@@ -256,20 +261,25 @@ void OGRE::frameBegin()
     
     if ( init_nonempty() )
     {
-        // ensure we can touch Ogre
+        // ensure we are allow to touch Ogre (OGRE is part of non-core BATB)
         if ( enabled_ )
         {
             batb->gl->ogreBegin();
-            ////////////////////////////////////////////////////////////////////////////////
-            // look at definition of OgreRoot::renderOneFrame() !!
 
-            // ( bool Root::renderOneFrame(void) )
-            ogre_root->_fireFrameStarted();
-            
-            // void RenderTarget::updateImpl(void)
-            ogre_rendertarget->_beginUpdate();
+            ////////////////////////////////////////////////////////////////
+            // see Root::_renderOneFrame()
+            // Root::startRendering() > Root::renderOneFrame 
 
+            bool b;
+
+            // Root::_fireFrameStarted
+            b = ogre_root->_fireFrameStarted();
+            if ( !b ) batb->log << "WARNING: OGRE: false _fireFrameStarted()" << std::endl;
+
+            //            
+            //            
             ////////////////////////////////////////////////////////////////////////////////
+
             batb->gl->ogreEnd();
         }
     } 
@@ -278,6 +288,7 @@ void OGRE::frameBegin()
 
 void OGRE::frameEnd()
 {
+    // look at Ogre::Root::startRendering()
     Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
     
     if ( init_nonempty() )
@@ -285,21 +296,43 @@ void OGRE::frameEnd()
         if ( enabled_ )
         {
             batb->gl->ogreBegin();
+
             ////////////////////////////////////////////////////////////////////////////////
             // look at definition of OgreRoot::renderOneFrame() !!
+            // Root::renderOneFrame() > Root::_updateAllRenderTargets()
+            bool b;
 
             // void RenderTarget::updateImpl(void)
-            ogre_rendertarget->_endUpdate();
+            //ogre_rendertarget->_endUpdate();
 
-            // bool Root::_updateAllRenderTargets(void)
-            ogre_root->_fireFrameRenderingQueued();
-            ogre_rendersystem->_swapAllRenderTargetBuffers();
-            for (SceneManagerEnumerator::SceneManagerIterator it = ogre_root->getSceneManagerIterator(); it.hasMoreElements(); it.moveNext()) 
-                it.peekNextValue()->_handleLodEvents();
+            ////////////////////////////////////////////////////////////////
+            // see Root::_updateAllRenderTargets()
 
-            // bool Root::renderOneFrame(void)
-            ogre_root->_fireFrameEnded();
+            // update all targets but don't swap buffers
+            ogre_root->getRenderSystem()->_updateAllRenderTargets(false);
+            // give client app opportunity to use queued GPU time
+            b = ogre_root->_fireFrameRenderingQueued();
+            // block for final swap
+            //ogre_root->getRenderSystem()->_swapAllRenderTargetBuffers();
+
+            // This belongs here, as all render targets must be updated before events are
+            // triggered, otherwise targets could be mismatched.  This could produce artifacts,
+            // for instance, with shadows.
+            SceneManagerEnumerator::Instances::const_iterator it, end = ogre_root->getSceneManagers().end();
+            for (it = ogre_root->getSceneManagers().begin(); it != end; ++it)
+                it->second->_handleLodEvents();
+
+            if ( !b ) batb->log << "WARNING: OGRE: false _updateAllRenderTargets()" << std::endl;
+
+            
+            // Root::_fireFrameEnded
+            b = ogre_root->_fireFrameEnded();
+            if ( !b ) batb->log << "WARNING: OGRE: false _fireFrameEnded()" << std::endl;
+
+            //            
+            //            
             ////////////////////////////////////////////////////////////////////////////////
+
             batb->gl->ogreEnd();
         }
     }
