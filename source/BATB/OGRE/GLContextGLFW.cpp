@@ -16,11 +16,6 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-////////////////////////////////////////////////////////////////////////////////
-// expose native GL
-// TODO:  set this based on Platform and context type!!
-//        see http://www.glfw.org/docs/latest/group__native.html
-
 // linux
 #ifdef BATB_BUILD_PLATFORM_LINUX
 #define GLFW_EXPOSE_NATIVE_X11
@@ -32,12 +27,13 @@
 #define GLFW_EXPOSE_NATIVE_COCOA
 #define GLFW_EXPOSE_NATIVE_NSGL
 #endif
+
 #include <GLFW/glfw3native.h>
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BATB/OGRE/GLContextGLFW.hpp"
 #include "BATB/Screen.hpp"
-
+#if 0
 ////////////////////////////////////////////////////////////////////////////////
 namespace batb
 {
@@ -99,5 +95,5 @@ Ogre::GLContext* GLContextGLFW::clone() const
 
 } // namespace batb
 
-
+#endif
 

@@ -29,6 +29,19 @@
 #include "OgreSceneManager.h"
 #include "RenderSystems/GL/include/OgreGLRenderSystem.h"
 
+// macOS
+#ifdef BATB_BUILD_PLATFORM_MACOS
+#define GLFW_EXPOSE_NATIVE_COCOA
+#define GLFW_EXPOSE_NATIVE_NSGL
+#endif
+
+// linux: X11
+// TODO
+
+// linux: WAYLAND
+// TODO
+
+#include <GLFW/glfw3native.h>
 
 namespace batb
 {
@@ -148,46 +161,38 @@ debug::gl::msg( "ogre_root->initialise" );
         ////////////////////////////////////////////////////////////////////////////////
         // create an Ogre window, using our existing GLFW window.
         //
-        // we find the interesting details we need in the implementation of 
-        // OSXCocoaWindow/GLXWind::create()!
-        //
-        // Ogre doc:
-        // externalGLControl: "Let the external window control OpenGL i.e. don't select 
-        //                    a pixel format for the window, do not change v-sync and 
-        //                    do not swap buffer. When set to true, the calling application 
-        //                    is responsible of OpenGL initialization and buffer swapping. 
-        //                    It should also create an OpenGL context for its own rendering, 
-        //                    Ogre will create one for its use. **Then the calling application 
-        //                    must also enable Ogre OpenGL context before calling any Ogre 
-        //                    function and restore its OpenGL context after these calls.**"
 debug::gl::msg( "ogre_root->createRenderWindow()" );
         Ogre::NameValuePairList params;
 
 #ifdef BATB_BUILD_PLATFORM_LINUX
-        // let the created RenderWindow use current context
-        params["currentGLContext"] = "true";  // let RenderWindow use our GL context
-                                  
-        params["externalGLControl"] = "true"; 
+        // TODO: Linux!
 #endif
 
 #ifdef BATB_BUILD_PLATFORM_MACOS
-        // defaults to "carbon", it segfaults if not set
-        //params["macAPI"] = "cocoa";
-
-        // let the created RenderWindow use current context
+        ////////////////////////////////////////////////////////////////////////////////
+        // Ogre and macOS, i.e. OSX and Cocoa
+        // the interesting code lies in OgreOSXCocoaWindow.mm:CocoaWindow::create() 
+        // which handles the given 'miscParams' to createRenderWindow (https://ogrecave.github.io/ogre/api/1.10/class_ogre_1_1_root.html#a537b7d1d0937f799cfe4936f6b672620)
         //
-        // OgreOSXCocoaWindow::create() seems to ignore these two in the original code; see
-        // OgreOSXCocoaWindow.mm. I've fixed this in our Ogre mirror.
-        params["currentGLContext"] = "true";  
-        params["externalGLControl"] = "true";  // not used!
+        //
+        // GL3PlusRenderSystem < GLRenderSystemCommon:
+        //    GLContext* mMainContext     // main thread only
+        //    GLContext* mCurrentContext  // main thread only
+        //
 
-        // our Ogre mirror has implemented currentGLContext ans so this is redundatn
-        //params["macAPICocoaUseNSView"] = "todo: pointer";
-        //params["externalWindowHandle"] = "true"; // must be done in order for "macAPICocoaUseNSView" to trigger
+        // 'id' is defined as void* in glfw3native
+        id win = glfwGetCocoaWindow( batb->screen->glfw_window );
+        id ctx = glfwGetNSGLContext( batb->screen->glfw_window );
+
+        // let RenderWindow use our NSWindow. 
+        params["externalWindowHandle"] = std::to_string( (unsigned long)( win ) );
+        // let RenderWindow use our NSOpenGLContext. 
+        params["externalGLContext"] = std::to_string( (unsigned long)( ctx ) );  
+
 #endif
         // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
-        //                                -> XXXWindow::create(). and this creates XXXContext class too.
-        ogre_renderwindow = ogre_root->createRenderWindow( "GLFWRenderWindow", 0, 0, false, &params );
+        //                                -> XXXWindow::create(). and this creates the XXXContext class too.
+        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 100, 100, false, &params );
         ogre_renderwindow->setVisible(true);
         batb->log << "RenderWindow created" << std::endl;
 
