@@ -234,7 +234,7 @@ void Screen::printGLInfo()
     // https://www.khronos.org/opengl/wiki/GLAPI/glGetString
     // https://www.khronos.org/registry/OpenGL-Refpages/
     // https://stackoverflow.com/questions/27407774/get-supported-glsl-versions
-    //
+    // https://stackoverflow.com/questions/27407774/get-supported-glsl-versions
     batb->log << "GL vendor:    " << glGetString( GL_VENDOR ) << std::endl;
     batb->log << "GL version:   " << glGetString( GL_VERSION) << std::endl;
     batb->log << "GL renderer:  " << glGetString(GL_RENDERER) << std::endl;
