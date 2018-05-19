@@ -177,6 +177,8 @@ void Screen::begin(const std::string& path)
             throw std::runtime_error( os.str() );
         }
 
+        batb->log << "GL version: " << glGetString( GL_VERSION) << std::endl;
+
         // TODO: print GL info if verbose setting in yaml
 
     }

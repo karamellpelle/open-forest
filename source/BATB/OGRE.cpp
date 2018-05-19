@@ -124,7 +124,7 @@ debug::gl::msg( os.str() );
 
         // pick RenderSystem defined in yaml. default "OpenGL Rendering Subsystem".
 debug::gl::msg( "ogre_root->getRenderSystemByName" );
-        ogre_rendersystem_name_ = yaml["ogre_rendersystem"].as<std::string>( "OpenGL Rendering Subsystem" );
+        ogre_rendersystem_name_ = yaml["rendersystem"].as<std::string>( "OpenGL Rendering Subsystem" );
         ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
 
         // set our Ogre render system
@@ -132,7 +132,7 @@ debug::gl::msg( "ogre_root->getRenderSystemByName" );
         {
 debug::gl::msg( "ogre_root->setRenderSystem" );
             ogre_root->setRenderSystem( ogre_rendersystem );
-            batb->log << "RenderSystem used: " << ogre_rendersystem_name_ << std::endl;
+            batb->log << "RenderSystem used: " << ogre_rendersystem->getName() << std::endl;
         }
         else
         {
@@ -140,12 +140,8 @@ debug::gl::msg( "ogre_root->setRenderSystem" );
             batb->log->indentPop();
             throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre_rendersystem_name_ );
         }
-//#endif
-       
-        // xx
-	//ogre_root->setRenderSystem(ogre_root->getAvailableRenderers().front());
-	//ogre_root->getRenderSystem()->setConfigOption("RTT Preferred Mode", "Copy"); // see OgreController.mm
 
+       
         ////////////////////////////////////////////////////////////////////////////////    
         // initialize Root, using our defined RenderSystem
         // (this method returns nullptr, since our argument is 'false')
