@@ -120,7 +120,11 @@ debug::gl::msg( os.str() );
 
 
         ////////////////////////////////////////////////////////////////////////////////
-        // set ogre_rendersystem for Ogre
+        // set RenderSystem
+        //
+        // regarding GL3PlusRenderSystem, see 
+        // https://www.khronos.org/opengl/wiki/OpenGL_Context#OpenGL_3.2_and_Profiles
+        // https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/UpdatinganApplicationtoSupportOpenGL3/UpdatinganApplicationtoSupportOpenGL3.html#//apple_ref/doc/uid/TP40001987-CH3-SW1
 
         // pick RenderSystem defined in yaml. default "OpenGL Rendering Subsystem".
 debug::gl::msg( "ogre_root->getRenderSystemByName" );

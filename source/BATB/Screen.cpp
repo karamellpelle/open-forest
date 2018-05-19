@@ -177,9 +177,15 @@ void Screen::begin(const std::string& path)
             throw std::runtime_error( os.str() );
         }
 
-        batb->log << "GL version: " << glGetString( GL_VERSION) << std::endl;
+        // print verbose GL info 
+        if ( YAML::Node node = yaml[ "info" ] )
+        {
+            if ( node.as<bool>() )
+            {
+                printGLInfo();
+            }
+        }
 
-        // TODO: print GL info if verbose setting in yaml
 
     }
 
@@ -219,6 +225,33 @@ void Screen::end()
     init( false );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// 
+
+void Screen::printGLInfo()
+{
+    // see
+    // https://www.khronos.org/opengl/wiki/GLAPI/glGetString
+    // https://www.khronos.org/registry/OpenGL-Refpages/
+    // https://stackoverflow.com/questions/27407774/get-supported-glsl-versions
+    //
+    batb->log << "GL vendor:    " << glGetString( GL_VENDOR ) << std::endl;
+    batb->log << "GL version:   " << glGetString( GL_VERSION) << std::endl;
+    batb->log << "GL renderer:  " << glGetString(GL_RENDERER) << std::endl;
+    batb->log << "GL shader:    " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    batb->log << "GL extensions:" << std::endl;
+    {
+        LogIndent indent( batb->log, "- " );
+
+        GLint num;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &num );
+        for ( GLint i = 0; i != num; ++i)
+        {
+            batb->log << glGetStringi(GL_EXTENSIONS, i ) << std::endl;
+
+        }
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 // frame
 //
@@ -318,6 +351,7 @@ void Screen::closingClear()
 {
     glfwSetWindowShouldClose( glfw_window, GLFW_FALSE);
 }
+
 
 
 } // namespace screen

@@ -67,6 +67,8 @@ public:
     GLFWwindow* glfw_window     = nullptr;
 
 private:
+    void printGLInfo();
+
     // width before fullscreen
     int nonfullscreen_wth_ = 0;
     int nonfullscreen_hth_ = 0;

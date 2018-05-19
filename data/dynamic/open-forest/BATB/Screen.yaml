@@ -2,6 +2,7 @@ fullscreen: false
 size: {wth: 1024, hth: 700 }
 multisamples: 4
 debug: true
+info: true
 glfw-hints:
     GLFW_DECORATED: true
     GLFW_CONTEXT_VERSION_MAJOR: 3
