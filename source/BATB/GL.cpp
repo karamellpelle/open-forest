@@ -50,8 +50,21 @@ void GL::begin(const std::string& path)
         initState();
         batb->log << "default state initialized" << std::endl;
 
+        ////////////////////////////////////////////////////////////////
+        // NanoVG
+        // 
+
+        // context creation flags
+        int nanovg_flags = NVG_STENCIL_STROKES;
+
+        // add debug to nanovg?
+        if ( YAML::Node node = yaml["nanovg-debug"] )
+        {
+            nanovg_flags |= (node.as<bool>( false ) ? NVG_DEBUG : 0);
+        }
+
 #ifdef NANOVG_GL2_IMPLEMENTATION
-        nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES /*| NVG_DEBUG*/ ); // TODO: add debug if defined in yaml
+        nvg_context = nvgCreateGL2( nanovg_flags ); // TODO: add debug if defined in yaml
 	if ( nvg_context == nullptr )
         {
             batb->log << "ERROR: could not create NanoVG GL2 context" << std::endl;
@@ -61,7 +74,7 @@ void GL::begin(const std::string& path)
         batb->log << "NanoVG GL2 context created" << std::endl;
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
-        nvg_context = nvgCreateGLXXX( NVG_STENCIL_STROKES /*| NVG_DEBUG*/ ); // TODO: add debug if defined in yaml
+        nvg_context = nvgCreateGL3( nanovg_flags ); 
 	if ( nvg_context == nullptr )
         {
             batb->log << "ERROR: could not create NanoVG GL3 context" << std::endl;
@@ -70,6 +83,9 @@ void GL::begin(const std::string& path)
 	}
         batb->log << "NanoVG GL3 context created" << std::endl;
 #endif
+      
+        ////////////////////////////////////////////////////////////////
+        //
 
         
     }
@@ -92,7 +108,7 @@ void GL::end()
     {
         save();
 
-         //clear fonts
+        //clear nanovg fonts?
         //for ( auto& i : gl.nanovg_fonts_ )
         //{
         //    // (release font not necessary (?))
@@ -100,11 +116,14 @@ void GL::end()
         //}
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2( nvg_context );
-        batb->log << "nanovg context deleted" << std::endl;
+        batb->log << "NanoVG GL2 context deleted" << std::endl;
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
-
+        nvgDeleteGL3( nvg_context );
+        batb->log << "NanoVG GL3 context deleted" << std::endl;
 #endif
+
+        nvg_context = nullptr;
     }
    
     init( false );
@@ -262,14 +281,41 @@ NVGcontext* GL::nanovgBegin(const Scene& scene)
 
 void GL::nanovgEnd()
 {
-    //nvgRestore( nvg );
-    nvgEndFrame( nvg_context );
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    // see nanovg's README.md for altered state
+    //nvgRestore( nvg );
+    nvgEndFrame( nvg_context );
+
+    // see
+    // https://github.com/memononen/nanovg#opengl-state-touched-by-the-backend
+    //glUseProgram(prog);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CCW);
+    //glEnable(GL_BLEND);
+    //glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_SCISSOR_TEST);
+    //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    //glStencilMask(0xffffffff);
+    //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    //glStencilFunc(GL_ALWAYS, 0, 0xffffffff);
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindBuffer(GL_UNIFORM_BUFFER, buf);
+    //glBindVertexArray(arr);
+    //glBindBuffer(GL_ARRAY_BUFFER, buf);
+    //glBindTexture(GL_TEXTURE_2D, tex);
+    //glUniformBlockBinding(... , GLNVG_FRAG_BINDING);
+
     glEnable( GL_DEPTH_TEST );
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    //glBindVertexArray(arr);
+    glBlendEquationSeparate( GL_FUNC_ADD, 
+                             GL_FUNC_ADD );
+    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    
 ////////////////////////////////////////////////////////////////////////////////
 
 }

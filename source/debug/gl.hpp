@@ -27,7 +27,7 @@ namespace gl
 
 ////////////////////////////////////////////////////////////////////////////////
 // these are handy together with https://github.com/apitrace/apitrace
-// when we use GLEW (it has the GL_KHR_debug extension)
+// see https://www.khronos.org/opengl/wiki/Debug_Output
 
 
 
