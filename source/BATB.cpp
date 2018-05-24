@@ -78,7 +78,7 @@ void BATB::begin(const std::string& path)
         time->begin(    file::directory( filepath() ) + "/BATB/Time.yaml" );
         keys->begin(    file::directory( filepath() ) + "/BATB/Keys.yaml" );
         gui->begin(     file::directory( filepath() ) + "/BATB/GUI.yaml" );
-        gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );
+        //gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );// FIXME!!!
         al->begin(      file::directory( filepath() ) + "/BATB/AL.yaml" );
 
         // now configure module from 'yaml'
@@ -108,7 +108,7 @@ void BATB::end()
         // end core part
         al->end();
         gui->end();
-        gl->end();
+        //gl->end();// FIXME!!!
         keys->end();
         time->end();
         screen->end();
@@ -124,7 +124,7 @@ void BATB::end()
 void BATB::beginNonCore()
 {
     // load Ogre
-    ogre->begin( file::directory( filepath() ) + "/BATB/OGRE.yaml" );
+    //ogre->begin( file::directory( filepath() ) + "/BATB/OGRE.yaml" );// FIXME!!!
 
     // load the non-core part of Run
     run->begin( file::directory( filepath() ) + "/BATB/Run.yaml" );

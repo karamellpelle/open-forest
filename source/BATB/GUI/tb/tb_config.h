@@ -55,7 +55,14 @@
 
 /** Enable renderer using OpenGL. This renderer depends on TB_RENDERER_BATCHER.
 	It is using GL version 1.1, */
-#define TB_RENDERER_GL
+//#define TB_RENDERER_GL
+// use custom renderer with GL3.2 support (and GL ES), defined in open-forest source,
+// and taken & modified from here: https://github.com/tesch1/turbobadger/blob/50859e14bd8c923be65ccc8dfab237d30af19a23/src/tb/renderers/tb_renderer_gl.cpp
+#define TB_RENDERER_GL_PLUS
+#ifdef TB_RENDERER_GL_PLUS
+#define TB_RENDERER_GL3 // desktop (OpenGL GL3+, not OpenGL ES)
+#endif
+
 
 /** Enable renderer using OpenGL ES. This renderer depends on TB_RENDERER_GL.
 	It is using GL ES version 1. */

@@ -30,6 +30,7 @@
 
 //#define DEMO_FOREST_DIRECT
 
+#include "tmp_gl.hpp"
 
 namespace batb
 {
@@ -86,7 +87,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     batb->gui->bind( batb->keys.get() );
 
     // nanovg demo
-    demo::nanovg::demo_begin( batb );
+    //demo::nanovg::demo_begin( batb ); // FIXME
+
+    // tmp:
+    gl_setup( batb );
 
     // ALURE demo
     demo::al::demo_begin( batb );
@@ -135,11 +139,13 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
-    
+
+    // tmp:
+    gl_draw( batb );
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );
-    demo::nanovg::demo_iterate( batb, false, false );
+    //demo::nanovg::demo_iterate( batb, false, false ); // FIXME
 
     // step widget
     tb_main->step( run );

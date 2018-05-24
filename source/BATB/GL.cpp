@@ -38,6 +38,7 @@ namespace gl
 
 void GL::begin(const std::string& path)
 {
+
     batb->log << "batb->gl->begin( " << path << " )" << std::endl;
     LogIndent indent( batb->log, "* " );
 
@@ -83,7 +84,7 @@ void GL::begin(const std::string& path)
 	}
         batb->log << "NanoVG GL3 context created" << std::endl;
 #endif
-      
+
         ////////////////////////////////////////////////////////////////
         //
 
@@ -93,14 +94,12 @@ void GL::begin(const std::string& path)
     
     init( true );
 
-
     
 }
 
 
 void GL::end()
 {
-
     batb->log << "batb->gl->end()" << std::endl;
     LogIndent indent( batb->log, "* " );
 
@@ -114,6 +113,7 @@ void GL::end()
         //    // (release font not necessary (?))
         //
         //}
+
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2( nvg_context );
         batb->log << "NanoVG GL2 context deleted" << std::endl;
@@ -124,9 +124,11 @@ void GL::end()
 #endif
 
         nvg_context = nullptr;
+
     }
    
     init( false );
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +140,7 @@ void GL::end()
 
 void GL::initState()
 {
+#if 0
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     //batb->log << DEBUG_FUNCTION_NAME << std::endl;
@@ -161,6 +164,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     glDepthMask( GL_TRUE );
     glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
     glEnable( GL_DEPTH_TEST );
+#endif
 }
 
 
@@ -203,6 +207,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 // reset GL state after Ogre
 void GL::ogreEnd()
 {
+#if 0
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     glDisable( GL_LIGHTING );
@@ -215,7 +220,9 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     //glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
 
     // set premult blend equation?
+#endif
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // working with turbobadger
@@ -228,22 +235,25 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 }
 
 // reset GL state after turbobadger
-// see TBRendererGL::BeginPaint in tb_renderer_gl.cpp
+// see the TBRenderer's (i.e. TBRendererGL330) BeginPaint()/EndPaint()
 void GL::turbobadgerEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    glDisableClientState( GL_COLOR_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
-    glDisableClientState( GL_VERTEX_ARRAY ); 
+    //glDisableClientState( GL_COLOR_ARRAY );
+    //glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
+    //glDisableClientState( GL_VERTEX_ARRAY ); 
+    //glDisable( GL_TEXTURE_2D );
 
-    glDisable( GL_TEXTURE_2D );
-    glDepthFunc( GL_LEQUAL );
-    glEnable( GL_DEPTH_TEST );
+    //glDepthFunc( GL_LEQUAL );
+    //glEnable( GL_DEPTH_TEST );
+    //glEnable(GL_BLEND);
+
+    //glDisableVertexAttribArray(0);
+    //glDisableVertexAttribArray(1);
+    //glDisableVertexAttribArray(2);
 
     // blending premultiplied colors
-    //glBlendEquationSeparate( GL_FUNC_ADD, 
-    //                         GL_FUNC_ADD );
     glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
                          GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -264,6 +274,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 NVGcontext* GL::nanovgBegin(const Scene& scene)
 {
+
     // calculate pixel ration for hi-dpi devices.
     int winWidth, winHeight;
     glfwGetWindowSize( batb->screen->glfw_window, &winWidth, &winHeight ); 
@@ -277,6 +288,7 @@ NVGcontext* GL::nanovgBegin(const Scene& scene)
     //nvgSave( nvg );
 
     return nvg_context;
+
 }
 
 void GL::nanovgEnd()

@@ -114,7 +114,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     begin( run.scene );
 
     // setup Ogre for a new frame
-    batb->ogre->frameBegin(); 
+    //batb->ogre->frameBegin(); // FIXME!!!
 
     // begin frame for AL
     batb->al->frameBegin();
@@ -133,7 +133,7 @@ debug::gl::msg("iterate_run()");
     batb->al->frameEnd();
 
     // end Ogre frame
-    batb->ogre->frameEnd();
+    //batb->ogre->frameEnd();// FIXME!!!
 
     // output and step GUI (_every_ frame!)
     batb->gui->output( run.scene );

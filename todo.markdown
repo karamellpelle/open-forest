@@ -1,5 +1,7 @@
 # TODO
 
+* no indent->pop() for exceptions; done by destructors regarding exception or not
+* clipboard support TB (tb_system.h)
 * use the implemetation of Ogre::renderOneFrame(Real timeSinceLastFrame)?
 * nanovg debug if defined in yaml
 * clean up events during shutdown

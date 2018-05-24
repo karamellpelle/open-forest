@@ -267,6 +267,7 @@ list( APPEND ALURE_INCLUDE_DIRS "${LIBS_SOURCE_DIR}/alure/include" )
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
+      "${MAIN_SOURCE_DIR}/tmp_gl.cpp"
       "${MAIN_SOURCE_DIR}/BATB.cpp"
       "${MAIN_SOURCE_DIR}/BATB/AL.cpp"
       "${MAIN_SOURCE_DIR}/BATB/CourseDrawer.cpp"             
@@ -288,6 +289,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/GUI.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_file_batb.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_system_batb.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_renderer_gl_plus.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBProgressBarWidget.cpp"
       #"${MAIN_SOURCE_DIR}/BATB/tb.cpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBPanel.cpp"
@@ -405,6 +407,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/GUI.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_config.h"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_system_batb.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/GUI/tb/tb_renderer_gl_plus.h"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBProgressBarWidget.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBPanel.hpp"
       "${MAIN_SOURCE_DIR}/BATB/GUI/tb/TBCommandline.hpp"

@@ -17,6 +17,7 @@
 //
 #include "BATB/GUI.hpp"
 #include "BATB/GUI/tb/tb_system_batb.hpp"
+#include "BATB/GUI/tb/tb_renderer_gl_plus.h"
 #include "BATB/Scene.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/GL.hpp"
@@ -52,6 +53,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         // TODO: check for errors
 
         ////////////////////////////////////////////////////////////////////////////////
+        // turbobadger
+        batb->log << "using Turbobadger as GUI system" << std::endl;
+        LogIndent indent( batb->log, "- " );
+
+        ////////////////////////////////////////////////////////////////////////////////
         // this is the actual init process in turbobadger demo:
         // * AppBackendGLFW()
         // * AppBackendGLFW::Init()
@@ -63,10 +69,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         ////////////////////////////////////////////////////////////////////////////////
         // AppBackendGLFW::Init()
           
-        tb_renderer_ =  new tb::TBRendererGL();
+        // use custom renderer. it defined in open-forest source, but taken from here:
+        // https://github.com/tesch1/turbobadger/blob/50859e14bd8c923be65ccc8dfab237d30af19a23/src/tb/renderers/tb_renderer_gl.cpp
+        tb_renderer_ =  new tb::TBRendererGLPlus();
         tb::tb_core_init( tb_renderer_ );
-        batb->log << "TBRenderer created" << std::endl;
-
+        batb->log << "renderer: TBRendererGLPlus" << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -86,15 +93,15 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         // declared in batb/gui/tb_system.hpp 
 #ifdef TB_FONT_RENDERER_TBBF
         register_tbbf_font_renderer();
-        batb->log << "TBBFRenderer registered" << std::endl;
+        batb->log << "font renderer registered: TBBFRenderer" << std::endl;
 #endif
 #ifdef TB_FONT_RENDERER_STB
         register_stb_font_renderer();
-        batb->log << "STBFontRenderer registered" << std::endl;
+        batb->log << "font renderer registered: STBFontRenderer" << std::endl;
 #endif
 #ifdef TB_FONT_RENDERER_FREETYPE
         register_freetype_font_renderer();
-        batb->log << "FreetypeFontRenderer registered" << std::endl;
+        batb->log << "font renderer registered: FreetypeFontRenderer" << std::endl;
 #endif
 
         // Add fonts we can use to the font manager.
@@ -130,7 +137,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         if (font)
         {
             font->RenderGlyphs(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~•·åäöÅÄÖ");
-            batb->log << "TBFontFace created and rendered" << std::endl;
+            batb->log << "default font prerendered" << std::endl;
         }
         // Give the root widget a background skin
         //m_root.SetSkinBg(TBIDC("background"));
@@ -203,12 +210,6 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // TODO: bind FBO, ..., from 'scene'
     //       see: tb_renderer_gl.cpp, TBRendererGL::BeginPaint
-
-    // we need to set modelview for TB rendering 
-    // TODO: use 'scene'
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity(); 
-
 
     ////////////////////////////////////////////////////////////////////////////////
     // App::RenderFrame

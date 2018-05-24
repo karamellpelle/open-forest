@@ -186,6 +186,8 @@ void Screen::begin(const std::string& path)
             }
         }
 
+static const GLfloat red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+            glClearBufferfv(GL_COLOR, 0, red);
 
     }
 
@@ -231,6 +233,7 @@ void Screen::end()
 void Screen::printGLInfo()
 {
     // see
+    // https://www.khronos.org/files/opengl4-quick-reference-card.pdf
     // https://www.khronos.org/opengl/wiki/GLAPI/glGetString
     // https://www.khronos.org/registry/OpenGL-Refpages/
     // https://stackoverflow.com/questions/27407774/get-supported-glsl-versions
