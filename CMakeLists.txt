@@ -267,7 +267,6 @@ list( APPEND ALURE_INCLUDE_DIRS "${LIBS_SOURCE_DIR}/alure/include" )
 ################################################################################
 # define batb sources
 set(  BATB_SOURCES
-      "${MAIN_SOURCE_DIR}/tmp_gl.cpp"
       "${MAIN_SOURCE_DIR}/BATB.cpp"
       "${MAIN_SOURCE_DIR}/BATB/AL.cpp"
       "${MAIN_SOURCE_DIR}/BATB/CourseDrawer.cpp"             
@@ -350,6 +349,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Demo/KeySet.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/Output.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/al.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/gl.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.c"
@@ -372,6 +372,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Demo/Output.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/World.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/al.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/gl.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.h"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.h"

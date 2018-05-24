@@ -27,10 +27,11 @@
 #include "BATB/Demo/libs/nanovg.hpp"
 #include "BATB/Demo/libs/ogre.hpp"
 #include "BATB/Demo/libs/al.hpp"
+#include "BATB/Demo/libs/gl.hpp"
+
 
 //#define DEMO_FOREST_DIRECT
 
-#include "tmp_gl.hpp"
 
 namespace batb
 {
@@ -85,8 +86,8 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // nanovg demo
     demo::nanovg::demo_begin( batb );
 
-    // tmp:
-    gl_setup( batb );
+    // tmp: test GL
+    demo::gl::tests_setup( batb );
 
     // ALURE demo
     demo::al::demo_begin( batb );
@@ -137,7 +138,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     // *** step ***
 
     // tmp:
-    gl_draw( batb );
+    demo::gl::tests_draw();
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );

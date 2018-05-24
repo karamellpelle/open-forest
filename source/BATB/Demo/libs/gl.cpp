@@ -1,16 +1,28 @@
-#include "tmp_gl.hpp"
+#include "BATB/Demo/libs/gl.hpp"
+#include "BATB/Screen.hpp"
+#include "BATB/Time.hpp"
+#include "BATB.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// small programs based on OpenGL Superbible 6
+//
 
 namespace batb
 {
 
+namespace demo
+{
+
+namespace gl
+{
+
 BATB* batb = nullptr;
 GLuint make_program(const std::string& name, const GLchar* , const GLchar* , const GLchar* );
-
 GLuint rendering_program; 
 GLuint vertex_array_object;
 
-void gl_setup(BATB* b)
+
+void tests_setup(BATB* b)
 {
 
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
@@ -81,7 +93,7 @@ std::cout << "gl_setup\n";
     glPointSize( 40.0f );
 }
 
-void gl_shutdown(BATB* b)
+void tests_shutdown(BATB* b)
 {
     debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     std::cout << "gl_shutdown\n";
@@ -90,7 +102,7 @@ void gl_shutdown(BATB* b)
     glDeleteVertexArrays(1, &vertex_array_object);
 }
 
-void gl_draw(BATB* b)
+void tests_draw()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     double currentTime = batb->time->get();
@@ -191,5 +203,7 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
     return ret; 
 }
 
+} // namespace gl
+} // namespace demo
 } // namespace batb
 
