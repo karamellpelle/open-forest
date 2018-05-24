@@ -1,5 +1,5 @@
 #include "tmp_gl.hpp"
-//#include "helpers/helpers_gl.hpp"
+
 
 namespace batb
 {
@@ -83,11 +83,11 @@ std::cout << "gl_setup\n";
 
 void gl_shutdown(BATB* b)
 {
-debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-std::cout << "gl_shutdown\n";
-glDeleteVertexArrays(1, &vertex_array_object); 
-glDeleteProgram(rendering_program);
-glDeleteVertexArrays(1, &vertex_array_object);
+    debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+    std::cout << "gl_shutdown\n";
+    glDeleteVertexArrays(1, &vertex_array_object); 
+    glDeleteProgram(rendering_program);
+    glDeleteVertexArrays(1, &vertex_array_object);
 }
 
 void gl_draw(BATB* b)
@@ -99,6 +99,9 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
                                       0.0f, 1.0f };
     //glClearBufferfv(GL_COLOR, 0, color);
 
+    glDisable( GL_DEPTH_TEST );
+    glDisable( GL_SCISSOR_TEST );
+    glEnable( GL_BLEND );
     // Use the program object we created earlier for rendering
     glUseProgram(rendering_program);
     glBindVertexArray(vertex_array_object);

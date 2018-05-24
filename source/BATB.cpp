@@ -78,7 +78,7 @@ void BATB::begin(const std::string& path)
         time->begin(    file::directory( filepath() ) + "/BATB/Time.yaml" );
         keys->begin(    file::directory( filepath() ) + "/BATB/Keys.yaml" );
         gui->begin(     file::directory( filepath() ) + "/BATB/GUI.yaml" );
-        //gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );// FIXME!!!
+        gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );
         al->begin(      file::directory( filepath() ) + "/BATB/AL.yaml" );
 
         // now configure module from 'yaml'
@@ -108,7 +108,7 @@ void BATB::end()
         // end core part
         al->end();
         gui->end();
-        //gl->end();// FIXME!!!
+        gl->end();
         keys->end();
         time->end();
         screen->end();

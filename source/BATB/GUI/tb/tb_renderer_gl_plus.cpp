@@ -6,7 +6,6 @@
 #include "BATB/GUI/tb/tb_renderer_gl_plus.h"
 #include <fstream>
 
-#ifdef TB_RENDERER_GL_PLUS
 #include "tb_bitmap_fragment.h"
 #include "tb_system.h"
 #include <assert.h>
@@ -19,19 +18,6 @@ namespace tb {
 uint32 dbg_bitmap_validations = 0;
 #endif // TB_RUNTIME_DEBUG_INFO
 
-#ifdef TB_RUNTIME_DEBUG_INFO
-#define GLCALL(CALL) do {												\
-		CALL;															\
-		GLenum err;														\
-		while ((err = glGetError()) != GL_NO_ERROR) {					\
-			TBDebugPrint("%s:%d, GL error 0x%x\n", __FILE__, __LINE__, err); \
-		} } while (0)
-#else
-//#define GLCALL(xxx) do {} while (0)
-#define GLCALL(xxx) error "GL_CALL macro used :("
-#endif
-// ^ EMPTY GLCALL when not TB_RUNTIME_DEBUG_INFO was probably what caused a non working renderer
-// the first time!! anyway, I modify this file to a GLES 330 renderer
 
 static void MakeOrtho(float * ortho, float l, float r, float b, float t, float n, float f)
 {
@@ -68,9 +54,9 @@ void BindBitmap(TBBitmap *bitmap)
 	if (texture != g_current_texture)
 	{
 		g_current_texture = texture;
-#if defined(TB_RENDERER_GLES_2) || defined(TB_RENDERER_GL3)
+
 		glActiveTexture(GL_TEXTURE0);
-#endif
+
 		glBindTexture(GL_TEXTURE_2D, g_current_texture);
 	}
 }
@@ -84,7 +70,8 @@ TBBitmapGLPlus::TBBitmapGLPlus(TBRendererGLPlus *renderer)
 
 TBBitmapGLPlus::~TBBitmapGLPlus()
 {
-//return; // FIXME!!!
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
 	// Must flush and unbind before we delete the texture
 	m_renderer->FlushBitmap(this);
 	if (m_texture == g_current_texture)
@@ -95,8 +82,8 @@ TBBitmapGLPlus::~TBBitmapGLPlus()
 
 bool TBBitmapGLPlus::Init(int width, int height, uint32 *data)
 {
-//return true; // FIXME!!!
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
 	assert(width == TBGetNearestPowerOfTwo(width));
 	assert(height == TBGetNearestPowerOfTwo(height));
 
@@ -119,7 +106,7 @@ void TBBitmapGLPlus::SetData(uint32 *data)
 	m_renderer->FlushBitmap(this);
 	BindBitmap(this);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_w, m_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
 	TB_IF_DEBUG_SETTING(RENDER_BATCHES, dbg_bitmap_validations++);
 }
 
@@ -160,18 +147,14 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	glBufferData(GL_ARRAY_BUFFER, sizeof(batch.vertex), (void *)&batch.vertex[0], GL_DYNAMIC_DRAW);
 
 	// Setup white 1-pixel "texture" as default
-	{
-		uint32 whitepix = 0xffffffff;
-		m_white.Init(1, 1, &whitepix);
-	}
+        uint32 whitepix = 0xffffffff;
+        m_white.Init(1, 1, &whitepix);
 }
 
 
 void TBRendererGLPlus::BeginPaint(int render_target_w, int render_target_h)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-
-
 
 
 #ifdef TB_RUNTIME_DEBUG_INFO
@@ -196,21 +179,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//glUseProgram(m_program);
-        //glBindVertexArray( m_vao );
-        //glDisable( GL_SCISSOR_TEST );
-        //glDisable( GL_DEPTH_TEST );
-        //glDisable( GL_STENCIL_TEST );
-        //glPointSize( 40.0f );
-        //glDrawArrays(GL_POINTS, 0, 1);
-
 }
 
 void TBRendererGLPlus::EndPaint()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-return; // FIXME!!!
 
 	TBRendererBatcher::EndPaint();
 
@@ -347,4 +320,3 @@ GLuint TBRendererGLPlus::make_program(const GLchar* name, const GLchar* vsh_sour
 
 } // namespace tb
 
-#endif // TB_RENDERER_GL_PLUS

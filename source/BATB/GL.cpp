@@ -140,10 +140,9 @@ void GL::end()
 
 void GL::initState()
 {
-#if 0
+
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    //batb->log << DEBUG_FUNCTION_NAME << std::endl;
 
     //  set up our GL-invariants:
     glEnable( GL_MULTISAMPLE );
@@ -164,7 +163,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     glDepthMask( GL_TRUE );
     glDepthFunc( GL_LEQUAL ); // FIXME: strict less, because of round off errors?
     glEnable( GL_DEPTH_TEST );
-#endif
 }
 
 
@@ -173,17 +171,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 ////////////////////////////////////////////////////////////////////////////////
 //  resetting our GL state between library (Ogre, nanovg, turbobadger) calls
 // 
-//  calls have been stripped down. see commit 659cfa97f4006370b6fce005badc13f23dcf5d71
-//  for the other calls we had before, if there should be some problem. that
-//  commit contains the calls that made these libraries work together for the
-//  first time.
-//
-//  for some reason, only nanovg (or nanovg + turbobadger) without Ogre decrease
-//  our framerate. if we add Ogre, then the framerate becomes normal (60 fps).
-//  I expect this happened when glEnable( GL_MULTISAMPLE ) was added, but
-//  it has not been verified.
-//
-//
 //  actually, only gl::end_XXX() should be necessary (shown as 'reset' below)
 //
 //  current draw order: 
@@ -207,20 +194,13 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 // reset GL state after Ogre
 void GL::ogreEnd()
 {
-#if 0
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     glDisable( GL_LIGHTING );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    //glDisableClientState( GL_NORMAL_ARRAY );
-    //glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-    //glDisableClientState( GL_VERTEX_ARRAY );
-    //glDisableClientState( GL_INDEX_ARRAY );
-    //glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
-
     // set premult blend equation?
-#endif
+
 }
 
 
@@ -240,14 +220,9 @@ void GL::turbobadgerEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    //glDisableClientState( GL_COLOR_ARRAY );
-    //glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
-    //glDisableClientState( GL_VERTEX_ARRAY ); 
-    //glDisable( GL_TEXTURE_2D );
-
     //glDepthFunc( GL_LEQUAL );
-    //glEnable( GL_DEPTH_TEST );
-    //glEnable(GL_BLEND);
+    glEnable( GL_DEPTH_TEST );
+    glEnable(GL_BLEND);
 
     //glDisableVertexAttribArray(0);
     //glDisableVertexAttribArray(1);

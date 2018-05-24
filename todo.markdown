@@ -1,5 +1,10 @@
-# TODO
 
+# TODO
+* helpers/tb.hpp -> tb/helpers.hpp
+* custom TB-widgets have empty constructors since all TB-widgets should be possible.
+  to read from .tb.txt file's (TBWidgetFactory).
+  - TBMain
+  - TBConsole?
 * no indent->pop() for exceptions; done by destructors regarding exception or not
 * clipboard support TB (tb_system.h)
 * use the implemetation of Ogre::renderOneFrame(Real timeSinceLastFrame)?

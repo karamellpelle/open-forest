@@ -51,12 +51,8 @@ void IterationRunMain::begin()
 {
 
     // create main menu
-    // TODO: use create
     tb_main = new TBMain( batb );
-    //tb_main = new TBMain();
-    //tb_main->batb = batb;
-    //tb_main->begin( path ); // use defined in .yaml? constexpr const char* path = "static://BATB/Run/main.tb.txt";
-    // ^ TODO: tb_main
+    // ^ TODO: use new_widget<TBMain> from GUI/tb/helpers.hpp!
 
     batb->gui->addWidget( tb_main );
 
@@ -87,7 +83,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     batb->gui->bind( batb->keys.get() );
 
     // nanovg demo
-    //demo::nanovg::demo_begin( batb ); // FIXME
+    demo::nanovg::demo_begin( batb );
 
     // tmp:
     gl_setup( batb );
@@ -145,7 +141,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );
-    //demo::nanovg::demo_iterate( batb, false, false ); // FIXME
+    demo::nanovg::demo_iterate( batb, false, false );
 
     // step widget
     tb_main->step( run );

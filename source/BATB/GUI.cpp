@@ -140,7 +140,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
             batb->log << "default font prerendered" << std::endl;
         }
         // Give the root widget a background skin
-        //m_root.SetSkinBg(TBIDC("background"));
+        //root.SetSkinBg(TBIDC("background"));
 
 
 
