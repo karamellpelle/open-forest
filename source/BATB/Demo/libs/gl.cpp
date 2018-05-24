@@ -24,86 +24,89 @@ GLuint vertex_array_object;
 
 void tests_setup(BATB* b)
 {
-
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-std::cout << "gl_setup\n";
 
-    batb = b;
-
-    static const GLchar * vertex_shader_source = R"(#version 330 core
-
-    layout (location = 0) in vec4 offset;
-    layout (location = 1) in vec4 color;
-
-    out VS_OUT
+    if ( !batb )
     {
-        vec4 color;
+        static const GLchar * vertex_shader_source = R"(#version 330 core
+        layout (location = 0) in vec4 offset;
+        layout (location = 1) in vec4 color;
 
-    } vs_out;
-
-    void main(void)
-    {
-        const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0), vec4(-0.25, -0.25, 0.5, 1.0), vec4( 0.25, 0.25, 0.5, 1.0));
-        //const vec4 colors[3] = vec4[3]( vec4( 1.0, 0.4, 0.0, 1.0), vec4(0.3, 0.0, 0.7, 1.0), vec4( 0.1, 0.0, 0.8, 1.0) );
-
-        vs_out.color = color;
-
-        gl_Position = vertices[ gl_VertexID ] + offset;
-    }
-    )";
-
-    static const GLchar * geometry_shader_source = R"(#version 330 core
-    layout (triangles) in;
-    layout (points, max_vertices = 3) out;
-
-    void main(void)
-    {
-        int i;
-        for (i = 0; i < gl_in.length(); i++)
+        out VS_OUT
         {
-            gl_Position = gl_in[i].gl_Position;
-            EmitVertex();
-        } 
+            vec4 color;
+
+        } vs_out;
+
+        void main(void)
+        {
+            const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0), vec4(-0.25, -0.25, 0.5, 1.0), vec4( 0.25, 0.25, 0.5, 1.0));
+            //const vec4 colors[3] = vec4[3]( vec4( 1.0, 0.4, 0.0, 1.0), vec4(0.3, 0.0, 0.7, 1.0), vec4( 0.1, 0.0, 0.8, 1.0) );
+
+            vs_out.color = color;
+
+            gl_Position = vertices[ gl_VertexID ] + offset;
+        }
+        )";
+
+        static const GLchar * geometry_shader_source = R"(#version 330 core
+        layout (triangles) in;
+        layout (points, max_vertices = 3) out;
+
+        void main(void)
+        {
+            int i;
+            for (i = 0; i < gl_in.length(); i++)
+            {
+                gl_Position = gl_in[i].gl_Position;
+                EmitVertex();
+            } 
+        }
+        )";
+
+        static const GLchar * fragment_shader_source = R"(#version 330 core
+        in VS_OUT
+        {
+          vec4 color;
+        } fs_in;
+
+        out vec4 color;
+
+        void main(void)
+        {
+            //color = vec4(0.0, 0.8, 1.0, 1.0);
+            color = fs_in.color;
+            //color = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + 0.5, cos(gl_FragCoord.y * 0.25) * 0.5 + 0.5, sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15), 1.0);
+        }
+        )";
+
+
+        rendering_program = make_program( "OpenGLSuperBible6", vertex_shader_source, 0, fragment_shader_source ); 
+
+        // create simple VAO
+        glGenVertexArrays(1, &vertex_array_object); 
+        glBindVertexArray(vertex_array_object);
+
+        glPointSize( 40.0f );
+
+        batb = b;
     }
-    )";
-
-    static const GLchar * fragment_shader_source = R"(#version 330 core
-    in VS_OUT
-    {
-      vec4 color;
-    } fs_in;
-
-    out vec4 color;
-
-    void main(void)
-    {
-        //color = vec4(0.0, 0.8, 1.0, 1.0);
-        color = fs_in.color;
-        //color = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + 0.5, cos(gl_FragCoord.y * 0.25) * 0.5 + 0.5, sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15), 1.0);
-    }
-    )";
-
-
-    rendering_program = make_program( "tmp_gl", vertex_shader_source, 0, fragment_shader_source ); 
-
-    // create simple VAO
-    glGenVertexArrays(1, &vertex_array_object); 
-    glBindVertexArray(vertex_array_object);
-
-    glPointSize( 40.0f );
 }
 
 void tests_shutdown(BATB* b)
 {
     debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-    std::cout << "gl_shutdown\n";
     glDeleteVertexArrays(1, &vertex_array_object); 
     glDeleteProgram(rendering_program);
     glDeleteVertexArrays(1, &vertex_array_object);
+
+    batb = nullptr;
 }
 
 void tests_draw()
 {
+    if ( batb == nullptr ) return;
+
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     double currentTime = batb->time->get();
 
@@ -191,7 +194,7 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
     auto pstr = std::make_unique<GLchar[]>( log_length );
     glGetProgramInfoLog( ret, log_length, NULL, pstr.get() );
 
-    if ( log_length == 0 ) std::cout << "(program OK)";
+    if ( log_length == 0 ) std::cout << "OK";
     else                   std::cout << pstr.get();
     std::cout << std::endl;
 

@@ -17,11 +17,13 @@
 //
 #include "BATB/GUI.hpp"
 #include "BATB/GUI/tb/tb_system_batb.hpp"
-#include "BATB/GUI/tb/tb_renderer_gl_plus.h"
 #include "BATB/Scene.hpp"
 #include "BATB/Keys.hpp"
 #include "BATB/GL.hpp"
 
+// our OpenGL 3.3+ renderer, based on this
+// https://github.com/tesch1/turbobadger/blob/50859e14bd8c923be65ccc8dfab237d30af19a23/src/tb/renderers/tb_renderer_gl.h
+#include "BATB/GUI/tb/TBRendererGL330.hpp"
 
 
 
@@ -71,9 +73,12 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
           
         // use custom renderer. it defined in open-forest source, but taken from here:
         // https://github.com/tesch1/turbobadger/blob/50859e14bd8c923be65ccc8dfab237d30af19a23/src/tb/renderers/tb_renderer_gl.cpp
-        tb_renderer_ =  new tb::TBRendererGLPlus();
+        // the original code there did not work for me, but I think this is because 
+        // a bug in its macro 'GLCALL' (it's a no op when no debug). anyway, let's go for
+        // OpenGL 3.3+ 
+        tb_renderer_ =  new tb::TBRendererGL330();
         tb::tb_core_init( tb_renderer_ );
-        batb->log << "renderer: TBRendererGLPlus" << std::endl;
+        batb->log << "renderer: TBRendererGL330 (custom)" << std::endl;
 
 
         ////////////////////////////////////////////////////////////////////////////////

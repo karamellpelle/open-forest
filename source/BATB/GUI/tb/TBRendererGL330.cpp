@@ -3,7 +3,8 @@
 // ==                     See tb_core.h for more information.                    ==
 // ================================================================================
 // this file is taken from here and modified to our needs: https://github.com/tesch1/turbobadger/blob/50859e14bd8c923be65ccc8dfab237d30af19a23/src/tb/renderers/tb_renderer_gl.cpp
-#include "BATB/GUI/tb/tb_renderer_gl_plus.h"
+#include "BATB/GUI/tb/TBRendererGL330.hpp"
+
 #include <fstream>
 
 #include "tb_bitmap_fragment.h"
@@ -11,6 +12,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+// print info from shader compilations?
+//#define PRINT_COMPILE_INFO
+
 
 namespace tb {
 
@@ -45,12 +50,13 @@ static void MakeOrtho(float * ortho, float l, float r, float b, float t, float n
 // == Batching ====================================================================================
 
 GLuint g_current_texture = (GLuint)-1;
+
 TBRendererBatcher::Batch *g_current_batch = 0;
 
 void BindBitmap(TBBitmap *bitmap)
 {
-//return;
-	GLuint texture = bitmap ? static_cast<TBBitmapGLPlus*>(bitmap)->m_texture : 0;
+
+	GLuint texture = bitmap ? static_cast<TBBitmapGL330*>(bitmap)->m_texture : 0;
 	if (texture != g_current_texture)
 	{
 		g_current_texture = texture;
@@ -61,14 +67,14 @@ void BindBitmap(TBBitmap *bitmap)
 	}
 }
 
-// == TBBitmapGLPlus ==================================================================================
+// == TBBitmapGL330 ==================================================================================
 
-TBBitmapGLPlus::TBBitmapGLPlus(TBRendererGLPlus *renderer)
+TBBitmapGL330::TBBitmapGL330(TBRendererGL330 *renderer)
 	: m_renderer(renderer), m_w(0), m_h(0), m_texture(0)
 {
 }
 
-TBBitmapGLPlus::~TBBitmapGLPlus()
+TBBitmapGL330::~TBBitmapGL330()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
@@ -80,7 +86,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	glDeleteTextures(1, &m_texture);
 }
 
-bool TBBitmapGLPlus::Init(int width, int height, uint32 *data)
+bool TBBitmapGL330::Init(int width, int height, uint32 *data)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
@@ -100,7 +106,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	return true;
 }
 
-void TBBitmapGLPlus::SetData(uint32 *data)
+void TBBitmapGL330::SetData(uint32 *data)
 {
 
 	m_renderer->FlushBitmap(this);
@@ -110,32 +116,88 @@ void TBBitmapGLPlus::SetData(uint32 *data)
 	TB_IF_DEBUG_SETTING(RENDER_BATCHES, dbg_bitmap_validations++);
 }
 
-// == TBRendererGLPlus ================================================================================
+// == TBRendererGL330 ================================================================================
 
-TBRendererGLPlus::TBRendererGLPlus() : m_white(this)
+TBRendererGL330::TBRendererGL330() : m_white(this)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-	GLchar vsh_cstr[] = R"(
-        )";
-	GLchar gsh_cstr[] = R"(
-        )";
-	GLchar fsh_cstr[] = R"(
+        //std::ifstream vsh_if( file::static_data( "tb.vsh" ) );
+        //std::string vsh_str( (std::istreambuf_iterator<char>(vsh_if) ), (std::istreambuf_iterator<char>()    ) );
+        //std::ifstream fsh_if( file::static_data( "tb.fsh" ) );
+        //std::string fsh_str( (std::istreambuf_iterator<char>(fsh_if) ), (std::istreambuf_iterator<char>()    ) );
+        //std::cout << vsh_str << fsh_str << std::endl;
+        //m_program = make_program( "TBRendererGL330", vsh_str.c_str(), nullptr, fsh_str.c_str() );
+
+
+        ////////////////////////////////////////////////////////////////
+        // vertex shader
+	constexpr GLchar vsh_cstr[] = R"(
+        #version 330
+
+        uniform mat4 ortho;
+        uniform sampler2D tex;
+
+        layout (location = 0 ) in vec2 xy;
+        layout (location = 1 ) in vec2 uv;
+        layout (location = 2 ) in vec4 color;
+
+        out VSH_OUT
+        {
+            vec2 uv;
+            vec4 color;
+
+        } vsh_out;
+
+        void main()
+        {
+            vsh_out.uv = uv;
+            vsh_out.color = color;
+
+            gl_Position = ortho * vec4( xy, 0, 1 );
+        }
         )";
 
-        std::ifstream vsh_if( file::static_data( "tb.vsh" ) );
-        std::string vsh_str( (std::istreambuf_iterator<char>(vsh_if) ), (std::istreambuf_iterator<char>()    ) );
-        std::ifstream fsh_if( file::static_data( "tb.fsh" ) );
-        std::string fsh_str( (std::istreambuf_iterator<char>(fsh_if) ), (std::istreambuf_iterator<char>()    ) );
-        
-        std::cout << vsh_str << fsh_str << std::endl;
+        ////////////////////////////////////////////////////////////////
+        // geometry shader (not used)
+	constexpr GLchar gsh_cstr[] = R"(
+        )";
 
-        // create program from files
-        m_program = make_program( "TBRendererGLPlus", vsh_str.c_str(), nullptr, fsh_str.c_str() );
+        ////////////////////////////////////////////////////////////////
+        // fragment shader
+	constexpr GLchar fsh_cstr[] = R"(
+        #version 330
 
-        // retrieve uniforms
-	m_orthoLoc = glGetUniformLocation(m_program, "ortho"); if ( m_orthoLoc == -1 ) std::cout << "WARNING: uniform 'ortho' does not exist" << std::endl;
-	m_texLoc = glGetUniformLocation(m_program, "tex"); if ( m_texLoc == -1 ) std::cout << "WARNING: uniform 'tex' does not exist" << std::endl;
+        uniform sampler2D tex;
+
+        in VSH_OUT
+        {
+            vec2 uv;
+            vec4 color;
+
+        } fsh_in;
+
+        out vec4 color;
+
+        void main()
+        {
+            color = fsh_in.color * texture( tex, fsh_in.uv );
+        }
+        )";
+
+        ////////////////////////////////////////////////////////////////
+
+
+        // create program from shader sources
+        m_program = make_program( "TBRendererGL330", vsh_cstr, nullptr, fsh_cstr );
+
+        // program created, now retrieve its uniforms 
+	m_orthoLoc = glGetUniformLocation(m_program, "ortho");
+	m_texLoc = glGetUniformLocation(m_program, "tex"); 
+#ifdef PRINT_COMPILE_INFO
+        if ( m_orthoLoc == -1 ) std::cout << "WARNING: uniform 'ortho' does not exist" << std::endl;
+        if ( m_texLoc == -1 ) std::cout << "WARNING: uniform 'tex' does not exist" << std::endl;
+#endif
 
         // our VAO
 	glGenVertexArrays(1, &m_vao);
@@ -152,7 +214,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 }
 
 
-void TBRendererGLPlus::BeginPaint(int render_target_w, int render_target_h)
+void TBRendererGL330::BeginPaint(int render_target_w, int render_target_h)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
@@ -175,13 +237,14 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	glViewport(0, 0, render_target_w, render_target_h);
 	glScissor(0, 0, render_target_w, render_target_h);
 
+        // set up. set back to OpenGL default in EndPaint()?
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void TBRendererGLPlus::EndPaint()
+void TBRendererGL330::EndPaint()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
@@ -197,10 +260,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 #endif // TB_RUNTIME_DEBUG_INFO
 }
 
-TBBitmap *TBRendererGLPlus::CreateBitmap(int width, int height, uint32 *data)
+TBBitmap *TBRendererGL330::CreateBitmap(int width, int height, uint32 *data)
 {
 
-	TBBitmapGLPlus *bitmap = new TBBitmapGLPlus(this);
+	TBBitmapGL330 *bitmap = new TBBitmapGL330(this);
 	if (!bitmap || !bitmap->Init(width, height, data))
 	{
 		delete bitmap;
@@ -209,16 +272,13 @@ TBBitmap *TBRendererGLPlus::CreateBitmap(int width, int height, uint32 *data)
 	return bitmap;
 }
 
-void TBRendererGLPlus::RenderBatch(Batch *batch)
+void TBRendererGL330::RenderBatch(Batch *batch)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 	// Bind texture and array pointers
-#if defined(TB_RENDERER_GLES_2) || defined(TB_RENDERER_GL3)
+        // use white color if no bitmap (see fragment shader source)
 	BindBitmap(batch->bitmap ? batch->bitmap : &m_white);
-#else
-	BindBitmap(batch->bitmap);
-#endif
 
 	if (g_current_batch != batch)
 	{
@@ -233,25 +293,25 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	}
 
 	// Flush
-//#if defined(TB_RENDERER_GLES_2) || defined(TB_RENDERER_GL3)
 	glBufferSubData(GL_ARRAY_BUFFER, 0, batch->vertex_count * sizeof(Vertex), (void *)&batch->vertex[0]);
-//#endif
 	glDrawArrays(GL_TRIANGLES, 0, batch->vertex_count);
 }
 
-void TBRendererGLPlus::SetClipRect(const TBRect &rect)
+void TBRendererGL330::SetClipRect(const TBRect &rect)
 {
 
 	glScissor(m_clip_rect.x, m_screen_rect.h - (m_clip_rect.y + m_clip_rect.h), m_clip_rect.w, m_clip_rect.h);
 }
 
-GLuint TBRendererGLPlus::make_shader(GLenum type, const GLchar* source)
+GLuint TBRendererGL330::make_shader(GLenum type, const GLchar* source)
 {
+#ifdef PRINT_COMPILE_INFO
     std::cout << "creating shader of type ";
     if ( type == GL_VERTEX_SHADER ) std::cout <<   "GL_VERTEX_SHADER  ";
     if ( type == GL_FRAGMENT_SHADER ) std::cout << "GL_FRAGMENT_SHADER";
     if ( type == GL_GEOMETRY_SHADER ) std::cout << "GL_GEOMETRY_SHADER";
     std::cout << ": ";
+#endif
 
     GLuint ret = glCreateShader( type );
     glShaderSource( ret, 1, &source, NULL );
@@ -259,7 +319,9 @@ GLuint TBRendererGLPlus::make_shader(GLenum type, const GLchar* source)
 
     GLint param;
     glGetShaderiv( ret, GL_COMPILE_STATUS, &param );
+#ifdef PRINT_COMPILE_INFO
     if ( param == 0 ) std::cout << "ERROR: could not compile shader! ";
+#endif
 
 
     // Get the log...
@@ -269,17 +331,21 @@ GLuint TBRendererGLPlus::make_shader(GLenum type, const GLchar* source)
     
     glGetShaderInfoLog( ret, log_length, NULL, pstr.get());
 
+#ifdef PRINT_COMPILE_INFO
     if ( log_length == 0 ) std::cout << "OK";
     else                   std::cout << std::endl << pstr.get();
     std::cout << std::endl;
+#endif
 
 
     return ret;
 }
 
-GLuint TBRendererGLPlus::make_program(const GLchar* name, const GLchar* vsh_source, const GLchar* gsh_source, const GLchar* fsh_source)
+GLuint TBRendererGL330::make_program(const GLchar* name, const GLchar* vsh_source, const GLchar* gsh_source, const GLchar* fsh_source)
 {
+#ifdef PRINT_COMPILE_INFO
     std::cout << "making program '" << name << "'" << std::endl;
+#endif
 
     auto vsh = vsh_source ? make_shader( GL_VERTEX_SHADER, vsh_source ) : 0;
     auto gsh = gsh_source ? make_shader( GL_GEOMETRY_SHADER, gsh_source ) : 0;
@@ -295,8 +361,9 @@ GLuint TBRendererGLPlus::make_program(const GLchar* name, const GLchar* vsh_sour
 
     GLint param;
     glGetProgramiv( ret, GL_LINK_STATUS, &param );
+#ifdef PRINT_COMPILE_INFO
     if ( param == 0 ) std::cout << "ERROR: could not link program!" << std::endl;
-
+#endif
 
     // Get the log...
     GLint log_length;
@@ -304,9 +371,11 @@ GLuint TBRendererGLPlus::make_program(const GLchar* name, const GLchar* vsh_sour
     auto pstr = std::make_unique<GLchar[]>( log_length );
     glGetProgramInfoLog( ret, log_length, NULL, pstr.get() );
 
-    if ( log_length == 0 ) std::cout << "(program OK)";
+#ifdef PRINT_COMPILE_INFO
+    if ( log_length == 0 ) std::cout << "OK";
     else                   std::cout << pstr.get();
     std::cout << std::endl;
+#endif
 
     // Delete the shaders as the program has them now
     glDeleteShader( vsh );
