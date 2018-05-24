@@ -1,5 +1,5 @@
 plugins:
-  - RenderSystem_GL
+  #- RenderSystem_GL
   - RenderSystem_GL3Plus
   - Plugin_ParticleFX
   - Plugin_BSPSceneManager

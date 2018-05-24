@@ -114,7 +114,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     begin( run.scene );
 
     // setup Ogre for a new frame
-    //batb->ogre->frameBegin(); // FIXME!!!
+    batb->ogre->frameBegin();
 
     // begin frame for AL
     batb->al->frameBegin();
@@ -133,7 +133,7 @@ debug::gl::msg("iterate_run()");
     batb->al->frameEnd();
 
     // end Ogre frame
-    //batb->ogre->frameEnd();// FIXME!!!
+    batb->ogre->frameEnd();
 
     // output and step GUI (_every_ frame!)
     batb->gui->output( run.scene );
@@ -151,9 +151,8 @@ debug::gl::msg("iterate_run()");
 }
 
 
-// set up our Scene object for a new frame.
-// currently, our Scene is just the default FBO,
-// from Env
+// set up scene for this frame
+// TODO: use the Scene's FBO
 void IterationRun::begin(Scene& scene)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
@@ -178,10 +177,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // define fragment region
     glViewport( 0, 0, scene.wth, scene.hth );
 
-    // bind FBO 
+    // set framebuffer to our scene's FBO. TODO
     //glBindFramebuffer( gl_FRAMEBUFFER, scene.fbo );
 
-    // clear screen
+    // clear screen for the new frame
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
 }

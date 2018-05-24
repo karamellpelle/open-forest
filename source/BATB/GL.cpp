@@ -196,10 +196,11 @@ void GL::ogreEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    glDisable( GL_LIGHTING );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     // set premult blend equation?
+    
+    // FIXME!
 
 }
 

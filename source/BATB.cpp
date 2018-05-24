@@ -124,7 +124,7 @@ void BATB::end()
 void BATB::beginNonCore()
 {
     // load Ogre
-    //ogre->begin( file::directory( filepath() ) + "/BATB/OGRE.yaml" );// FIXME!!!
+    ogre->begin( file::directory( filepath() ) + "/BATB/OGRE.yaml" );
 
     // load the non-core part of Run
     run->begin( file::directory( filepath() ) + "/BATB/Run.yaml" );
