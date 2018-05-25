@@ -96,9 +96,16 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     // TODO: delete old before loading
     // TODO: use state
     // TODO: 
-    //  * add demo resources (demo_begin)
     batb->gl->ogreBegin();
 
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Ogre
+    //
+    // see:
+    //  * tutorial (https://ogrecave.github.io/ogre/api/1.11/tut__first_scene.html)
+    //
+    ////////////////////////////////////////////////////////////////////////////////
 
     {
         // TODO: use yaml above
@@ -127,26 +134,11 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     // FIXME: remove upon deletion of forest::World? see Ogre::SampleBrowser::runSample()/Ogre::ApplicationContext::create/destroyDummyScene()
     batb->ogre->ogre_shader_generator->addSceneManager( forest.ogre_scenemanager );
 
-    // create a view into scene, a Camera!
-    // FIXME: add not SceneNode! new in 1.10
-    forest.camera.ogre_camera = forest.ogre_scenemanager->createCamera( "Camera::ogre_camera" );
-
-    //
-    // create Viewport, the 2D target of Camera
-    forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
-    forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
-
-
     // this is now done in Terrain.cpp, but move into weater setup below when 
     // things are working!
 
 //    // TODO: setup light/... based on forest::Weather
-//#ifdef USE_SAMPLE_ENDLESSWORLD
-//    forest.ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 4000, 10000);
-//#endif
-//#ifdef USE_SAMPLE_TERRAIN
 //    forest.ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000); // Terrain
-//#endif
 //
 //    Light* l = forest.ogre_scenemanager->createLight("tstLight");
 //    l->setType(Light::LT_DIRECTIONAL);
@@ -154,68 +146,53 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 //    lightdir.normalise();
 //    l->setDirection( lightdir );
 //    l->setDiffuseColour(ColourValue::White);
-//#ifdef USE_SAMPLE_ENDLESSWORLD
-//    l->setSpecularColour(ColourValue(0.1, 0.1, 0.1));
-//#endif
-//#ifdef USE_SAMPLE_TERRAIN
 //    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
-//#endif
 //    forest.ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
+    ////////////////////////////////////////////////////////////////
+    // create a view into the Ogre scene, a Camera!
+    // it has to be connected to a SceneNode (new in version 1.10)
+    Ogre::Camera* cam = forest.ogre_scenemanager->createCamera( "Camera::ogre_camera" );
+    Ogre::SceneNode* cam_node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
+    cam_node->attachObject( cam );
+    cam->setNearClipDistance(0.1);
+    cam->setFarClipDistance(50000);
+    if ( batb->ogre->ogre_root->getRenderSystem()->getCapabilities()->hasCapability( RSC_INFINITE_FAR_PLANE ) )
+    {
+        // enable infinite far clip distance if we can
+        cam->setFarClipDistance( 0 );   
+    }
 
-    // set terrain
+
+    ////////////////////////////////////////////////////////////////
+    // load terrain (based on Ogre sample)
     forest.terrain.ogre_scenemanager = forest.ogre_scenemanager;
     forest.terrain.ogre_viewport = forest.ogre_viewport;
+    forest.terrain.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
 
 
     ////////////////////////////////////////////////////////////////
-    // this one does very much of the terrain rendering setup!
-    //forest.terrain.load( yaml[ "Terrain" ] );
-    forest.terrain.load( YAML::Node() );
-    //
-    //
-    ////////////////////////////////////////////////////////////////
-
-
-    ////////////////////////////////////////////////////////////////
-    // set weater
-    // TODO!!
-    forest.weather.load( YAML::Node() );
+    // set weater TODO
+    forest.weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
     forest.ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
     
-    ////////////////////////////////////////////////////////////////
-    // setup camera
-    // TODO: should this be done here, think. it's similar to Sample_Terrain::setupView()
-    // FIXME: use the cameras SceneNode to set view. this is new in v1.10
-#ifdef USE_SAMPLE_TERRAIN
-Ogre::Vector3 terrain_pos(1000,0,5000);
-    forest.camera.ogre_camera->setPosition(terrain_pos + Vector3(1683, 50, 2116));
-    forest.camera.ogre_camera->lookAt(Vector3(1963, 50, 1660));
-    forest.camera.ogre_camera->setNearClipDistance(0.1);
-    forest.camera.ogre_camera->setFarClipDistance(50000);
-#endif
-#ifdef USE_SAMPLE_ENDLESSWORLD
-    // view
-    Vector3 terrain_pos;
-    Vector3 forestCenter(
-            (ENDLESS_PAGE_MAX_X+ENDLESS_PAGE_MIN_X) / 2 * TERRAIN_WORLD_SIZE,
-            0,
-            -(ENDLESS_PAGE_MAX_Y+ENDLESS_PAGE_MIN_Y) / 2 * TERRAIN_WORLD_SIZE
-            );
-    forest.camera.ogre_camera->setPosition(terrain_pos +forestCenter);
-    forest.camera.ogre_camera->lookAt(terrain_pos);
-    forest.camera.ogre_camera->setNearClipDistance(0.1);
-    forest.camera.ogre_camera->setFarClipDistance(50000);
-
-#endif
-    if (batb->ogre->ogre_root->getRenderSystem()->getCapabilities()->hasCapability(RSC_INFINITE_FAR_PLANE))
-    {
-        forest.camera.ogre_camera->setFarClipDistance(0);   // enable infinite far clip distance if we can
-    }
-    
+    // setup Forest::Camera
+    Ogre::Vector3 terrain_pos(1000,0,5000);
+    cam_node->setPosition(terrain_pos + Vector3(1683, 50, 2116));
+    cam_node->lookAt( Ogre::Vector3(1963, 50, 1660), Ogre::Node::TransformSpace::TS_WORLD );
+    forest.camera.ogre_camera = cam;
+    forest.camera.ogre_scenenode = cam_node;
+    // ^ FIXME: this is redudant because we use DTMovable
     // place camera
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
+
+
+    // create Viewport, the 2D target of Camera
+    forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
+    forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
+    forest.ogre_viewport->setBackgroundColour( ColourValue( 0.0, 0.6, 0.2 )); // tmp
+
 
     // end ogre frame
     batb->gl->ogreEnd();

@@ -17,7 +17,6 @@
 //
 #include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
-#include "BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
 
 #include "OgreMaterialManager.h"
 #include "OgreRoot.h"
@@ -28,7 +27,6 @@
 #include "OgreViewport.h"
 #include "OgreSceneManager.h"
 #include "OgreRenderWindow.h"
-//#include "OgreWindowEventUtilities.h"
 #include "OgreResourceGroupManager.h"
 #include "OgreLogManager.h"
 
@@ -45,7 +43,27 @@
 
 using namespace Ogre;
 
-static PerlinNoiseTerrainGenerator* perlin_noise;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// this file is based on the Sample_Terrain demo 
+//
+
+#define TERRAIN_PAGE_MIN_X 0
+#define TERRAIN_PAGE_MIN_Y 0
+#define TERRAIN_PAGE_MAX_X 0
+#define TERRAIN_PAGE_MAX_Y 0
+#define ENDLESS_TERRAIN_FILE_SUFFIX String("dat")
+#define ENDLESS_PAGE_MIN_X (-0x7FFF)
+#define ENDLESS_PAGE_MIN_Y (-0x7FFF)
+#define ENDLESS_PAGE_MAX_X 0x7FFF
+#define ENDLESS_PAGE_MAX_Y 0x7FFF
+#define HOLD_LOD_DISTANCE 300.0
+#define TERRAIN_FILE_PREFIX String("testTerrain")
+#define TERRAIN_FILE_SUFFIX String("dat")
+#define TERRAIN_WORLD_SIZE 12000.0f
+#define TERRAIN_SIZE 513
+
 static TerrainGroup* terrain_group = nullptr;
 bool terrains_imported = false;
 void getTerrainImage(bool flipX, bool flipY, Ogre::Image& img);
@@ -79,10 +97,8 @@ dummy_page_provider;
 
 void Terrain::load(const YAML::Node& yaml)
 {
-//#ifdef USE_SAMPLE_TERRAIN
 //    if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("Terrain"))
 //        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Terrain");
-//#endif
 
     ////////////////////////////////////////////////////////////////////////////////
     // Sample_Terrain::setupContent()
@@ -113,16 +129,7 @@ void Terrain::load(const YAML::Node& yaml)
 
     ogre_scenemanager->setAmbientLight(ColourValue(0.2, 0.2, 0.2));
 
-    ogre_terrain_group = 
-        OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
-//#ifdef USE_SAMPLE_ENDLESSWORLD
-//    ogre_terrain_group->setFilenameConvention(ENDLESS_TERRAIN_FILE_PREFIX, ENDLESS_TERRAIN_FILE_SUFFIX);
-//    ogre_terrain_group->setAutoUpdateLod( TerrainAutoUpdateLodFactory::getAutoUpdateLod(BY_DISTANCE) );
-//#endif
-//#ifdef USE_SAMPLE_TERRAIN
-//    ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
-//    ogre_terrain_group->setResourceGroup("Terrain");
-//#endif
+    ogre_terrain_group = OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
     ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
     //ogre_terrain_group->setOrigin( Vector3(1000,0,5000)); // in Sample_Terrain
 
@@ -186,7 +193,6 @@ void Terrain::load(const YAML::Node& yaml)
     // Sample_Terrain::setupContent()
 
     // Paging setup
-#ifndef USE_SAMPLE_TERRAIN
     ogre_page_manager = OGRE_NEW PageManager();
     // Since we're not loading any pages from .page files, we need a way just 
     // to say we've loaded them without them actually being loaded
@@ -196,36 +202,10 @@ void Terrain::load(const YAML::Node& yaml)
     ogre_page_manager->setDebugDisplayLevel(0);
     ogre_terrain_paging = OGRE_NEW TerrainPaging(ogre_page_manager);
     ogre_paged_world = ogre_page_manager->createWorld();
-    ogre_paged_world_section = ogre_terrain_paging->createWorldSection(ogre_paged_world, ogre_terrain_group, 
-#ifdef USE_SAMPLE_ENDLESSWORLD
-            400, 500, 
-            ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
-            ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
-#endif
-#ifdef USE_SAMPLE_TERRAIN
-            400, 500, // TODO: 2000, 3000 in Sample_Terrain!!
-            ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
-            ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
-            //2000, 3000,
-            //TERRAIN_PAGE_MIN_X, TERRAIN_PAGE_MIN_Y,
-            //TERRAIN_PAGE_MAX_X, TERRAIN_PAGE_MAX_Y);
-#endif
-#endif
+    ogre_paged_world_section = ogre_terrain_paging->createWorldSection(ogre_paged_world, ogre_terrain_group, 2000, 3000,
+                                           TERRAIN_PAGE_MIN_X, TERRAIN_PAGE_MIN_Y,
+                                           TERRAIN_PAGE_MAX_X, TERRAIN_PAGE_MAX_Y);
 
-#ifdef USE_SAMPLE_ENDLESSWORLD
-    perlin_noise = OGRE_NEW PerlinNoiseTerrainGenerator( 3.3, 2.2, 10, 128, 0.4 );
-    ogre_paged_world_section->setDefiner( perlin_noise );
-//		ogre_paged_world_section->setDefiner( OGRE_NEW SimpleTerrainDefiner );
-
-        TerrainGroup::TerrainIterator ti = ogre_terrain_group->getTerrainIterator();
-        while(ti.hasMoreElements())
-        {
-            Terrain* t = ti.getNext()->instance;
-            initBlendMaps(t);
-        }
-
-#endif
-#ifdef USE_SAMPLE_TERRAIN
     bool blankTerrain = false;
     for (long x = TERRAIN_PAGE_MIN_X; x <= TERRAIN_PAGE_MAX_X; ++x)
         for (long y = TERRAIN_PAGE_MIN_Y; y <= TERRAIN_PAGE_MAX_Y; ++y)
@@ -250,7 +230,6 @@ void Terrain::load(const YAML::Node& yaml)
     }
 
     ogre_terrain_group->freeTemporaryResources();
-#endif
 
     // now, Sample_Terrain creates Ogre::Entity's tudorhouse.mesh
     
@@ -294,7 +273,6 @@ float_t Terrain::incline(const glm::mat4& aim)
 using namespace Ogre;
 
 
-//#ifdef USE_SAMPLE_TERRAIN
     void defineTerrain(long x, long y, bool flat )
     {
         // if a file is available, use it

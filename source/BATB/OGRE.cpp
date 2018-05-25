@@ -250,6 +250,9 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         // Clear event times
         ogre_root->clearEventTimes();
 
+        // necessary functionality?
+        enabled( true );
+
     }
     ////////////////////////////////////////////////////////////////////////////////
     
@@ -299,6 +302,9 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
     
         //glcontextglfw_.end();
 
+  
+        
+        enabled( false );
     }
    
 }
@@ -518,45 +524,38 @@ void OGRE::sceneBegin(const Scene& scene)
 
 void OGRE::outputCamera(Ogre::Camera* camera)
 {
-    Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
-    
-    // void RenderTarget::_updateViewport(Viewport* viewport, bool updateStatistics)
-
     // render into previous used viewport of camera
     // (typically just 1 viewport)
-    auto viewport = camera->getViewport();
-    if ( viewport )
-    {
-        assert(viewport->getTarget() == ogre_rendertarget &&
-                "RenderTarget::_updateViewport the requested viewport is "
-                "not bound to the ogre_rendertarget!");
-
-        //mCamera->_renderScene(this, mShowOverlays);
-        bool mShowOverlays = viewport->getOverlaysEnabled();
-        camera->_renderScene( viewport, mShowOverlays );
-    }
+    outputViewport( camera->getViewport() );
+    
 }
 
 
 void OGRE::outputViewport(Ogre::Viewport* viewport)
 {
-    Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
-    
-    // void RenderTarget::_updateViewport(Viewport* viewport, bool updateStatistics)
-    {
-        assert(viewport->getTarget() == ogre_rendertarget &&
-                "RenderTarget::_updateViewport the requested viewport is "
-                "not bound to the ogre_rendertarget!");
+    // see Ogre::RenderTarget::_updateViewport()
 
-        //fireViewportPreUpdate(viewport);
-        viewport->update();
-        //if(updateStatistics)
-        //{
-        //    mStats.triangleCount += viewport->_getNumRenderedFaces();
-        //    mStats.batchCount += viewport->_getNumRenderedBatches();
-        //}
-        //fireViewportPostUpdate(viewport);
+    if ( viewport )
+    {
+        Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
+
+        ogre_rendertarget->_updateViewport( viewport, ogre_statistics );
     }
+
+    //Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
+    //
+    //assert( viewport->getTarget() == ogre_rendertarget && "RenderTarget::_updateViewport the requested viewport is not bound to the ogre_rendertarget!" );
+    //
+    //ogre_rendertarget->fireViewportPreUpdate( viewport );
+    //
+    //viewport->update();
+    //
+    //if( ogre_statistics )
+    //{
+    //    mStats.triangleCount += viewport->_getNumRenderedFaces();
+    //    mStats.batchCount += viewport->_getNumRenderedBatches();
+    //}
+    //fireViewportPostUpdate(viewport);
 
 }
 

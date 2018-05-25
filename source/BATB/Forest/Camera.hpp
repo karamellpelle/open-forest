@@ -22,6 +22,7 @@
 namespace Ogre
 {
 class Camera;
+class SceneNode;
 }
 
 
@@ -39,6 +40,8 @@ public:
     DTMovable move;
 
     Ogre::Camera* ogre_camera = nullptr;
+    Ogre::SceneNode* ogre_scenenode = nullptr;
+
 private:
 };
 

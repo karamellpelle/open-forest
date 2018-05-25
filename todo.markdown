@@ -1,5 +1,11 @@
 
 # TODO
+* remove Camera from forest::World and only use the underlying graphics motor (i.e. Ogre)?
+  this will make camera controls difficult
+* remove OGRE::GLFWContext?
+* OGRE/AL enabled() necessary ??
+* forest::World: load Ogre resources from yaml, not dedicated file? what about 
+  different types (for example subclasses of Terrain)?
 * remove demo/libs/ogreterrain, and clean up data directories
 * forest::World: set Weater (skybox, light, etc.) after terrain loaded.
   move the light creation from terrain::load() into the weather setup!

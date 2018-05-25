@@ -7,6 +7,9 @@
 // small programs based on OpenGL Superbible 6
 //
 
+
+//#define PRINT_COMPILE_INFO
+
 namespace batb
 {
 
@@ -137,11 +140,13 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 GLuint make_shader(GLenum type, const GLchar* source)
 {
+#ifdef PRINT_COMPILE_INFO
     std::cout << "creating shader of type ";
     if ( type == GL_VERTEX_SHADER ) std::cout <<   "GL_VERTEX_SHADER  ";
     if ( type == GL_FRAGMENT_SHADER ) std::cout << "GL_FRAGMENT_SHADER";
     if ( type == GL_GEOMETRY_SHADER ) std::cout << "GL_GEOMETRY_SHADER";
     std::cout << ": ";
+#endif
 
     GLuint ret = glCreateShader( type );
     glShaderSource( ret, 1, &source, NULL );
@@ -149,7 +154,9 @@ GLuint make_shader(GLenum type, const GLchar* source)
 
     GLint param;
     glGetShaderiv( ret, GL_COMPILE_STATUS, &param );
+#ifdef PRINT_COMPILE_INFO
     if ( param == 0 ) std::cout << "ERROR: could not compile shader! ";
+#endif
 
 
     // Get the log...
@@ -159,9 +166,11 @@ GLuint make_shader(GLenum type, const GLchar* source)
     
     glGetShaderInfoLog( ret, log_length, NULL, pstr.get());
 
+#ifdef PRINT_COMPILE_INFO
     if ( log_length == 0 ) std::cout << "OK";
     else                   std::cout << std::endl << pstr.get();
     std::cout << std::endl;
+#endif
 
 
     return ret;
@@ -169,7 +178,9 @@ GLuint make_shader(GLenum type, const GLchar* source)
 
 GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLchar* gsh_source, const GLchar* fsh_source)
 {
+#ifdef PRINT_COMPILE_INFO
     std::cout << "making program '" << name << "'" << std::endl;
+#endif
 
     auto vsh = vsh_source ? make_shader( GL_VERTEX_SHADER, vsh_source ) : 0;
     auto gsh = gsh_source ? make_shader( GL_GEOMETRY_SHADER, gsh_source ) : 0;
@@ -185,7 +196,9 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
 
     GLint param;
     glGetProgramiv( ret, GL_LINK_STATUS, &param );
+#ifdef PRINT_COMPILE_INFO
     if ( param == 0 ) std::cout << "ERROR: could not link program!" << std::endl;
+#endif
 
 
     // Get the log...
@@ -194,9 +207,11 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
     auto pstr = std::make_unique<GLchar[]>( log_length );
     glGetProgramInfoLog( ret, log_length, NULL, pstr.get() );
 
+#ifdef PRINT_COMPILE_INFO
     if ( log_length == 0 ) std::cout << "OK";
     else                   std::cout << pstr.get();
     std::cout << std::endl;
+#endif
 
     // Delete the shaders as the program has them now
     glDeleteShader( vsh );
