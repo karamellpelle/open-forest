@@ -18,12 +18,9 @@ resources:
   # Rarely used resources should be separately loaded by the
   # samples which require them.
   Popular:
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media }
+    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media } # contains terrain.cfg, but not sure if we use that
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/fonts }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL }       # not in Ogre 1.11 resources.cfg
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL150 }    # not in Ogre 1.11 resources.cfg
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL400 }    # not in Ogre 1.11 resources.cfg
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/scripts }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/textures }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/textures/nvidia }
@@ -32,11 +29,11 @@ resources:
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/DeferredShadingMedia }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/DeferredShadingMedia/DeferredShading/post }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/PCZAppMedia }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib/materials }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/scripts/SSAO }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/textures/SSAO }
+    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL120 }
     - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/volumeTerrain }
+    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib/GLSL }
     - { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/packs/cubemap.zip }
     - { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/packs/cubemapsJS.zip }
     - { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/packs/dragon.zip }
@@ -48,11 +45,12 @@ resources:
     - { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/volumeTerrain/volumeTerrainBig.zip }
 
   General:
-    #- { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/PBR }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/textures/glTF2_IBL }
-    - { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/packs/DamagedHelmet.zip }
-    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/HLMS }
+    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media }
+    #- { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/PBR }
+    #- { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/textures/glTF2_IBL }
+    #- { type: Zip,                path: BATB/Demo/libs/ogre/Samples/Media/packs/DamagedHelmet.zip }
+    #- { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/HLMS }
+    # ^ WTF?
 
   # Materials for visual tests
   Tests:

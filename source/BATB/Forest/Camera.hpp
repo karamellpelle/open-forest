@@ -39,7 +39,6 @@ public:
     DTMovable move;
 
     Ogre::Camera* ogre_camera = nullptr;
-    //ALuint al_camera = 0;
 private:
 };
 

@@ -30,6 +30,8 @@
 #include "OgreRenderWindow.h"
 //#include "OgreWindowEventUtilities.h"
 #include "OgreResourceGroupManager.h"
+#include "OgreLogManager.h"
+
 
 #include "OgreTerrain.h"
 #include "OgreTerrainGroup.h"
@@ -77,10 +79,13 @@ dummy_page_provider;
 
 void Terrain::load(const YAML::Node& yaml)
 {
-#ifdef USE_SAMPLE_TERRAIN
-    if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("Terrain"))
-        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Terrain");
-#endif
+//#ifdef USE_SAMPLE_TERRAIN
+//    if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("Terrain"))
+//        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Terrain");
+//#endif
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Sample_Terrain::setupContent()
 
     // create the only TerrainGlobalOptions, if not present
     // Terrain::setResourceGroup overrides this (??)
@@ -90,31 +95,70 @@ void Terrain::load(const YAML::Node& yaml)
         // TODO: setup ?
     }
 
+    MaterialManager::getSingleton().setDefaultTextureFiltering(TFO_ANISOTROPIC);
+    MaterialManager::getSingleton().setDefaultAnisotropy(7);
+
+    ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000);
+
+    LogManager::getSingleton().setLogDetail(LL_BOREME);
+
+    Vector3 lightdir(0.55, -0.3, 0.75);
+    lightdir.normalise();
+
+    Light* l = ogre_scenemanager->createLight("tstLight");
+    l->setType(Light::LT_DIRECTIONAL);
+    l->setDirection(lightdir);
+    l->setDiffuseColour(ColourValue::White);
+    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
+
+    ogre_scenemanager->setAmbientLight(ColourValue(0.2, 0.2, 0.2));
+
     ogre_terrain_group = 
-        OGRE_NEW TerrainGroup(ogre_scenemgr, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
-#ifdef USE_SAMPLE_ENDLESSWORLD
-    ogre_terrain_group->setFilenameConvention(ENDLESS_TERRAIN_FILE_PREFIX, ENDLESS_TERRAIN_FILE_SUFFIX);
-    ogre_terrain_group->setAutoUpdateLod( TerrainAutoUpdateLodFactory::getAutoUpdateLod(BY_DISTANCE) );
-#endif
-#ifdef USE_SAMPLE_TERRAIN
+        OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
+//#ifdef USE_SAMPLE_ENDLESSWORLD
+//    ogre_terrain_group->setFilenameConvention(ENDLESS_TERRAIN_FILE_PREFIX, ENDLESS_TERRAIN_FILE_SUFFIX);
+//    ogre_terrain_group->setAutoUpdateLod( TerrainAutoUpdateLodFactory::getAutoUpdateLod(BY_DISTANCE) );
+//#endif
+//#ifdef USE_SAMPLE_TERRAIN
+//    ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
+//    ogre_terrain_group->setResourceGroup("Terrain");
+//#endif
     ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
-    ogre_terrain_group->setResourceGroup("Terrain");
-#endif
+    //ogre_terrain_group->setOrigin( Vector3(1000,0,5000)); // in Sample_Terrain
 
     terrain_group = ogre_terrain_group;
+
+    ////////////////////////////////////////////////////////////////
+    // Sample_Terrain::configureTerrainDefaults(Light* l)
 
     // Configure global
     ogre_terrain_globals->setMaxPixelError( 8 );
     // testing composite map
     ogre_terrain_globals->setCompositeMapDistance( 3000 );
-    //ogre_terrain_globals->setUseRayBoxDistanceCalculation(true);
-    ogre_terrain_globals->getDefaultMaterialGenerator()->setLightmapEnabled( false );
+    //mTerrainGlobals->setUseRayBoxDistanceCalculation(true);
+    //mTerrainGlobals->getDefaultMaterialGenerator()->setDebugLevel(1);
+    //mTerrainGlobals->setLightMapSize(256);
 
-    // FIXME: SceneManager, light, ...
-    auto* l = ogre_scenemgr->getLight( "tstLight" );
-    ogre_terrain_globals->setCompositeMapAmbient( ogre_scenemgr->getAmbientLight() ); 
-    ogre_terrain_globals->setCompositeMapDiffuse( l->getDiffuseColour());    
-    ogre_terrain_globals->setLightMapDirection( l->getDerivedDirection());
+    // Disable the lightmap for OpenGL ES 2.0. The minimum number of samplers allowed is 8(as opposed to 16 on desktop).
+    // Otherwise we will run over the limit by just one. The minimum was raised to 16 in GL ES 3.0.
+    if (Ogre::Root::getSingletonPtr()->getRenderSystem()->getCapabilities()->getNumTextureUnits() < 9)
+    {
+        TerrainMaterialGeneratorA::SM2Profile* matProfile =
+            static_cast<TerrainMaterialGeneratorA::SM2Profile*>( ogre_terrain_globals->getDefaultMaterialGenerator()->getActiveProfile());
+        matProfile->setLightmapEnabled(false);
+    }
+    //ogre_terrain_globals->setUseRayBoxDistanceCalculation(true);
+    //ogre_terrain_globals->getDefaultMaterialGenerator()->setLightmapEnabled( false );
+
+    //// FIXME: SceneManager, light, ...
+    //auto* l = ogre_scenemanager->getLight( "tstLight" );
+    //ogre_terrain_globals->setCompositeMapAmbient( ogre_scenemanager->getAmbientLight() ); 
+    //ogre_terrain_globals->setCompositeMapDiffuse( l->getDiffuseColour());    
+    //ogre_terrain_globals->setLightMapDirection( l->getDerivedDirection());
+    ogre_terrain_globals->setLightMapDirection(l->getDerivedDirection());
+    ogre_terrain_globals->setCompositeMapAmbient(ogre_scenemanager->getAmbientLight());
+    //ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
+    ogre_terrain_globals->setCompositeMapDiffuse(l->getDiffuseColour());
 
     // Configure default import settings for if we use imported image
     Ogre::Terrain::ImportData& defaultimp = ogre_terrain_group->getDefaultImportSettings();
@@ -126,16 +170,20 @@ void Terrain::load(const YAML::Node& yaml)
     // textures
     // see 'initBlendMaps below 
     defaultimp.layerList.resize(3);
-    defaultimp.layerList[0].worldSize = 100; // scale layer
+    defaultimp.layerList[0].worldSize = 100;
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
     defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_normalheight.dds");
-    defaultimp.layerList[1].worldSize = 30; // scale layer
+    defaultimp.layerList[1].worldSize = 30;
     defaultimp.layerList[1].textureNames.push_back("grass_green-01_diffusespecular.dds");
     defaultimp.layerList[1].textureNames.push_back("grass_green-01_normalheight.dds");
-    defaultimp.layerList[2].worldSize = 200; // scale layer
+    defaultimp.layerList[2].worldSize = 200;
     defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
     defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
 ////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////
+    // Sample_Terrain::setupContent()
 
     // Paging setup
 #ifndef USE_SAMPLE_TERRAIN
@@ -143,7 +191,7 @@ void Terrain::load(const YAML::Node& yaml)
     // Since we're not loading any pages from .page files, we need a way just 
     // to say we've loaded them without them actually being loaded
     ogre_page_manager->setPageProvider(&dummy_page_provider);
-    auto* camera = ogre_scenemgr->getCamera(  "Camera::ogre_camera" );
+    auto* camera = ogre_scenemanager->getCamera(  "Camera::ogre_camera" );
     ogre_page_manager->addCamera(camera);
     ogre_page_manager->setDebugDisplayLevel(0);
     ogre_terrain_paging = OGRE_NEW TerrainPaging(ogre_page_manager);
@@ -155,7 +203,7 @@ void Terrain::load(const YAML::Node& yaml)
             ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
 #endif
 #ifdef USE_SAMPLE_TERRAIN
-            400, 500, 
+            400, 500, // TODO: 2000, 3000 in Sample_Terrain!!
             ENDLESS_PAGE_MIN_X, ENDLESS_PAGE_MIN_Y, 
             ENDLESS_PAGE_MAX_X, ENDLESS_PAGE_MAX_Y);
             //2000, 3000,
@@ -189,6 +237,7 @@ void Terrain::load(const YAML::Node& yaml)
     //  OGRE::output called. the error is caused in OgreTerrainGroup::loadTerrainImpl when
     //  a work request is added to Ogre. The request handler is OgreTerrainGroup, but I 
     //  have not tracked the error there and further down.
+    //  ^ this comment was for the previous version of ogre 
 
     if (terrains_imported)
     {
@@ -202,6 +251,10 @@ void Terrain::load(const YAML::Node& yaml)
 
     ogre_terrain_group->freeTemporaryResources();
 #endif
+
+    // now, Sample_Terrain creates Ogre::Entity's tudorhouse.mesh
+    
+    // also, Sample_Terrain creates the sky box
 
 }
 

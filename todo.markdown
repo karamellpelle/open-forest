@@ -1,5 +1,11 @@
 
 # TODO
+* remove demo/libs/ogreterrain, and clean up data directories
+* forest::World: set Weater (skybox, light, etc.) after terrain loaded.
+  move the light creation from terrain::load() into the weather setup!
+* attach Camera to SceneNode and use that. new in v1.10
+* remove OgreTerrain demo, stay with forest
+* fix OGRE data: static vs dynamic. 
 * helpers/tb.hpp -> tb/helpers.hpp
 * custom TB-widgets have empty constructors since all TB-widgets should be possible.
   to read from .tb.txt file's (TBWidgetFactory).

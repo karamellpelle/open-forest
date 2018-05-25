@@ -307,6 +307,7 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Log.cpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE.cpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.cpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/SGTechniqueResolverListener.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Player.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Run/Console.cpp"
@@ -429,6 +430,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/ModuleBATB.hpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE.hpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE/GLContextGLFW.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/OGRE/SGTechniqueResolverListener.hpp"
       "${MAIN_SOURCE_DIR}/BATB/OGRE/helpers.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Player.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Race.hpp"
@@ -618,14 +620,29 @@ if ( BATB_BUILD )
     list( APPEND BATB_LIBRARIES yaml-cpp )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/yaml-cpp/include" )
 
-    # Ogre
+    # Ogre Components
     list( APPEND BATB_LIBRARIES OgreMain )
     list( APPEND BATB_LIBRARIES OgreTerrain )
     list( APPEND BATB_LIBRARIES OgrePaging )
+    list( APPEND BATB_LIBRARIES OgreHLMS )
+    list( APPEND BATB_LIBRARIES OgreMeshLodGenerator )
+    list( APPEND BATB_LIBRARIES OgreOverlay )
+    list( APPEND BATB_LIBRARIES OgreProperty )
+    list( APPEND BATB_LIBRARIES OgreRTShaderSystem )
+    list( APPEND BATB_LIBRARIES OgreVolume )
+
+#Ogre.framework
+
     # FIXME: use Framework folders in build tree
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/OgreMain/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Paging/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Terrain/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/RTShaderSystem/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/MeshLodGenerator/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/HLMS/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Overlay/include" )
+    target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Property/include" )
+    #target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre/Components/Volume/include" )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
     target_include_directories( open-forest PRIVATE "${CMAKE_BINARY_DIR}/include" ) # we need the build generated XXXX
     target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/ogre/include" ) # we need the build generated YYYY

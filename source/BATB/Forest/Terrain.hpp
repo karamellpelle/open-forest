@@ -86,7 +86,7 @@ public:
     // [Tree] :         Terrain is populated with trees
     // other objects :  Terrain is populated with other objects
 
-    Ogre::SceneManager*                 ogre_scenemgr = nullptr;
+    Ogre::SceneManager*                 ogre_scenemanager = nullptr;
     Ogre::Viewport*                     ogre_viewport = nullptr;
 
     static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; // only 1 per app; into BATB::Forest

@@ -27,7 +27,19 @@
 #include "OgreCamera.h"
 #include "OgreResourceGroupManager.h"
 #include "OgreSceneManager.h"
-#include "RenderSystems/GL/include/OgreGLRenderSystem.h"
+#include "OgreGpuProgramManager.h"
+//#include "RenderSystems/GL/include/OgreGLRenderSystem.h"
+//#include "RenderSystems/GL3Plus/include/OgreGL3PlusRenderSystem.h"
+
+#include "OgreRTShaderSystem.h"
+#include "OgreMaterialManager.h"
+
+// custom Shader Generator resolver (for RTSS)
+#include "BATB/OGRE/SGTechniqueResolverListener.hpp"
+
+#include "helpers/yaml.hpp"
+
+
 
 // macOS
 #ifdef BATB_BUILD_PLATFORM_MACOS
@@ -48,6 +60,8 @@ namespace batb
 
 namespace ogre
 {
+
+
 
 using namespace Ogre;
     
@@ -198,6 +212,29 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         ogre_renderwindow->setVisible(true);
         batb->log << "RenderWindow created" << std::endl;
 
+        ////////////////////////////////////////////////////////////////
+        // init various stuff. this may not belong here but we need materials 
+        // and RTShaderSystem through the whole open-forest launch (unless we
+        // don't use this OGRE Module). it is based upon 
+        // Ogre::ApplicationContext::setup()/locateResources()/initialiseRTShaderSystem()
+        // of OgreBites.
+        //
+
+        // add material programs:
+        initPrograms();
+
+        // RTShaderSystem
+        // see
+        //  * https://ogrecave.github.io/ogre/api/1.11/rtss.html
+        //  * Ogre::ApplicationContext::locateResources() and Ogre::ApplicationContext::setup() of the OgreBites Component
+        //   
+        // must be done before loading other resources (i.e. forest::World calling OGRE::addResourceLocation(YAML)),
+        // according to Ogre::ApplicationContext::createDummyScene()
+        initRTSS();
+
+        // now init our resource groups as done in ApplicationContext::setup()
+        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
         ////////////////////////////////////////////////////////////////////////////////
         // TODO: remove?
         // Ogre GL context
@@ -236,9 +273,16 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
    
         // needs to be done before modding Ogre, since
         // frameBegin/End may be done in other thread (i.e. main thread)
+        // TODO: do this at end to keep invariant of not being initialized and
+        //       use a mutex lock instead!
         init( false );
-
         
+
+        // delete ogre_technique_resolver_listener
+        delete ogre_technique_resolver_listener;
+        ogre_technique_resolver_listener = nullptr;
+
+
 debug::gl::msg( "OGRE_DELETE Root" );
         OGRE_DELETE ogre_root;
         batb->log << "Ogre::Root deleted" << std::endl;
@@ -257,6 +301,129 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
     }
    
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// programs
+
+void OGRE::initPrograms()
+{
+    batb->log << "initPrograms()" << std::endl;
+    LogIndent indent( batb->log, "- " );
+
+    // see Ogre::ApplicationContext::locateResources()
+    if ( YAML::Node programs = ( yaml > "materials" > "programs" ) )
+    {
+        Ogre::String sec = Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME;
+
+        // according to Ogre::ApplicationContext::locateResources():
+        // always add glsl120, add glsl150 if supported or glsl if not, add glsl400 if supported
+
+        // always glsl120 according to Ogre::ApplicationContext::locateResources()
+        if ( true )
+        {
+            batb->log << "adding resource 'glsl120'" << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            addResourceGroup( sec, (programs > "glsl120") ); 
+        }
+
+        // glsl400?
+        if ( Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl400") )
+        {
+            batb->log << "adding resource 'glsl400'" << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            addResourceGroup( sec, programs > "glsl400" );            
+        }
+
+        // glsl150? otherwise glsl
+        if ( Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl150") )
+        {
+            batb->log << "adding resource 'glsl150'" << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            addResourceGroup( sec, programs > "glsl150" );            
+        }
+        else
+        {
+            batb->log << "adding resource 'glsl'" << std::endl;
+            LogIndent indent( batb->log, "- " );
+
+            addResourceGroup( sec, programs > "glsl" );            
+        }
+
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// RTSS
+
+void OGRE::initRTSS()
+{
+    batb->log << "initRTSS()" << std::endl;
+    LogIndent indent( batb->log, "- " );
+
+    // see https://ogrecave.github.io/ogre/api/1.11/rtss.html and Ogre::ApplicationContext::setup()/initialiseRTShaderSystem()
+    if ( Ogre::RTShader::ShaderGenerator::initialize() )
+    {
+        ogre_shader_generator = Ogre::RTShader::ShaderGenerator::getSingletonPtr();
+
+        if ( YAML::Node lib = yaml > "RTShaderLib" )
+        {
+            Ogre::String sec = Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME;
+            
+            // always add 'materials' according to ApplicationContext::locateResources().
+            if ( true )
+            {
+                batb->log << "adding resource 'materials'" << std::endl;
+                LogIndent indent( batb->log, "- " );
+
+                addResourceGroup( sec, lib > "materials" ); 
+            }
+
+            // no ES at this time
+            //if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+            //{
+            //    batb->log << "adding resource 'glsles'" << std::endl;
+            //    LogIndent indent( batb->log, "- " );
+            //
+            //    addResourceGroup( programs > "glsl" , sec );            
+            //    addResourceGroup( programs > "glsles" , sec );            
+            //}
+
+            if ( Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl") )
+            {
+                batb->log << "adding resource 'glsl'" << std::endl;
+                LogIndent indent( batb->log, "- " );
+
+                addResourceGroup( sec, lib > "glsl" );            
+            }
+        }
+        else
+        {
+            throw std::runtime_error( "OGRE: no RTShaderLib path defined" + ogre_rendersystem_name_ );
+        }
+
+
+        // write generated shader to this folder. TODO: better. TODO: may be dynamic data
+        auto cache_path = file::directory( file::tmp( "path" ) );
+        ogre_shader_generator->setShaderCachePath( cache_path );
+        
+        // FIXME write cache path
+
+        if ( !ogre_technique_resolver_listener )
+        {
+            ogre_technique_resolver_listener = new SGTechniqueResolverListener( batb );
+            Ogre::MaterialManager::getSingleton().addListener( ogre_technique_resolver_listener );
+        }
+
+        // 
+
+        
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 //  OGRE
@@ -424,9 +591,10 @@ debug::gl::msg( "ogre_root->renderOneFrame();" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// add resources to Ogre by groups defined in YAML node.
+// note that Ogre will not add subdirectories for a resource location.
 // 
-// NB: only static currently!
-void OGRE::addResourceLocation(const YAML::Node& yaml)
+void OGRE::addResourceGroupsAndInit(const YAML::Node& yaml)
 {
     // begin GL state for Ogre
     // FIXME: necessary?
@@ -448,36 +616,8 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
         LogIndent indent( batb->log, "- " );
 
         // iterate over defined content for that group
-        for (auto j = std::begin( i->second ); j != std::end( i->second ); ++j )
-        {
-            YAML::Node resource = *j;
-            if ( resource[ "type" ] && resource[ "path" ] )
-            {
-                std::string type = resource[ "type" ].as<std::string>();
-                std::string path = resource[ "path" ].as<std::string>();
-                
-                batb->log << path;
+        addResourceGroup( name, i->second );
 
-                // add resource item
-                try
-                {
-                    //ogre_root->addResourceLocation(  file::static_data( path ), type, name );
-	            //Ogre::ResourceGroupManager::getSingleton().addResourceLocation(mResourcePath, std::string("FileSystem"), ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, false);
-	            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(  file::static_data( path ), type, name );
-                }
-                catch (std::exception& e)
-                {
-                    batb->log << "WARNING: " << e.what();
-                }
-
-            }
-            else
-            {
-                batb->log << "WARNING: invalid item definition";
-            }
-            
-            batb->log->endl();
-        }
     }
     }
 
@@ -487,12 +627,44 @@ void OGRE::addResourceLocation(const YAML::Node& yaml)
     }
     catch (std::exception& e)
     {
-        batb->log << "OGRE: WARNING: initialiseAllResourceGroups(): " << e.what() << std::endl;
+        batb->log << "OGRE: WARNING: addResourceGroupsAndInit(): " << e.what() << std::endl;
     }
 
     batb->gl->ogreEnd();
 }
 
+void OGRE::addResourceGroup(const std::string& group_name, const YAML::Node& node)
+{
+    for (auto j = std::begin( node ); j != std::end( node ); ++j )
+    {
+        YAML::Node resource = *j;
+        if ( resource[ "type" ] && resource[ "path" ] )
+        {
+            std::string type = resource[ "type" ].as<std::string>();
+            std::string path = resource[ "path" ].as<std::string>();
+            
+
+            // add resource item
+            try
+            {
+                Ogre::ResourceGroupManager::getSingleton().addResourceLocation(  file::static_data( path ), type, group_name );
+            }
+            catch (std::exception& e)
+            {
+                batb->log << "WARNING: " << e.what();
+            }
+
+            batb->log << path;
+
+        }
+        else
+        {
+            batb->log << "WARNING: invalid item definition";
+        }
+        
+        batb->log->endl();
+    }
+}
 void OGRE::enabled(bool e)
 { 
     enabled_ = e; 
@@ -505,7 +677,7 @@ void OGRE::set_glfwcontext_()
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // TODO: GL vs GL3Plus
     //
-    Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( ogre_rendersystem );
+    //Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( ogre_rendersystem );
 
     //rs->_switchContext( &glcontextglfw_ );
 

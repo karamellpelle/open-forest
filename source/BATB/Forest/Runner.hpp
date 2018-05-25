@@ -23,6 +23,7 @@ namespace Ogre
 {
 class Entity;
 class AnimationState;
+class Light;
 }
 
 
@@ -180,8 +181,12 @@ public:
 
 
     //ogre_
+    // our runners SceneNode is the one of 'ogre_entity'
     Ogre::Entity* ogre_entity = nullptr;
-    //AL::source al_source_ 
+    Ogre::Light* ogre_headlamp = nullptr; // ->setType(Light::LT_SPOTLIGHT); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
+
+    // sound
+    //AL::source al_source
 
     RunnerAnimation animation;
 

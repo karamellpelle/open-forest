@@ -27,11 +27,17 @@ namespace Ogre
     class LogManager;
     class Log;
     class Root;
+    //class String; // luckily Ogre::String is only a typedef of std::string
     class RenderWindow;
     class RenderTarget;
     class Camera;
     class Viewport;
     class RenderSystem;
+
+    namespace RTShader
+    {
+        class ShaderGenerator;
+    }
 }
 
 
@@ -43,6 +49,7 @@ class Scene;
 namespace ogre
 {
 
+class SGTechniqueResolverListener;
 
 
 
@@ -88,14 +95,23 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // 
-    void addResourceLocation(const YAML::Node& );
+    void addResourceGroup(const std::string& group_name, const YAML::Node& );
+    void addResourceGroupsAndInit(const YAML::Node& );
+
       
-    Ogre::LogManager*   ogre_logmanager = nullptr;
-    Ogre::Root*         ogre_root = nullptr;
-    Ogre::RenderSystem* ogre_rendersystem = nullptr;
-    Ogre::RenderWindow* ogre_renderwindow = nullptr; // this is a Ogre::RenderTarget
+    Ogre::LogManager*                ogre_logmanager = nullptr;
+    Ogre::Root*                      ogre_root = nullptr;
+    Ogre::RenderSystem*              ogre_rendersystem = nullptr;
+    Ogre::RenderWindow*              ogre_renderwindow = nullptr; // this is a Ogre::RenderTarget
+    Ogre::RTShader::ShaderGenerator* ogre_shader_generator = nullptr;
+    SGTechniqueResolverListener*     ogre_technique_resolver_listener = nullptr;
+    // ^ see Ogre::ApplicationContext::setup()/initialiseRTShaderSystem(), Ogre::SGTechniqueResolverListener of OgreBites
+    //   and https://ogrecave.github.io/ogre/api/1.11/rtss.html
 
 private:
+    void initPrograms();
+    void initRTSS();
+
     // Name of current ogre_rendersystem
     std::string ogre_rendersystem_name_ = "OpenGL Rendering Subsystem";
 

@@ -32,6 +32,7 @@
 #include "OgreSceneNode.h"
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
+#include "OgreShaderGenerator.h"
 
 namespace batb
 {
@@ -107,7 +108,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            batb->ogre->addResourceLocation( yaml["resources"] );
+            batb->ogre->addResourceGroupsAndInit( yaml["resources"] );
         }
         else
         {
@@ -120,49 +121,50 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // create SceneManager
     // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-    forest.ogre_scenemgr = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
+    forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
+
+    // see Ogre::ApplicationContext::createDummyScene()
+    // FIXME: remove upon deletion of forest::World? see Ogre::SampleBrowser::runSample()/Ogre::ApplicationContext::create/destroyDummyScene()
+    batb->ogre->ogre_shader_generator->addSceneManager( forest.ogre_scenemanager );
 
     // create a view into scene, a Camera!
-    forest.camera.ogre_camera = forest.ogre_scenemgr->createCamera( "Camera::ogre_camera" );
+    // FIXME: add not SceneNode! new in 1.10
+    forest.camera.ogre_camera = forest.ogre_scenemanager->createCamera( "Camera::ogre_camera" );
 
     //
     // create Viewport, the 2D target of Camera
     forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
-    forest.ogre_viewport->setClearEveryFrame( false, 0 ); // TODO: remove 0??
+    forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
 
 
-    // set weater
-    //forest.weather.load( yaml[ "Weather" ] );
-    forest.weather.load( YAML::Node() );
+    // this is now done in Terrain.cpp, but move into weater setup below when 
+    // things are working!
 
-
-    // TODO: setup light/... based on forest::Weather
-#ifdef USE_SAMPLE_ENDLESSWORLD
-    forest.ogre_scenemgr->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 4000, 10000);
-#endif
-#ifdef USE_SAMPLE_TERRAIN
-    forest.ogre_scenemgr->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000); // Terrain
-#endif
-
-    //LogManager::getSingleton().setLogDetail(LL_BOREME); // ??
-
-    Light* l = forest.ogre_scenemgr->createLight("tstLight");
-    l->setType(Light::LT_DIRECTIONAL);
-    Vector3 lightdir(0.55, -0.3, 0.75);
-    lightdir.normalise();
-    l->setDirection( lightdir );
-    l->setDiffuseColour(ColourValue::White);
-#ifdef USE_SAMPLE_ENDLESSWORLD
-    l->setSpecularColour(ColourValue(0.1, 0.1, 0.1));
-#endif
-#ifdef USE_SAMPLE_TERRAIN
-    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
-#endif
-    forest.ogre_scenemgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+//    // TODO: setup light/... based on forest::Weather
+//#ifdef USE_SAMPLE_ENDLESSWORLD
+//    forest.ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 4000, 10000);
+//#endif
+//#ifdef USE_SAMPLE_TERRAIN
+//    forest.ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000); // Terrain
+//#endif
+//
+//    Light* l = forest.ogre_scenemanager->createLight("tstLight");
+//    l->setType(Light::LT_DIRECTIONAL);
+//    Vector3 lightdir(0.55, -0.3, 0.75);
+//    lightdir.normalise();
+//    l->setDirection( lightdir );
+//    l->setDiffuseColour(ColourValue::White);
+//#ifdef USE_SAMPLE_ENDLESSWORLD
+//    l->setSpecularColour(ColourValue(0.1, 0.1, 0.1));
+//#endif
+//#ifdef USE_SAMPLE_TERRAIN
+//    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
+//#endif
+//    forest.ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
 
     // set terrain
-    forest.terrain.ogre_scenemgr = forest.ogre_scenemgr;
+    forest.terrain.ogre_scenemanager = forest.ogre_scenemanager;
     forest.terrain.ogre_viewport = forest.ogre_viewport;
 
 
@@ -175,9 +177,16 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////
 
 
-    // TODO: before terrain.load!
-    forest.ogre_scenemgr->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
-
+    ////////////////////////////////////////////////////////////////
+    // set weater
+    // TODO!!
+    forest.weather.load( YAML::Node() );
+    forest.ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
+    
+    ////////////////////////////////////////////////////////////////
+    // setup camera
+    // TODO: should this be done here, think. it's similar to Sample_Terrain::setupView()
+    // FIXME: use the cameras SceneNode to set view. this is new in v1.10
 #ifdef USE_SAMPLE_TERRAIN
 Ogre::Vector3 terrain_pos(1000,0,5000);
     forest.camera.ogre_camera->setPosition(terrain_pos + Vector3(1683, 50, 2116));

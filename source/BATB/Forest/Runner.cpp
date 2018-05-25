@@ -94,8 +94,8 @@ void Runner::reset(const YAML::Node& yaml)
         os << player->name;
     }
 
-    ogre_entity = forest.ogre_scenemgr->createEntity( os.str(), "Sinbad.mesh" );
-    auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
+    ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "Sinbad.mesh" );
+    auto* node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
     node->scale( 3, 3, 3 ); // FIXME
     node->attachObject( ogre_entity );
 

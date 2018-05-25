@@ -39,8 +39,8 @@ void Control::reset()
         auto* node = ogre_entity->getParentSceneNode();
         ogre_entity->detachFromParent(); // remove parent Node (SceneNode)
 
-        forest.ogre_scenemgr->destroyEntity( ogre_entity );
-        forest.ogre_scenemgr->destroySceneNode( node );
+        forest.ogre_scenemanager->destroyEntity( ogre_entity );
+        forest.ogre_scenemanager->destroySceneNode( node );
 
 
     }
@@ -66,8 +66,8 @@ void Control::reset(const ControlDefinition& def)
     std::ostringstream os( "Control_" );
     os << def.code << "(" << this << ")";
 
-    ogre_entity = forest.ogre_scenemgr->createEntity( os.str(), "control.mesh" );
-    auto* node = forest.ogre_scenemgr->getRootSceneNode()->createChildSceneNode();
+    ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "control.mesh" );
+    auto* node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
     node->scale( 16, 16, 16 ); // FIXME
     node->setPosition( aim.pos.x, aim.pos.y, aim.pos.z );
     node->attachObject( ogre_entity );
