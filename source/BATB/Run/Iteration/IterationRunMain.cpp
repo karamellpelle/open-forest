@@ -92,7 +92,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     demo::gl::tests_setup( batb );
 
     // ALURE demo
-    //FIXME demo::al::demo_begin( batb );
+    demo::al::demo_begin( batb );
 
     // make GUI visible
     //FIXME tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
@@ -145,7 +145,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     batb->ogre->sceneEnd();
 
     // step AL and nanovg demos
-    //FIXME demo::al::demo_iterate( batb, run );
+    demo::al::demo_iterate( batb, run );
     //FIXME demo::nanovg::demo_iterate( batb, false, false );
 
     // step widget

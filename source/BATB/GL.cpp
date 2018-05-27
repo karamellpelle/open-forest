@@ -196,11 +196,6 @@ void GL::ogreEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    //FIXME glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-    //FIXME glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    // set premult blend equation?
-    
-    // FIXME!
 
 }
 
@@ -224,10 +219,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     //glDepthFunc( GL_LEQUAL );
     glEnable( GL_DEPTH_TEST );
     glEnable(GL_BLEND);
-
-    //glDisableVertexAttribArray(0);
-    //glDisableVertexAttribArray(1);
-    //glDisableVertexAttribArray(2);
 
     // blending premultiplied colors
     glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
