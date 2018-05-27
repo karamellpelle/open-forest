@@ -117,7 +117,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     batb->ogre->frameBegin();
 
     // begin frame for AL
-    //FIXME batb->al->frameBegin();
+    batb->al->frameBegin();
 
     ////////////////////////////////////////////////////////////////////////////////
     // iterate run::World - our application world
@@ -130,7 +130,7 @@ debug::gl::msg("iterate_run()");
     // end output frame
     
     // end AL frame
-    //FIXME batb->al->frameEnd();
+    batb->al->frameEnd();
 
     // end Ogre frame
     batb->ogre->frameEnd();
