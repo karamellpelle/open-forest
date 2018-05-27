@@ -221,7 +221,6 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     wth_ = scene.wth; hth_ = scene.hth;
     tb::g_renderer->BeginPaint( wth_, hth_ );
 
-
     // paint our GUI tree
     root.InvokePaint( tb::TBWidget::PaintProps() );
 
@@ -233,7 +232,6 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     // reset gl-state after turbobadger, for  this frame
     batb->gl->turbobadgerEnd();
-
 }
 
 void GUI::step(tick_t tick)

@@ -71,14 +71,14 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
         if ( batb->run->keys->console->click() )
         {
             // note that 'keys.console' can not be disabled
-            //FIXME if ( batb->run->keys->console->toggle() ) batb->run->console->open( run ); else batb->run->console->close( run );
+            if ( batb->run->keys->console->toggle() ) batb->run->console->open( run ); else batb->run->console->close( run );
         }
 
         // update Console
-        //FIXME batb->run->console->step( run );
+        batb->run->console->step( run );
 
         // update Notify
-        //FIXME batb->run->notify->step( run );
+        batb->run->notify->step( run );
 
         ////////////////////////////////////////////////////////////////
 
@@ -136,8 +136,8 @@ debug::gl::msg("iterate_run()");
     batb->ogre->frameEnd();
 
     // output and step GUI (_every_ frame!)
-    //FIXME batb->gui->output( run.scene );
-    //FIXME batb->gui->step( run.tick );
+    batb->gui->output( run.scene );
+    batb->gui->step( run.tick );
 
 
     ////////////////////////////////////////////////////////////////////////////////

@@ -81,20 +81,20 @@ void Run::begin(const std::string& path)
         keys->console->canDisable( false );
 
         // setup Console
-        //FIXME console->begin();
-        //FIXME batb->log << "Console created" << std::endl;
+        console->begin();
+        batb->log << "Console created" << std::endl;
 
         // setup Notify
-        //FIXME notify->begin(); 
-        //FIXME batb->log << "Notify created" << std::endl;
+        notify->begin(); 
+        batb->log << "Notify created" << std::endl;
 
         // begin non-core iterations:
-        //FIXME iterationRunOld->begin();
-        //FIXME batb->log << "IterationRunOld created" << std::endl;
+        iterationRunOld->begin();
+        batb->log << "IterationRunOld created" << std::endl;
         iterationRunMain->begin();
         batb->log << "IterationRunMain created" << std::endl;
-        //FIXME iterationRunDemo->begin();
-        //FIXME batb->log << "IterationRunDemo created" << std::endl;
+        iterationRunDemo->begin();
+        batb->log << "IterationRunDemo created" << std::endl;
     }
 
     init( true );

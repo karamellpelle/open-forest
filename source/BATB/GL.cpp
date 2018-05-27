@@ -65,7 +65,7 @@ void GL::begin(const std::string& path)
         }
 
 #ifdef NANOVG_GL2_IMPLEMENTATION
-        nvg_context = nvgCreateGL2( nanovg_flags ); // TODO: add debug if defined in yaml
+        nvg_context = nvgCreateGL2( nanovg_flags );
 	if ( nvg_context == nullptr )
         {
             batb->log << "ERROR: could not create NanoVG GL2 context" << std::endl;
@@ -224,8 +224,12 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
                          GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 
-
-
+    // this is important with respect to Ogre: do not bind the program
+    // after use. otherwise it breaks Ogre's ProgramPipelineObject 
+    // see https://www.khronos.org/opengl/wiki/Shader_Compilation#Separate_programs
+    //glUseProgram( 0 );
+    // ^ NOTE: done by 'TBRendererGL330::EndPaint()' instead, as the NanoVG lib does
+    // for us
 }
 
 
@@ -264,7 +268,8 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     //nvgRestore( nvg );
     nvgEndFrame( nvg_context );
-
+    // calls glUseProgram( 0 ), see glnvg__renderFlush() in nanovg_gl.h
+    //
     // see
     // https://github.com/memononen/nanovg#opengl-state-touched-by-the-backend
     //glUseProgram(prog);

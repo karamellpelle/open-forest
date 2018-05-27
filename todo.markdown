@@ -1,7 +1,7 @@
 
 # TODO
-* remove Camera from forest::World and only use the underlying graphics motor (i.e. Ogre)?
-  this will make camera controls difficult
+* setup GUI from .yaml
+* review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
 * remove OGRE::GLFWContext?
 * OGRE/AL enabled() necessary ??
 * forest::World: load Ogre resources from yaml, not dedicated file? what about 

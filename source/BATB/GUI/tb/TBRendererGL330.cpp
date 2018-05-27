@@ -228,6 +228,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	g_current_texture = (GLuint)-1;
 	g_current_batch = nullptr;
 
+//debug::gl::msg( "TBRendererGL330::BeginPaint::glUseProgram()" );
 	glUseProgram(m_program);
 	glBindVertexArray(m_vao);
 	static float ortho[16];
@@ -242,6 +243,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
+
 }
 
 void TBRendererGL330::EndPaint()
@@ -249,6 +251,10 @@ void TBRendererGL330::EndPaint()
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 	TBRendererBatcher::EndPaint();
+
+        // this is important - otherwise it fucks up ProgramPipelineObject used
+        // by Ogre3D!
+	glUseProgram(0);
 
         // set back to default
 	glDisable(GL_BLEND);
