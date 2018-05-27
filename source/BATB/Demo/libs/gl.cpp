@@ -3,6 +3,25 @@
 #include "BATB/Time.hpp"
 #include "BATB.hpp"
 
+#include "BATB/OGRE.hpp"
+#include "OgreLogManager.h"
+#include "OgreEntity.h"
+#include "OgreLog.h"
+#include "OgreRoot.h"
+#include "OgreSceneNode.h"
+#include "OgreRenderWindow.h"
+#include "OgreViewport.h"
+#include "OgreCamera.h"
+#include "OgreResourceGroupManager.h"
+#include "OgreSceneManager.h"
+#include "OgreGpuProgramManager.h"
+#include "OgreMeshManager.h"
+//#include "RenderSystems/GL/include/OgreGLRenderSystem.h"
+//#include "RenderSystems/GL3Plus/include/OgreGL3PlusRenderSystem.h"
+
+#include "OgreRTShaderSystem.h"
+#include "OgreMaterialManager.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 // small programs based on OpenGL Superbible 6
 //
@@ -12,6 +31,7 @@
 
 namespace batb
 {
+class BATB;
 
 namespace demo
 {
@@ -24,6 +44,8 @@ GLuint make_program(const std::string& name, const GLchar* , const GLchar* , con
 GLuint rendering_program; 
 GLuint vertex_array_object;
 
+void ogre_setup();
+void ogre_draw();
 
 void tests_setup(BATB* b)
 {
@@ -31,6 +53,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     if ( !batb )
     {
+        batb = b;
+
+        ogre_setup();
+
+#if 0
         static const GLchar * vertex_shader_source = R"(#version 330 core
         layout (location = 0) in vec4 offset;
         layout (location = 1) in vec4 color;
@@ -91,26 +118,31 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         glBindVertexArray(vertex_array_object);
 
         glPointSize( 40.0f );
-
-        batb = b;
+#endif
     }
 }
 
 void tests_shutdown(BATB* b)
 {
+#if 0
     debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     glDeleteVertexArrays(1, &vertex_array_object); 
     glDeleteProgram(rendering_program);
     glDeleteVertexArrays(1, &vertex_array_object);
 
     batb = nullptr;
+#endif
 }
 
 void tests_draw()
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     if ( batb == nullptr ) return;
 
-debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+    ogre_draw();
+
+#if 0
     double currentTime = batb->time->get();
 
     const GLfloat color[] = { (float)std::sin(currentTime) * 0.5f + 0.5f, (float)std::cos(currentTime) * 0.5f + 0.5f,
@@ -133,6 +165,8 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     // Draw one point
     glDrawArrays(GL_TRIANGLES, 0, 3);
+#endif
+
 }
 
 
@@ -220,6 +254,205 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
 
     return ret; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using namespace Ogre;
+
+Camera* cam = nullptr;
+SceneNode* camNode = nullptr;
+
+void updateCamNode(double time)
+{
+    double x,z;
+    cossin( time, x, z );
+    x *= 400;
+    z *= 400;
+
+    camNode->setPosition( x, 300, z );
+    camNode->lookAt(Vector3(0, 0, 0), Node::TransformSpace::TS_WORLD);
+}
+
+void ogre_setup()
+{
+        YAML::Node yaml = YAML::LoadFile( file::static_data( "BATB/Forest/ogre.yaml" ) );
+
+        // add resources for demo
+        // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
+        if ( YAML::Node resources = yaml[ "resources" ] )
+        {
+            batb->ogre->addResourceGroupsAndInit( yaml["resources"] );
+        }
+
+    Root* root = batb->ogre->ogre_root;
+    SceneManager* scnMgr = root->createSceneManager();
+
+    // register our scene with the RTSS
+    RTShader::ShaderGenerator* shadergen = RTShader::ShaderGenerator::getSingletonPtr();
+    shadergen->addSceneManager(scnMgr);
+
+    // -- tutorial section start --
+    //! [cameracreate]
+    camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    cam = scnMgr->createCamera("myCam");
+    //! [cameracreate]
+
+    //! [cameraposition]
+    //camNode->setPosition(200, 300, 400);
+    //camNode->lookAt(Vector3(0, 0, 0), Node::TransformSpace::TS_WORLD);
+    updateCamNode( batb->time->get() );
+    //! [cameraposition]
+
+    //! [cameralaststep]
+    cam->setNearClipDistance(5);
+    camNode->attachObject(cam);
+    //! [cameralaststep]
+
+    //scnMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+
+    //! [addviewport]
+    Viewport* vp = batb->ogre->ogre_renderwindow->addViewport(cam);
+    //! [addviewport]
+
+    //! [viewportback]
+    vp->setBackgroundColour(ColourValue(0, 0, 0));
+    //! [viewportback]
+
+    //! [cameraratio]
+    cam->setAspectRatio(Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
+    //! [cameraratio]
+
+    //! [ninja]
+    Entity* ninjaEntity = scnMgr->createEntity("ninja.mesh");
+    ninjaEntity->setCastShadows(true);
+
+    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ninjaEntity);
+    //! [ninja]
+
+    //! [plane]
+    Plane plane(Vector3::UNIT_Y, 0);
+    //! [plane]
+
+    //! [planedefine]
+    MeshManager::getSingleton().createPlane(
+            "ground",
+            ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+            plane,
+            1500, 1500, 20, 20,
+            true,
+            1, 5, 5,
+            Vector3::UNIT_Z);
+    //! [planedefine]
+    //! [planecreate]
+    Entity* groundEntity = scnMgr->createEntity("ground");
+    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
+    //! [planecreate]
+
+    //! [planenoshadow]
+    groundEntity->setCastShadows(false);
+    //! [planenoshadow]
+
+    //! [planesetmat]
+    groundEntity->setMaterialName("Examples/Rockwall");
+    //! [planesetmat]
+
+    //! [lightingsset]
+    scnMgr->setAmbientLight(ColourValue(0, 0, 0));
+    scnMgr->setShadowTechnique(ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
+    //! [lightingsset]
+
+    //! [spotlight]
+    Light* spotLight = scnMgr->createLight("SpotLight");
+    //! [spotlight]
+
+    //! [spotlightcolor]
+    //spotLight->setDiffuseColour(0, 0, 1.0);
+    //spotLight->setSpecularColour(0, 0, 1.0);
+    spotLight->setDiffuseColour(1.0, 1.0, 1.0);
+    spotLight->setSpecularColour(1.0, 1.0, 1.0);
+    //! [spotlightcolor]
+
+    //! [spotlighttype]
+    spotLight->setType(Light::LT_SPOTLIGHT);
+    //! [spotlighttype]
+
+    //! [spotlightposrot]
+    SceneNode* spotLightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    spotLightNode->attachObject(spotLight);
+    spotLightNode->setDirection(-1, -1, 0);
+    spotLightNode->setPosition(Vector3(200, 200, 0));
+    //! [spotlightposrot]
+
+    //! [spotlightrange]
+    spotLight->setSpotlightRange(Degree(35), Degree(50));
+    //! [spotlightrange]
+    //
+    //! [directlight]
+    Light* directionalLight = scnMgr->createLight("DirectionalLight");
+    directionalLight->setType(Light::LT_DIRECTIONAL);
+    //! [directlight]
+
+    //! [directlightcolor]
+    directionalLight->setDiffuseColour(ColourValue(0.4, 0.4, 0.4));
+    directionalLight->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
+    //! [directlightcolor]
+
+    //! [directlightdir]
+    SceneNode* directionalLightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    directionalLightNode->attachObject(directionalLight);
+    directionalLightNode->setDirection(Vector3(0, -1, 1));
+    //! [directlightdir]
+
+    //! [pointlight]
+    Light* pointLight = scnMgr->createLight("PointLight");
+    pointLight->setType(Light::LT_POINT);
+    //! [pointlight]
+
+    //! [pointlightcolor]
+    pointLight->setDiffuseColour(0.3, 0.3, 0.3);
+    pointLight->setSpecularColour(0.3, 0.3, 0.3);
+    //! [pointlightcolor]
+
+    //! [pointlightpos]
+    SceneNode* pointLightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    pointLightNode->attachObject(pointLight);
+    pointLightNode->setPosition(Vector3(0, 150, 250));
+
+}
+
+void ogre_draw()
+{
+    uint w,h;
+    batb->screen->getSize( w, h );
+    //
+    cam->setAspectRatio( (float_t)(w) / (float_t)( h) );
+
+    updateCamNode( batb->time->get() );
+    batb->ogre->outputCamera( cam );
+}
+
+
+
 
 } // namespace gl
 } // namespace demo

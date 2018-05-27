@@ -77,9 +77,9 @@ void BATB::begin(const std::string& path)
         screen->begin(  file::directory( filepath() ) + "/BATB/Screen.yaml" );
         time->begin(    file::directory( filepath() ) + "/BATB/Time.yaml" );
         keys->begin(    file::directory( filepath() ) + "/BATB/Keys.yaml" );
-        gui->begin(     file::directory( filepath() ) + "/BATB/GUI.yaml" );
-        gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );
-        al->begin(      file::directory( filepath() ) + "/BATB/AL.yaml" );
+        //FIXME gui->begin(     file::directory( filepath() ) + "/BATB/GUI.yaml" );
+        //FIXME gl->begin(      file::directory( filepath() ) + "/BATB/GL.yaml" );
+        //FIXME al->begin(      file::directory( filepath() ) + "/BATB/AL.yaml" );
 
         // now configure module from 'yaml'
         // ...

@@ -115,11 +115,6 @@ private:
     // Name of current ogre_rendersystem
     std::string ogre_rendersystem_name_ = "OpenGL Rendering Subsystem";
 
-    // FIXME: remove??
-    // FIXME: differate between GL an GL3Plus
-    //GLContextGLFW glcontextglfw_;
-    void set_glfwcontext_();
-
     bool enabled_ = false;
     bool ogre_statistics = true;
 

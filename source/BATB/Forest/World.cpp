@@ -92,7 +92,6 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     forest.al_listener = batb->al->al_context.getListener();
     // TODO: create alure::Buffer's from defines in .yaml file.
     
-    using namespace Ogre;
     // TODO: delete old before loading
     // TODO: use state
     // TODO: 
@@ -123,35 +122,68 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
         }
 
     } 
-     
+
+    using namespace Ogre;
 
     ////////////////////////////////////////////////////////////////////////////////
     // create SceneManager
     // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-    forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
+    //forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
+    forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager();
 
     // see Ogre::ApplicationContext::createDummyScene()
     // FIXME: remove upon deletion of forest::World? see Ogre::SampleBrowser::runSample()/Ogre::ApplicationContext::create/destroyDummyScene()
     batb->ogre->ogre_shader_generator->addSceneManager( forest.ogre_scenemanager );
 
-    // this is now done in Terrain.cpp, but move into weater setup below when 
-    // things are working!
+    auto scnMgr = forest.ogre_scenemanager;
+    scnMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5)); 
 
-//    // TODO: setup light/... based on forest::Weather
-//    forest.ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000); // Terrain
-//
-//    Light* l = forest.ogre_scenemanager->createLight("tstLight");
-//    l->setType(Light::LT_DIRECTIONAL);
-//    Vector3 lightdir(0.55, -0.3, 0.75);
-//    lightdir.normalise();
-//    l->setDirection( lightdir );
-//    l->setDiffuseColour(ColourValue::White);
-//    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
-//    forest.ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+    Light* light = scnMgr->createLight("MainLight");
+    SceneNode* lightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    lightNode->attachObject(light);
 
+    //scnMgr->setSkyBox(true, "Examples/MorningSkyBox");
+
+    //! [newlight]
+
+    //! [lightpos]
+    lightNode->setPosition(20, 80, 50);
+    //! [lightpos]
+
+    //! [camera]
+    SceneNode* camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+
+    // create the camera
+    Ogre::Camera* cam = scnMgr->createCamera("myCam");
+    cam->setNearClipDistance(5); // specific to this sample
+    cam->setAutoAspectRatio(true);
+    camNode->attachObject(cam);
+    camNode->setPosition(0, 0, 140);
+    //! [cameramove]
+        // and tell it to render into the main window
+    batb->ogre->ogre_renderwindow->addViewport(cam);
+
+//! [entity1]
+    Entity* ogreEntity = scnMgr->createEntity("ogrehead.mesh");
+    //! [entity1]
+
+    //! [entity1node]
+    SceneNode* ogreNode = scnMgr->getRootSceneNode()->createChildSceneNode();
+    //! [entity1node]
+
+    //! [entity1nodeattach]
+    ogreNode->attachObject(ogreEntity);
+    //! [entity1nodeattach]
+
+    //! [cameramove]
+    camNode->setPosition(0, 47, 222);
+    forest.camera.ogre_camera = cam;
+    forest.camera.ogre_scenenode = camNode;
     ////////////////////////////////////////////////////////////////
     // create a view into the Ogre scene, a Camera!
     // it has to be connected to a SceneNode (new in version 1.10)
+
+#if 0
     Ogre::Camera* cam = forest.ogre_scenemanager->createCamera( "Camera::ogre_camera" );
     Ogre::SceneNode* cam_node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
     cam_node->attachObject( cam );
@@ -192,7 +224,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
     forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
     forest.ogre_viewport->setBackgroundColour( ColourValue( 0.0, 0.6, 0.2 )); // tmp
-
+#endif
 
     // end ogre frame
     batb->gl->ogreEnd();

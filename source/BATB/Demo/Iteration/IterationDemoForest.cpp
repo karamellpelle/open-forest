@@ -86,7 +86,7 @@ void IterationDemoForest::iterate_begin(World& demo)
 
     ////////////////////////////////////////////////////////////////////////////////
     // add a runner, if first time
-
+/*
     if ( !demo.runner )
     {
         demo.runner = forest.addRunner( run.player ); 
@@ -119,6 +119,7 @@ void IterationDemoForest::iterate_begin(World& demo)
         // move camera by ModifyControlCamera (manual movement)
         modifyControlCamera.modifier( &modifyCamera );
     }
+*/
 }
 
 
@@ -142,11 +143,14 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // output forest::World
     output( forest );
 
+    // this one runs forever 
+    return { this };
+
+
     // output demo::World
     outputDemo( demo );
 
     
-
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
 

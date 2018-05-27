@@ -71,14 +71,14 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
         if ( batb->run->keys->console->click() )
         {
             // note that 'keys.console' can not be disabled
-            if ( batb->run->keys->console->toggle() ) batb->run->console->open( run ); else batb->run->console->close( run );
+            //FIXME if ( batb->run->keys->console->toggle() ) batb->run->console->open( run ); else batb->run->console->close( run );
         }
 
         // update Console
-        batb->run->console->step( run );
+        //FIXME batb->run->console->step( run );
 
         // update Notify
-        batb->run->notify->step( run );
+        //FIXME batb->run->notify->step( run );
 
         ////////////////////////////////////////////////////////////////
 
@@ -117,7 +117,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     batb->ogre->frameBegin();
 
     // begin frame for AL
-    batb->al->frameBegin();
+    //FIXME batb->al->frameBegin();
 
     ////////////////////////////////////////////////////////////////////////////////
     // iterate run::World - our application world
@@ -130,14 +130,14 @@ debug::gl::msg("iterate_run()");
     // end output frame
     
     // end AL frame
-    batb->al->frameEnd();
+    //FIXME batb->al->frameEnd();
 
     // end Ogre frame
     batb->ogre->frameEnd();
 
     // output and step GUI (_every_ frame!)
-    batb->gui->output( run.scene );
-    batb->gui->step( run.tick );
+    //FIXME batb->gui->output( run.scene );
+    //FIXME batb->gui->step( run.tick );
 
 
     ////////////////////////////////////////////////////////////////////////////////

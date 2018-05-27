@@ -46,8 +46,8 @@ void Output::operator()(World& forest)
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
-    forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) ); 
-    forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
+    //forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) ); 
+    //forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
 
     ////////////////////////////////////////////////////////////////////////////////
 

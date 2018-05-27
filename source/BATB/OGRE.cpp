@@ -141,6 +141,7 @@ debug::gl::msg( os.str() );
         // https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/UpdatinganApplicationtoSupportOpenGL3/UpdatinganApplicationtoSupportOpenGL3.html#//apple_ref/doc/uid/TP40001987-CH3-SW1
 
         // pick RenderSystem defined in yaml. default "OpenGL Rendering Subsystem".
+        // TODO: only 3.3
 debug::gl::msg( "ogre_root->getRenderSystemByName" );
         ogre_rendersystem_name_ = yaml["rendersystem"].as<std::string>( "OpenGL Rendering Subsystem" );
         ogre_rendersystem = ogre_root->getRenderSystemByName( ogre_rendersystem_name_ );
@@ -203,7 +204,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         ////////////////////////////////////////////////////////////////////////////////
         // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
         //                                -> XXXWindow::create(). and this creates the XXXContext class too.
-        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 0, 0, false, &params );
+        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 800, 600, false, &params );
         // don't let Ogre swap our GLFWwindow; prevent flickering. this should work since 
         // RenderSystem::_swapAllRenderTargetBuffers() only swaps auto updated windows. however, 
         // RenderTarget::setAutoUpdated() and RenderTarget::isAutoUpdated() are virtual functions,
@@ -234,13 +235,6 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
 
         // now init our resource groups as done in ApplicationContext::setup()
         Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // TODO: remove?
-        // Ogre GL context
-        // NOTE: must not be setCurrent/set_glfwcontext_ here, since we are loading 
-        //       OGRE in another GL context (background thread)
-        //glcontextglfw_.begin();
 
         ////////////////////////////////////////////////////////////////////////////////
         // now emuluate OgreRoot::startRendering(), the closed rendering loop of Ogre.
@@ -314,6 +308,8 @@ debug::gl::msg( "OGRE_DELETE LogManager" );
 
 void OGRE::initPrograms()
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     batb->log << "initPrograms()" << std::endl;
     LogIndent indent( batb->log, "- " );
 
@@ -368,6 +364,8 @@ void OGRE::initPrograms()
 
 void OGRE::initRTSS()
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     batb->log << "initRTSS()" << std::endl;
     LogIndent indent( batb->log, "- " );
 
@@ -436,6 +434,7 @@ void OGRE::initRTSS()
 
 void OGRE::frameBegin()
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     
     if ( init_nonempty() )
     {
@@ -466,6 +465,8 @@ void OGRE::frameBegin()
 
 void OGRE::frameEnd()
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     if ( init_nonempty() )
     {
         // ensure we are allow to touch Ogre (OGRE is part of non-core BATB)
@@ -514,6 +515,8 @@ void OGRE::frameEnd()
 
 void OGRE::sceneBegin(const Scene& scene)
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     // setup ogre
     batb->gl->ogreBegin();
 
@@ -524,6 +527,8 @@ void OGRE::sceneBegin(const Scene& scene)
 
 void OGRE::outputCamera(Ogre::Camera* camera)
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     // render into previous used viewport of camera
     // (typically just 1 viewport)
     outputViewport( camera->getViewport() );
@@ -533,6 +538,8 @@ void OGRE::outputCamera(Ogre::Camera* camera)
 
 void OGRE::outputViewport(Ogre::Viewport* viewport)
 {
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+
     // see Ogre::RenderTarget::_updateViewport()
 
     if ( viewport )
@@ -542,29 +549,11 @@ void OGRE::outputViewport(Ogre::Viewport* viewport)
         ogre_rendertarget->_updateViewport( viewport, ogre_statistics );
     }
 
-    //Ogre::RenderTarget* ogre_rendertarget = ogre_renderwindow;
-    //
-    //assert( viewport->getTarget() == ogre_rendertarget && "RenderTarget::_updateViewport the requested viewport is not bound to the ogre_rendertarget!" );
-    //
-    //ogre_rendertarget->fireViewportPreUpdate( viewport );
-    //
-    //viewport->update();
-    //
-    //if( ogre_statistics )
-    //{
-    //    mStats.triangleCount += viewport->_getNumRenderedFaces();
-    //    mStats.batchCount += viewport->_getNumRenderedBatches();
-    //}
-    //fireViewportPostUpdate(viewport);
-
 }
 
 void OGRE::sceneEnd()
 {
 
-
-    // set back our context
-    set_glfwcontext_();
 
     // reset gl-state after Ogre, for this framd
     batb->gl->ogreEnd();
@@ -671,16 +660,6 @@ void OGRE::enabled(bool e)
 
 
 
-void OGRE::set_glfwcontext_()
-{
-debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-    // TODO: GL vs GL3Plus
-    //
-    //Ogre::GLRenderSystem* rs = static_cast<Ogre::GLRenderSystem*>( ogre_rendersystem );
-
-    //rs->_switchContext( &glcontextglfw_ );
-
-}
 
 } // namespace ogre
 

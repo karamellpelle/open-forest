@@ -29,6 +29,8 @@
 #include "BATB/Demo/libs/al.hpp"
 #include "BATB/Demo/libs/gl.hpp"
 
+#include "BATB/OGRE.hpp"
+
 
 //#define DEMO_FOREST_DIRECT
 
@@ -52,10 +54,10 @@ void IterationRunMain::begin()
 {
 
     // create main menu
-    tb_main = new TBMain( batb );
+    //FIXME tb_main = new TBMain( batb );
     // ^ TODO: use new_widget<TBMain> from GUI/tb/helpers.hpp!
 
-    batb->gui->addWidget( tb_main );
+    //FIXME batb->gui->addWidget( tb_main );
 
 }
 
@@ -66,7 +68,7 @@ void IterationRunMain::end()
     demo = nullptr;
 
     // remove main menu widget
-    batb->gui->removeWidget( tb_main );
+    //FIXME batb->gui->removeWidget( tb_main );
     delete tb_main;
     tb_main = nullptr;
 
@@ -81,19 +83,19 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     batb->run->keys->reset();
 
     // point Keys to GUI 
-    batb->gui->bind( batb->keys.get() );
+    //FIXME batb->gui->bind( batb->keys.get() );
 
     // nanovg demo
-    demo::nanovg::demo_begin( batb );
+    //FIXME demo::nanovg::demo_begin( batb );
 
     // tmp: test GL
     demo::gl::tests_setup( batb );
 
     // ALURE demo
-    demo::al::demo_begin( batb );
+    //FIXME demo::al::demo_begin( batb );
 
     // make GUI visible
-    tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
+    //FIXME tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 /*
     // cool
     batb->log->endl();
@@ -120,7 +122,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
                               << "use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
     //batb->run->notify->message( os.str(), 10.0 );
-    batb->run->notify->message( os.str(), 4.0 );
+    //FIXME batb->run->notify->message( os.str(), 4.0 );
 
 }
 
@@ -138,17 +140,19 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     // *** step ***
 
     // tmp:
+    batb->ogre->sceneBegin( run.scene );
     demo::gl::tests_draw();
+    batb->ogre->sceneEnd();
 
     // step AL and nanovg demos
-    demo::al::demo_iterate( batb, run );
-    demo::nanovg::demo_iterate( batb, false, false );
+    //FIXME demo::al::demo_iterate( batb, run );
+    //FIXME demo::nanovg::demo_iterate( batb, false, false );
 
     // step widget
-    tb_main->step( run );
+    //FIXME tb_main->step( run );
 
     // escape quits main (exit)
-    //if ( batb.run.keys.escape->click() )  run.events.push( event::Do::Exit );
+    if ( batb->run->keys->escape->click() )  run.events.push( event::Do::Exit );
     
 #ifdef DEMO_FOREST_DIRECT
     run.events.push( event::Do::DemoForest );
