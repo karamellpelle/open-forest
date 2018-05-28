@@ -25,6 +25,7 @@
 #include "OgreCamera.h"
 #include "OgreEntity.h"
 #include "OgreNode.h"
+#include "OgreSceneNode.h"
 
 
 namespace batb
@@ -37,22 +38,24 @@ void Output::operator()(World& forest)
 {
     run::World& run = forest.run;
 
+    using namespace Ogre;
   
-    // TODO: instead for below, use Scene: camera->setProjection( run.scene.proj3D );
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     forest.camera.ogre_camera->setAspectRatio( aspect );
 
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
-    forest.camera.ogre_camera->setDirection( ogre::cast_( forest.camera.move.aim[2] ) ); 
-    forest.camera.ogre_camera->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
+    // FIXME: use Aim matrix
+    forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
+    forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) , SceneNode::TransformSpace::TS_WORLD ); 
+    //Ogre::Quaternion quat = ogre::cast( glm::quat_cast( forest.camera.move.aim ) ); 
+    //forest.camera.ogre_scenenode->setOrientation( quat ); 
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    // TODO: terrain_group->autoUpdateLodAll(false, Any( Real(HOLD_LOD_DISTANCE) )) ?
-
     // render 3D view from camera into Scene
+    // NOTE: see https://ogrecave.github.io/ogre/api/1.11/class_ogre_1_1_render_target.html#ad0b724596d2b9e278293aee6e55a5273
     batb->ogre->sceneBegin( run.scene );
     batb->ogre->outputCamera( forest.camera.ogre_camera );
     batb->ogre->sceneEnd();

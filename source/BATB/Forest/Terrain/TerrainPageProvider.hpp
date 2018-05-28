@@ -1,4 +1,4 @@
-//    open-forest: an orienteering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,52 +15,41 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_OGRE_GLCONTEXTGLFW_HPP
-#define BATB_OGRE_GLCONTEXTGLFW_HPP
-#include "include.hpp"
-#include "RenderSystems/GL/include/OgreGLContext.h"
+#ifndef BATB_FOREST_TERRAIN_TERRAINPAGEPROVIDER_HPP
+#define BATB_FOREST_TERRAIN_TERRAINPAGEPROVIDER_HPP
+#include "BATB.hpp"
+#include "OgreTerrain.h"
+#include "OgrePageManager.h"
+
+
+
 
 namespace batb
 {
 
-class BATB;
 
-namespace ogre
+namespace forest
 {
 
-
-// class for making Ogre not mess up all GL and create seperate
-// GL states
-//
-// see implementation of 
-//    void GLRenderSystem::_switchContext(GLContext *context)
-//    void GLStateCacheManager::switchContext(intptr_t id)
-//
-class GLContextGLFW : public Ogre::GLContext
+class TerrainPageProvider : public Ogre::PageProvider
 {
 public:
-    GLContextGLFW(BATB* b) : batb( b ) { }
+    TerrainPageProvider();
 
-    void begin();
-    void end();
-
-    void setCurrent() override;
-    void endCurrent() override;
-    Ogre::GLContext* clone() const override;
-
-    BATB* batb;
-
-private:
+    bool prepareProceduralPage(Ogre::Page* page, Ogre::PagedWorldSection* section);
+    bool loadProceduralPage(Ogre::Page* page, Ogre::PagedWorldSection* section);
+    bool unloadProceduralPage(Ogre::Page* page, Ogre::PagedWorldSection* section);
+    bool unprepareProceduralPage(Ogre::Page* page, Ogre::PagedWorldSection* section);
 
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// 
 
 
-} // namespace ogre
+
+} // namespace forest
 
 } // namespace batb
+
 
 
 #endif

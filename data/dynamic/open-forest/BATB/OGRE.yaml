@@ -1,8 +1,44 @@
 plugins:
-  - RenderSystem_GL
+  #- RenderSystem_GL
+  - RenderSystem_GL3Plus
   - Plugin_ParticleFX
   - Plugin_BSPSceneManager
   - Plugin_PCZSceneManager
   - Plugin_OctreeZone
   - Plugin_OctreeSceneManager
-rendersystem: !<!> OpenGL Rendering Subsystem
+  - Codec_EXR
+  - Codec_FreeImage
+  - Codec_STBI
+
+#rendersystem: !<!> OpenGL Rendering Subsystem
+rendersystem: !<!> OpenGL 3+ Rendering Subsystem
+
+################################################################################
+# add resources we need throught the whole program. this should probably be done 
+# better/more general.
+#
+# this is based on the function Ogre::ApplicationContext::locateResources() of the 
+# OgreBites Component
+materials:
+    programs:
+        # Cg removed because Cg is old. use GLSL
+        #glsles: # no ES at this time
+        # look at implementation of Ogre::ApplicationContext::locateResources(); 
+        glsl: 
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL }
+        glsl120: 
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL120 }
+        glsl150: 
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL150 }
+        glsl400: 
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/materials/programs/GLSL400 }
+        
+
+RTShaderLib: 
+        materials:
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib/materials }
+        #glsles: no ES at this time
+        #    - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib/GLSLES }
+        glsl: 
+            - { type: FileSystem,         path: BATB/Demo/libs/ogre/Samples/Media/RTShaderLib/GLSL }
+

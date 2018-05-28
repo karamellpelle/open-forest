@@ -119,6 +119,7 @@ void IterationDemoForest::iterate_begin(World& demo)
         // move camera by ModifyControlCamera (manual movement)
         modifyControlCamera.modifier( &modifyCamera );
     }
+
 }
 
 
@@ -146,7 +147,6 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     outputDemo( demo );
 
     
-
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
 

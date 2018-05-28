@@ -27,6 +27,10 @@
 #include "BATB/Demo/libs/nanovg.hpp"
 #include "BATB/Demo/libs/ogre.hpp"
 #include "BATB/Demo/libs/al.hpp"
+#include "BATB/Demo/libs/gl.hpp"
+
+#include "BATB/OGRE.hpp"
+
 
 //#define DEMO_FOREST_DIRECT
 
@@ -50,12 +54,8 @@ void IterationRunMain::begin()
 {
 
     // create main menu
-    // TODO: use create
     tb_main = new TBMain( batb );
-    //tb_main = new TBMain();
-    //tb_main->batb = batb;
-    //tb_main->begin( path ); // use defined in .yaml? constexpr const char* path = "static://BATB/Run/main.tb.txt";
-    // ^ TODO: tb_main
+    // ^ TODO: use new_widget<TBMain> from GUI/tb/helpers.hpp!
 
     batb->gui->addWidget( tb_main );
 
@@ -88,6 +88,9 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // nanovg demo
     demo::nanovg::demo_begin( batb );
 
+    // tmp: test GL
+    //demo::gl::tests_setup( batb );
+
     // ALURE demo
     demo::al::demo_begin( batb );
 
@@ -118,7 +121,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n"
                               << "use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
-    //batb->run->notify->message( os.str(), 10.0 );
+
     batb->run->notify->message( os.str(), 4.0 );
 
 }
@@ -135,7 +138,11 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
-    
+
+    // tmp:
+    //batb->ogre->sceneBegin( run.scene );
+    //demo::gl::tests_draw();
+    //batb->ogre->sceneEnd();
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );
@@ -145,7 +152,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     tb_main->step( run );
 
     // escape quits main (exit)
-    //if ( batb.run.keys.escape->click() )  run.events.push( event::Do::Exit );
+    if ( batb->run->keys->escape->click() )  run.events.push( event::Do::Exit );
     
 #ifdef DEMO_FOREST_DIRECT
     run.events.push( event::Do::DemoForest );

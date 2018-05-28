@@ -15,44 +15,45 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_CAMERA_HPP
-#define BATB_FOREST_CAMERA_HPP
-#include "BATB/Forest/DTMovable.hpp"
+#include "BATB/Forest/Terrain/TerrainPageProvider.hpp"
 
-namespace Ogre
-{
-class Camera;
-class SceneNode;
-}
 
 
 namespace batb
 {
-
-class BATB;
-
 namespace forest
 {
 
-class Camera 
+using namespace Ogre;
+
+TerrainPageProvider::TerrainPageProvider() 
 {
-public:
-    DTMovable move;
 
-    Ogre::Camera* ogre_camera = nullptr;
-    Ogre::SceneNode* ogre_scenenode = nullptr;
+}
 
-private:
-};
+
+bool TerrainPageProvider::prepareProceduralPage(Page* page, PagedWorldSection* section)    
+{
+    return true;
+}
+
+bool TerrainPageProvider::loadProceduralPage(Page* page, PagedWorldSection* section)       
+{
+    return true;
+}
+
+bool TerrainPageProvider::unloadProceduralPage(Page* page, PagedWorldSection* section)     
+{
+    return true;
+}
+
+bool TerrainPageProvider::unprepareProceduralPage(Page* page, PagedWorldSection* section)  
+{
+    return true;
+}
 
 
 } // namespace forest
 
 } // namespace batb
-
-
-
-
-
-#endif
 

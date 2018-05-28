@@ -1,6 +1,30 @@
-# TODO
 
-* 
+# TODO
+* remove RenderSystemGL and only use RenderSystemGL3Plus
+* fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
+  something wrong happesn if 'setFixedYawAxis( true );' is not called
+  also fix controls and Z direction. An Ogre::Camera uses -Z for view direction.
+* setup GUI from .yaml
+* review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
+* remove OGRE::GLFWContext?
+* OGRE/AL enabled() necessary ??
+* forest::World: load Ogre resources from yaml, not dedicated file? what about 
+  different types (for example subclasses of Terrain)?
+* remove demo/libs/ogreterrain, and clean up data directories
+* forest::World: set Weater (skybox, light, etc.) after terrain loaded.
+  move the light creation from terrain::load() into the weather setup!
+* attach Camera to SceneNode and use that. new in v1.10
+* remove OgreTerrain demo, stay with forest
+* fix OGRE data: static vs dynamic. 
+* helpers/tb.hpp -> tb/helpers.hpp
+* custom TB-widgets have empty constructors since all TB-widgets should be possible.
+  to read from .tb.txt file's (TBWidgetFactory).
+  - TBMain
+  - TBConsole?
+* no indent->pop() for exceptions; done by destructors regarding exception or not
+* clipboard support TB (tb_system.h)
+* use the implemetation of Ogre::renderOneFrame(Real timeSinceLastFrame)?
+* nanovg debug if defined in yaml
 * clean up events during shutdown
 * better reading custom TB widgets. read custom props for for example console
 * let cmd's use boost program_options

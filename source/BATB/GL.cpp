@@ -38,6 +38,7 @@ namespace gl
 
 void GL::begin(const std::string& path)
 {
+
     batb->log << "batb->gl->begin( " << path << " )" << std::endl;
     LogIndent indent( batb->log, "* " );
 
@@ -50,19 +51,42 @@ void GL::begin(const std::string& path)
         initState();
         batb->log << "default state initialized" << std::endl;
 
+        ////////////////////////////////////////////////////////////////
+        // NanoVG
+        // 
+
+        // context creation flags
+        int nanovg_flags = NVG_STENCIL_STROKES;
+
+        // add debug to nanovg?
+        if ( YAML::Node node = yaml["nanovg-debug"] )
+        {
+            nanovg_flags |= (node.as<bool>( false ) ? NVG_DEBUG : 0);
+        }
+
 #ifdef NANOVG_GL2_IMPLEMENTATION
-        nvg_context = nvgCreateGL2( NVG_STENCIL_STROKES /*| NVG_DEBUG*/ ); // TODO: add debug if defined in yaml
-        batb->log << "nanovg GL2 context created" << std::endl;
-#endif
-#ifdef NANOVG_GL3_IMPLEMENTATION
-        //batb->log << "nanovg GL3 context created" << std::endl;
-#endif
+        nvg_context = nvgCreateGL2( nanovg_flags );
 	if ( nvg_context == nullptr )
         {
-            batb->log << "ERROR: could not create nanovg context" << std::endl;
+            batb->log << "ERROR: could not create NanoVG GL2 context" << std::endl;
             batb->log->indentPop();
-            throw std::runtime_error( "GL: could not create nanovg context" );
+            throw std::runtime_error( "GL: could not create NanoVG GL2 context" );
 	}
+        batb->log << "NanoVG GL2 context created" << std::endl;
+#endif
+#ifdef NANOVG_GL3_IMPLEMENTATION
+        nvg_context = nvgCreateGL3( nanovg_flags ); 
+	if ( nvg_context == nullptr )
+        {
+            batb->log << "ERROR: could not create NanoVG GL3 context" << std::endl;
+            batb->log->indentPop();
+            throw std::runtime_error( "GL: could not create NanoVG GL3 context" );
+	}
+        batb->log << "NanoVG GL3 context created" << std::endl;
+#endif
+
+        ////////////////////////////////////////////////////////////////
+        //
 
         
     }
@@ -70,14 +94,12 @@ void GL::begin(const std::string& path)
     
     init( true );
 
-
     
 }
 
 
 void GL::end()
 {
-
     batb->log << "batb->gl->end()" << std::endl;
     LogIndent indent( batb->log, "* " );
 
@@ -85,22 +107,28 @@ void GL::end()
     {
         save();
 
-         //clear fonts
+        //clear nanovg fonts?
         //for ( auto& i : gl.nanovg_fonts_ )
         //{
         //    // (release font not necessary (?))
         //
         //}
+
 #ifdef NANOVG_GL2_IMPLEMENTATION
         nvgDeleteGL2( nvg_context );
-        batb->log << "nanovg context deleted" << std::endl;
+        batb->log << "NanoVG GL2 context deleted" << std::endl;
 #endif
 #ifdef NANOVG_GL3_IMPLEMENTATION
-
+        nvgDeleteGL3( nvg_context );
+        batb->log << "NanoVG GL3 context deleted" << std::endl;
 #endif
+
+        nvg_context = nullptr;
+
     }
    
     init( false );
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,9 +140,9 @@ void GL::end()
 
 void GL::initState()
 {
+
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    //batb->log << DEBUG_FUNCTION_NAME << std::endl;
 
     //  set up our GL-invariants:
     glEnable( GL_MULTISAMPLE );
@@ -143,17 +171,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 ////////////////////////////////////////////////////////////////////////////////
 //  resetting our GL state between library (Ogre, nanovg, turbobadger) calls
 // 
-//  calls have been stripped down. see commit 659cfa97f4006370b6fce005badc13f23dcf5d71
-//  for the other calls we had before, if there should be some problem. that
-//  commit contains the calls that made these libraries work together for the
-//  first time.
-//
-//  for some reason, only nanovg (or nanovg + turbobadger) without Ogre decrease
-//  our framerate. if we add Ogre, then the framerate becomes normal (60 fps).
-//  I expect this happened when glEnable( GL_MULTISAMPLE ) was added, but
-//  it has not been verified.
-//
-//
 //  actually, only gl::end_XXX() should be necessary (shown as 'reset' below)
 //
 //  current draw order: 
@@ -179,17 +196,9 @@ void GL::ogreEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    glDisable( GL_LIGHTING );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    //glDisableClientState( GL_NORMAL_ARRAY );
-    //glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-    //glDisableClientState( GL_VERTEX_ARRAY );
-    //glDisableClientState( GL_INDEX_ARRAY );
-    //glDisableClientState( GL_SECONDARY_COLOR_ARRAY );
 
-    // set premult blend equation?
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // working with turbobadger
@@ -202,27 +211,20 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 }
 
 // reset GL state after turbobadger
-// see TBRendererGL::BeginPaint in tb_renderer_gl.cpp
+// see the TBRenderer's (i.e. TBRendererGL330) BeginPaint()/EndPaint()
 void GL::turbobadgerEnd()
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    glDisableClientState( GL_COLOR_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY ); 
-    glDisableClientState( GL_VERTEX_ARRAY ); 
-
-    glDisable( GL_TEXTURE_2D );
-    glDepthFunc( GL_LEQUAL );
     glEnable( GL_DEPTH_TEST );
+    glEnable(GL_BLEND);
 
-    // blending premultiplied colors
-    //glBlendEquationSeparate( GL_FUNC_ADD, 
-    //                         GL_FUNC_ADD );
-    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
-                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-
-
-
+    // this is important with respect to Ogre: do not bind the program
+    // after use. otherwise it breaks Ogre's ProgramPipelineObject 
+    // see https://www.khronos.org/opengl/wiki/Shader_Compilation#Separate_programs
+    //glUseProgram( 0 );
+    // ^ NOTE: done by 'TBRendererGL330::EndPaint()' instead, as the NanoVG lib does
+    // for us
 }
 
 
@@ -238,6 +240,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 NVGcontext* GL::nanovgBegin(const Scene& scene)
 {
+
     // calculate pixel ration for hi-dpi devices.
     int winWidth, winHeight;
     glfwGetWindowSize( batb->screen->glfw_window, &winWidth, &winHeight ); 
@@ -251,18 +254,27 @@ NVGcontext* GL::nanovgBegin(const Scene& scene)
     //nvgSave( nvg );
 
     return nvg_context;
+
 }
 
 void GL::nanovgEnd()
 {
-    //nvgRestore( nvg );
-    nvgEndFrame( nvg_context );
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
-    // see nanovg's README.md for altered state
+    nvgEndFrame( nvg_context );
+    // ^ calls glUseProgram( 0 ), see glnvg__renderFlush() in nanovg_gl.h
+
+    // TODO: can we remove this?
+    // see https://github.com/memononen/nanovg#opengl-state-touched-by-the-backend
     glEnable( GL_DEPTH_TEST );
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    //glBindVertexArray(arr);
+    glBlendEquationSeparate( GL_FUNC_ADD, 
+                             GL_FUNC_ADD );
+    glBlendFuncSeparate( GL_ONE, GL_ONE_MINUS_SRC_ALPHA,
+                         GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    
 ////////////////////////////////////////////////////////////////////////////////
 
 }

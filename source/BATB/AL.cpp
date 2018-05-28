@@ -69,7 +69,8 @@ void AL::begin(const std::string& path)
             throw e;
         }
 
-
+        // enable functionality should not be necessary, since AL is part of BATB core
+        enabled( true );
 
     }
     ////////////////////////////////////////////////////////////////////////////////

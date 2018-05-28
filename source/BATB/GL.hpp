@@ -19,8 +19,8 @@
 #define BATB_GL_HPP
 #include "BATB/ModuleBATB.hpp"
 
-// TODO: GL 3+
-#define NANOVG_GL2_IMPLEMENTATION
+//#define NANOVG_GL2_IMPLEMENTATION
+#define NANOVG_GL3_IMPLEMENTATION
 #include "nanovg.h"
 
 namespace batb

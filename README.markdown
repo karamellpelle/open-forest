@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/karamellpelle/open-forest/master/data/static/batb/openforest-512x256.png "OpenForest")
+![](https://raw.githubusercontent.com/karamellpelle/open-forest/master/data/meta/screenshots/open-forest-may2018-macos.png "Ogre v1.11 on macOS")
 
 Open Forest
 --------------------
@@ -9,15 +9,15 @@ The old game is still runnable through Open Forest, but then the project will ha
 
 My intention has been to build up a foundation for an open source orienteering game. Despite the sport of orienteering is small, there are multiple commercial orienteering games available (Catching Features, Suunnistussimulaattori, Oriantica). I don't see the point of having so many commercial games for something that probably will not generate enough money for a high-end product. And there are many good programmers/developers in the orienteering community.
 
-This project builds (on macOS as of May 2018 (and probably still also Linux)) and the libraries are up and running, so collaborative development is absolutely possible. But I should have finished more work first (I'm in lack of time). The program's structure is based on how I've been writing functional games in Haskell. The thing is to abandon the traditional "main loop" and consider a game as a _World_ (with subworlds) that is iterated by _Iteration_'s. See [computergames.pdf](https://github.com/karamellpelle/grid/blob/master/computergames.pdf). This makes the program flow a lot easier to implement and opens up possibilites that are complicated to do with a traditional main loop. It can be considered as a MVC pattern where _World_ is the model, and _Iteration_'s are control and view.
+This project builds (on macOS High Sierra as of May 2018) and the libraries are up and running, so collaborative development is absolutely possible. But I should have finished some more work first (I'm in lack of time). The program's structure is based on how I've been writing functional games in Haskell. The thing is to abandon the traditional "main loop" and consider a game as a _World_ (with subworlds) that is iterated by _Iteration_'s. See [computergames.pdf](https://github.com/karamellpelle/grid/blob/master/computergames.pdf). This makes the program flow a lot easier to implement and opens up possibilites that are complicated to do with a traditional main loop. It can be considered as a MVC pattern where _World_ is the model, and _Iteration_'s are control and view.
 
-The [Ogre3D](https://www.ogre3d.org/) graphics library is used for 3D rendering. It has very good forest rendering capabilities, for example see this [Ogre3D based](https://forums.ogre3d.org/viewtopic.php?f=11&t=35922) game: [clip A](https://youtu.be/4QIHzn1PrxY?t=12m20s), [clip B](https://youtu.be/PWSg4olxaYE?t=5m9s), [clip C](https://youtu.be/CXr82Gtbk1Y?t=1m57s).
+[Ogre3D](https://www.ogre3d.org/) is used for 3D rendering. It has very good forest rendering capabilities, for example see this [Ogre3D based](https://forums.ogre3d.org/viewtopic.php?f=11&t=35922) game: [clip A](https://youtu.be/4QIHzn1PrxY?t=12m20s), [clip B](https://youtu.be/PWSg4olxaYE?t=5m9s), [clip C](https://youtu.be/CXr82Gtbk1Y?t=1m57s).
 
 
 Programming
 --------------------
 
-We shall aim at modern programming (OpenGL 3.3+, C++14, modern libraries etc.)
+We shall useat modern programming (OpenGL 3.3 Core, C++14, modern libraries etc.)
 
 #### Libraries
 
@@ -46,15 +46,18 @@ Currently, `GLFW`, `Ogre`, `nanovg`, `turbobadger`, `ALURE`, `YAML`, `tinyxml2`,
 Building
 --------------------
 
-_open-forest_ depends on:
+## macOS 
 
-  * glew
-  * boost
-  * mpg123
-  * libzzip
-  * freeimage
-  * freetype
-  * OpenAL
+As of 28 May 2018, this project builds and runs on macOS High Sierra (using Ogre3D v1.11).
+Use [homebrew](www.brew.sh) to install the dependencies:
+
+    $ brew install cmake
+    $ brew install glew
+    $ brew install boost
+    $ brew install mpg123
+    $ brew install libzzip
+    $ brew install freeimage
+    $ brew install freetype
 
 It also depends on git submodules. Run
     
@@ -67,21 +70,7 @@ Building can then be done with
 
     $ ./build.sh
 
-which creates a program you can run with `./open-forest.sh`. 
-
-## macOS
-
-I am working on build on macOS High Sierra. Use [homebrew](www.brew.sh) to install what you need:
-
-    $ brew install cmake
-    $ brew install glew
-    $ brew install boost
-    $ brew install mpg123
-    $ brew install libzzip
-    $ brew install freeimage
-    $ brew install freetype
-
-I been having some problems with [Ogre3D](https://github.com/karamellpelle/open-forest-ogre) on macOS, the problem seems to lie in the files `Components/Terrain/src/OgreTerrainMaterialGeneratorA.cpp` and `Components/Terrain/src/OgreTerrainMaterialShaderHelperGLSL.cpp` because shaders fails to compile. I just started a new branch trying to use the new Ogre3D version 1.11, but I need more time to integrate it fully.
+which creates a program you can run with `./open-forest.sh`. (Afterwards you can use `./build.sh make-openforest` to only build the program source).
 
 Screenshots
 ----------------

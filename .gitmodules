@@ -11,12 +11,14 @@
 [submodule "libs/nanovg"]
 	path = libs/nanovg
 	url = https://github.com/memononen/nanovg
+	branch = master
 [submodule "libs/yaml-cpp"]
 	path = libs/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
 [submodule "libs/alure"]
 	path = libs/alure
 	url = https://github.com/kcat/alure.git
-[submodule "libs/open-forest-ogre"]
-	path = libs/open-forest-ogre
-	url = https://github.com/karamellpelle/open-forest-ogre.git
+[submodule "libs/ogre"]
+	path = libs/ogre
+	url = https://github.com/karamellpelle/ogre.git
+	branch = master

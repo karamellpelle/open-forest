@@ -31,7 +31,7 @@
 #include "OgreViewport.h"
 #include "OgreSceneManager.h"
 #include "OgreRenderWindow.h"
-#include "OgreWindowEventUtilities.h"
+//#include "OgreWindowEventUtilities.h"
 #include "OgreResourceGroupManager.h"
 
 #include "OgreTerrain.h"
@@ -164,7 +164,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
         // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
         if ( YAML::Node resources = yaml[ "resources" ] )
         {
-            batb->ogre->addResourceLocation( yaml["resources"] );
+            batb->ogre->addResourceGroupsAndInit( yaml["resources"] );
         }
         else
         {

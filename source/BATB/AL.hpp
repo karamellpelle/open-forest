@@ -69,7 +69,7 @@ public:
   
 
 private:
-    bool enabled_ = true;
+    bool enabled_ = false;
    
     // for playing sources
     std::list<alure::Buffer> buffers_;

@@ -2,7 +2,13 @@ fullscreen: false
 size: {wth: 1024, hth: 700 }
 multisamples: 4
 debug: true
+info: true
 glfw-hints:
-    GLFW_DECORATED: GLFW_FALSE
+    GLFW_DECORATED: true
+    GLFW_CONTEXT_VERSION_MAJOR: 3
+    #GLFW_CONTEXT_VERSION_MINOR: 2
+    GLFW_CONTEXT_VERSION_MINOR: 3
+    GLFW_OPENGL_FORWARD_COMPAT: true
+    GLFW_OPENGL_PROFILE: GLFW_OPENGL_CORE_PROFILE
 
 title: !<!> "https://github.com/karamellpelle/open-forest"
