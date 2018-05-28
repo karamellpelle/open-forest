@@ -1,5 +1,8 @@
 
 # TODO
+* fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
+  something wrong happesn if 'setFixedYawAxis( true );' is not called
+  also fix controls and Z direction. An Ogre::Camera uses -Z for view direction.
 * setup GUI from .yaml
 * review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
 * remove OGRE::GLFWContext?

@@ -17,6 +17,8 @@
 //
 #include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
+#include "BATB/Forest/Terrain.hpp"
+#include "BATB/Forest/Terrain/TerrainPageProvider.hpp"
 
 #include "OgreMaterialManager.h"
 #include "OgreRoot.h"
@@ -64,11 +66,19 @@ using namespace Ogre;
 #define TERRAIN_WORLD_SIZE 12000.0f
 #define TERRAIN_SIZE 513
 
-static TerrainGroup* terrain_group = nullptr;
 bool terrains_imported = false;
+Ogre::TerrainGroup* terrain_group = nullptr;
 void getTerrainImage(bool flipX, bool flipY, Ogre::Image& img);
 void initBlendMaps(Ogre::Terrain* terrain);
 void defineTerrain(long x, long y, bool flat = false);
+
+////////////////////////////////////////////////////////////////
+
+
+// enable paging of terrain?
+// FIXME: does not work (no terrain is created. paging not even enabled in Sample_Terrain)
+//#define PAGING_ENABLE
+
 
 namespace batb
 {
@@ -76,35 +86,46 @@ namespace batb
 namespace forest
 {
 
-// global!
+// global
 Ogre::TerrainGlobalOptions*  Terrain::ogre_terrain_globals = nullptr; 
 
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
-class DummyPageProvider : public Ogre::PageProvider
+//
+
+Terrain::Terrain()
 {
-public:
-    bool prepareProceduralPage(Page* page, PagedWorldSection* section)    { return true; }
-    bool loadProceduralPage(Page* page, PagedWorldSection* section)       { return true; }
-    bool unloadProceduralPage(Page* page, PagedWorldSection* section)     { return true; }
-    bool unprepareProceduralPage(Page* page, PagedWorldSection* section)  { return true; }
-
+    
 }
-dummy_page_provider;
 
+Terrain::~Terrain()
+{
+    // Sample_Terrain::_shutdown()
 
+    if ( ogre_terrain_paging )
+    {
+        delete ogre_terrain_paging;
+        delete ogre_page_manager;
+        delete page_provider;
+    }
+    else if ( ogre_terrain_group ) // FIXME: why else-if??
+    {
+        delete ogre_terrain_globals;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 
 void Terrain::load(const YAML::Node& yaml)
 {
-//    if (!Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("Terrain"))
-//        Ogre::ResourceGroupManager::getSingleton().createResourceGroup("Terrain");
-
     ////////////////////////////////////////////////////////////////////////////////
     // Sample_Terrain::setupContent()
 
     // create the only TerrainGlobalOptions, if not present
-    // Terrain::setResourceGroup overrides this (??)
+    // see https://ogrecave.github.io/ogre/api/1.11/class_ogre_1_1_terrain_global_options.html
     if ( ogre_terrain_globals == nullptr )
     {
         ogre_terrain_globals = OGRE_NEW TerrainGlobalOptions();
@@ -125,15 +146,15 @@ void Terrain::load(const YAML::Node& yaml)
     l->setType(Light::LT_DIRECTIONAL);
     l->setDirection(lightdir);
     l->setDiffuseColour(ColourValue::White);
-    l->setSpecularColour(ColourValue(0.4, 0.4, 0.4));
+    l->setSpecularColour(ColourValue(0.6, 0.6, 0.6));
 
-    ogre_scenemanager->setAmbientLight(ColourValue(0.2, 0.2, 0.2));
+    ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
     ogre_terrain_group = OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
     ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
     //ogre_terrain_group->setOrigin( Vector3(1000,0,5000)); // in Sample_Terrain
+    terrain_group = ogre_terrain_group; // since helper functions are not class members
 
-    terrain_group = ogre_terrain_group;
 
     ////////////////////////////////////////////////////////////////
     // Sample_Terrain::configureTerrainDefaults(Light* l)
@@ -154,14 +175,6 @@ void Terrain::load(const YAML::Node& yaml)
             static_cast<TerrainMaterialGeneratorA::SM2Profile*>( ogre_terrain_globals->getDefaultMaterialGenerator()->getActiveProfile());
         matProfile->setLightmapEnabled(false);
     }
-    //ogre_terrain_globals->setUseRayBoxDistanceCalculation(true);
-    //ogre_terrain_globals->getDefaultMaterialGenerator()->setLightmapEnabled( false );
-
-    //// FIXME: SceneManager, light, ...
-    //auto* l = ogre_scenemanager->getLight( "tstLight" );
-    //ogre_terrain_globals->setCompositeMapAmbient( ogre_scenemanager->getAmbientLight() ); 
-    //ogre_terrain_globals->setCompositeMapDiffuse( l->getDiffuseColour());    
-    //ogre_terrain_globals->setLightMapDirection( l->getDerivedDirection());
     ogre_terrain_globals->setLightMapDirection(l->getDerivedDirection());
     ogre_terrain_globals->setCompositeMapAmbient(ogre_scenemanager->getAmbientLight());
     //ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
@@ -191,33 +204,29 @@ void Terrain::load(const YAML::Node& yaml)
 
     ////////////////////////////////////////////////////////////////
     // Sample_Terrain::setupContent()
-
+#ifdef PAGING_ENABLE
     // Paging setup
     ogre_page_manager = OGRE_NEW PageManager();
     // Since we're not loading any pages from .page files, we need a way just 
     // to say we've loaded them without them actually being loaded
-    ogre_page_manager->setPageProvider(&dummy_page_provider);
-    auto* camera = ogre_scenemanager->getCamera(  "Camera::ogre_camera" );
-    ogre_page_manager->addCamera(camera);
-    ogre_page_manager->setDebugDisplayLevel(0);
-    ogre_terrain_paging = OGRE_NEW TerrainPaging(ogre_page_manager);
+    page_provider = new TerrainPageProvider(); // custom class
+    ogre_page_manager->setPageProvider( page_provider );
+    ogre_page_manager->addCamera( ogre_scenemanager->getCamera(  "ogre_camera" ) );
+    ogre_page_manager->setDebugDisplayLevel( 0 );
+    ogre_terrain_paging = OGRE_NEW TerrainPaging( ogre_page_manager );
     ogre_paged_world = ogre_page_manager->createWorld();
     ogre_paged_world_section = ogre_terrain_paging->createWorldSection(ogre_paged_world, ogre_terrain_group, 2000, 3000,
                                            TERRAIN_PAGE_MIN_X, TERRAIN_PAGE_MIN_Y,
                                            TERRAIN_PAGE_MAX_X, TERRAIN_PAGE_MAX_Y);
 
+#else
     bool blankTerrain = false;
     for (long x = TERRAIN_PAGE_MIN_X; x <= TERRAIN_PAGE_MAX_X; ++x)
         for (long y = TERRAIN_PAGE_MIN_Y; y <= TERRAIN_PAGE_MAX_Y; ++y)
             defineTerrain(x, y, blankTerrain);
     // sync load since we want everything in place when we start
     ogre_terrain_group->loadAllTerrains(true);
-    // ^FIXME:
-    //  loadAllTerrains does something to our GL context/state, causing wrong output until
-    //  OGRE::output called. the error is caused in OgreTerrainGroup::loadTerrainImpl when
-    //  a work request is added to Ogre. The request handler is OgreTerrainGroup, but I 
-    //  have not tracked the error there and further down.
-    //  ^ this comment was for the previous version of ogre 
+#endif
 
     if (terrains_imported)
     {
@@ -231,12 +240,7 @@ void Terrain::load(const YAML::Node& yaml)
 
     ogre_terrain_group->freeTemporaryResources();
 
-    // now, Sample_Terrain creates Ogre::Entity's tudorhouse.mesh
-    
-    // also, Sample_Terrain creates the sky box
-
 }
-
 
 // compute incline at position and direction, [-1, 1]
 // only z direction of 'aim' in xz plane is used, but maybe could we

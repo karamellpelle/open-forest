@@ -36,31 +36,40 @@ namespace batb
 namespace forest
 {
 
+// this custom class loads our terrain dynamically
+class TerrainPageProvider;
+
 
 class Terrain
 {
 public:
+    Terrain();
+    ~Terrain();
+
+    void load(const YAML::Node& );
+
+    float_t incline(const glm::mat4& );
+
     // [Tree] :         Terrain is populated with trees
     // other objects :  Terrain is populated with other objects
+
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     Ogre::SceneManager*                 ogre_scenemanager = nullptr;
     Ogre::Viewport*                     ogre_viewport = nullptr;
 
-    static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; // only 1 per app; into BATB::Forest
     Ogre::TerrainGroup*                 ogre_terrain_group = nullptr;
     Ogre::TerrainPaging*                ogre_terrain_paging = nullptr;
     Ogre::PageManager*                  ogre_page_manager = nullptr;
     Ogre::PagedWorld*                   ogre_paged_world = nullptr;
     Ogre::TerrainPagedWorldSection*     ogre_paged_world_section = nullptr;
+    TerrainPageProvider*                page_provider = nullptr;
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // methods
-    //
-    void load(const YAML::Node& );
-
-    float_t incline(const glm::mat4& );
+    static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; // only 1 per app, hence put into BATB::Forest?
 
 private:
+
 };
 
 

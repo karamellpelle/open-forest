@@ -125,79 +125,37 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 
     using namespace Ogre;
 
-    ////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////
     // create SceneManager
-    // see http://www.ogre3d.org/tikiwiki/SceneManagersFAQ for managers
-    //forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager( "DefaultSceneManager" );
     forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager();
 
-    // see Ogre::ApplicationContext::createDummyScene()
-    // FIXME: remove upon deletion of forest::World? see Ogre::SampleBrowser::runSample()/Ogre::ApplicationContext::create/destroyDummyScene()
-    batb->ogre->ogre_shader_generator->addSceneManager( forest.ogre_scenemanager );
 
-    auto scnMgr = forest.ogre_scenemanager;
-    scnMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5)); 
-
-    Light* light = scnMgr->createLight("MainLight");
-    SceneNode* lightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    lightNode->attachObject(light);
-
-    //scnMgr->setSkyBox(true, "Examples/MorningSkyBox");
-
-    //! [newlight]
-
-    //! [lightpos]
-    lightNode->setPosition(20, 80, 50);
-    //! [lightpos]
-
-    //! [camera]
-    SceneNode* camNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-
-    // create the camera
-    Ogre::Camera* cam = scnMgr->createCamera("myCam");
-    cam->setNearClipDistance(5); // specific to this sample
-    cam->setAutoAspectRatio(true);
-    camNode->attachObject(cam);
-    camNode->setPosition(0, 0, 140);
-    //! [cameramove]
-        // and tell it to render into the main window
-    batb->ogre->ogre_renderwindow->addViewport(cam);
-
-//! [entity1]
-    Entity* ogreEntity = scnMgr->createEntity("ogrehead.mesh");
-    //! [entity1]
-
-    //! [entity1node]
-    SceneNode* ogreNode = scnMgr->getRootSceneNode()->createChildSceneNode();
-    //! [entity1node]
-
-    //! [entity1nodeattach]
-    ogreNode->attachObject(ogreEntity);
-    //! [entity1nodeattach]
-
-    //! [cameramove]
-    camNode->setPosition(0, 47, 222);
-    forest.camera.ogre_camera = cam;
-    forest.camera.ogre_scenenode = camNode;
     ////////////////////////////////////////////////////////////////
     // create a view into the Ogre scene, a Camera!
-    // it has to be connected to a SceneNode (new in version 1.10)
-
-#if 0
-    Ogre::Camera* cam = forest.ogre_scenemanager->createCamera( "Camera::ogre_camera" );
+    Ogre::Camera* cam = forest.ogre_scenemanager->createCamera( "ogre_camera" );
     Ogre::SceneNode* cam_node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
+    cam_node->setFixedYawAxis( true ); // strange stuff happens without this. FIXME
     cam_node->attachObject( cam );
     cam->setNearClipDistance(0.1);
-    cam->setFarClipDistance(50000);
+    // enable infinite far clip distance if we can
     if ( batb->ogre->ogre_root->getRenderSystem()->getCapabilities()->hasCapability( RSC_INFINITE_FAR_PLANE ) )
     {
-        // enable infinite far clip distance if we can
         cam->setFarClipDistance( 0 );   
     }
+    else
+    {
+        cam->setFarClipDistance(50000);
+    }
+        
+    forest.camera.ogre_camera = cam;
+    forest.camera.ogre_scenenode = cam_node;
 
 
     ////////////////////////////////////////////////////////////////
     // load terrain (based on Ogre sample)
+    //
     forest.terrain.ogre_scenemanager = forest.ogre_scenemanager;
     forest.terrain.ogre_viewport = forest.ogre_viewport;
     forest.terrain.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
@@ -205,26 +163,18 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 
     ////////////////////////////////////////////////////////////////
     // set weater TODO
+    //
     forest.weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
     forest.ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
     
-    // setup Forest::Camera
-    Ogre::Vector3 terrain_pos(1000,0,5000);
-    cam_node->setPosition(terrain_pos + Vector3(1683, 50, 2116));
-    cam_node->lookAt( Ogre::Vector3(1963, 50, 1660), Ogre::Node::TransformSpace::TS_WORLD );
-    forest.camera.ogre_camera = cam;
-    forest.camera.ogre_scenenode = cam_node;
-    // ^ FIXME: this is redudant because we use DTMovable
     // place camera
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 
-
     // create Viewport, the 2D target of Camera
     forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
     forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
-    forest.ogre_viewport->setBackgroundColour( ColourValue( 0.0, 0.6, 0.2 )); // tmp
-#endif
+
 
     // end ogre frame
     batb->gl->ogreEnd();

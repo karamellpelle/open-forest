@@ -89,7 +89,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     demo::nanovg::demo_begin( batb );
 
     // tmp: test GL
-    demo::gl::tests_setup( batb );
+    //demo::gl::tests_setup( batb );
 
     // ALURE demo
     demo::al::demo_begin( batb );
@@ -140,9 +140,9 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     // *** step ***
 
     // tmp:
-    batb->ogre->sceneBegin( run.scene );
-    demo::gl::tests_draw();
-    batb->ogre->sceneEnd();
+    //batb->ogre->sceneBegin( run.scene );
+    //demo::gl::tests_draw();
+    //batb->ogre->sceneEnd();
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );

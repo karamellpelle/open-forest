@@ -38,16 +38,19 @@ void Output::operator()(World& forest)
 {
     run::World& run = forest.run;
 
+    using namespace Ogre;
   
-    // TODO: instead for below, use Scene: camera->setProjection( run.scene.proj3D );
     float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
     forest.camera.ogre_camera->setAspectRatio( aspect );
 
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
-    //forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) ); 
-    //forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
+    // FIXME: use Aim matrix
+    forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
+    forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) , SceneNode::TransformSpace::TS_WORLD ); 
+    //Ogre::Quaternion quat = ogre::cast( glm::quat_cast( forest.camera.move.aim ) ); 
+    //forest.camera.ogre_scenenode->setOrientation( quat ); 
 
     ////////////////////////////////////////////////////////////////////////////////
 
