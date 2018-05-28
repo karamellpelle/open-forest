@@ -125,7 +125,6 @@ debug::gl::msg( os.str() );
         else
         {
             batb->log << "ERROR: no 'plugins' defined in .yaml" << std::endl;
-            batb->log->indentPop();
             throw std::runtime_error( "OGRE: no 'plugins' defined in config" );
         }
 
@@ -153,7 +152,6 @@ debug::gl::msg( "ogre_root->setRenderSystem" );
         else
         {
             batb->log << "ERROR: no RenderSystem with name '" << ogre_rendersystem_name_ << "'" << std::endl;
-            batb->log->indentPop();
             throw std::runtime_error( "OGRE: no RenderSystem with name " + ogre_rendersystem_name_ );
         }
 

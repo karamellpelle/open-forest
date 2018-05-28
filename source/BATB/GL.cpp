@@ -69,7 +69,6 @@ void GL::begin(const std::string& path)
 	if ( nvg_context == nullptr )
         {
             batb->log << "ERROR: could not create NanoVG GL2 context" << std::endl;
-            batb->log->indentPop();
             throw std::runtime_error( "GL: could not create NanoVG GL2 context" );
 	}
         batb->log << "NanoVG GL2 context created" << std::endl;
@@ -79,7 +78,6 @@ void GL::begin(const std::string& path)
 	if ( nvg_context == nullptr )
         {
             batb->log << "ERROR: could not create NanoVG GL3 context" << std::endl;
-            batb->log->indentPop();
             throw std::runtime_error( "GL: could not create NanoVG GL3 context" );
 	}
         batb->log << "NanoVG GL3 context created" << std::endl;

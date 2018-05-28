@@ -65,7 +65,6 @@ void AL::begin(const std::string& path)
         catch (std::exception& e)
         {
             batb->log << "ERROR: could not initialize (" << e.what() << ")" << std::endl;
-            batb->log->indentPop();
             throw e;
         }
 

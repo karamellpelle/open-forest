@@ -57,7 +57,6 @@ void Screen::begin(const std::string& path)
         if ( !glfwInit() )
         {
             batb->log << "ERROR: could not initialize GLFW" << std::endl;
-            batb->log->indentPop(); 
             throw std::runtime_error( "Screen: Could not init GLFW" );
         }
 
@@ -158,7 +157,6 @@ void Screen::begin(const std::string& path)
         if ( !glfw_window )
         {
             batb->log << "ERROR: could not create GLFW window" << std::endl;
-            batb->log->indentPop();
             throw std::runtime_error( "Screen: could not create GLFW window" );
         }
 
@@ -170,7 +168,6 @@ void Screen::begin(const std::string& path)
         if ( err != GLEW_OK )
         {
             batb->log << "ERROR: could not initialize the OpenGL loading library (GLEW): " << glewGetErrorString( err ) << std::endl;
-            batb->log->indentPop();
 
             std::ostringstream os;
             os << "Screen: could not init GLEW (" << glewGetErrorString( err ) << ")";
