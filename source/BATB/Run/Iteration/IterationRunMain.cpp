@@ -33,7 +33,8 @@
 
 
 //#define DEMO_FOREST_DIRECT
-//#define DEMO_TEST_GL
+
+#define DEMO_TEST_GL
 
 namespace batb
 {
@@ -92,6 +93,7 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 #ifdef DEMO_TEST_GL
     demo::gl::tests_setup( batb );
+    demo::gl::tests_pause( false );
 #endif
 
     // ALURE demo
@@ -193,6 +195,11 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
                 }
                 else
                 {
+#ifdef DEMO_TEST_GL
+                    // remove the viewport 
+                    // after this, the demo will not render anyting
+                    demo::gl::tests_pause( true );
+#endif
 
                     // create and set up demo world
                     auto demo = newDemoWorld( &run );

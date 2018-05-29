@@ -199,7 +199,7 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         ////////////////////////////////////////////////////////////////////////////////
         // OgreRoot::createRenderWindow() -> XXXRenderSystem::_createRenderWindow() -> XXXGLSupport::newWindow() 
         //                                -> XXXWindow::create(). and this creates the XXXContext class too.
-        ogre_renderwindow = ogre_root->createRenderWindow( "BATBOgreRenderWindow", 800, 600, false, &params );
+        ogre_renderwindow = ogre_root->createRenderWindow( "ogre_renderwindow", 800, 600, false, &params );
         // don't let Ogre swap our GLFWwindow; prevent flickering. this should work since 
         // RenderSystem::_swapAllRenderTargetBuffers() only swaps auto updated windows. however, 
         // RenderTarget::setAutoUpdated() and RenderTarget::isAutoUpdated() are virtual functions,

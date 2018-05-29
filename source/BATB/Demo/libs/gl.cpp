@@ -53,7 +53,9 @@ void superbible6_draw();
 void ogre_setup();
 void ogre_draw(const Scene& );
 void ogre_shutdown();
+void ogre_pause(bool );
 
+bool is_pause = false;
 
 void tests_setup(BATB* b)
 {
@@ -87,6 +89,13 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 }
 
+void tests_pause(bool b)
+{
+
+    ogre_pause( b );
+
+    is_pause = b;
+}
 
 
 
@@ -294,8 +303,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
 using namespace Ogre;
 
+#define OGRE_VIEWPORT_ZORDER (-1)
+
 Camera* cam = nullptr;
 SceneNode* camNode = nullptr;
+SceneManager* scnMgr = nullptr;
 
 void updateCamNode(double time)
 {
@@ -320,7 +332,7 @@ void ogre_setup()
         }
 
     Root* root = batb->ogre->ogre_root;
-    SceneManager* scnMgr = root->createSceneManager();
+    scnMgr = root->createSceneManager();
 
     // register our scene with the RTSS
     RTShader::ShaderGenerator* shadergen = RTShader::ShaderGenerator::getSingletonPtr();
@@ -346,7 +358,7 @@ void ogre_setup()
     //scnMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
     //! [addviewport]
-    Viewport* vp = batb->ogre->ogre_renderwindow->addViewport(cam);
+    Viewport* vp = batb->ogre->ogre_renderwindow->addViewport(cam, OGRE_VIEWPORT_ZORDER ); // below other zorders
     //! [addviewport]
 
     //! [viewportback]
@@ -419,7 +431,7 @@ void ogre_setup()
     //! [spotlightposrot]
     SceneNode* spotLightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
     spotLightNode->attachObject(spotLight);
-    spotLightNode->setDirection(-1, -1, 0);
+    spotLightNode->setDirection(OGRE_VIEWPORT_ZORDER, OGRE_VIEWPORT_ZORDER, 0);
     spotLightNode->setPosition(Vector3(200, 200, 0));
     //! [spotlightposrot]
 
@@ -440,7 +452,7 @@ void ogre_setup()
     //! [directlightdir]
     SceneNode* directionalLightNode = scnMgr->getRootSceneNode()->createChildSceneNode();
     directionalLightNode->attachObject(directionalLight);
-    directionalLightNode->setDirection(Vector3(0, -1, 1));
+    directionalLightNode->setDirection(Vector3(0, OGRE_VIEWPORT_ZORDER, 1));
     //! [directlightdir]
 
     //! [pointlight]
@@ -462,23 +474,47 @@ void ogre_setup()
 
 void ogre_draw(const Scene& scene)
 {
-    
-    batb->ogre->sceneBegin( scene );
+    if ( scnMgr )
+    {
+        batb->ogre->sceneBegin( scene );
 
-    uint w,h;
-    batb->screen->getSize( w, h );
-    //
-    cam->setAspectRatio( (float_t)(w) / (float_t)( h) );
+        uint w,h;
+        batb->screen->getSize( w, h );
+        //
+        cam->setAspectRatio( (float_t)(w) / (float_t)( h) );
 
-    updateCamNode( batb->time->get() );
-    batb->ogre->outputCamera( cam );
+        updateCamNode( batb->time->get() );
+        batb->ogre->outputCamera( cam );
 
-    batb->ogre->sceneEnd();
+        batb->ogre->sceneEnd();
+    }
+}
+
+void ogre_pause(bool pause)
+{
+    if ( pause && !is_pause )
+    {
+        // create a new viewport
+        batb->ogre->ogre_renderwindow->removeViewport( OGRE_VIEWPORT_ZORDER );
+    }
+    if ( !pause && is_pause )
+    {
+        // add a new viewport. the previous was removed
+        Viewport* vp = batb->ogre->ogre_renderwindow->addViewport(cam, OGRE_VIEWPORT_ZORDER ); // below other zorders
+        vp->setBackgroundColour(ColourValue(0, 0, 0));
+    }
 }
 
 void ogre_shutdown()
 {
+    batb->ogre->ogre_renderwindow->removeViewport( OGRE_VIEWPORT_ZORDER );
 
+    // this releases (?) created objects
+    batb->ogre->ogre_root->destroySceneManager( scnMgr );
+
+    camNode = nullptr;
+    cam = nullptr;
+    scnMgr = nullptr;
 }
 
 

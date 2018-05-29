@@ -17,6 +17,7 @@ namespace gl
 void tests_setup(BATB* batb);
 void tests_shutdown(BATB* batb);
 void tests_draw(const Scene&);
+void tests_pause(bool );
 
 } // namespace gl
 } // namespace demo
