@@ -171,7 +171,8 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 
     // should be done right after createSceneManager(). see https://ogrecave.github.io/ogre/api/1.11/_shadows.html
     // but need camera first in the mehtod's implementation
-    ogreShadows( forest );
+    // it's CPU intensive!
+    //ogreShadows( forest );
 
     ////////////////////////////////////////////////////////////////
     // load terrain (based on Ogre sample)
@@ -195,7 +196,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 
     // create Viewport, the 2D target of Camera
     // fix problem with externalWindow handling and resizing. see https://github.com/OGRECave/ogre/issues/774#issuecomment-392755242
-    //forest.ogre_renderwindow->windowMovedOrResized();
+    batb->ogre->ogre_renderwindow->windowMovedOrResized();
     forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
     forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
 
