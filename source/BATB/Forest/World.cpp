@@ -41,6 +41,11 @@ namespace forest
 {
 
 
+World::World(run::World& r) : run( r ), weather( this )
+{ 
+
+}
+
 Control* World::addControl(const ControlDefinition& def)
 {
 
@@ -164,10 +169,12 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////
     // set weater TODO
     //
-    forest.weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
-    forest.ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
-    
-    // place camera
+    //forest.weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
+    forest.weather.setDay();
+   
+
+    ////////////////////////////////////////////////////////////////
+    // place camera at origo plane XZ
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 

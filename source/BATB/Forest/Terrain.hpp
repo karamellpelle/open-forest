@@ -66,7 +66,7 @@ public:
     Ogre::TerrainPagedWorldSection*     ogre_paged_world_section = nullptr;
     TerrainPageProvider*                page_provider = nullptr;
 
-    static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; // only 1 per app, hence put into BATB::Forest?
+    static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; 
 
 private:
 

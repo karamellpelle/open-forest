@@ -17,6 +17,7 @@
 //
 #include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
+#include "BATB/Forest/Terrain.hpp"
 
 
 namespace batb
@@ -26,12 +27,70 @@ namespace forest
 {
 
 
-
-void Weather::load(const YAML::Node& yaml)
+Weather::Weather(World* t) : forest( t )
 {
 
 }
 
+
+void Weather::load(const YAML::Node& yaml)
+{
+    // TODO
+    //
+}
+
+void Weather::setDay()
+{
+    using namespace Ogre;
+
+    // fog
+    forest->ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000);
+    
+    // sun direction. TODO
+
+    // sun light
+    if ( ogre_light_sun == nullptr )
+    {
+        ogre_light_sun = forest->ogre_scenemanager->createLight( "ogre_light_sun" );
+    }
+
+    Vector3 lightdir(0.55, -0.3, 0.75);
+    lightdir.normalise();
+    ogre_light_sun->setType( Light::LT_DIRECTIONAL );
+    ogre_light_sun->setDirection( lightdir );
+    ogre_light_sun->setDiffuseColour( ColourValue::White );
+    ogre_light_sun->setSpecularColour( ColourValue(0.6, 0.6, 0.6) );
+
+    // ambient light
+    forest->ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+
+    forest->terrain.ogre_terrain_globals->setLightMapDirection( ogre_light_sun->getDerivedDirection() );
+    forest->terrain.ogre_terrain_globals->setCompositeMapAmbient( forest->ogre_scenemanager->getAmbientLight() );
+    //forest->terrain.ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
+    forest->terrain.ogre_terrain_globals->setCompositeMapDiffuse( ogre_light_sun->getDiffuseColour() );
+    forest->terrain.ogre_terrain_globals->setLightMapDirection( ogre_light_sun->getDerivedDirection() );
+    forest->terrain.ogre_terrain_globals->setCompositeMapAmbient( forest->ogre_scenemanager->getAmbientLight() );
+    //forest->terrain.ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
+    forest->terrain.ogre_terrain_globals->setCompositeMapDiffuse( ogre_light_sun->getDiffuseColour() );
+
+
+    // sky box
+    forest->ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
+}
+
+void Weather::setNight()
+{
+
+}
+
+
+void Weather::setHourOfDay(float_t hour)
+{
+    // normalise into day
+    hour = std::fmod( hour,  24.0 );
+
+    // TODO: sun position and light based on hour an location on planet
+}
 
 } // namespace forest
 

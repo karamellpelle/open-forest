@@ -57,7 +57,7 @@ public:
     typedef std::forward_list<Map>      MapList;
     typedef std::forward_list<Runner>   RunnerList;
 
-    World(run::World& r) : run( r ) { }
+    World(run::World& r); 
 
     ////////////////////////////////////////////////////////////////////////////////
     //
@@ -120,7 +120,6 @@ public:
 
     Ogre::SceneManager* ogre_scenemanager = nullptr;
     Ogre::Viewport*     ogre_viewport = nullptr;
-    Ogre::Light*        ogre_light_sun = nullptr; // ->setType(Light::LT_DIRECTIONAL); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
 
 
     // sound

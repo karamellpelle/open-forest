@@ -37,11 +37,27 @@ class World;
 class Weather
 {
 public:
-    // Date: day, time
-    // ...
+    Weather(World* t);
+
     void load(const YAML::Node& );
 
-private:
+    // 24 times clock
+    void setHourOfDay(float_t );
+
+    // simple for now:
+    void setDay();
+    void setNight();
+
+    //void setPercipitaion(/* none | rain | snow | hail | etc */);
+    //void setFog(float_t 0.0..1.0);
+
+    // TODO: terrain location on planet and date of year (for location and intensity)
+    // ...
+    // float_t speed; // forest.tick -> hour of day
+
+    World* forest = nullptr;
+
+    Ogre::Light*        ogre_light_sun = nullptr; // ->setType(Light::LT_DIRECTIONAL); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
 };
 
 
