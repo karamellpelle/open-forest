@@ -33,7 +33,7 @@
 
 
 //#define DEMO_FOREST_DIRECT
-
+//#define DEMO_TEST_GL
 
 namespace batb
 {
@@ -88,8 +88,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // nanovg demo
     demo::nanovg::demo_begin( batb );
 
-    // tmp: test GL
-    //demo::gl::tests_setup( batb );
+    // test GL
+
+#ifdef DEMO_TEST_GL
+    demo::gl::tests_setup( batb );
+#endif
 
     // ALURE demo
     demo::al::demo_begin( batb );
@@ -139,10 +142,10 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     ////////////////////////////////////////////////////////////////////////////////
     // *** step ***
 
-    // tmp:
-    //batb->ogre->sceneBegin( run.scene );
-    //demo::gl::tests_draw();
-    //batb->ogre->sceneEnd();
+
+#ifdef DEMO_TEST_GL
+    demo::gl::tests_draw( run.scene );
+#endif
 
     // step AL and nanovg demos
     demo::al::demo_iterate( batb, run );

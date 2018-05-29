@@ -95,7 +95,7 @@ Ogre::TerrainGlobalOptions*  Terrain::ogre_terrain_globals = nullptr;
 ////////////////////////////////////////////////////////////////////////////////
 //
 
-Terrain::Terrain()
+Terrain::Terrain(World& f) : forest( f )
 {
     
 }
@@ -128,27 +128,13 @@ void Terrain::load(const YAML::Node& yaml)
     // see https://ogrecave.github.io/ogre/api/1.11/class_ogre_1_1_terrain_global_options.html
     if ( ogre_terrain_globals == nullptr )
     {
-        ogre_terrain_globals = OGRE_NEW TerrainGlobalOptions();
+        ogre_terrain_globals = new TerrainGlobalOptions();
         // TODO: setup ?
     }
 
     MaterialManager::getSingleton().setDefaultTextureFiltering(TFO_ANISOTROPIC);
     MaterialManager::getSingleton().setDefaultAnisotropy(7);
 
-    //ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000);
-
-    LogManager::getSingleton().setLogDetail(LL_BOREME);
-
-    //Vector3 lightdir(0.55, -0.3, 0.75);
-    //lightdir.normalise();
-    //
-    //Light* l = ogre_scenemanager->createLight("tstLight");
-    //l->setType(Light::LT_DIRECTIONAL);
-    //l->setDirection(lightdir);
-    //l->setDiffuseColour(ColourValue::White);
-    //l->setSpecularColour(ColourValue(0.6, 0.6, 0.6));
-    //
-    //ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
     ogre_terrain_group = OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
     ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
@@ -174,10 +160,6 @@ void Terrain::load(const YAML::Node& yaml)
             static_cast<TerrainMaterialGeneratorA::SM2Profile*>( ogre_terrain_globals->getDefaultMaterialGenerator()->getActiveProfile());
         matProfile->setLightmapEnabled(false);
     }
-    //ogre_terrain_globals->setLightMapDirection(l->getDerivedDirection());
-    //ogre_terrain_globals->setCompositeMapAmbient(ogre_scenemanager->getAmbientLight());
-    ////ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
-    //ogre_terrain_globals->setCompositeMapDiffuse(l->getDiffuseColour());
 
     // Configure default import settings for if we use imported image
     Ogre::Terrain::ImportData& defaultimp = ogre_terrain_group->getDefaultImportSettings();

@@ -126,6 +126,7 @@ public:
     alure::Listener al_listener;
 private:
     
+    
 };
 
 
@@ -140,8 +141,11 @@ public:
     void unload(World& );
 
 private:
-    BATB* batb;
-    //run::Work& work
+    void ogreShadows(World& );
+
+    BATB* batb = nullptr;
+
+
 };
 
 

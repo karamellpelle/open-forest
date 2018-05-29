@@ -5,6 +5,7 @@ namespace batb
 {
 
 class BATB;
+class Scene;
 
 namespace demo
 {
@@ -15,8 +16,7 @@ namespace gl
 
 void tests_setup(BATB* batb);
 void tests_shutdown(BATB* batb);
-
-void tests_draw();
+void tests_draw(const Scene&);
 
 } // namespace gl
 } // namespace demo

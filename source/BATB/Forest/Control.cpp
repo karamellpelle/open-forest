@@ -32,6 +32,7 @@ namespace batb
 namespace forest
 {
 
+// clear??
 void Control::reset()
 {
     if ( ogre_entity )
@@ -68,9 +69,12 @@ void Control::reset(const ControlDefinition& def)
 
     ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "control.mesh" );
     auto* node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
-    node->scale( 16, 16, 16 ); // FIXME
+    node->scale( 16, 16, 16 ); // FIXME: use metric system all over
     node->setPosition( aim.pos.x, aim.pos.y, aim.pos.z );
     node->attachObject( ogre_entity );
+
+    // shadows
+    ogre_entity->setCastShadows( true );
 
     // set definition
     definition = def;

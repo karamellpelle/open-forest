@@ -36,6 +36,8 @@ namespace batb
 namespace forest
 {
 
+class World;
+
 // this custom class loads our terrain dynamically
 class TerrainPageProvider;
 
@@ -43,7 +45,7 @@ class TerrainPageProvider;
 class Terrain
 {
 public:
-    Terrain();
+    Terrain(World& );
     ~Terrain();
 
     void load(const YAML::Node& );
@@ -55,6 +57,8 @@ public:
 
 
     ////////////////////////////////////////////////////////////////////////////////
+    World& forest;
+
 
     Ogre::SceneManager*                 ogre_scenemanager = nullptr;
     Ogre::Viewport*                     ogre_viewport = nullptr;
@@ -68,6 +72,7 @@ public:
 
     static Ogre::TerrainGlobalOptions*  ogre_terrain_globals; 
 
+    
 private:
 
 };

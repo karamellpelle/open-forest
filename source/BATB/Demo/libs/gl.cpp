@@ -1,5 +1,6 @@
 #include "BATB/Demo/libs/gl.hpp"
 #include "BATB/Screen.hpp"
+#include "BATB/Scene.hpp"
 #include "BATB/Time.hpp"
 #include "BATB.hpp"
 
@@ -39,13 +40,20 @@ namespace demo
 namespace gl
 {
 
+
 BATB* batb = nullptr;
 GLuint make_program(const std::string& name, const GLchar* , const GLchar* , const GLchar* );
-GLuint rendering_program; 
-GLuint vertex_array_object;
 
+// OpenGL Super Bible 6 examples
+void superbible6_setup();
+void superbible6_shutdown();
+void superbible6_draw();
+
+// test OGRE
 void ogre_setup();
-void ogre_draw();
+void ogre_draw(const Scene& );
+void ogre_shutdown();
+
 
 void tests_setup(BATB* b)
 {
@@ -55,117 +63,27 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     {
         batb = b;
 
+        //superbible6_setup();
         ogre_setup();
-
-#if 0
-        static const GLchar * vertex_shader_source = R"(#version 330 core
-        layout (location = 0) in vec4 offset;
-        layout (location = 1) in vec4 color;
-
-        out VS_OUT
-        {
-            vec4 color;
-
-        } vs_out;
-
-        void main(void)
-        {
-            const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0), vec4(-0.25, -0.25, 0.5, 1.0), vec4( 0.25, 0.25, 0.5, 1.0));
-            //const vec4 colors[3] = vec4[3]( vec4( 1.0, 0.4, 0.0, 1.0), vec4(0.3, 0.0, 0.7, 1.0), vec4( 0.1, 0.0, 0.8, 1.0) );
-
-            vs_out.color = color;
-
-            gl_Position = vertices[ gl_VertexID ] + offset;
-        }
-        )";
-
-        static const GLchar * geometry_shader_source = R"(#version 330 core
-        layout (triangles) in;
-        layout (points, max_vertices = 3) out;
-
-        void main(void)
-        {
-            int i;
-            for (i = 0; i < gl_in.length(); i++)
-            {
-                gl_Position = gl_in[i].gl_Position;
-                EmitVertex();
-            } 
-        }
-        )";
-
-        static const GLchar * fragment_shader_source = R"(#version 330 core
-        in VS_OUT
-        {
-          vec4 color;
-        } fs_in;
-
-        out vec4 color;
-
-        void main(void)
-        {
-            //color = vec4(0.0, 0.8, 1.0, 1.0);
-            color = fs_in.color;
-            //color = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + 0.5, cos(gl_FragCoord.y * 0.25) * 0.5 + 0.5, sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15), 1.0);
-        }
-        )";
-
-
-        rendering_program = make_program( "OpenGLSuperBible6", vertex_shader_source, 0, fragment_shader_source ); 
-
-        // create simple VAO
-        glGenVertexArrays(1, &vertex_array_object); 
-        glBindVertexArray(vertex_array_object);
-
-        glPointSize( 40.0f );
-#endif
     }
 }
 
 void tests_shutdown(BATB* b)
 {
-#if 0
-    debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
-    glDeleteVertexArrays(1, &vertex_array_object); 
-    glDeleteProgram(rendering_program);
-    glDeleteVertexArrays(1, &vertex_array_object);
-
-    batb = nullptr;
-#endif
+    ogre_shutdown();
+    //superbible6_shutdown();
 }
 
-void tests_draw()
+void tests_draw(const Scene& scene)
 {
 debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 
     if ( batb == nullptr ) return;
 
-    ogre_draw();
+    ogre_draw( scene );
+   
+    //superbible6_draw();
 
-#if 0
-    double currentTime = batb->time->get();
-
-    const GLfloat color[] = { (float)std::sin(currentTime) * 0.5f + 0.5f, (float)std::cos(currentTime) * 0.5f + 0.5f,
-                                      0.0f, 1.0f };
-    //glClearBufferfv(GL_COLOR, 0, color);
-
-    glDisable( GL_DEPTH_TEST );
-    glDisable( GL_SCISSOR_TEST );
-    glEnable( GL_BLEND );
-    // Use the program object we created earlier for rendering
-    glUseProgram(rendering_program);
-    glBindVertexArray(vertex_array_object);
-    GLfloat attrib[] = { (float)sin(currentTime) * 0.5f, (float)cos(currentTime) * 0.6f, 0.0f, 0.0f };
-    // Update the value of input attribute 0
-    glVertexAttrib4fv(0, attrib);
-
-    // color
-    GLfloat attribcolor[] = { 0.5f * (float)(1.0 + sin(currentTime)), 0.5f * (float)(1.0 + cos(1.7 * currentTime) ), 0.0f, 1.0f };
-    glVertexAttrib4fv(1, attribcolor);
-
-    // Draw one point
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-#endif
 
 }
 
@@ -259,22 +177,119 @@ GLuint make_program(const std::string& name, const GLchar* vsh_source, const GLc
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+//  OpenGL Super Bible examples
+
+GLuint rendering_program; 
+GLuint vertex_array_object;
+
+void superbible6_setup()
+{
+
+    static const GLchar * vertex_shader_source = R"(#version 330 core
+    layout (location = 0) in vec4 offset;
+    layout (location = 1) in vec4 color;
+
+    out VS_OUT
+    {
+        vec4 color;
+
+    } vs_out;
+
+    void main(void)
+    {
+        const vec4 vertices[3] = vec4[3](vec4( 0.25, -0.25, 0.5, 1.0), vec4(-0.25, -0.25, 0.5, 1.0), vec4( 0.25, 0.25, 0.5, 1.0));
+        //const vec4 colors[3] = vec4[3]( vec4( 1.0, 0.4, 0.0, 1.0), vec4(0.3, 0.0, 0.7, 1.0), vec4( 0.1, 0.0, 0.8, 1.0) );
+
+        vs_out.color = color;
+
+        gl_Position = vertices[ gl_VertexID ] + offset;
+    }
+    )";
+
+    static const GLchar * geometry_shader_source = R"(#version 330 core
+    layout (triangles) in;
+    layout (points, max_vertices = 3) out;
+
+    void main(void)
+    {
+        int i;
+        for (i = 0; i < gl_in.length(); i++)
+        {
+            gl_Position = gl_in[i].gl_Position;
+            EmitVertex();
+        } 
+    }
+    )";
+
+    static const GLchar * fragment_shader_source = R"(#version 330 core
+    in VS_OUT
+    {
+      vec4 color;
+    } fs_in;
+
+    out vec4 color;
+
+    void main(void)
+    {
+        //color = vec4(0.0, 0.8, 1.0, 1.0);
+        color = fs_in.color;
+        //color = vec4(sin(gl_FragCoord.x * 0.25) * 0.5 + 0.5, cos(gl_FragCoord.y * 0.25) * 0.5 + 0.5, sin(gl_FragCoord.x * 0.15) * cos(gl_FragCoord.y * 0.15), 1.0);
+    }
+    )";
+
+
+    rendering_program = make_program( "OpenGLSuperBible6", vertex_shader_source, 0, fragment_shader_source ); 
+
+    // create simple VAO
+    glGenVertexArrays(1, &vertex_array_object); 
+    glBindVertexArray(vertex_array_object);
+
+    glPointSize( 40.0f );
+}
+
+void superbible6_draw()
+{
+
+    double currentTime = batb->time->get();
+
+    const GLfloat color[] = { (float)std::sin(currentTime) * 0.5f + 0.5f, (float)std::cos(currentTime) * 0.5f + 0.5f,
+                                      0.0f, 1.0f };
+    //glClearBufferfv(GL_COLOR, 0, color);
+
+    glDisable( GL_DEPTH_TEST );
+    glDisable( GL_SCISSOR_TEST );
+    glEnable( GL_BLEND );
+    // Use the program object we created earlier for rendering
+    glUseProgram(rendering_program);
+    glBindVertexArray(vertex_array_object);
+    GLfloat attrib[] = { (float)sin(currentTime) * 0.5f, (float)cos(currentTime) * 0.6f, 0.0f, 0.0f };
+    // Update the value of input attribute 0
+    glVertexAttrib4fv(0, attrib);
+
+    // color
+    GLfloat attribcolor[] = { 0.5f * (float)(1.0 + sin(currentTime)), 0.5f * (float)(1.0 + cos(1.7 * currentTime) ), 0.0f, 1.0f };
+    glVertexAttrib4fv(1, attribcolor);
+
+    // Draw one point
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void superbible6_shutdown()
+{
+debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
+    glDeleteVertexArrays(1, &vertex_array_object); 
+    glDeleteProgram(rendering_program);
+    glDeleteVertexArrays(1, &vertex_array_object);
+
+    batb = nullptr;
+}
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
+//  Ogre tutorial
 
 
 using namespace Ogre;
@@ -343,10 +358,14 @@ void ogre_setup()
     //! [cameraratio]
 
     //! [ninja]
-    Entity* ninjaEntity = scnMgr->createEntity("ninja.mesh");
-    ninjaEntity->setCastShadows(true);
+    //Entity* entity = scnMgr->createEntity("ninja.mesh");
+    Entity* entity = scnMgr->createEntity("control.mesh");
+    entity->setCastShadows(true);
 
-    scnMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ninjaEntity);
+    SceneNode* node = scnMgr->getRootSceneNode()->createChildSceneNode();
+    node->scale( 170, 170, 170 ); 
+    node->attachObject( entity );
+
     //! [ninja]
 
     //! [plane]
@@ -377,7 +396,8 @@ void ogre_setup()
     //! [planesetmat]
 
     //! [lightingsset]
-    scnMgr->setAmbientLight(ColourValue(0, 0, 0));
+    scnMgr->setAmbientLight(ColourValue(0.0, 0.0, 0.0));
+    //scnMgr->setAmbientLight(ColourValue(0.4, 0.4, 0.4));
     scnMgr->setShadowTechnique(ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
     //! [lightingsset]
 
@@ -440,8 +460,11 @@ void ogre_setup()
 
 }
 
-void ogre_draw()
+void ogre_draw(const Scene& scene)
 {
+    
+    batb->ogre->sceneBegin( scene );
+
     uint w,h;
     batb->screen->getSize( w, h );
     //
@@ -449,8 +472,14 @@ void ogre_draw()
 
     updateCamNode( batb->time->get() );
     batb->ogre->outputCamera( cam );
+
+    batb->ogre->sceneEnd();
 }
 
+void ogre_shutdown()
+{
+
+}
 
 
 

@@ -95,8 +95,10 @@ void Runner::reset(const YAML::Node& yaml)
     }
 
     ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "Sinbad.mesh" );
+    ogre_entity->setCastShadows( true );
+
     auto* node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
-    node->scale( 3, 3, 3 ); // FIXME
+    node->scale( 3, 3, 3 ); // FIXME: use metric system all over (Terrain, Runners, Controls)
     node->attachObject( ogre_entity );
 
     // setup animations for runner

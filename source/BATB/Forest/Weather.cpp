@@ -62,7 +62,8 @@ void Weather::setDay()
     ogre_light_sun->setSpecularColour( ColourValue(0.6, 0.6, 0.6) );
 
     // ambient light
-    forest->ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+    //forest->ogre_scenemanager->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+    forest->ogre_scenemanager->setAmbientLight(ColourValue(0.6, 0.6, 0.6));
 
     forest->terrain.ogre_terrain_globals->setLightMapDirection( ogre_light_sun->getDerivedDirection() );
     forest->terrain.ogre_terrain_globals->setCompositeMapAmbient( forest->ogre_scenemanager->getAmbientLight() );

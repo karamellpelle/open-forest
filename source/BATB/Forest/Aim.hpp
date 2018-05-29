@@ -37,6 +37,14 @@ public:
     Aim(const Aim& a) : aim( a.aim ), pos( aim[3] )               { }
     Aim(Aim&& a)      : aim( std::move( a.aim ) ), pos( aim[3] )  { }
 
+    inline void setPos(const glm::vec3& vec)
+    {
+        pos = glm::vec4( vec, 1.0 );
+    }
+    inline void setPos(const glm::vec4::value_type& x, const glm::vec4::value_type& y, const glm::vec4::value_type& z)
+    {
+        pos = glm::vec4( x, y, z, 1.0 );
+    }
     glm::mat4  aim;
     glm::vec4& pos;
 };

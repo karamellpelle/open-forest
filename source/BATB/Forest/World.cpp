@@ -33,6 +33,18 @@
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
 #include "OgreShaderGenerator.h"
+#include "OgreTerrainMaterialGeneratorA.h"
+
+#include "OgrePageManager.h"
+#include "OgreTerrain.h"
+#include "OgreTerrainGroup.h"
+#include "OgreTerrainQuadTreeNode.h"
+#include "OgreTerrainMaterialGeneratorA.h"
+#include "OgreTerrainPaging.h"
+#include "OgreShadowCameraSetupPSSM.h"
+#include "OgreMaterialManager.h"
+#include "OgreTechnique.h"
+
 
 namespace batb
 {
@@ -41,7 +53,7 @@ namespace forest
 {
 
 
-World::World(run::World& r) : run( r ), weather( this )
+World::World(run::World& r) : terrain( *this ), weather( this ),  run( r )
 { 
 
 }
@@ -135,7 +147,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////
     // create SceneManager
     forest.ogre_scenemanager = batb->ogre->ogre_root->createSceneManager();
-
+   
 
     ////////////////////////////////////////////////////////////////
     // create a view into the Ogre scene, a Camera!
@@ -157,6 +169,9 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     forest.camera.ogre_camera = cam;
     forest.camera.ogre_scenenode = cam_node;
 
+    // should be done right after createSceneManager(). see https://ogrecave.github.io/ogre/api/1.11/_shadows.html
+    // but need camera first in the mehtod's implementation
+    ogreShadows( forest );
 
     ////////////////////////////////////////////////////////////////
     // load terrain (based on Ogre sample)
@@ -179,6 +194,8 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 
     // create Viewport, the 2D target of Camera
+    // fix problem with externalWindow handling and resizing. see https://github.com/OGRECave/ogre/issues/774#issuecomment-392755242
+    //forest.ogre_renderwindow->windowMovedOrResized();
     forest.ogre_viewport = batb->ogre->ogre_renderwindow->addViewport( forest.camera.ogre_camera );
     forest.ogre_viewport->setClearEveryFrame( false, 0 ); 
 
@@ -192,6 +209,114 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
 void WorldLoader::unload(World& forest)
 {
     batb->log << "FIXME: unload forest::World!" << std::endl;
+}
+
+static Ogre::ShadowCameraSetupPtr mPSSMSetup;
+
+void WorldLoader::ogreShadows(World& forest)
+{
+    using namespace Ogre;
+
+   // below does not work, but this do
+   forest.ogre_scenemanager->setShadowTechnique(ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE);
+    
+#if 0
+    Ogre::MaterialPtr buildDepthShadowMaterial(const Ogre::String& );
+
+    bool enabled = true;
+    bool depthShadows = false;
+
+    // create global options if not present yet
+    Terrain::ogre_terrain_globals = Terrain::ogre_terrain_globals ? Terrain::ogre_terrain_globals : new TerrainGlobalOptions();
+
+    TerrainMaterialGeneratorA::SM2Profile* matProfile =
+        static_cast<TerrainMaterialGeneratorA::SM2Profile*>( Terrain::ogre_terrain_globals->getDefaultMaterialGenerator()->getActiveProfile());
+    matProfile->setReceiveDynamicShadowsEnabled(enabled);
+#ifdef SHADOWS_IN_LOW_LOD_MATERIAL
+    matProfile->setReceiveDynamicShadowsLowLod(true);
+#else
+    matProfile->setReceiveDynamicShadowsLowLod(false);
+#endif
+
+    //forest.ogre_scenemanager->setShadowTechnique( ShadowTechnique::SHADOWTYPE_STENCIL_MODULATIVE );
+    forest.ogre_scenemanager->setShadowTechnique(SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
+    forest.ogre_scenemanager->setShadowFarDistance(3000);
+    // 3 textures per directional light (PSSM)
+    forest.ogre_scenemanager->setShadowTextureCountPerLightType(Ogre::Light::LT_DIRECTIONAL, 3);
+    
+    Ogre::Camera* cam = forest.camera.ogre_camera;
+    
+    if (!mPSSMSetup)
+    {
+        // shadow camera setup
+        PSSMShadowCameraSetup* pssmSetup = new PSSMShadowCameraSetup();
+        pssmSetup->setSplitPadding( cam->getNearClipDistance());
+        pssmSetup->calculateSplitPoints(3,  cam->getNearClipDistance(), forest.ogre_scenemanager->getShadowFarDistance());
+        pssmSetup->setOptimalAdjustFactor(0, 2);
+        pssmSetup->setOptimalAdjustFactor(1, 1);
+        pssmSetup->setOptimalAdjustFactor(2, 0.5);
+
+        mPSSMSetup.reset(pssmSetup);
+    }
+    forest.ogre_scenemanager->setShadowCameraSetup(mPSSMSetup);
+
+    if (depthShadows)
+    {
+        forest.ogre_scenemanager->setShadowTextureCount(3);
+        forest.ogre_scenemanager->setShadowTextureConfig(0, 2048, 2048, PF_FLOAT32_R);
+        forest.ogre_scenemanager->setShadowTextureConfig(1, 1024, 1024, PF_FLOAT32_R);
+        forest.ogre_scenemanager->setShadowTextureConfig(2, 1024, 1024, PF_FLOAT32_R);
+        forest.ogre_scenemanager->setShadowTextureSelfShadow(true);
+        forest.ogre_scenemanager->setShadowCasterRenderBackFaces(true);
+
+        //MaterialPtr houseMat = buildDepthShadowMaterial("fw12b.jpg");
+        //for (EntityList::iterator i = mHouseList.begin(); i != mHouseList.end(); ++i)
+        //{
+        //    (*i)->setMaterial(houseMat);
+        //}
+    }
+    else
+    {
+        forest.ogre_scenemanager->setShadowTextureCount(3);
+        forest.ogre_scenemanager->setShadowTextureConfig(0, 2048, 2048, PF_X8B8G8R8);
+        forest.ogre_scenemanager->setShadowTextureConfig(1, 1024, 1024, PF_X8B8G8R8);
+        forest.ogre_scenemanager->setShadowTextureConfig(2, 1024, 1024, PF_X8B8G8R8);
+        forest.ogre_scenemanager->setShadowTextureSelfShadow(false);
+        forest.ogre_scenemanager->setShadowCasterRenderBackFaces(false);
+        forest.ogre_scenemanager->setShadowTextureCasterMaterial(MaterialPtr());
+    }
+
+    matProfile->setReceiveDynamicShadowsDepth(depthShadows);
+    matProfile->setReceiveDynamicShadowsPSSM(static_cast<PSSMShadowCameraSetup*>(mPSSMSetup.get()));
+#endif
+
+}
+
+Ogre::MaterialPtr buildDepthShadowMaterial(const Ogre::String& textureName)
+{
+    using namespace Ogre;
+
+    String matName = "DepthShadows/" + textureName;
+
+    MaterialPtr ret = MaterialManager::getSingleton().getByName(matName);
+    if (!ret)
+    {
+        MaterialPtr baseMat = MaterialManager::getSingleton().getByName("Ogre/shadow/depth/integrated/pssm");
+        ret = baseMat->clone(matName);
+        Pass* p = ret->getTechnique(0)->getPass(0);
+        p->getTextureUnitState("diffuse")->setTextureName(textureName);
+
+        Vector4 splitPoints;
+        const PSSMShadowCameraSetup::SplitPointList& splitPointList =
+            static_cast<PSSMShadowCameraSetup*>(mPSSMSetup.get())->getSplitPoints();
+        for (int i = 0; i < 3; ++i)
+        {
+            splitPoints[i] = splitPointList[i];
+        }
+        p->getFragmentProgramParameters()->setNamedConstant("pssmSplitPoints", splitPoints);
+    }
+
+    return ret;
 }
 
 
