@@ -60,6 +60,11 @@ void IterationRunMain::begin()
 
     batb->gui->addWidget( tb_main );
 
+#ifdef DEMO_FOREST_DIRECT
+    // push event to Run, not run::World
+    batb->run->events->push( event::Do::DemoForest );
+#endif
+
 }
 
 void IterationRunMain::end()
@@ -159,10 +164,6 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
     // escape quits main (exit)
     if ( batb->run->keys->escape->click() )  run.events.push( event::Do::Exit );
     
-#ifdef DEMO_FOREST_DIRECT
-    run.events.push( event::Do::DemoForest );
-#endif
-
     ////////////////////////////////////////////////////////////////////////////////
     // otherwise we doesn't do much about our world 'run' here; the more important stuff are done
     // by our parent class 'IterationRun::iterate()', and iterating subworlds (i.e. IterationDemoForest)).

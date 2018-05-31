@@ -142,6 +142,38 @@ void Runner::punch(Control* control1)
     }
 }
 
+void Runner::headlampOn(bool on)
+{
+    using namespace Ogre;
+
+    // create a headlamp if not attached
+    if ( ogre_headlamp == nullptr )
+    {
+
+        ogre_headlamp = forest.ogre_scenemanager->createLight();
+        ogre_headlamp->setType( Light::LT_SPOTLIGHT );
+        ogre_headlamp->setSpotlightRange( Degree(20), Degree( 20 ));
+
+        ogre_headlamp->setDiffuseColour( 1.0, 1.0, 1.0 );
+        ogre_headlamp->setSpecularColour( 0.0, 0.0, 0.0 );
+
+        // attach spotlight to runners head
+        SceneNode* node = ogre_entity->getParentSceneNode()->createChildSceneNode(); // TODO: SceneNode of head
+        node->setDirection( Vector3( 0, -1.0, 0 ).normalisedCopy() );
+
+        node->setPosition(Vector3(0, 5, 0));
+        node->attachObject( ogre_headlamp );
+
+        //auto* entity = forest.ogre_scenemanager->createEntity( "ogrehead.mesh" );
+        //SceneNode* entity_node = ogre_entity->getParentSceneNode()->createChildSceneNode(); // TODO: SceneNode of head
+        //entity_node->setPosition(Vector3(0, 3, 0));
+        //entity_node->setScale( 0.1, 0.1, 0.1 );
+        //entity_node->attachObject( entity );
+    }
+
+    // turn headlamp on/off
+    ogre_headlamp->setVisible( on );
+}
 
 void Runner::step()
 {

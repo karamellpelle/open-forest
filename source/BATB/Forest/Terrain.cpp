@@ -138,7 +138,7 @@ void Terrain::load(const YAML::Node& yaml)
 
     ogre_terrain_group = OGRE_NEW TerrainGroup(ogre_scenemanager, Ogre::Terrain::ALIGN_X_Z, TERRAIN_SIZE, TERRAIN_WORLD_SIZE);
     ogre_terrain_group->setFilenameConvention(TERRAIN_FILE_PREFIX, TERRAIN_FILE_SUFFIX);
-    terrain_group = ogre_terrain_group; // since helper functions are not class members
+    terrain_group = ogre_terrain_group; // since helper functions below are not class members
 
 
     ////////////////////////////////////////////////////////////////
@@ -162,24 +162,24 @@ void Terrain::load(const YAML::Node& yaml)
     }
 
     // Configure default import settings for if we use imported image
-    Ogre::Terrain::ImportData& defaultimp = ogre_terrain_group->getDefaultImportSettings();
-    defaultimp.terrainSize = TERRAIN_SIZE;
-    defaultimp.worldSize = TERRAIN_WORLD_SIZE;
-    defaultimp.inputScale = 600;
-    defaultimp.minBatchSize = 33;
-    defaultimp.maxBatchSize = 65;
+    Ogre::Terrain::ImportData& terrain_import = ogre_terrain_group->getDefaultImportSettings();
+    terrain_import.terrainSize = TERRAIN_SIZE;
+    terrain_import.worldSize = TERRAIN_WORLD_SIZE;
+    terrain_import.inputScale = 600;
+    terrain_import.minBatchSize = 33;
+    terrain_import.maxBatchSize = 65;
     // textures
     // see 'initBlendMaps below 
-    defaultimp.layerList.resize(3);
-    defaultimp.layerList[0].worldSize = 100;
-    defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
-    defaultimp.layerList[0].textureNames.push_back("dirt_grayrocky_normalheight.dds");
-    defaultimp.layerList[1].worldSize = 30;
-    defaultimp.layerList[1].textureNames.push_back("grass_green-01_diffusespecular.dds");
-    defaultimp.layerList[1].textureNames.push_back("grass_green-01_normalheight.dds");
-    defaultimp.layerList[2].worldSize = 200;
-    defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
-    defaultimp.layerList[2].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
+    terrain_import.layerList.resize(3);
+    terrain_import.layerList[0].worldSize = 400;
+    terrain_import.layerList[0].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
+    terrain_import.layerList[0].textureNames.push_back("dirt_grayrocky_normalheight.dds");
+    terrain_import.layerList[1].worldSize = 30;
+    terrain_import.layerList[1].textureNames.push_back("grass_green-01_diffusespecular.dds");
+    terrain_import.layerList[1].textureNames.push_back("grass_green-01_normalheight.dds");
+    terrain_import.layerList[2].worldSize = 200;
+    terrain_import.layerList[2].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
+    terrain_import.layerList[2].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -218,6 +218,7 @@ void Terrain::load(const YAML::Node& yaml)
             initBlendMaps(t);
         }
     }
+    ogre_terrain_group->updateDerivedData();
 
     ogre_terrain_group->freeTemporaryResources();
 

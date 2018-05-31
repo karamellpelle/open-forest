@@ -187,13 +187,17 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     //
     //forest.weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
     forest.weather.setDay();
-   
+    //forest.weather.setNight();
+
 
     ////////////////////////////////////////////////////////////////
     // place camera at origo plane XZ
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 
+    // tmp: test light
+
+    ////////////////////////////////////////////////////////////////
     // create Viewport, the 2D target of Camera
     // fix problem with externalWindow handling and resizing. see https://github.com/OGRECave/ogre/issues/774#issuecomment-392755242
     batb->ogre->ogre_renderwindow->windowMovedOrResized();

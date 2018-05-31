@@ -46,18 +46,11 @@ void Weather::setDay()
     // fog
     forest->ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000);
     
-    // sun direction. TODO
+    // make sure we have a sun
+    createSun();
 
-    // sun light
-    if ( ogre_light_sun == nullptr )
-    {
-        ogre_light_sun = forest->ogre_scenemanager->createLight( "ogre_light_sun" );
-    }
-
-    Vector3 lightdir(0.55, -0.3, 0.75);
-    lightdir.normalise();
     ogre_light_sun->setType( Light::LT_DIRECTIONAL );
-    ogre_light_sun->setDirection( lightdir );
+    ogre_light_sun->setDirection( Vector3(0.55, -0.3, 0.75).normalisedCopy() );
     ogre_light_sun->setDiffuseColour( ColourValue::White );
     ogre_light_sun->setSpecularColour( ColourValue(0.6, 0.6, 0.6) );
 
@@ -81,7 +74,33 @@ void Weather::setDay()
 
 void Weather::setNight()
 {
+    using namespace Ogre;
 
+    // fog
+    forest->ogre_scenemanager->setFog(FOG_LINEAR, ColourValue(0.7, 0.7, 0.8), 0, 10000, 25000);
+
+    // make sure we have a sun
+    createSun();
+
+    ogre_light_sun->setType( Light::LT_DIRECTIONAL );
+    ogre_light_sun->setVisible( false );
+
+    ogre_light_sun->setDirection( Vector3( 0.0, -1.0, 0.0 ) );
+    ogre_light_sun->setDiffuseColour( ColourValue::White );
+    ogre_light_sun->setSpecularColour( ColourValue(0.6, 0.6, 0.6) );
+
+    // ambient light
+    forest->ogre_scenemanager->setAmbientLight(ColourValue(0.14, 0.14, 0.14) );
+
+    forest->terrain.ogre_terrain_globals->setLightMapDirection( ogre_light_sun->getDerivedDirection() );
+    forest->terrain.ogre_terrain_globals->setCompositeMapAmbient( ColourValue(0,0,0) );
+    //forest->terrain.ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
+    forest->terrain.ogre_terrain_globals->setCompositeMapDiffuse( ColourValue(0,0,0) );
+    forest->terrain.ogre_terrain_globals->setLightMapDirection( ogre_light_sun->getDerivedDirection() );
+    //forest->terrain.ogre_terrain_globals->setCompositeMapAmbient(ColourValue::Red);
+
+    // sky box
+    //forest->ogre_scenemanager->setSkyBox( true, "Examples/CloudyNoonSkyBox" ); 
 }
 
 
@@ -91,6 +110,17 @@ void Weather::setHourOfDay(float_t hour)
     hour = std::fmod( hour,  24.0 );
 
     // TODO: sun position and light based on hour an location on planet
+}
+
+
+void Weather::createSun()
+{
+    if ( ogre_light_sun == nullptr )
+    {
+        ogre_light_sun = forest->ogre_scenemanager->createLight( "ogre_light_sun" );
+    }
+
+
 }
 
 } // namespace forest

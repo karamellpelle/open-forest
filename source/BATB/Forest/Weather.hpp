@@ -58,6 +58,11 @@ public:
     World* forest = nullptr;
 
     Ogre::Light*        ogre_light_sun = nullptr; // ->setType(Light::LT_DIRECTIONAL); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
+
+private:
+    void createSun();
+
+
 };
 
 
