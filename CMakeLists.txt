@@ -490,7 +490,6 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/helpers/helpers_gl.hpp"
       "${MAIN_SOURCE_DIR}/helpers/helpers_tinyxml2.hpp"
       "${MAIN_SOURCE_DIR}/helpers/yaml.hpp"
-      "${MAIN_SOURCE_DIR}/helpers/tb.hpp"
       "${MAIN_SOURCE_DIR}/helpers/glfw.hpp"
       "${MAIN_SOURCE_DIR}/include.hpp"
    )
