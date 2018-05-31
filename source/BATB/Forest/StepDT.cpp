@@ -23,6 +23,9 @@
 #include "BATB/Value/Forest.hpp"
 
 
+#define KEEP_CAMERA_ABOVE_GROUND
+
+
 namespace batb
 {
 
@@ -63,10 +66,18 @@ void StepDT::operator()(World& forest, tick_t dt)
     Camera& camera = forest.camera;
     stepdt( camera.move, dt );
 
+#ifdef KEEP_CAMERA_ABOVE_GROUND
+    {
+    auto pos = camera.move.pos;
+    auto terrain_h = forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Ogre::Vector3( pos.x, pos.y, pos.z ) );
+    camera.move.pos.y = std::max( pos.y, 1 + terrain_h ); 
+    }
+#endif
+
     // also set listener to camera Aim
     auto listener = forest.al_listener;
     auto pos = camera.move.aim[3];
-    auto at = camera.move.aim[2];
+    auto at = camera.move.aim[2]; // FIXME: correct camera Aim matrix
     auto up = camera.move.aim[1];
     forest.al_listener.setPosition( { pos.x, pos.y, pos.z } );
     forest.al_listener.setOrientation( {{at.x, at.y, at.z}, {up.x, up.y, up.z}} );
