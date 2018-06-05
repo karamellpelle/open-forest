@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/karamellpelle/open-forest/master/data/meta/screenshots/open-forest-may2018-macos.png "Ogre v1.11 on macOS")
+![](https://raw.githubusercontent.com/karamellpelle/open-forest/master/data/meta/screenshots/open-forest-june2018-macos.png "macOS High Sierra, using Ogre v1.11")
 
 # Open Forest
 
@@ -9,9 +9,12 @@ The old game is still runnable through Open Forest, but then the project will ha
 
 My intention has been to build up a foundation for an open source orienteering game. Despite the sport of orienteering is small, there are multiple commercial orienteering games available (Catching Features, Suunnistussimulaattori, Oriantica). I don't see the point of having so many commercial games for something that probably will not generate enough money for a high-end product. And there are many good programmers/developers in the orienteering community.
 
-This project builds (on macOS High Sierra as of May 2018) and the libraries are up and running, so collaborative development is absolutely possible. But I should have finished some more work first (I'm in lack of time). The program's structure is based on how I've been writing functional games in Haskell. The thing is to abandon the traditional "main loop" and consider a game as a _World_ (with subworlds) that is iterated by _Iteration_'s. See [computergames.pdf](https://github.com/karamellpelle/grid/blob/master/computergames.pdf). This makes the program flow a lot easier to implement and opens up possibilites that are complicated to do with a traditional main loop. It can be considered as a MVC pattern where _World_ is the model, and _Iteration_'s are control and view.
+Here are some [screenshots](readme/screenshots.markdown) of terrain.
+
+This project builds (on macOS High Sierra as of June 2018) and the libraries are up and running, so collaborative development is absolutely possible. But I should have finished some more work first (I'm in lack of time). The program's structure is based on how I've been writing functional games in Haskell. The thing is to abandon the traditional "main loop" and consider a game as a _World_ (with subworlds) that is iterated by _Iteration_'s. See [computergames.pdf](https://github.com/karamellpelle/grid/blob/master/computergames.pdf). This makes the program flow a lot easier to implement and opens up possibilites that are complicated to do with a traditional main loop. It can be considered as a MVC pattern where _World_ is the model, and _Iteration_'s are control and view.
 
 [Ogre3D](https://www.ogre3d.org/) is used for 3D rendering. It has very good forest rendering capabilities, for example see this [Ogre3D based](https://forums.ogre3d.org/viewtopic.php?f=11&t=35922) game: [clip A](https://youtu.be/4QIHzn1PrxY?t=12m20s), [clip B](https://youtu.be/PWSg4olxaYE?t=5m9s), [clip C](https://youtu.be/CXr82Gtbk1Y?t=1m57s).
+
 
 
 ## Programming
@@ -72,10 +75,6 @@ Building can then be done with
 
 which creates a program you can run with `./open-forest.sh`. (Afterwards you can use `./build.sh make-openforest` to only build the program source).
 
-## Screenshots
-
-
-Some [screenshots](data/meta/screenshots/screenshots.markdown) showing the terrain rendering.
 
 ## Contact
 
