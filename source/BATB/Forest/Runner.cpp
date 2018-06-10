@@ -142,7 +142,7 @@ void Runner::punch(Control* control1)
     }
 }
 
-void Runner::headlampOn(bool on)
+void Runner::headlamp(bool on)
 {
     using namespace Ogre;
 

@@ -99,7 +99,7 @@ public:
     // output
 
     Ogre::Entity* ogre_entity = nullptr;
-    //ALuint al_source_;
+    //alure::Source alure_source;
 
     ////////////////////////////////////////////////////////////////////////////////
     // statistic

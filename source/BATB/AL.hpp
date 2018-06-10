@@ -62,10 +62,10 @@ public:
     //alure::Source& source(const std::string& ); // <- TODO: no matrix means background sound
 
 
-    alure::DeviceManager al_devmgr;
-    alure::Device        al_device;
-    alure::Context       al_context;
-    alure::Listener      al_listener;
+    alure::DeviceManager alure_devmgr;
+    alure::Device        alure_device;
+    alure::Context       alure_context;
+    alure::Listener      alure_listener;
   
 
 private:

@@ -123,7 +123,7 @@ public:
 
 
     // sound
-    alure::Listener al_listener;
+    alure::Listener alure_listener;
 private:
     
     

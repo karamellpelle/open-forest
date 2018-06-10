@@ -45,19 +45,19 @@ void AL::begin(const std::string& path)
         try
         {
             //////////////////////////////////////////////////
-            al_devmgr = alure::DeviceManager::getInstance();
+            alure_devmgr = alure::DeviceManager::getInstance();
 
             // FIXME: memory leak, according to valgrind
-            al_device = al_devmgr.openPlayback(); 
+            alure_device = alure_devmgr.openPlayback(); 
 
-            batb->log << "opened al_device '" << al_device.getName() << "'" << std::endl;
+            batb->log << "opened alure_device '" << alure_device.getName() << "'" << std::endl;
 
-            al_context = al_device.createContext();
-            alure::Context::MakeCurrent( al_context );
+            alure_context = alure_device.createContext();
+            alure::Context::MakeCurrent( alure_context );
             batb->log << "context created" << std::endl;
 
             // there is only one listener
-            al_listener = al_context.getListener();
+            alure_listener = alure_context.getListener();
 
             //////////////////////////////////////////////////////////
             //      OpenAL
@@ -95,14 +95,14 @@ void AL::end()
         // Buffer's must be destroyed according to doc
         for ( auto buf : buffers_ )
         {
-            al_context.removeBuffer( buf );
+            alure_context.removeBuffer( buf );
         }
         batb->log << "buffers removed" << std::endl;
 
         alure::Context::MakeCurrent( nullptr );
-        al_context.destroy();
+        alure_context.destroy();
         batb->log << "context destroyed" << std::endl;
-        al_device.close();
+        alure_device.close();
         batb->log << "device closed" << std::endl;
         
     }
@@ -152,7 +152,7 @@ void AL::frameEnd()
 
                 if ( srcs.empty() )
                 {
-                    al_context.removeBuffer( buf );
+                    alure_context.removeBuffer( buf );
                     i = buffers_.erase( i );
                 }
                 else
@@ -173,7 +173,7 @@ void AL::frameEnd()
             }
 
             // update ALURE/AL
-            al_context.update();
+            alure_context.update();
         }
     }
 
@@ -184,13 +184,13 @@ alure::Source AL::source(const std::string& path, const glm::mat4& mat)
 {
     // "multiple calls with the same name will return the same buffer"
     //    - alure doc
-    auto buf = al_context.getBuffer( path );
+    auto buf = alure_context.getBuffer( path );
     if ( std::find( std::begin( buffers_ ), std::end( buffers_ ), buf ) == std::end( buffers_ ) )
     {
         buffers_.push_back( buf );
     }
    
-    auto src = al_context.createSource();
+    auto src = alure_context.createSource();
 
     auto pos = mat[3];
     src.setPosition( { pos.x, pos.y, pos.z } );

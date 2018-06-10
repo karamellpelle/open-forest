@@ -91,7 +91,7 @@ void IterationDemoForest::iterate_begin(World& demo)
     {
         demo.runner = forest.addRunner( run.player ); 
         demo.runner->reset( glm::vec2( 0, 0 ) );
-       //demo.runner->headlampOn( true );
+       //demo.runner->headlamp( true );
     }
 
     // if we have no Course, create one

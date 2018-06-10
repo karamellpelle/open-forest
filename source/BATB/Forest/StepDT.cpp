@@ -75,12 +75,12 @@ void StepDT::operator()(World& forest, tick_t dt)
 #endif
 
     // also set listener to camera Aim
-    auto listener = forest.al_listener;
+    auto listener = forest.alure_listener;
     auto pos = camera.move.aim[3];
     auto at = camera.move.aim[2]; // FIXME: correct camera Aim matrix
     auto up = camera.move.aim[1];
-    forest.al_listener.setPosition( { pos.x, pos.y, pos.z } );
-    forest.al_listener.setOrientation( {{at.x, at.y, at.z}, {up.x, up.y, up.z}} );
+    forest.alure_listener.setPosition( { pos.x, pos.y, pos.z } );
+    forest.alure_listener.setOrientation( {{at.x, at.y, at.z}, {up.x, up.y, up.z}} );
    
     
     ////////////////////////////////////////////////////////////////////////////////

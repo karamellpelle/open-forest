@@ -106,7 +106,7 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     ////////////////////////////////////////////////////////////////////////////////
     // setup AL
 
-    forest.al_listener = batb->al->al_context.getListener();
+    forest.alure_listener = batb->al->alure_context.getListener();
     // TODO: create alure::Buffer's from defines in .yaml file.
     
     // TODO: delete old before loading
@@ -190,12 +190,28 @@ void WorldLoader::load(World& forest, const YAML::Node& yaml)
     //forest.weather.setNight();
 
 
+
     ////////////////////////////////////////////////////////////////
     // place camera at origo plane XZ
     float_t height = 50 + forest.terrain.ogre_terrain_group->getHeightAtWorldPosition( Vector3::ZERO );
     forest.camera.move.pos = glm::vec4( 0, height, 0, 1 );
 
     // tmp: test light
+#if 0
+        auto* ogre_headlamp = forest.ogre_scenemanager->createLight();
+        ogre_headlamp->setType( Light::LT_SPOTLIGHT );
+        ogre_headlamp->setSpotlightRange( Degree(20), Degree( 30 ));
+
+        ogre_headlamp->setDiffuseColour( 0.0, 1.0, 0.0 );
+        ogre_headlamp->setSpecularColour( 0.0, 0.0, 1.0 );
+
+        // attach spotlight to runners head
+        SceneNode* node = forest.ogre_scenemanager->createSceneNode(); // TODO: SceneNode of head
+        node->setDirection( Vector3( 0, -1.0, 0 ).normalisedCopy() );
+
+        node->setPosition(Vector3(0, height, 0));
+        node->attachObject( ogre_headlamp );
+#endif
 
     ////////////////////////////////////////////////////////////////
     // create Viewport, the 2D target of Camera

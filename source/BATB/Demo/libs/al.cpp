@@ -51,21 +51,11 @@ void demo_begin(BATB* batb)
 
 void demo_play(BATB* batb, const std::string& path)
 {
-    decoder = batb->al->al_context.createDecoder( path );
+    decoder = batb->al->alure_context.createDecoder( path );
     if ( decoder == nullptr ) return;
 
-    source = batb->al->al_context.createSource();
+    source = batb->al->alure_context.createSource();
     source.play( decoder, 32768, 4);
-/*
-    std::cout << "demo::al: " << path 
-              << " ("
-              << alure::GetSampleTypeName(decoder->getSampleType())<< ", "
-              << alure::GetSampleConfigName(decoder->getSampleConfig()) 
-              << ", "
-              << decoder->getFrequency() << "hz"
-              << ")" 
-              << std::endl;
-*/
 }
 
 void demo_iterate(BATB* batb, run::World& world)
