@@ -230,27 +230,17 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 // working with nanovg
 
 
-// NanoVG only likes pixel coordinates
-NVGcontext* GL::nanovgBegin(float_t wth, float_t hth)
-{
-
-    // calculate pixel ration for hi-dpi devices.
-    int winWidth, winHeight;
-    glfwGetWindowSize( batb->screen->glfw_window, &winWidth, &winHeight ); 
-    int fbWidth, fbHeight; 
-    glfwGetFramebufferSize( batb->screen->glfw_window, &fbWidth, &fbHeight ); 
-    float pxRatio = (float)fbWidth / (float)winWidth; 
-
-    nvgBeginFrame( nvg_context, wth, hth, pxRatio);
-
-    return nvg_context;
-
-}
-
 NVGcontext* GL::nanovgBegin(const Scene& scene)
 {
-    return nanovgBegin( scene.wth, scene.hth );
+    // NanoVG only likes pixel coordinates (which differs from fragments: the 
+    // primitive size of Scene)
 
+    // calculate pixel ration for hi-dpi targets
+    float px_ratio = (float)(scene.wth) / (float)(scene.wth_px);
+
+    nvgBeginFrame( nvg_context, scene.wth_px, scene.hth_px, px_ratio );
+
+    return nvg_context;
 }
 
 

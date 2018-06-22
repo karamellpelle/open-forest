@@ -31,13 +31,28 @@ class Scene
 public:
     Scene()             { }
 
+    // the frambuffer 
     GLuint fbo          = 0;
 
+    // size of scene, in fragments
     uint wth            = 0;
     uint hth            = 0;
+
+    // physical size, in meters (if not known, use the same as Shape)
+    float_t wth_m       = 0.0;
+    float_t hth_m       = 0.0;
+
+    // size of scene, in pixels. these may differ from fragments, for example on
+    // Retina screens
+    uint wth_px         = 0;
+    uint hth_px         = 0;
+
+    // shape of Scene
     Shape shape;
 
+    // from 2D
     glm::mat4 proj2D;
+    // from 3D
     glm::mat4 proj3D;
 
 };

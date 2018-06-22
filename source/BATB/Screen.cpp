@@ -293,6 +293,30 @@ void Screen::getSize(uint& wth, uint& hth) const
     hth = h;
 }
 
+void Screen::getSizeMeters(float_t& wth_m, float_t& hth_m) const
+{
+    // see: http://www.glfw.org/docs/latest/monitor_guide.html
+    auto glfw_monitor = glfwGetPrimaryMonitor();
+    auto mode = glfwGetVideoMode( glfw_monitor );
+    int mw_mm, mh_mm;
+    glfwGetMonitorPhysicalSize( glfw_monitor, &mw_mm, &mh_mm );
+    int wth_win, hth_win;
+    glfwGetWindowSize( batb->screen->glfw_window, &wth_win, &hth_win );
+
+    wth_m = (double)(mw_mm * wth_win) / (double)( 1000 * mode->width );
+    hth_m = (double)(mh_mm * hth_win) / (double)( 1000 * mode->height );
+
+}
+
+void Screen::getSizePixels(uint& wth, uint& hth) const
+{
+    int w, h;
+    glfwGetWindowSize( glfw_window, &w, &h );
+    wth = w;
+    hth = h;
+}
+
+
 void Screen::getShape(float_t& wth, float_t& hth) const
 {
     uint w, h;

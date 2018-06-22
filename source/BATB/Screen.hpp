@@ -50,8 +50,19 @@ public:
 
     ////////////////////////////////////////////////////////////////
     // screen
+    // size of screen, in fragments
     void getSize(uint& wth, uint& hth) const;
+    // physical size of screen, in meters
+    void getSizeMeters(float_t& wth, float_t& hth) const;
+    // physical size of screen, window coordiates (i.e. pixels). this is
+    // not the same as size, in general, because there may be more fragments
+    // per pixel (cf. Retina displays).
+    void getSizePixels(uint& wth, uint& hth) const;
+
+    // shape of screen
     void getShape(float_t& wth, float_t& hth) const;
+    
+    // framebuffer for screen
     void setFBO0()                                  { setFBO( fbo0_ ); }
     void setFBO1()                                  { setFBO( fbo1_ ); }
     GLuint getFBO() const                           { return fbo_; }

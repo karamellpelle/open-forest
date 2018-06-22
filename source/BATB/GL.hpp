@@ -51,9 +51,8 @@ public:
 
     ////////////////////////////////////////////////////////////////
     // working with NanoVG
-    // custom coordinates
-    NVGcontext* nanovgBegin(float_t , float_t );
-    // context with Scene coordinates
+    // context in pixel coordinates
+    // NOTE: not fragment coordinates which is the prime measurement of Scene
     NVGcontext* nanovgBegin(const Scene& );
     void nanovgEnd();  
 

@@ -160,6 +160,10 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     // set fragment size of scene from current screen size.
     batb->screen->getSize( scene.wth, scene.hth );
 
+    // also set these since we know them (Scene is Screen)
+    batb->screen->getSizeMeters( scene.wth_m, scene.hth_m );
+    batb->screen->getSizePixels( scene.wth_px, scene.hth_px );
+
     // set shape
     scene.shape.size( scene.wth, scene.hth );
 

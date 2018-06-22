@@ -150,6 +150,7 @@ void IterationDemoForest::output(World& demo)
 {
     auto& run    = *demo.run;
     auto& forest = *demo.forest;
+    auto& scene  = run.scene;
 
 
     // TODO: use Scene of run::World
@@ -158,7 +159,7 @@ void IterationDemoForest::output(World& demo)
     // 3D
 
     // draw forest::World 
-    batb->ogre->sceneBegin( run.scene );
+    batb->ogre->sceneBegin( scene );
     demo.forest_drawer.draw( batb->ogre->ogre_renderwindow  );
     batb->ogre->sceneEnd();
 
@@ -172,49 +173,20 @@ void IterationDemoForest::output(World& demo)
     //
     // we want to work on the FBO target with meter coordinates to make the 
     // map as real as possible.
-    // we could assume 1 dot is 1/96inch, but that would not work with
-    // a Scene/FBO representing the screen of a Retina display. 
-    // the best would be (if FBO is a screen!) to assume that the Scene/FBO 
-    // always has a typical size of for example 280 mm width. however, the 
-    // scaling will be wrong on the screen.
     //
-    // since we currently know that the Scene/FBO represents the screen, let's 
-    // try to be precise and use tools (i.e. GLFW) to retrieve the size of the
-    // Scene/FBO in millimeters
-    //
-    // TODO: implement methods for Scene to retrieve physical size (like below,
-    //       when Scene represents the screen), or assume a certain mapping between
-    //       pixels and millimeters (typically: 1 dot = 96 inch) (which is problematic
-    //       for Retina screens).
-
-    // see: http://www.glfw.org/docs/latest/monitor_guide.html
-
-    // create NanoVG context in meter coordinates
-    auto nvg = batb->gl->nanovgBegin( run.scene );
-
-    // scale from meters into pixels
-    auto glfw_monitor = glfwGetPrimaryMonitor();
-    auto mode = glfwGetVideoMode( glfw_monitor );
-    int mw_mm, mh_mm;
-    glfwGetMonitorPhysicalSize( glfw_monitor, &mw_mm, &mh_mm );
-    int wth_win, hth_win;
-    glfwGetWindowSize( batb->screen->glfw_window, &wth_win, &hth_win );
-    // size of FBO, in meters
-    double wth_m = (double)(mw_mm * wth_win) / (double)( 1000 * mode->width );
-    double hth_m = (double)(mh_mm * hth_win) / (double)( 1000 * mode->height );
+    auto nvg = batb->gl->nanovgBegin( scene );
 
     nvgSave( nvg );
 
-    // set origo in the middle 
-    nvgTranslate( nvg, 0.5 * run.scene.wth, 0.5 * run.scene.hth );
-
     // define size of NanoVG context, in pixels and meters
     DemoMapDrawer::Draw draw;
-    draw.wth = wth_win;
-    draw.hth = hth_win;
-    draw.wth_m = wth_m;
-    draw.hth_m = hth_m;
+    draw.wth   = scene.wth_px;
+    draw.hth   = scene.hth_px;
+    draw.wth_m = scene.wth_m;
+    draw.hth_m = scene.hth_m;
     
+    // set origo in the middle 
+    nvgTranslate( nvg, 0.5 * scene.wth_px, 0.5 * scene.hth_px );
 
     //demo.map_drawer.setZoom(2.5);
     demo.map_drawer.mapscale( 1, 10000 );
@@ -225,7 +197,7 @@ void IterationDemoForest::output(World& demo)
     
     batb->gl->nanovgEnd(); 
 
-    // TODO: ALURE: background sound (music)
+    // TODO: ALURE: background sound (2D music)
 
 
 }
