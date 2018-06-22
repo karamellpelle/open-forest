@@ -25,7 +25,6 @@
 #include "BATB/GUI.hpp"
 #include "BATB/Demo.hpp"
 #include "BATB/Demo/libs/nanovg.hpp"
-#include "BATB/Demo/libs/ogre.hpp"
 #include "BATB/Demo/libs/al.hpp"
 #include "BATB/Demo/libs/gl.hpp"
 

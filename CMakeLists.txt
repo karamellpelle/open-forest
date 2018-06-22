@@ -355,8 +355,6 @@ set(  BATB_SOURCES
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.c"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.c"
-      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre.cpp"
-      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.cpp"
       "${MAIN_SOURCE_DIR}/BATB/Demo/workers.cpp"
    )
 
@@ -379,8 +377,6 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/demo.h"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/perf.h"
       "${MAIN_SOURCE_DIR}/BATB/Demo/libs/nanovg/stb_image_write.h"
-      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre.hpp"
-      "${MAIN_SOURCE_DIR}/BATB/Demo/libs/ogre/PerlinNoiseTerrainGenerator.h"
       "${MAIN_SOURCE_DIR}/BATB/Demo/workers.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Event.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Event/EventBase.hpp"
