@@ -80,6 +80,9 @@ void CourseDrawer::begin(NVGcontext* nvg)
     nvgStrokeColor( nvg_, nanovg_color_next_ );
     nvgFillColor( nvg_, nanovg_color_next_ );
     
+    // draw everything as 1 path. this makes it possible to draw
+    // transparent courses without overlapping color
+    nvgBeginPath( nvg_ );
 }
 
 
@@ -95,6 +98,9 @@ void CourseDrawer::end()
                       p1.x, p1.y, 1);
 
     draw( trans, type1 );
+
+    // let's draw the only path
+    nvgStroke( nvg_ );
 
     nvg_ = nullptr;
 
@@ -123,11 +129,9 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
         // line from object 1 to object 2
         auto l1 = trans * glm::vec3( size( type1 ), 0, 1.0 );
         auto l2 = trans * glm::vec3( len - size( type2 ), 0, 1.0 );
-        nvgBeginPath( nvg_ );
+
         nvgMoveTo( nvg_, l1.x, l1.y );
         nvgLineTo( nvg_, l2.x, l2.y );
-        nvgStroke( nvg_ );
-
 
         // draw numbers?
         if ( indices_ )
@@ -222,9 +226,9 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto x = trans * glm::vec3( 0.0, 0.0, 1.0 );
 
         // draw circle
-        nvgBeginPath( nvg_ );
+        nvgMoveTo( nvg_, x.x + a, x.y );
         nvgArc( nvg_, x.x, x.y, a, 0, twopi, NVG_CCW );
-        nvgStroke( nvg_ );
+
         return true;
     }
     if ( type == ObjectType::Start )
@@ -237,13 +241,13 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto a = trans * glm::vec3( s * start_x0, 0.0, 1.0 );
         auto b = trans * glm::vec3( s * start_x1, s * start_y0, 1.0 );
         auto c = trans * glm::vec3( s * start_x1, s * start_y1, 1.0 );
+
         // draw triangle
-        nvgBeginPath( nvg_ );
         nvgMoveTo( nvg_, a.x, a.y );
         nvgLineTo( nvg_, b.x, b.y );
         nvgLineTo( nvg_, c.x, c.y );
         nvgClosePath( nvg_ );
-        nvgStroke( nvg_ );
+
         return true;
     }
     if ( type == ObjectType::Finish )
@@ -253,12 +257,11 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto x = trans * glm::vec3( 0.0, 0.0, 1.0 );  
 
         // draw two circles
-        nvgBeginPath( nvg_ );
+        nvgMoveTo( nvg_, x.x + a, x.y );
         nvgArc( nvg_, x.x, x.y, a, 0, twopi, NVG_CCW );
-        nvgStroke( nvg_ );
-        nvgBeginPath( nvg_ );
+        nvgMoveTo( nvg_, x.x + b, x.y );
         nvgArc( nvg_, x.x, x.y, b, 0, twopi, NVG_CCW );
-        nvgStroke( nvg_ );
+
         return true;
     }
 

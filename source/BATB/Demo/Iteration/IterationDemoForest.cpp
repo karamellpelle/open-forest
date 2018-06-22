@@ -170,15 +170,16 @@ void IterationDemoForest::output(World& demo)
 
     // draw map as overlay on Scene 
     //
-    // we want to work on the FBO target with millimeter coordinates to make the 
+    // we want to work on the FBO target with meter coordinates to make the 
     // map as real as possible.
     // we could assume 1 dot is 1/96inch, but that would not work with
     // a Scene/FBO representing the screen of a Retina display. 
     // the best would be (if FBO is a screen!) to assume that the Scene/FBO 
-    // always has a typical size of for example 280 mm width.
+    // always has a typical size of for example 280 mm width. however, the 
+    // scaling will be wrong on the screen.
     //
     // since we currently know that the Scene/FBO represents the screen, let's 
-    // try to be precise and use specific tools to retrieve the size of the
+    // try to be precise and use tools (i.e. GLFW) to retrieve the size of the
     // Scene/FBO in millimeters
     //
     // TODO: implement methods for Scene to retrieve physical size (like below,
@@ -187,8 +188,6 @@ void IterationDemoForest::output(World& demo)
     //       for Retina screens).
 
     // see: http://www.glfw.org/docs/latest/monitor_guide.html
-#if 1
-
 
     // create NanoVG context in meter coordinates
     auto nvg = batb->gl->nanovgBegin( run.scene );
@@ -215,45 +214,19 @@ void IterationDemoForest::output(World& demo)
     draw.hth = hth_win;
     draw.wth_m = wth_m;
     draw.hth_m = hth_m;
-    //draw.from_m = (1000.0 * (double)( mode->width ) ) / (double)( mw_mm );
     
-/*
-    auto nanovg_font_ = nvgFindFont( nvg, "CourseDrawer" );
-    if ( nanovg_font_ == -1 )
-    {
-        // create font
-        nanovg_font_ =  nvgCreateFont( nvg, "CourseDrawer", file::static_data( "BATB/CourseDrawer.ttf" ).c_str() );
-    }
-        nvgFillColor( nvg, nvgRGBA( 22, 213, 23, 255) );
-	nvgFontSize(nvg, 500.0f / scale);
-                nvgFontFaceId( nvg, nanovg_font_ );
-                nvgText( nvg, 0, 0, std::to_string( 444 ).c_str(), nullptr );
-*/
-
 
     //demo.map_drawer.setZoom(2.5);
-    //demo.map_drawer.setRotation( 0.1 * demo.tick );
-    //demo.map_drawer.setRotation( 0.1 );
     demo.map_drawer.mapscale( 1, 10000 );
     demo.map_drawer.useMap( nullptr ); 
     demo.map_drawer.draw( nvg, draw );
 
-    //nvgStrokeWidth( nvg, 0.02 ); // 3 mm
-    //// x
-    //nvgStrokeColor(nvg, nvgRGBA(0,192,255,255));
-    //nvgLineCap(nvg, NVG_ROUND );
-    //nvgBeginPath( nvg );
-    //nvgMoveTo( nvg, 0.00, 0.00 );
-    //nvgLineTo( nvg, 0.00, 0.04 ); 
-    //nvgStroke( nvg );
-
     nvgRestore( nvg );
     
     batb->gl->nanovgEnd(); 
-#endif
+
     // TODO: ALURE: background sound (music)
 
-    // TODO: output
 
 }
 
