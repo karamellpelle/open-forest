@@ -127,7 +127,7 @@ void DemoMapDrawer::endMapDraw(NVGcontext* nvg, const forest::Map::Draw2D& draw)
     ////////////////////////////////////////////////////////////////////////////////
     // draw course
 #endif
-#if 0
+#if 1
     if ( 2 <= course.size() )
     {
         CourseDrawer drawer;
@@ -159,7 +159,7 @@ void DemoMapDrawer::endMapDraw(NVGcontext* nvg, const forest::Map::Draw2D& draw)
         drawer.end();
     }
 #endif
-#if 1
+#if 0
         CourseDrawer drawer;
         drawer.numbers( true );
         // unit size in drawing (defined by radius of a Normal control), in world coordinates

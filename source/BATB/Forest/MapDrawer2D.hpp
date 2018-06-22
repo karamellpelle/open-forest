@@ -30,8 +30,8 @@ class World;
 class Map;
 
 
-// draw a Map to a 2D NanovgContext
-// Map in meters (world coordinates), NanoVG context in millimeter coordinates
+// draw a Map to a 2D NanoVG context
+// Map is in world coordinates, NanoVG context in pixel coordinates
 class MapDrawer2D
 {
 public:
@@ -48,42 +48,32 @@ public:
     // world coordinates makes it easy to switch Map's on the fly
     // TODO: use decltype of world coordinates
 
-    // view draw map from this center
+    // view draw map from this point
     void setPosition(double x, double z);
-    // up direction
+    // look direction, i.e. upwards
     void setDirection(double u0, double u1);
     void lookAt(double x, double y);
-    void setRotation(double ); // [0, twopi)
+    void setRotation(double ); 
 
     // working on context
     void setZoom(double ); // 1.0 is mapscale
 
-    double getScaling() const;
-
-    // we need this since NanoVG has problem with non-pixel
-    // coordinates
+    // we need to work with pixel since NanoVG has problem with 
+    // non-pixel coordinates, especially fonts
     class Draw
     {
     public:
-        double wth = 0.0; // width of nanovg target, in pixels
-        double hth = 0.0; // height of nanovg target, in pixels
-        double wth_m = 0.0; // width of nanovg target, in pixels
-        double hth_m = 0.0; // height of nanovg target, in pixels
-        //double from_m = 1.0; // scaling meter -> pixel
+        double wth   = 0.0; // width of nanovg target, in pixels
+        double hth   = 0.0; // height of nanovg target, in pixels
+        double wth_m = 0.0; // width of nanovg target, in meters
+        double hth_m = 0.0; // height of nanovg target, in meters
 
     };
 
-    // draw to coordinate system of given nanovg context
-    // MapDrawer2D assumes the unit of the nanovg context is 1.0 meter
+    // draw to given nanovg context. 
     void draw(NVGcontext* nvg, const Draw& );
 
 protected:
-    // this does no scaling
-    // identitiy:
-    //    world x/north -> -y (screen up)
-    //    world z/east  -> x (screen right)
-    // (i.e. north is up)
-
     double p0_ = 0.0;
     double p1_ = 0.0;
     double u0_ = 1.0;

@@ -81,16 +81,8 @@ void MapDrawer2D::useMap(Map* m)
     map = m; 
 }
 
-double MapDrawer2D::getScaling() const
-{
-    return scale_ * zoom_;
-}
-
 void MapDrawer2D::draw(NVGcontext* nvg, const Draw& draw)
 {
-    // rotate: x/north up, z/east right
-    //nvgTransform( nvg, 0.0, -1.0, 1.0, 0.0, 0.0, 0.0 );
-
     // meter context -> pixel of context
     double from_m = draw.wth / draw.wth_m;
 
@@ -126,7 +118,8 @@ void MapDrawer2D::draw(NVGcontext* nvg, const Draw& draw)
     auto p1 = draw2d.to_pixel * p1_;
     nvgTransform( nvg, v0_, -u0_, v1_, -u1_, -p0, -p1 );
 
-#if 1
+// debug: draw axis
+#if 0
     nvgStrokeWidth( nvg, 4.0 ); 
     // x
     nvgStrokeColor(nvg, nvgRGBA(255,0.0,0.0,255));
