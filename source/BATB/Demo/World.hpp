@@ -18,6 +18,8 @@
 #ifndef BATB_DEMO_WORLD_HPP
 #define BATB_DEMO_WORLD_HPP
 #include "BATB/Demo/Course.hpp"
+#include "BATB/Demo/DemoMapDrawer.hpp"
+#include "BATB/Forest/WorldDrawer.hpp"
 
 
 namespace batb
@@ -37,33 +39,46 @@ class World
 {
 
 public:
-    World(run::World& r);
+    World(run::World* r);
 
-    // setup this world. this should ideally be done by IterationRunDemoBegin,
-    // and not call this function, since loading takes time and should be done
-    // in seperate thread
-    void begin();
 
-    ////////////////////////////////////////////////////////////////
-    run::World& run;
-
-    // forest subworld
+    // subworld: forest::World
     std::unique_ptr<forest::World> forest;
 
-    EventList events;
+    // drawing state: 3D world
+    forest::WorldDrawer forest_drawer;
+    // drawing state: 2D map
+    demo::DemoMapDrawer map_drawer;
+    // physics update state
+    //forest::StepDT stepdt;
 
-    // tick of world
-    tick_t tick = 0.0;
+    // controllers
+    //forest::AimKeysController     aim_controller;
+    //forest::MapViewKeysController map_controller;
 
-    
+    // working with Runner
     forest::Runner* runner = nullptr;
+    //forest::AimRunnerController runnercontroller_aim;
+    //demo::AIRunnerController    runnercontroller_demoai;
 
+    // demo values
     Course course;
     uint course_i = 0; // current control
 
 
-private:
-    
+
+    ////////////////////////////////////////////////////////////////
+
+    // tick of world
+    tick_t tick = 0.0;
+
+    EventList events;
+
+
+    // TODO: remove?
+    run::World* run = nullptr;
+
+
 };
 
 

@@ -17,31 +17,59 @@
 //
 #ifndef BATB_FOREST_MAP_HPP
 #define BATB_FOREST_MAP_HPP
-#include "include.hpp"
+#include "BATB/GL.hpp"
 
 
 namespace batb
 {
 
-class BATB;
-
 namespace forest
 {
+class World;
+class Terrain;
 
+
+
+// a 2D view of Terrain
 class Map
 {
 public:
     // implies a Terrain
-    Terrain* terrain;
+    Terrain* terrain = nullptr;
+
+    //////////////////////////////////////////////////////////////////////////////// 
+    // draw map
+    class Draw2D
+    {
+    public:
+        // scaling: world -> context
+        //double scale = 1.0;
+        //double scale_inv = 1.0;
+
+        // bounding box, world coordinates
+        double x = 0.0;
+        double z = 0.0;
+        double w = 1.0;
+        double h = 1.0;
     
+        // world coordinates scaled down (i.e. mapscale)
+        double to_m = 1.0;
+        // mapscale to NanoVG coordinates
+        double from_m = 1.0;
+        // world coordinates to NanoVG coordinates (NanoVG fonts needs pixels)
+        double to_pixel = from_m * to_m;
+    };
+    // draw region defined by Draw2D
+    virtual void draw2D(NVGcontext* nvg, const Draw2D& draw) { }
+
     // defining how Map is mapped into Terrain
     // ...
+    
+    std::string name;
 
 private:
-    std::string name_;
-    // other meta stuff
-
-    //GLuint tex_;
+    //GLuint tex = 0;
+    //GLuint pos,xxx
     //uint tex_wth_;
     //uint tex_hth_;
 };

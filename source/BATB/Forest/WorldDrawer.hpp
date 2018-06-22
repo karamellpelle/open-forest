@@ -15,9 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_OUTPUT_HPP
-#define BATB_FOREST_OUTPUT_HPP
-#include "game/Output.hpp"
+#ifndef BATB_FOREST_WORLDDRAWER_HPP
+#define BATB_FOREST_WORLDDRAWER_HPP
+#include "include.hpp"
+
+namespace Ogre { class RenderTarget; }
 
 namespace batb
 {
@@ -28,19 +30,37 @@ namespace forest
 class World;
 
 
-// the default outputter (OpenGL, sound, network, ...)
-class Output : public game::Output<World>
+
+
+
+class WorldDrawer 
 {
 public:
-    Output(BATB* b) : batb( b )       { }
+    WorldDrawer();
 
-    virtual void operator()(World& ) override;
+    void init(World* );
 
-    // TODO: controls:
-    // ...
+    // draw to Ogre::RenderTarget
+    void draw(Ogre::RenderTarget* );
+#if 0
+    // set view into World
+    void cameraAim(Aim* , tick_t ticks = 0.0);
+    void cameraFree();
+    void cameraAround(Aim* );
 
-protected:
-    BATB* batb;
+    Aim aim_free;
+    Aim aim_around;
+#endif
+
+private:
+    World* forest_ = nullptr;
+    Aim* aim_ = nullptr;
+
+    
+    Ogre::Camera* ogre_camera_              = nullptr;
+    Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
+
+
 };
 
 

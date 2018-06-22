@@ -23,7 +23,7 @@ namespace batb
 
 
 
-CourseDrawer::CourseDrawer(BATB* b) : batb( b )
+CourseDrawer::CourseDrawer() 
 {
 
     // set values 
@@ -35,9 +35,6 @@ CourseDrawer::CourseDrawer(BATB* b) : batb( b )
     size_ix_pad_    = value::coursedrawerSizeIxPad;
     size_line_      = value::coursedrawerSizeLine;
 
-    /// set nanovg context to work on
-    nvg = batb->gl->nvg_context;
-
     // set default color
     nanovg_color_next_ = nvgRGBAf( 
                          value::coursedrawerColorR,
@@ -45,20 +42,21 @@ CourseDrawer::CourseDrawer(BATB* b) : batb( b )
                          value::coursedrawerColorB,
                          value::coursedrawerColorA );
     
-    // find font
-    nanovg_font_ = nvgFindFont( nvg, "CourseDrawer" );
-    if ( nanovg_font_ == -1 )
-    {
-        // create font
-        nanovg_font_ = batb->gl->nanovgFont( "CourseDrawer", 
-                       file::static_data( "BATB/CourseDrawer.ttf" ) );
-    }
-
 
 }
 
-void CourseDrawer::begin()
+void CourseDrawer::begin(NVGcontext* nvg)
 {
+    nvg_ = nvg;
+
+    // retrieve font
+    nanovg_font_ = nvgFindFont( nvg_, "CourseDrawer" );
+    if ( nanovg_font_ == -1 )
+    {
+        // create font
+        nanovg_font_ =  nvgCreateFont( nvg_, "CourseDrawer", file::static_data( "BATB/CourseDrawer.ttf" ).c_str() );
+    }
+
     type0 = ObjectType::Empty; 
     p0 = glm::vec3(-1.0, 0.0, 1.0);
     type1 = ObjectType::Empty; 
@@ -67,20 +65,20 @@ void CourseDrawer::begin()
 
     // convert line width to pixels
     float_t w = scale_size_ * size_line_;
-    nvgStrokeWidth( nvg, w );
+    nvgStrokeWidth( nvg_, w );
 
 
     // line end and join
-    nvgLineCap( nvg, NVG_ROUND );   // necessary?
-    nvgLineJoin( nvg, NVG_ROUND );
+    nvgLineCap( nvg_, NVG_ROUND );   // necessary?
+    nvgLineJoin( nvg_, NVG_ROUND );
 
     // size of index text
-    nvgFontSize( nvg, scale_size_ * size_ix_ );
-    nvgTextAlign( nvg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE );
+    nvgFontSize( nvg_, scale_size_ * size_ix_ );
+    nvgTextAlign( nvg_, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE );
 
     // set color's
-    nvgStrokeColor( nvg, nanovg_color_next_ );
-    nvgFillColor( nvg, nanovg_color_next_ );
+    nvgStrokeColor( nvg_, nanovg_color_next_ );
+    nvgFillColor( nvg_, nanovg_color_next_ );
     
 }
 
@@ -97,6 +95,8 @@ void CourseDrawer::end()
                       p1.x, p1.y, 1);
 
     draw( trans, type1 );
+
+    nvg_ = nullptr;
 
 }
 
@@ -123,10 +123,10 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
         // line from object 1 to object 2
         auto l1 = trans * glm::vec3( size( type1 ), 0, 1.0 );
         auto l2 = trans * glm::vec3( len - size( type2 ), 0, 1.0 );
-        nvgBeginPath( nvg );
-        nvgMoveTo( nvg, l1.x, l1.y );
-        nvgLineTo( nvg, l2.x, l2.y );
-        nvgStroke( nvg );
+        nvgBeginPath( nvg_ );
+        nvgMoveTo( nvg_, l1.x, l1.y );
+        nvgLineTo( nvg_, l2.x, l2.y );
+        nvgStroke( nvg_ );
 
 
         // draw numbers?
@@ -152,10 +152,8 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
                 auto x = trans[2] + a;
                 
                 // draw text
-                std::ostringstream os;
-                os << ix_;
-                nvgFontFaceId( nvg, nanovg_font_ );
-                nvgText( nvg, x.x, x.y, os.str().c_str(), nullptr );
+                nvgFontFaceId( nvg_, nanovg_font_ );
+                nvgText( nvg_, x.x, x.y, std::to_string( ix_ ).c_str(), nullptr );
                 
             }
 
@@ -169,8 +167,8 @@ void CourseDrawer::push_draw(const glm::vec3& p2, ObjectType type2)
     // set color for next object 
     if ( color_next_ )
     {
-        nvgStrokeColor( nvg, nanovg_color_next_ );
-        nvgFillColor( nvg, nanovg_color_next_ );
+        nvgStrokeColor( nvg_, nanovg_color_next_ );
+        nvgFillColor( nvg_, nanovg_color_next_ );
 
         color_next_ = false;
     }
@@ -224,9 +222,9 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto x = trans * glm::vec3( 0.0, 0.0, 1.0 );
 
         // draw circle
-        nvgBeginPath( nvg );
-        nvgArc( nvg, x.x, x.y, a, 0, twopi, NVG_CCW );
-        nvgStroke( nvg );
+        nvgBeginPath( nvg_ );
+        nvgArc( nvg_, x.x, x.y, a, 0, twopi, NVG_CCW );
+        nvgStroke( nvg_ );
         return true;
     }
     if ( type == ObjectType::Start )
@@ -240,12 +238,12 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto b = trans * glm::vec3( s * start_x1, s * start_y0, 1.0 );
         auto c = trans * glm::vec3( s * start_x1, s * start_y1, 1.0 );
         // draw triangle
-        nvgBeginPath( nvg );
-        nvgMoveTo( nvg, a.x, a.y );
-        nvgLineTo( nvg, b.x, b.y );
-        nvgLineTo( nvg, c.x, c.y );
-        nvgClosePath( nvg );
-        nvgStroke( nvg );
+        nvgBeginPath( nvg_ );
+        nvgMoveTo( nvg_, a.x, a.y );
+        nvgLineTo( nvg_, b.x, b.y );
+        nvgLineTo( nvg_, c.x, c.y );
+        nvgClosePath( nvg_ );
+        nvgStroke( nvg_ );
         return true;
     }
     if ( type == ObjectType::Finish )
@@ -255,12 +253,12 @@ bool CourseDrawer::draw(const glm::mat3& trans, ObjectType type)
         auto x = trans * glm::vec3( 0.0, 0.0, 1.0 );  
 
         // draw two circles
-        nvgBeginPath( nvg );
-        nvgArc( nvg, x.x, x.y, a, 0, twopi, NVG_CCW );
-        nvgStroke( nvg );
-        nvgBeginPath( nvg );
-        nvgArc( nvg, x.x, x.y, b, 0, twopi, NVG_CCW );
-        nvgStroke( nvg );
+        nvgBeginPath( nvg_ );
+        nvgArc( nvg_, x.x, x.y, a, 0, twopi, NVG_CCW );
+        nvgStroke( nvg_ );
+        nvgBeginPath( nvg_ );
+        nvgArc( nvg_, x.x, x.y, b, 0, twopi, NVG_CCW );
+        nvgStroke( nvg_ );
         return true;
     }
 

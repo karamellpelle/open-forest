@@ -53,7 +53,7 @@ namespace forest
 {
 
 
-World::World(run::World& r) : terrain( *this ), weather( this ),  run( r )
+World::World(run::World* r) : terrain( *this ), weather( this ),  run( r )
 { 
 
 }

@@ -49,10 +49,14 @@ public:
     void initState();
 
 
-    // nanovg drawing begin end
-    void nanovgBegin();
+    ////////////////////////////////////////////////////////////////
+    // working with NanoVG
+    // custom coordinates
+    NVGcontext* nanovgBegin(float_t , float_t );
+    // context with Scene coordinates
     NVGcontext* nanovgBegin(const Scene& );
     void nanovgEnd();  
+
     // nanovg helpers
     void nanovgNormalize(const Scene& );
     int nanovgFont(const std::string& , const std::string& );

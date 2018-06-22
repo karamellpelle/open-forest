@@ -94,7 +94,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     if ( !on_ )  return;
 
     // begin GL state for nanovg
-    batb->gl->nanovgBegin();
     window = batb->screen->glfw_window;
     vg = batb->gl->nvg_context;
 

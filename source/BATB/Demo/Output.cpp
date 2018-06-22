@@ -70,6 +70,7 @@ void Output::operator()(World& demo)
         update( demo );
 
 
+#if 0
         ////////////////////////////////////////////////////////////////////////////////
         // begin nanovg drawing
         auto* nvg = batb->gl->nanovgBegin( run.scene );
@@ -182,6 +183,7 @@ void Output::operator()(World& demo)
 
         nvgRestore( nvg );
         batb->gl->nanovgEnd();
+#endif
     }
 
     ////////////////////////////////////////////////////////////////////////////////

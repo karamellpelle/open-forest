@@ -25,6 +25,7 @@ namespace batb
 
 
 // defining a rendering target for OpenGL
+// TODO: add Ogre::RenderTarget?
 class Scene
 {
 public:

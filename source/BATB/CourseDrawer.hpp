@@ -28,7 +28,7 @@ class BATB;
 class CourseDrawer
 {
 public:
-    CourseDrawer(BATB* batb);
+    CourseDrawer();
 
     enum class ObjectType { Empty, Normal, Start, Finish, };
    
@@ -42,7 +42,7 @@ public:
 
     // new drawing
     // assuming inside Nanovg rendering
-    void begin();
+    void begin(NVGcontext* );
     void end();
 
     // current color
@@ -60,14 +60,11 @@ public:
     void finish(const glm::vec3& p)   { finish( glm::vec2( p.x, p.z ) ); }
 
 private:
-    BATB* batb;
-
-public:
     bool draw(const glm::mat3& , ObjectType );        // draw only this
     void push_draw(const glm::vec3& p, ObjectType );  // draw previuos, this next
     float_t size(ObjectType );
 
-    NVGcontext* nvg = nullptr;
+    NVGcontext* nvg_ = nullptr;
     
     glm::vec3 p0; // previous point - 1
     glm::vec3 p1; // previous point 

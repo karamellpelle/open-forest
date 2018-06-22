@@ -57,7 +57,7 @@ public:
     typedef std::forward_list<Map>      MapList;
     typedef std::forward_list<Runner>   RunnerList;
 
-    World(run::World& r); 
+    World(run::World* r); 
 
     ////////////////////////////////////////////////////////////////////////////////
     //
@@ -107,7 +107,8 @@ public:
     // external resources could be different for two different forest::World's.
     // also, 'run' is a reference, hence there is one and only one run::World asso-
     // ciated with each forest::World
-    run::World& run;
+    // TODO: remove this
+    run::World* run = nullptr;
 
     
     // tick of world

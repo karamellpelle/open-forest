@@ -37,7 +37,7 @@ public:
 
     void clear();
 
-    void forest(forest::World* f) { forest_ = f; }
+    void init(forest::World* f) { forest_ = f; }
 
     void addControl(float_t, float_t, forest::ControlDefinition::Code, forest::ControlDefinition::Type);
     forest::Control* operator[](uint ) const;

@@ -32,7 +32,7 @@
 #include "BATB/OGRE.hpp"
 
 
-//#define DEMO_FOREST_DIRECT
+#define DEMO_FOREST_DIRECT
 
 #define DEMO_TEST_GL
 
@@ -69,9 +69,9 @@ void IterationRunMain::begin()
 
 void IterationRunMain::end()
 {
-    // destroy the demo world
     delete demo;
     demo = nullptr;
+
 
     // remove main menu widget
     batb->gui->removeWidget( tb_main );
@@ -203,7 +203,7 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 #endif
 
                     // create and set up demo world
-                    auto demo = newDemoWorld( &run );
+                    demo = newDemoWorld( &run );
 
                     // demo world created, make sure IterationRunDemo works on that
                     // for non-demo world, that world should be a 
@@ -264,7 +264,7 @@ demo::World* IterationRunMain::newDemoWorld(run::World* run)
     if ( !demo )
     {
         // create and set up demo world
-        demo = new demo::World( *run );
+        demo = new demo::World( run );
 
         auto& forest = *demo->forest;
 
@@ -273,9 +273,6 @@ demo::World* IterationRunMain::newDemoWorld(run::World* run)
         forest::WorldLoader loader( batb );        
         loader.load( forest, YAML::Node() ); 
 
-        // now, forest world of demo world is created, continue
-        // with other set ups 
-        demo->begin();
     }
     return demo;
 

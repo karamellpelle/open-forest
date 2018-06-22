@@ -18,7 +18,7 @@
 #include "BATB/Run/World.hpp"
 #include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
-#include "BATB/Forest/Output.hpp"
+#include "BATB/Forest/WorldDrawer.hpp"
 #include "BATB/OGRE.hpp"
 #include "BATB/OGRE/helpers.hpp"
 #include "OgreSingleton.h"
@@ -26,6 +26,7 @@
 #include "OgreEntity.h"
 #include "OgreNode.h"
 #include "OgreSceneNode.h"
+#include "OgreRenderTarget.h"
 
 
 namespace batb
@@ -34,38 +35,55 @@ namespace batb
 namespace forest
 {
 
-void Output::operator()(World& forest)
+WorldDrawer::WorldDrawer() 
 {
-    run::World& run = forest.run;
+
+
+}
+
+void WorldDrawer::init(World* f)
+{
+    forest_ = f;
+
+
+}
+
+void WorldDrawer::draw(Ogre::RenderTarget* ogre_rendertarget)
+{
 
     using namespace Ogre;
-  
-    float_t aspect = run.scene.shape.wth / run.scene.shape.hth;
-    forest.camera.ogre_camera->setAspectRatio( aspect );
 
+    // TMP:
+    ogre_camera_ = forest_->camera.ogre_camera;
+    ogre_camera_scenenode_ = forest_->camera.ogre_scenenode;
+
+
+    float_t aspect = (float_t)( ogre_rendertarget->getWidth() ) / (float_t)( ogre_rendertarget->getHeight() );
+    ogre_camera_->setAspectRatio( aspect );
+
+
+    //assert( aim_ );
 
     ////////////////////////////////////////////////////////////////////////////////
     // set camera from its DTMovable 
-    // FIXME: use Aim matrix
-    forest.camera.ogre_scenenode->setPosition(  ogre::cast_( forest.camera.move.aim[3] ) );
-    forest.camera.ogre_scenenode->setDirection( ogre::cast_( forest.camera.move.aim[2] ) , SceneNode::TransformSpace::TS_WORLD ); 
+    //Aim aim = *aim_;
+    auto aim = forest_->camera.move.aim; // tmp
+    ogre_camera_scenenode_->setPosition(  ogre::cast_( aim[3]  ) );
+    ogre_camera_scenenode_->setDirection( ogre::cast_( aim[2] ) , SceneNode::TransformSpace::TS_WORLD ); 
+    //ogre_camera_scenenode_->setDirection( ogre::cast_( -aim[2] ) , SceneNode::TransformSpace::TS_WORLD ); // camera looks in negative Z direction
+    // FIXME: use setOrientation using Aim insted of setPosition/setDirection
     //Ogre::Quaternion quat = ogre::cast( glm::quat_cast( forest.camera.move.aim ) ); 
     //forest.camera.ogre_scenenode->setOrientation( quat ); 
 
-    ////////////////////////////////////////////////////////////////////////////////
-
-    // render 3D view from camera into Scene
+    // render 3D view from camera into ogre_rendertarget
     // NOTE: see https://ogrecave.github.io/ogre/api/1.11/class_ogre_1_1_render_target.html#ad0b724596d2b9e278293aee6e55a5273
-    batb->ogre->sceneBegin( run.scene );
-    batb->ogre->outputCamera( forest.camera.ogre_camera );
-    batb->ogre->sceneEnd();
-
+    if ( ogre_rendertarget )
+    {
+        ogre_rendertarget->_updateViewport( ogre_camera_->getViewport(), true );
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
-    // TODO: other output
-    //  * sound 
-    //  * network
-    //  * 
+
 }
 
 

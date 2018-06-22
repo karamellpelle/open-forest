@@ -15,45 +15,43 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Demo/Iteration/IterationDemo.hpp"
-#include "BATB/Demo/World.hpp"
-#include "BATB/Run/World.hpp"
-#include "BATB/Demo.hpp"
+#ifndef BATB_DEMO_DEMOMAPDRAWER_HPP
+#define BATB_DEMO_DEMOMAPDRAWER_HPP
+#include "include.hpp"
+#include "BATB/Forest/MapDrawer2D.hpp"
+
 
 namespace batb
 {
-
-
 namespace demo
 {
+class World;
 
-IterationDemo::IterationDemo(BATB* b) : batb( b )
+
+// draw a Map to a 2D NanovgContext
+class DemoMapDrawer : public forest::MapDrawer2D
 {
-
-}
-
-IterationStack IterationDemo::iterate(World& demo)
-{
-    // free old events
-    demo.events.step();
+public:
+    DemoMapDrawer();
     
-    // demo-tick is run-tick:
-    demo.tick = demo.run->tick;
+    void init(World* );
 
-    // transfer events from Demo to demo::World
-    demo.events.take( *batb->demo->events );
+protected:
+    World* demo_ = nullptr;
 
-    ////////////////////////////////////////
-    // actual iteration, implemented by subclass
-    ////////////////////////////////////////
-    auto ret = iterate_demo( demo );
- 
+    void beginMapDraw(NVGcontext* , const forest::Map::Draw2D&) override;
+    void endMapDraw(NVGcontext* , const forest::Map::Draw2D& ) override;
 
-    return ret;
-}
+
+};
+
+
 
 
 } // namespace demo
 
 } // namespace batb
 
+
+
+#endif

@@ -18,9 +18,7 @@
 #ifndef BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
-#include "BATB/Demo/Output.hpp"
 #include "BATB/Demo/CourseCurve.hpp"
-#include "BATB/Forest/Output.hpp"
 #include "BATB/Forest/ModifyCamera.hpp"
 #include "BATB/Forest/ModifyRunner.hpp"
 #include "BATB/Forest/ModifyControlCamera.hpp"
@@ -57,12 +55,14 @@ public:
     ////////////////////////////////////////
 
 private:
+    void output(World& );
+    IterationStack step(World& );
+
+
     void createRandomCourse(demo::World& );
     void modifyRunnerDemo(demo::World& );
 
-    demo::Output outputDemo;
 
-    forest::Output output;
     forest::ModifyCamera modifyCamera;
     forest::ModifyRunner modifyRunner;
     forest::ModifyControlCamera modifyControlCamera;

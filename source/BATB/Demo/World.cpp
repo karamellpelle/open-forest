@@ -30,23 +30,19 @@ namespace demo
 
 
 
-World::World(run::World& r) : run( r )
+World::World(run::World* r) :  run( r )
 {
     forest = std::make_unique<forest::World>( run );
-    // ^FIXME: pointers, not references?
 
     // make sure Course works on our forest world
-    course.forest( forest.get() );
+    forest_drawer.init( forest.get() );
+    map_drawer.init( this );
+
+    course.init( forest.get() );
 
 };
 
 
-// load the demo world
-void World::begin()
-{
-
-
-}
 
 
 } // namespace demo

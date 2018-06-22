@@ -1,30 +1,78 @@
 
 # TODO
+
+* remove nanovgBeginMM since context is not always screen
+* remove run::World from forest::World! use pointers or references to super/subworlds?
+* remove forest::Camera, instead
+
+```
+  AimController working on Aim. Aim can be camera. Aim can be runner. Aim can be camera for 3d person view.
+  camera: 
+  runner: 
+  3th persion: 
+  AimController(RunnerModifier->aim )
+  forest::Output(`Aim*` ): RunnerModifier
+  forest::Output() :
+  forest::Output::aim(AimPtr )
+  forest::Output::aimFree()
+  forest::Output::aimRunnerModifier() // Not runner, since it should be possible to replay player cam
+  forest::Output::aim3thPerson( , AimPtr relative to)
+  forest->drawer->aimFree()
+  // ^ all these interpolates when setting a new Aim
+
+  forest::Output -> forest::Drawer
+  RunnerModifier::aimControl :: Aim   // for AimController
+  RunnerModifier::aimHead :: Aim   // for head view. used by forest::Output. 
+  // ^ RunnerModifier::update() takes aimHead as input for controlling `Runner*`, i.e. the Runner's DTMovable
+  // switch Runner:
+  //    RunnerModifier::runner( new runner ); 
+  //    Output::aim(RunnerModifier ) // interpolates
+
+  output demo = do
+     // 
+     demo->forest->drawer
+
+     // setup nvg
+     // MapDrawer::draw( scene )
+     demo->map_drawer->draw( scene )
+     // end nvg
+
+  DemoMapDrawer : public forest::MapDrawer
+    Map* map_
+    draw( scene )
+    drawEnd() override // use CourseDrawer
+
+  MapDrawer::draw()
+      // setup Coordinates matrix
+      drawBegin() // virtual
+      // draw Map* (typically an image). 
+      // can actually be animated, for example by dirt or runner fatigue
+      drawEnd()   // virtual. 
+
+  // !!!!!!!
+  // FIXME: Controllers into World or Iteration? ANSWER: World, since Iteration's
+  //        should work with same cameras, etc
+
+```
+  
+
 * remove RenderSystemGL and only use RenderSystemGL3Plus
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
   something wrong happesn if 'setFixedYawAxis( true );' is not called
   also fix controls and Z direction. An Ogre::Camera uses -Z for view direction.
 * setup GUI from .yaml
 * review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
-* remove OGRE::GLFWContext?
 * OGRE/AL enabled() necessary ??
 * forest::World: load Ogre resources from yaml, not dedicated file? what about 
   different types (for example subclasses of Terrain)?
 * remove demo/libs/ogreterrain, and clean up data directories
-* forest::World: set Weater (skybox, light, etc.) after terrain loaded.
-  move the light creation from terrain::load() into the weather setup!
-* attach Camera to SceneNode and use that. new in v1.10
 * remove OgreTerrain demo, stay with forest
 * fix OGRE data: static vs dynamic. 
-* helpers/tb.hpp -> tb/helpers.hpp
 * custom TB-widgets have empty constructors since all TB-widgets should be possible.
   to read from .tb.txt file's (TBWidgetFactory).
   - TBMain
   - TBConsole?
-* no indent->pop() for exceptions; done by destructors regarding exception or not
 * clipboard support TB (tb_system.h)
-* use the implemetation of Ogre::renderOneFrame(Real timeSinceLastFrame)?
-* nanovg debug if defined in yaml
 * clean up events during shutdown
 * better reading custom TB widgets. read custom props for for example console
 * let cmd's use boost program_options

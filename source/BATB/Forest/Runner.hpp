@@ -56,6 +56,8 @@ public:
     float_t y;
     float_t z;
 
+    // TODO: other information like intensity, fatigue, etc
+
 };
 
 
