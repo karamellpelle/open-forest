@@ -56,8 +56,8 @@ float_t forestCameraMoveZTicks   = 10.0;
 float_t forestCameraMoveZMin     = 32.0;
 float_t forestCameraMoveZMax     = 4000.0;
 
-float_t forestProximityControl   = 8000.0;
-float_t forestProximityRunner    = 8000.0;
+float_t forestProximityControl   = 2500.0; // 50 meters
+float_t forestProximityRunner    = 8100.0; // 90 meters
 
 float_t forestTraceD             = 4.0;
 

@@ -241,11 +241,11 @@ IterationStack IterationDemoForest::step(World& demo)
             {
                 //std::cout << std::setprecision( 2 ) << std::fixed << "\r"
                 //          << "proximity of control " << e->control->definition.code << ": "
-                //          << eps
+                //          << std::sqrt(e->epseps)
                 //          ;
 
                 // punch if close enough to control
-                constexpr float_t punch_d = 25.0;
+                constexpr float_t punch_d = 20.0;
                 if ( e->epseps < punch_d * punch_d )
                 {
                     if ( e->runner->control0 != e->control && 
@@ -330,10 +330,10 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
 
     if ( runner )
     {
+
         ////////////////////////////////////////////////////////////////////////////////
         auto p = glm::vec2( runner->move.pos.x, runner->move.pos.z );
-        auto p0 = curve( m, curve_i );
-        auto p1 = curve( m, curve_i + 1 );
+        auto p1 = curve( m, curve_i );
 
 
         // if runner at p1, run to p2
@@ -350,7 +350,6 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
                 ++curve_i;
 
                 // step curve
-                p0 = curve( m, curve_i );
                 p1 = curve( m, curve_i + 1);
 
             }
