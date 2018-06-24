@@ -20,6 +20,7 @@
 #include "BATB/Demo/Course.hpp"
 #include "BATB/Demo/DemoMapDrawer.hpp"
 #include "BATB/Forest/WorldDrawer.hpp"
+#include "BATB/Forest/StepDT.hpp"
 
 
 namespace batb
@@ -50,7 +51,7 @@ public:
     // drawing state: 2D map
     demo::DemoMapDrawer map_drawer;
     // physics update state
-    //forest::StepDT stepdt;
+    forest::StepDT step_dt;
 
     // controllers
     //forest::AimKeysController     aim_controller;

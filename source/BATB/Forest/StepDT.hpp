@@ -18,37 +18,29 @@
 #ifndef BATB_FOREST_STEPDT_HPP
 #define BATB_FOREST_STEPDT_HPP
 #include "include.hpp"
-#include "game/StepDT.hpp"
 
 namespace batb
 {
-
-
-class BATB;
-
-
 namespace forest
 {
 class World;
 
 
 // the default physics stepper
-class StepDT : public game::StepDT<World, tick_t>
+class StepDT 
 {
 public:
-    StepDT(BATB* b) : batb( b )       { }
+    StepDT();
 
-    // dt-step
-    // tick of world is not updated!
-    virtual void operator()(World& , tick_t ) override;
+    // add dt-step
+    // NOTE: tick of world will be increased. this make sense because looking
+    // at events after adding dt should have correct tick value
+    void add(World& , tick_t );
 
-    // after
-    // FIXME better naming!
-    void operator()(World& );
+    // typically after all dt's added
+    void update(World& );
 
 
-protected:
-    BATB* batb;
 };
 
 

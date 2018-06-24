@@ -54,10 +54,9 @@ namespace demo
 
 IterationDemoForest::IterationDemoForest(BATB* b) : 
     IterationDemo( b ), 
-    modifyCamera( b ), 
     modifyRunner( b ),
     modifyControlCamera( b ), 
-    modifyControlRunner( b ), stepDT( b )
+    modifyControlRunner( b )
 {
 
 }
@@ -117,8 +116,6 @@ void IterationDemoForest::iterate_begin(World& demo)
         modifyRunner.runner( demo.runner );
         modifyControlRunner.modifier( &modifyRunner );
 
-        // move camera by ModifyControlCamera (manual movement)
-        modifyControlCamera.modifier( &modifyCamera );
     }
 
 }
@@ -137,9 +134,12 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     // transfer events from Forest into forest::World
     forest.events.take( *batb->forest->events );
 
+
+    ////////////////////////////////////////////////////////////////
     // output 
     output( demo );
 
+    ////////////////////////////////////////////////////////////////
     // step
     return step( demo );
 
@@ -219,7 +219,6 @@ IterationStack IterationDemoForest::step(World& demo)
   
     ////////////////////////////////////////////////////////////////////////////////
     // movement
-    modifyCamera( forest );
     modifyRunner( forest );
 
   
@@ -233,7 +232,7 @@ IterationStack IterationDemoForest::step(World& demo)
     while ( forest.tick + value::dt <= tick )
     {
         // step World
-        stepDT( forest, value::dt );
+        demo.step_dt.add( forest, value::dt );
        
         // look at events (think)
         for ( auto& ev : forest.events )
@@ -310,11 +309,12 @@ IterationStack IterationDemoForest::step(World& demo)
             }
         }
 
-        // update tick of world
-        forest.tick += value::dt;
     }
+
     // update after dt
-    stepDT( forest );
+    demo.step_dt.update( forest );
+
+
 
     // this one runs forever 
     return { this };

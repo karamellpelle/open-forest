@@ -32,6 +32,10 @@ namespace batb
 namespace forest
 {
 
+StepDT::StepDT()
+{
+
+}
 
 void stepdt(DTMovable& move, tick_t dt)
 {
@@ -53,7 +57,7 @@ void stepdt(DTMovable& move, tick_t dt)
 }
 
 
-void StepDT::operator()(World& forest, tick_t dt)
+void StepDT::add(World& forest, tick_t dt)
 {
     // TODO: Camera and Runner should have pointers to DTMovable.
     //       all DTMovable's should be in continuos memory. 
@@ -136,11 +140,14 @@ void StepDT::operator()(World& forest, tick_t dt)
                                TracePoint( tick_next, glm::vec3( runner_a.move.aim[ 3 ] ) ) );
     }
 
-    // NOTE:
-    // tick of forest::World is not updated here!
+    ////////////////////////////////////////////////////////////////////////////////
+    // update tick of world
+    //
+    forest.tick += dt;
+
 }
 
-void StepDT::operator()(World& forest)
+void StepDT::update(World& forest)
 {
     // set respective Ogre based on Aim
     for (auto& runner : forest.runners )

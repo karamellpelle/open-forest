@@ -19,11 +19,9 @@
 #define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
 #include "BATB/Demo/CourseCurve.hpp"
-#include "BATB/Forest/ModifyCamera.hpp"
 #include "BATB/Forest/ModifyRunner.hpp"
 #include "BATB/Forest/ModifyControlCamera.hpp"
 #include "BATB/Forest/ModifyControlRunner.hpp"
-#include "BATB/Forest/StepDT.hpp"
 
 
 namespace batb
@@ -63,13 +61,12 @@ private:
     void modifyRunnerDemo(demo::World& );
 
 
-    forest::ModifyCamera modifyCamera;
     forest::ModifyRunner modifyRunner;
     forest::ModifyControlCamera modifyControlCamera;
     forest::ModifyControlRunner modifyControlRunner;
-    forest::StepDT stepDT;
 
     // movement of demo runner
+    // TODO: into "AI" controller
     CourseCurve curve;
     uint curve_i = 0;
 
