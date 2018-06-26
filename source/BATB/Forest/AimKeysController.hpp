@@ -15,54 +15,46 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WORLDDRAWER_HPP
-#define BATB_FOREST_WORLDDRAWER_HPP
+#ifndef BATB_FOREST_AIMKEYSCONTROLLER_HPP
+#define BATB_FOREST_AIMKEYSCONTROLLER_HPP
 #include "BATB/Forest/AimControllable.hpp"
-
-namespace Ogre
-{
-class RenderTarget;
-class SceneNode;
-}
+#include "helpers/time_value.hpp"
 
 namespace batb
 {
 class BATB;
 
+
 namespace forest
 {
-class World;
 
 
-
-
-
-class WorldDrawer : public AimControllable
+// using Keys to control an Aim
+class AimKeysController 
 {
 public:
-    WorldDrawer();
+    AimKeysController();
 
-    void init(World* );
+    // eat input
+    void step(BATB* );
 
-    // draw to Ogre::RenderTarget
-    void draw(Ogre::RenderTarget* );
+    // what to control 
+    void connect(AimControllable* );
 
-    // where to look from
-    void camera(Ogre::SceneNode* , tick_t = 0.0);
-    void cameraFree();
-    void camera3thPerson(Ogre::SceneNode* , tick_t = 0.0);
+    ////////////////////////////////////////////////////////////////////////////////
+    //
 
-    // AimControllable: let Keys control the view into World
-    void aiming(const Aim& ) override;
+    Aim aim;
+    float_t aim_a = 0.0;
+    float_t aim_b = 0.0;
+    float_t aim_c = 0.0;
 
 private:
-    World* forest_ = nullptr;
-
     
-    Ogre::Camera* ogre_camera_              = nullptr;
-    Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
+    AimControllable* controllable_ = nullptr;
 
-
+    tick_t tick_x = 0.0;
+    tick_t tick_z = 0.0;
 };
 
 

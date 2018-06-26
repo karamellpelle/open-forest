@@ -86,6 +86,15 @@ void WorldDrawer::draw(Ogre::RenderTarget* ogre_rendertarget)
 
 }
 
+void WorldDrawer::cameraFree()
+{
+
+}
+
+void WorldDrawer::aiming(const Aim& aim)
+{
+    // handle aim
+}
 
 } // namespace forest
 

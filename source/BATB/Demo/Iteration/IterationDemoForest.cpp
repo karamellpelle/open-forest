@@ -52,9 +52,7 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-IterationDemoForest::IterationDemoForest(BATB* b) : 
-    IterationDemo( b ), 
-    modifyControlCamera( b )
+IterationDemoForest::IterationDemoForest(BATB* b) : IterationDemo( b ), modifyControlCamera( b )
 {
 
 }
@@ -63,6 +61,7 @@ IterationDemoForest::IterationDemoForest(BATB* b) :
 
 void IterationDemoForest::iterate_begin(World& demo)
 {
+
     auto& run = *demo.run;
     auto& forest = *demo.forest;
 
@@ -89,6 +88,9 @@ void IterationDemoForest::iterate_begin(World& demo)
         demo.runner = forest.addRunner( run.player ); 
         demo.runner->reset( glm::vec2( 0, 0 ) );
        //demo.runner->headlamp( true );
+
+       // runner iff started before
+       demo.forest_drawer.cameraFree();
     }
 
     // if we have no Course, create one
@@ -205,28 +207,19 @@ IterationStack IterationDemoForest::step(World& demo)
     // "AI" for demo
     modifyRunnerDemo( demo );
 
-    // use Keys to control objects in forest::World
+    // use Keys to control aiming in forest::World, typically camera
+    demo.aim_keyscontroller.step( batb );
+
+    // TODO: this is old; remove
     modifyControlCamera( forest, tick );
 
-    auto& runner_a = *demo.runner;
 
-    //runner_a.move.vel.x = 400.0;
-    //float_t vx, vz;
-    //cossin( tick, vx, vz );
-    //constexpr float_t scale = 200.0;
-    //runner_a.setDirection( glm::vec2( vx, vz ) );
-    //runner_a.speed = 1.0;
-    //runner_a.move.vel.x = scale * vx;
-    //runner_a.move.vel.z = scale * vz;
 
-  
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
 
-    // make sure make sure we don't make a lot of dt steps below
-    // (prevent hang)
-    forest.tick = forest.tick + value::dt_max <= tick ? 
-                  tick - value::dt_max : forest.tick;
+    // make sure make sure we don't make a lot of dt steps (prevent hang)
+    forest.tick = forest.tick + value::dt_max <= tick ?  tick - value::dt_max : forest.tick;
 
     // make as many dt-step of forest::World as possible since last frame
     while ( forest.tick + value::dt <= tick )

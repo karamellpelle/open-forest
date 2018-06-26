@@ -21,6 +21,7 @@
 #include "BATB/Demo/DemoMapDrawer.hpp"
 #include "BATB/Forest/WorldDrawer.hpp"
 #include "BATB/Forest/StepDT.hpp"
+#include "BATB/Forest/AimKeysController.hpp"
 
 
 namespace batb
@@ -54,7 +55,7 @@ public:
     forest::StepDT step_dt;
 
     // controllers
-    //forest::AimKeysController     aim_controller;
+    forest::AimKeysController     aim_keyscontroller;
     //forest::MapViewKeysController map_controller;
 
     // working with Runner

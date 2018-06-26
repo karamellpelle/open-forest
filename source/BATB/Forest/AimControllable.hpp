@@ -15,55 +15,26 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WORLDDRAWER_HPP
-#define BATB_FOREST_WORLDDRAWER_HPP
-#include "BATB/Forest/AimControllable.hpp"
+#ifndef BATB_FOREST_AIMCONTROLLABLE_HPP
+#define BATB_FOREST_AIMCONTROLLABLE_HPP
+#include "BATB/Forest/Aim.hpp"
 
-namespace Ogre
-{
-class RenderTarget;
-class SceneNode;
-}
 
 namespace batb
 {
-class BATB;
-
 namespace forest
 {
-class World;
 
 
-
-
-
-class WorldDrawer : public AimControllable
+// something that can be controlled by Aim (i.e. AimKeysController)
+class AimControllable
 {
 public:
-    WorldDrawer();
-
-    void init(World* );
-
-    // draw to Ogre::RenderTarget
-    void draw(Ogre::RenderTarget* );
-
-    // where to look from
-    void camera(Ogre::SceneNode* , tick_t = 0.0);
-    void cameraFree();
-    void camera3thPerson(Ogre::SceneNode* , tick_t = 0.0);
-
-    // AimControllable: let Keys control the view into World
-    void aiming(const Aim& ) override;
-
-private:
-    World* forest_ = nullptr;
-
-    
-    Ogre::Camera* ogre_camera_              = nullptr;
-    Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
-
+    // we may later create a class Aiming containing more info
+    virtual void aiming(const Aim& ) = 0;
 
 };
+
 
 
 } // namespace forest
@@ -71,5 +42,5 @@ private:
 } // namespace batb
 
 
-#endif
 
+#endif
