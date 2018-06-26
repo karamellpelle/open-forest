@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_RUNNER_HPP
 #define BATB_FOREST_RUNNER_HPP
 #include "BATB/Forest/DTMovable.hpp"
+#include "BATB/Forest/Trace.hpp"
 
 namespace Ogre
 {
@@ -30,71 +31,14 @@ class SceneNode;
 
 namespace batb
 {
-
 class Player;
-
-  
 namespace forest
 {
-
 class World;
 class Control;
 class Map;
 class Runner;
 
-
-// point in a trace
-class TracePoint
-{
-public:
-    TracePoint() { }
-    TracePoint(tick_t t, const glm::vec3& v) : tick( t ), x( v[0] ), y( v[1] ), z( v[2] )  { }
-      
-    tick_t tick = 0.0;
-  
-    // use 'float' to save mem?
-    float_t x;
-    float_t y;
-    float_t z;
-
-    // TODO: other information like intensity, fatigue, etc
-
-};
-
-
-// line of TracePoint's
-class Trace
-{
-public:
-    void push(const TracePoint& point1);
-    void pushIf(float_t epseps, const TracePoint& point1)
-    {
-        float_t x = point1.x - point0.x;
-        float_t y = point1.y - point0.y;
-        float_t z = point1.z - point0.z;
-        if ( epseps <= x * x + y * y + z * z )
-        {
-            push( point1 );
-        }
-    }
-    void position(const TracePoint& p)
-    {
-        point0 = p;
-    }
-    void reset(const TracePoint& p)
-    {
-        points.clear();
-        point0 = p;
-    }
-
-    using TracePoints = std::vector<TracePoint>;
-    uint size() const { return points.size(); }
-
-    TracePoints points;
-    TracePoint point0;
-
-private:
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 // RunnerAnimation

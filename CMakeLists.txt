@@ -391,6 +391,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Forest/WorldDrawer.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/MapDrawer2D.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/Runner.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/Trace.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/StepDT.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain/TerrainPageProvider.hpp"

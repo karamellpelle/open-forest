@@ -272,12 +272,6 @@ void RunnerAnimation::step(tick_t tick_next)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void Trace::push(const TracePoint& point1)
-{
-    points.push_back( point0 );
-    point0 = point1;
-
-}
 
 
 } // namespace forest
