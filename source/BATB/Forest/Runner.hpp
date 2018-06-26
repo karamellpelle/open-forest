@@ -24,6 +24,7 @@ namespace Ogre
 class Entity;
 class AnimationState;
 class Light;
+class SceneNode;
 }
 
 
@@ -136,10 +137,13 @@ public:
     void reset(const glm::vec2& );
     void reset(const glm::vec3& );
 
+    void setDirection(const glm::vec2& );
+    void setSpeed(float_t speed);
+
     void headlamp(bool );
 
     // update position and output-state
-    void step();
+    void update();
 
     // punch a control
     void punch(Control* );
@@ -157,6 +161,7 @@ public:
 
     // physical state
     DTMovable move;
+    float_t speed = 0.0;
 
     // previous control
     Control* control0 = nullptr;
@@ -186,8 +191,9 @@ public:
 
     //ogre_
     // our runners SceneNode is the one of 'ogre_entity'
-    Ogre::Entity* ogre_entity         = nullptr;
-    Ogre::Light* ogre_headlamp        = nullptr; // ->setType(Light::LT_SPOTLIGHT); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
+    Ogre::Entity* ogre_entity       = nullptr;
+    Ogre::SceneNode* ogre_scenenode = nullptr;
+    Ogre::Light* ogre_headlamp      = nullptr; // ->setType(Light::LT_SPOTLIGHT); see https://ogrecave.github.io/ogre/api/1.11/tut__lights_cameras_shadows.html
 
     // sound
     //alure::Source alure_source;

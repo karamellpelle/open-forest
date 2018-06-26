@@ -56,11 +56,17 @@ public:
     typedef std::forward_list<Control>  ControlList;
     typedef std::forward_list<Map>      MapList;
     typedef std::forward_list<Runner>   RunnerList;
+    //typedef std::forward_list<std::shared_ptr<Control>>  ControlList;
+    //typedef std::forward_list<std::shared_ptr<Control>> MapList;
+    //typedef std::forward_list<std::shared_ptr<Control>>   RunnerList;
 
     World(run::World* r); 
 
     ////////////////////////////////////////////////////////////////////////////////
     //
+
+    // update states
+    void update();
 
     // Control
     Control* addControl(const ControlDefinition& );

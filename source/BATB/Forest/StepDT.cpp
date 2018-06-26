@@ -95,7 +95,7 @@ void StepDT::add(World& forest, tick_t dt)
         const auto tick_next = forest.tick + dt;
 
         auto& runner_a = *i;
-
+        
         // step runner
         stepdt( runner_a.move, dt );
       
@@ -147,14 +147,6 @@ void StepDT::add(World& forest, tick_t dt)
 
 }
 
-void StepDT::update(World& forest)
-{
-    // set respective Ogre based on Aim
-    for (auto& runner : forest.runners )
-    {
-        runner.step();
-    }
-}
 
 } // namespace forest
 

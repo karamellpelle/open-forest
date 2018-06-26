@@ -58,6 +58,19 @@ World::World(run::World* r) : terrain( *this ), weather( this ),  run( r )
 
 }
 
+// update states
+void World::update()
+{
+    // 
+    for (auto& runner : runners )
+    {
+        runner.update();
+    }
+
+    // TODO: update other parts
+
+}
+
 Control* World::addControl(const ControlDefinition& def)
 {
 

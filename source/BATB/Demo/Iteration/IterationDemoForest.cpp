@@ -54,9 +54,7 @@ namespace demo
 
 IterationDemoForest::IterationDemoForest(BATB* b) : 
     IterationDemo( b ), 
-    modifyRunner( b ),
-    modifyControlCamera( b ), 
-    modifyControlRunner( b )
+    modifyControlCamera( b )
 {
 
 }
@@ -110,11 +108,6 @@ void IterationDemoForest::iterate_begin(World& demo)
                       glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
         curve_i = 0; 
 
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // set controllers (Keys)
-        modifyRunner.runner( demo.runner );
-        modifyControlRunner.modifier( &modifyRunner );
 
     }
 
@@ -214,24 +207,32 @@ IterationStack IterationDemoForest::step(World& demo)
 
     // use Keys to control objects in forest::World
     modifyControlCamera( forest, tick );
-    modifyControlRunner( forest );
 
-  
-    ////////////////////////////////////////////////////////////////////////////////
-    // movement
-    modifyRunner( forest );
+    auto& runner_a = *demo.runner;
+
+    //runner_a.move.vel.x = 400.0;
+    //float_t vx, vz;
+    //cossin( tick, vx, vz );
+    //constexpr float_t scale = 200.0;
+    //runner_a.setDirection( glm::vec2( vx, vz ) );
+    //runner_a.speed = 1.0;
+    //runner_a.move.vel.x = scale * vx;
+    //runner_a.move.vel.z = scale * vz;
 
   
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
 
-    forest.tick = forest.tick + value::dt_max <= tick ? // prevent too many dt steps
+    // make sure make sure we don't make a lot of dt steps below
+    // (prevent hang)
+    forest.tick = forest.tick + value::dt_max <= tick ? 
                   tick - value::dt_max : forest.tick;
 
-    // make a dt-step of forest::World
+    // make as many dt-step of forest::World as possible since last frame
     while ( forest.tick + value::dt <= tick )
     {
-        // step World
+
+        // step World (do)
         demo.step_dt.add( forest, value::dt );
        
         // look at events (think)
@@ -273,16 +274,6 @@ IterationStack IterationDemoForest::step(World& demo)
                 src.setRolloffFactors( 8.0 );
                 src.setGain( 0.5 );
 
-                //std::cout << "control: \n"
-                //          << "x: " << source_aim[3].x << std::endl
-                //          << "y: " << source_aim[3].y << std::endl
-                //          << "z: " << source_aim[3].z << std::endl
-                //          << "camera: \n"
-                //          << "x: " << forest.camera.move.pos.x << std::endl
-                //          << "y: " << forest.camera.move.pos.y << std::endl
-                //          << "z: " << forest.camera.move.pos.z << std::endl
-                //          << std::endl;
-
 
                 // if correct control punched, set next
                 if ( code == code1 )
@@ -311,12 +302,12 @@ IterationStack IterationDemoForest::step(World& demo)
 
     }
 
-    // update after dt
-    demo.step_dt.update( forest );
 
+    // update states
+    forest.update();
+    
 
-
-    // this one runs forever 
+    // this iteratein runs forever 
     return { this };
     
 }
@@ -360,8 +351,8 @@ void IterationDemoForest::modifyRunnerDemo(demo::World& demo)
         // anyway, always move p against p1
         if ( p1 != p )
         {
-            modifyRunner.aim( p1 - p );
-            modifyRunner.speed( 1.0 );
+            runner->setDirection( p1 - p );
+            runner->setSpeed( 1.0 );
         }
 
     } 

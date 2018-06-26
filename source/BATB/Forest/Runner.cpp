@@ -97,9 +97,9 @@ void Runner::reset(const YAML::Node& yaml)
     ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "Sinbad.mesh" );
     ogre_entity->setCastShadows( true );
 
-    auto* node = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
-    node->scale( 3, 3, 3 ); // FIXME: use metric system all over (Terrain, Runners, Controls)
-    node->attachObject( ogre_entity );
+    ogre_scenenode = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
+    ogre_scenenode->scale( 3, 3, 3 ); // FIXME: use metric system all over (Terrain, Runners, Controls)
+    ogre_scenenode->attachObject( ogre_entity );
 
     // setup animations for runner
     animation.reset( YAML::Node() /*yaml["animation"]*/ );
@@ -158,9 +158,8 @@ void Runner::headlamp(bool on)
         ogre_headlamp->setSpecularColour( 0.0, 0.0, 0.0 );
 
         // attach spotlight to runners head
-        SceneNode* node = ogre_entity->getParentSceneNode()->createChildSceneNode(); // TODO: SceneNode of head
+        SceneNode* node = ogre_scenenode->createChildSceneNode(); // TODO: SceneNode of head
         node->setDirection( Vector3( 0, -1.0, 0 ).normalisedCopy() );
-
         node->setPosition(Vector3(0, 5, 0));
         node->attachObject( ogre_headlamp );
 
@@ -175,23 +174,62 @@ void Runner::headlamp(bool on)
     ogre_headlamp->setVisible( on );
 }
 
-void Runner::step()
+void Runner::update()
 {
+    ////////////////////////////////////////////////////////////////////////////////
+    // update physical state
+
+    // set intensity
+    intensity = std::abs( speed );
+
+    // set velocity, based on Terrain, 
+    // TODO: later use Terrain more active, like running slow in mosses, green parts of map, etc
+    float_t incline = std::min( (float_t)( 0.95 ), forest.terrain.incline( move.aim ) ); // 0.95: prevent standing still
+    float_t s = (1.0 - incline) * speed            // TODO: ensure 1.0 - 'incline' is OK
+                            * value::forestModifyRunnerSpeed;
+
+    // objects moves in z direction
+    move.vel = (float)( s ) * move.aim[2]; 
+ 
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // update Ogre state
+
     move.compute();
-    auto node = ogre_entity->getParentNode();
 
     // update position of runner
-    node->setPosition( ogre::cast_( move.pos ) );
+    ogre_scenenode->setPosition( ogre::cast_( move.pos ) );
 
     // update orientation of runner
     auto quat = glm::quat_cast( move.aim );
-    node->setOrientation( ogre::cast( quat ) );
+    ogre_scenenode->setOrientation( ogre::cast( quat ) );
+
 
     // update animation
     animation.step( forest.tick );
 
 }
 
+
+// z is forward
+// 'dir' gets normalized, so no need for unit vector
+void Runner::setDirection(const glm::vec2& dir)
+{
+    auto u = glm::normalize( dir );
+
+
+    // World direction in xz plane
+    // NOTE: only update the rotation part, not translation (i.e. position)
+    move.aim[0] = glm::vec4( u.y, 0.0, -u.x, 0.0 );
+    move.aim[1] = glm::vec4( 0.0, 1.0, 0.0, 0.0 );
+    move.aim[2] = glm::vec4( u.x, 0.0, u.y, 0.0 );
+}
+
+// 'speed' gets clamped to [-1, 1]
+void Runner::setSpeed(float_t s)
+{
+    speed = clamp( s, (float_t)( -1.0 ), (float_t)( 1.0 ) );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

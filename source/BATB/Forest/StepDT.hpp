@@ -37,9 +37,6 @@ public:
     // at events after adding dt should have correct tick value
     void add(World& , tick_t );
 
-    // typically after all dt's added
-    void update(World& );
-
 
 };
 
