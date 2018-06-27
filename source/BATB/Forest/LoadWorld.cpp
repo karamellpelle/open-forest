@@ -69,12 +69,6 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
     
 
 
-    // TODO: delete old before loading
-    // TODO: use state
-    // TODO: 
-    batb->gl->ogreBegin();
-
-
     ////////////////////////////////////////////////////////////////////////////////
     // Ogre
     //
@@ -83,29 +77,25 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    {
-        // TODO: use yaml above
-        YAML::Node yaml = YAML::LoadFile( file::static_data( "BATB/Forest/ogre.yaml" ) );
-
-        // add resources for demo
-        // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
-        if ( YAML::Node resources = yaml[ "resources" ] )
-        {
-            batb->ogre->addResourceGroupsAndInit( yaml["resources"] );
-        }
-        else
-        {
-            batb->log << "forest::LoadWorld: no resources defined!" << std::endl;
-        }
-
-    } 
-
     using namespace Ogre;
 
+    YAML::Node yaml_ogre = YAML::LoadFile( file::static_data( "BATB/Forest/ogre.yaml" ) ); // TODO: yaml[ "xxx" ]
+
+    // add resources for demo
+    // TODO: find out how to use ResourceGroupManager::initialiseAllResourceGroups()
+    if ( YAML::Node resources = yaml_ogre[ "resources" ] )
+    {
+        batb->ogre->addResourceGroupsAndInit( resources );
+    }
+    else
+    {
+        batb->log << "forest::LoadWorld: no resources defined!" << std::endl;
+    }
 
 
     ////////////////////////////////////////////////////////////////
     // create SceneManager
+    //
     forest->ogre_scenemanager = batb->ogre->ogre_root->createSceneManager();
    
 
@@ -123,7 +113,7 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
 
 
     ////////////////////////////////////////////////////////////////
-    // set weater TODO
+    // set weater
     //
     //forest->weather.load( YAML::Node() ); // TODO: yaml[ "xxx" ]
     forest->weather.setDay();
@@ -131,8 +121,9 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
 
 
 
-    // tmp: test light
 #if 0
+        // tmp: test light
+        //
         auto* ogre_headlamp = forest->ogre_scenemanager->createLight();
         ogre_headlamp->setType( Light::LT_SPOTLIGHT );
         ogre_headlamp->setSpotlightRange( Degree(20), Degree( 30 ));
@@ -148,10 +139,6 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
         node->attachObject( ogre_headlamp );
 #endif
 
-
-    // end ogre frame
-    batb->gl->ogreEnd();
-
 }
 
 
@@ -164,8 +151,8 @@ void LoadWorld::unload(World& forest)
 ////////////////////////////////////////////////////////////////////////////////
 // load Terrain, based on Ogre sample
 
-// TODO: enable paging of terrain?
-//#define PAGING_ENABLE
+
+//#define PAGING_ENABLE // TODO: enable paging?
 
 #define TERRAIN_PAGE_MIN_X 0
 #define TERRAIN_PAGE_MIN_Y 0
@@ -187,6 +174,7 @@ Ogre::TerrainGroup* terrain_group = nullptr;
 void getTerrainImage(bool flipX, bool flipY, Ogre::Image& img);
 void initBlendMaps(Ogre::Terrain* terrain);
 void defineTerrain(long x, long y, bool flat = false);
+
 
 void LoadWorld::load(const YAML::Node& yaml, Terrain* terrain)
 {
