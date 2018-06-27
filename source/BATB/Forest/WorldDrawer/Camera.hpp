@@ -15,51 +15,42 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_AIMKEYSCONTROLLER_HPP
-#define BATB_FOREST_AIMKEYSCONTROLLER_HPP
-#include "BATB/Forest/AimControllable.hpp"
+#ifndef BATB_FOREST_WORLDDRAWER_CAMERA_HPP
+#define BATB_FOREST_WORLDDRAWER_CAMERA_HPP
+#include "BATB/Forest/DTMovable.hpp"
+
+namespace Ogre
+{
+class Camera;
+class SceneNode;
+}
+
 
 namespace batb
 {
 class BATB;
 
-
 namespace forest
 {
 
 
-// using Keys to control an Aim
-class AimKeysController 
+
+class Camera 
 {
 public:
-    AimKeysController();
+    DTMovable move;
 
-    // eat input
-    void step(BATB* );
-
-    // what to control 
-    void connect(AimControllable* );
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //
-
-    AimControllable::Aiming aiming;
-    float_t aim_a = 0.0;
-    float_t aim_b = 0.0;
-    float_t aim_c = 0.0;
 
 private:
-    
-    AimControllable* controllable_ = nullptr;
-
-    tick_t tick_x_ = 0.0;
-    tick_t tick_z_ = 0.0;
 };
 
 
 } // namespace forest
 
 } // namespace batb
+
+
+
 
 
 #endif

@@ -208,6 +208,9 @@ debug::gl::msg( "ogre_root->createRenderWindow()" );
         ogre_renderwindow->setVisible(true);
         batb->log << "RenderWindow created" << std::endl;
 
+        // fix problem with externalWindow handling and resizing. see https://github.com/OGRECave/ogre/issues/774#issuecomment-392755242
+        batb->ogre->ogre_renderwindow->windowMovedOrResized();
+
         ////////////////////////////////////////////////////////////////
         // init various stuff. this may not belong here but we need materials 
         // and RTShaderSystem through the whole open-forest launch (unless we

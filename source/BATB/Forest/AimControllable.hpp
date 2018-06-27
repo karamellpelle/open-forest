@@ -30,8 +30,18 @@ namespace forest
 class AimControllable
 {
 public:
+    class Aiming : public Aim
+    {
+    public:
+        float_t move_x = 0.0;
+        float_t move_z = 0.0;
+
+        tick_t ticks_x = 0.0;
+        tick_t ticks_z = 0.0;
+    };
+
     // we may later create a class Aiming containing more info
-    virtual void aiming(const Aim& ) = 0;
+    virtual void aiming(const Aiming& ) = 0;
 
 };
 

@@ -52,7 +52,7 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-IterationDemoForest::IterationDemoForest(BATB* b) : IterationDemo( b ), modifyControlCamera( b )
+IterationDemoForest::IterationDemoForest(BATB* b) : IterationDemo( b )
 {
 
 }
@@ -90,6 +90,7 @@ void IterationDemoForest::iterate_begin(World& demo)
        //demo.runner->headlamp( true );
 
        // runner iff started before
+       demo.aim_keyscontroller.connect( &demo.forest_drawer );
        demo.forest_drawer.cameraFree();
     }
 
@@ -210,11 +211,6 @@ IterationStack IterationDemoForest::step(World& demo)
     // use Keys to control aiming in forest::World, typically camera
     demo.aim_keyscontroller.step( batb );
 
-    // TODO: this is old; remove
-    modifyControlCamera( forest, tick );
-
-
-
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
 
@@ -295,10 +291,12 @@ IterationStack IterationDemoForest::step(World& demo)
 
     }
 
-
     // update states
     forest.update();
     
+    // step output state
+    demo.forest_drawer.step( forest.tick );
+
 
     // this iteratein runs forever 
     return { this };

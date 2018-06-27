@@ -195,7 +195,6 @@ void Runner::update()
     ////////////////////////////////////////////////////////////////////////////////
     // update Ogre state
 
-    move.compute();
 
     // update position of runner
     ogre_scenenode->setPosition( ogre::cast_( move.pos ) );

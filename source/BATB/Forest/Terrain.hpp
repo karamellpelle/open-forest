@@ -48,8 +48,6 @@ public:
     Terrain(World& );
     ~Terrain();
 
-    void load(const YAML::Node& );
-
     float_t incline(const glm::mat4& );
 
     // [Tree] :         Terrain is populated with trees
@@ -59,9 +57,7 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     World& forest;
 
-
     Ogre::SceneManager*                 ogre_scenemanager = nullptr;
-    Ogre::Viewport*                     ogre_viewport = nullptr;
 
     Ogre::TerrainGroup*                 ogre_terrain_group = nullptr;
     Ogre::TerrainPaging*                ogre_terrain_paging = nullptr;
@@ -76,6 +72,7 @@ public:
 private:
 
 };
+
 
 
 

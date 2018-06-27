@@ -18,7 +18,6 @@
 #ifndef BATB_FOREST_WORLD_HPP
 #define BATB_FOREST_WORLD_HPP
 #include "BATB/Forest.hpp"
-#include "BATB/Forest/Camera.hpp"
 #include "BATB/Forest/Terrain.hpp"
 #include "BATB/Forest/Map.hpp"
 #include "BATB/Forest/Control.hpp"
@@ -76,9 +75,6 @@ public:
     Runner* addRunner(Player* = nullptr);
     
 
-    // viewing 
-    Camera camera;
-
     // physical Terrain.
     // * ground
     // * trees
@@ -102,18 +98,16 @@ public:
     // events happened for this ForestWorld    
     EventList events;
 
-    // ForestNetwork (connected to RunNetwork, with a filter)
+    // forest::Network (connected to run::Network, with a filter)
+    //Network network;
 
-    // forest::World implies a run::World, the run::World containing 'this'.
+    // forest::World is contained in a run::World.
     // it would be nice to let forest::World be totally independent of run::World,
     // so that forest::World works alone. however, forest::World needs access to
     // external resources. for exapmle Player's, containing information for each
     // Runner in forest::World. we let such external resources be part of run::World.
     // also, since there may be more than one forest::World, some of these
     // external resources could be different for two different forest::World's.
-    // also, 'run' is a reference, hence there is one and only one run::World asso-
-    // ciated with each forest::World
-    // TODO: remove this
     run::World* run = nullptr;
 
     
@@ -126,34 +120,19 @@ public:
 
 
     Ogre::SceneManager* ogre_scenemanager = nullptr;
-    Ogre::Viewport*     ogre_viewport = nullptr;
 
 
     // sound
     alure::Listener alure_listener;
+
+    // load a world
+    static void load(BATB* , const YAML::Node& , World& );
+    static void unload(BATB* , const YAML::Node& , World& );
 private:
     
     
 };
 
-
-// setup and destroy a World
-class WorldLoader
-{
-public:
-    WorldLoader(BATB* );
-    //WorldLoader(BATB* , run::Work& );
-
-    void load(World& , const YAML::Node& );
-    void unload(World& );
-
-private:
-    void ogreShadows(World& );
-
-    BATB* batb = nullptr;
-
-
-};
 
 
 } // namespace forest

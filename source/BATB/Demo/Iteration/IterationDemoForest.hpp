@@ -19,7 +19,6 @@
 #define BATB_DEMO_ITERATION_ITERATIONDEMOFOREST_HPP
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
 #include "BATB/Demo/CourseCurve.hpp"
-#include "BATB/Forest/ModifyControlCamera.hpp"
 
 
 namespace batb
@@ -58,8 +57,6 @@ private:
     void createRandomCourse(demo::World& );
     void modifyRunnerDemo(demo::World& );
 
-
-    forest::ModifyControlCamera modifyControlCamera;
 
     // movement of demo runner
     // TODO: into "AI" controller

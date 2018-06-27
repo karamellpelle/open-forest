@@ -1,72 +1,18 @@
 
 # TODO
 
-* remove nanovgBeginMM since context is not always screen
-* remove run::World from forest::World! use pointers or references to super/subworlds?
-* remove forest::Camera, instead
 
-```
-  AimController working on Aim. Aim can be camera. Aim can be runner. Aim can be camera for 3d person view.
-  camera: 
-  runner: 
-  3th persion: 
-  AimController(RunnerModifier->aim )
-  forest::Output(`Aim*` ): RunnerModifier
-  forest::Output() :
-  forest::Output::aim(AimPtr )
-  forest::Output::aimFree()
-  forest::Output::aimRunnerModifier() // Not runner, since it should be possible to replay player cam
-  forest::Output::aim3thPerson( , AimPtr relative to)
-  forest->drawer->aimFree()
-  // ^ all these interpolates when setting a new Aim
-
-  forest::Output -> forest::Drawer
-  RunnerModifier::aimControl :: Aim   // for AimController
-  RunnerModifier::aimHead :: Aim   // for head view. used by forest::Output. 
-  // ^ RunnerModifier::update() takes aimHead as input for controlling `Runner*`, i.e. the Runner's DTMovable
-  // switch Runner:
-  //    RunnerModifier::runner( new runner ); 
-  //    Output::aim(RunnerModifier ) // interpolates
-
-  output demo = do
-     // 
-     demo->forest->drawer
-
-     // setup nvg
-     // MapDrawer::draw( scene )
-     demo->map_drawer->draw( scene )
-     // end nvg
-
-  DemoMapDrawer : public forest::MapDrawer
-    Map* map_
-    draw( scene )
-    drawEnd() override // use CourseDrawer
-
-  MapDrawer::draw()
-      // setup Coordinates matrix
-      drawBegin() // virtual
-      // draw Map* (typically an image). 
-      // can actually be animated, for example by dirt or runner fatigue
-      drawEnd()   // virtual. 
-
-  // !!!!!!!
-  // FIXME: Controllers into World or Iteration? ANSWER: World, since Iteration's
-  //        should work with same cameras, etc
-
-```
   
-
-* remove RenderSystemGL and only use RenderSystemGL3Plus
+* let forest::World contain pointers to objects (Runners, Controls, etc.).
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
   something wrong happesn if 'setFixedYawAxis( true );' is not called
   also fix controls and Z direction. An Ogre::Camera uses -Z for view direction.
+* remove RenderSystemGL and only use RenderSystemGL3Plus
+* no al in demo file.
+  - find out what to do with the easter egg. can Alure delete buffer on finish?
 * setup GUI from .yaml
 * review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
 * OGRE/AL enabled() necessary ??
-* forest::World: load Ogre resources from yaml, not dedicated file? what about 
-  different types (for example subclasses of Terrain)?
-* remove demo/libs/ogreterrain, and clean up data directories
-* remove OgreTerrain demo, stay with forest
 * fix OGRE data: static vs dynamic. 
 * custom TB-widgets have empty constructors since all TB-widgets should be possible.
   to read from .tb.txt file's (TBWidgetFactory).
@@ -74,7 +20,6 @@
   - TBConsole?
 * clipboard support TB (tb_system.h)
 * clean up events during shutdown
-* better reading custom TB widgets. read custom props for for example console
 * let cmd's use boost program_options
 * Notify and message Key
   - remove Key from NotifyMessage and put into TBNotify. this key should call message->finish() on
@@ -86,20 +31,14 @@
 * make demo::World a subworld of run::World. then remove 'IterationRunDemo::demoWorld()' from 
   IterationRunDemo because Iteration's are never bound to specific worlds; they work on every
   world. in our case we only have 1 run::World so it works, but in the wrong way.
-* padding for TBNotify
 * Value reads values from Value.yaml file. 1 big file, or 1 per module?
 * TBTickerLine statusline in top of console :)
 * tb skin for Key::nameGUI()
 * tutorial for controls in forest.
-* worlds refer to each others with pointers: prevents recompilation and makes it easier to set
-  up a subworld after the world which own is has been properly set up. make a rule: subworld 
-  uses pointers (i.e. unique_ptr) and other are objects, lik Event's and Scene.
 * TBMain setup
-* callback for windows: close app
 * mouse and map view
-* create global variable 'batb'?
-* begin/end iterations
-* `using float_t = double_t;` in include
+* create global variable 'batb'? Answer: NO! BATB is the toolbox to work **on** World's, hence make it impossible to use it inside World's
+* `using float_t = double_t;` in include?
   - define precision of glm (vec, mat, etc) the same as float_t 
 * remove _emptylist_ - the bugfix for a compiler I had to use in a build.
 * better memory handling! use `shared_ptr`'s more.
@@ -118,19 +57,14 @@
 * conseqent case naming: i.e. camelCase
 ## Run
 * notify 
-  - fade out widgets
-  - handle keypress for infinity duration
   - play alert sound?
 
 ## threading
-* fix segfault (from Ogre) during shutdown on seperate thread. see OSXCocoaCOntext::clone() for how threading is done!
 * fix IterationRunWork to load run::World, forest::World, etc on seperate thread. 
-* remove template LoadWorker
 
 ## Ogre3d
 * fix nanovg+ogre debug errors! (errors every frame when nanovg has been initialized with the `NVG_DEBUG` flag)
 * load/unload terrains etc, making possible to start over
-* fix terrain rendering (it's black on macOS)
 
 ## game
 * wrap Iteratations into some class with shared_ptr to easily work with Iteration's and have control over their lifetimes
@@ -138,12 +72,10 @@
 ## Forest
 * `reset()` for objects in forest::World
 * use metric system for terrain and all models!!!
-* World::load. do something better than WorldLoader? it has to work with iterations loading on different threads
 * let AL sources for control punches play in 3D, not 2D as it seems to be now
 
 ### controls
 * add more settings in the "KeySet" YAML::Node than the ones used to create the Key's, for example camera movement speed and map scroll speed
-* accelerated movement with arrow buttons
 * while showing map, make it possible to use mouse scroll wheel (?) to
   control the opacity of map. hence it is possible to read map while running,
   and also don't switch screen too much thus keeping orientation. this value
@@ -159,14 +91,11 @@
   - YYY: postition in map and orientate map. this is absolutely cheating :)
 
 ## demo
-* no al in demo file.
-  - find out what to do with the easter egg. can Alure delete buffer on finish?
 
 ## Keys
 * configure more details from YAML::Node, like KeyMouseScroll speed and KeyAlpha values.
 * KeyCombine: use children for alpha(), typically for things like Ctrl+Shift+X 
 * memory handling (create / remove )
-* Key constructor: `BATB*`
 
 ## tb
 * language files
@@ -184,9 +113,6 @@
 
 * control debug build in CMakeLists.txt
 * no rtti for turbobadger
-
-## macOS
-* GLSL shader for terrain fails: undeclared identifier: worldPos!
 
 # credits
 * `<div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>`

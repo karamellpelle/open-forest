@@ -15,11 +15,10 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Time.hpp"
+#include "BATB/Forest/AimKeysController.hpp"
 #include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
-#include "BATB/Forest/Camera.hpp"
-#include "BATB/Forest/AimKeysController.hpp"
+#include "BATB/Time.hpp"
 #include "BATB/Value/Forest.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
@@ -36,51 +35,54 @@ AimKeysController::AimKeysController()
 }
 
 
+void AimKeysController::connect(AimControllable* controllable)
+{
+    controllable_ = controllable;
+}
+
 void AimKeysController::step(BATB* batb)
 {
     auto tick = batb->time->get();
 
     ////////////////////////////////////////////////////////////////////////////////
-    // move camera in xy-plane from mouse (yaw, pitch)
+    // rotate
+
     float_t x, y;
     batb->forest->keys->aim->axis( x, y );
     aim_a = value::forestAimX * (-x);
     aim_b = value::forestAimY * (y);
 
     auto rotation = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
-    aim.aim[0] = rotation[0];
-    aim.aim[1] = rotation[1];
-    aim.aim[2] = rotation[2];
+    aiming.aim[0] = rotation[0];
+    aiming.aim[1] = rotation[1];
+    aiming.aim[2] = rotation[2];
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    // move camera from keys. this should modify Runner
+    // move 
 
     // clear timed value
     if ( batb->forest->keys->left->pressed() || batb->forest->keys->right->pressed() )
     {
-        tick_x = tick;
+        tick_x_ = tick;
     }
     if ( batb->forest->keys->forward->pressed() || batb->forest->keys->backward->pressed() )
     {
-        tick_z = tick;
+        tick_z_ = tick;
     }
 
-    float_t move_x = (batb->forest->keys->left->press()  ? (1.0)  : (0.0)) +
-                     (batb->forest->keys->right->press() ? (-1.0) : (0.0));
-    float_t move_z = (batb->forest->keys->forward->press()  ? (1.0)  : (0.0)) +
-                     (batb->forest->keys->backward->press() ? (-1.0) : (0.0));
+    aiming.move_x = (batb->forest->keys->left->press()  ? (1.0)  : (0.0)) +
+                    (batb->forest->keys->right->press() ? (-1.0) : (0.0));
+    aiming.move_z = (batb->forest->keys->forward->press()  ? (1.0)  : (0.0)) +
+                    (batb->forest->keys->backward->press() ? (-1.0) : (0.0));
 
-    // 'pos' part of Aim tells us press time
-    aim.pos.x = move_x * (tick - tick_x);
-    aim.pos.y = 0.0;
-    aim.pos.z = move_z * (tick - tick_z);
-    aim.pos.w = 1.0;
+    aiming.ticks_x = aiming.move_x == 0.0 ? 0.0 : tick - tick_x_;
+    aiming.ticks_z = aiming.move_z == 0.0 ? 0.0 : tick - tick_z_;
 
     // we work controllable_
     if ( controllable_ )
     {
-        controllable_->aiming( aim );
+        controllable_->aiming( aiming );
     }
 }
 

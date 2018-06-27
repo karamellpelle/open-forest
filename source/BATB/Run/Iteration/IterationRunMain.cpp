@@ -24,6 +24,7 @@
 #include "BATB/Run/KeySet.hpp"
 #include "BATB/GUI.hpp"
 #include "BATB/Demo.hpp"
+#include "BATB/Demo/LoadWorld.hpp"
 #include "BATB/Demo/libs/nanovg.hpp"
 #include "BATB/Demo/libs/al.hpp"
 #include "BATB/Demo/libs/gl.hpp"
@@ -265,12 +266,9 @@ demo::World* IterationRunMain::newDemoWorld(run::World* run)
         // create and set up demo world
         demo = new demo::World( run );
 
-        auto& forest = *demo->forest;
+        // load here, on main thread
+        demo::LoadWorld( batb ).load( YAML::Node(), demo );
 
-        // create a Forest world for demo
-        // TODO: do something better than a loading class
-        forest::WorldLoader loader( batb );        
-        loader.load( forest, YAML::Node() ); 
 
     }
     return demo;

@@ -38,7 +38,6 @@ public:
     void begin(const std::string& );
     void end();
 
-
     std::unique_ptr<KeySet> keys;
 
     std::unique_ptr<EventList> events;

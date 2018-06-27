@@ -15,45 +15,39 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_AIMKEYSCONTROLLER_HPP
-#define BATB_FOREST_AIMKEYSCONTROLLER_HPP
-#include "BATB/Forest/AimControllable.hpp"
+#ifndef BATB_FOREST_LOADWORLD_HPP
+#define BATB_FOREST_LOADWORLD_HPP
+#include "include.hpp"
+
+
 
 namespace batb
 {
 class BATB;
 
-
 namespace forest
 {
+class World;
 
 
-// using Keys to control an Aim
-class AimKeysController 
+
+
+// setup or destroy a World
+class LoadWorld
 {
 public:
-    AimKeysController();
+    LoadWorld(BATB* );
 
-    // eat input
-    void step(BATB* );
+    void load(const YAML::Node& , World* );
+    void unload(World& );
 
-    // what to control 
-    void connect(AimControllable* );
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //
-
-    AimControllable::Aiming aiming;
-    float_t aim_a = 0.0;
-    float_t aim_b = 0.0;
-    float_t aim_c = 0.0;
 
 private:
-    
-    AimControllable* controllable_ = nullptr;
+    void shadows(World* );
+    void load(const YAML::Node& , Terrain* );
 
-    tick_t tick_x_ = 0.0;
-    tick_t tick_z_ = 0.0;
+    BATB* batb = nullptr;
+
 };
 
 
@@ -62,5 +56,6 @@ private:
 } // namespace batb
 
 
-#endif
 
+
+#endif

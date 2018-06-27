@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,44 +15,45 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_CAMERA_HPP
-#define BATB_FOREST_CAMERA_HPP
-#include "BATB/Forest/DTMovable.hpp"
+#ifndef BATB_DEMO_LOADWORLD_HPP
+#define BATB_DEMO_LOADWORLD_HPP
+#include "include.hpp"
 
-namespace Ogre
-{
-class Camera;
-class SceneNode;
-}
 
 
 namespace batb
 {
-
 class BATB;
 
-namespace forest
+namespace demo
 {
+class World;
 
-class Camera 
+
+
+
+// setup or destroy a World
+class LoadWorld
 {
 public:
-    DTMovable move;
+    LoadWorld(BATB* );
 
-    Ogre::Camera* ogre_camera = nullptr;
-    Ogre::SceneNode* ogre_scenenode = nullptr;
+    void load(const YAML::Node& , World* );
+    void unload(World& );
+
 
 private:
+
+    BATB* batb = nullptr;
+
 };
 
 
-} // namespace forest
+} // namespace demo
 
 } // namespace batb
 
 
 
 
-
 #endif
-

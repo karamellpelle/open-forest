@@ -16,7 +16,6 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Demo/World.hpp"
-#include "BATB/Forest.hpp"
 #include "BATB/Forest/World.hpp"
 #include "BATB/Run/World.hpp"
 
@@ -32,17 +31,11 @@ namespace demo
 
 World::World(run::World* r) :  run( r )
 {
+    // create subworld
     forest = std::make_unique<forest::World>( run );
 
-    // make sure Course works on our forest world
-    forest_drawer.init( forest.get() );
-    map_drawer.init( this );
-
-    course.init( forest.get() );
 
 };
-
-
 
 
 } // namespace demo

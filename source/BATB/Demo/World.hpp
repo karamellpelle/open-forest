@@ -77,7 +77,7 @@ public:
     EventList events;
 
 
-    // TODO: remove?
+    // demo::World is contained in a run::World
     run::World* run = nullptr;
 
 

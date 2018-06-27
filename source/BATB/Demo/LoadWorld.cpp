@@ -1,4 +1,4 @@
-//    open-forest: an orientering game.
+//    open-demo: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,49 +15,55 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_WORKERS_HPP
-#define BATB_DEMO_WORKERS_HPP
-#include "include.hpp"
-#include "BATB/Run/Iteration/IterationRunWork.hpp"
+#include "BATB/Demo/World.hpp"
+#include "BATB/Demo/LoadWorld.hpp"
+#include "BATB/Forest/World.hpp"
+#include "BATB/Forest/LoadWorld.hpp"
+#include "BATB/Run/World.hpp"
+
 
 
 namespace batb
 {
-class BATB;
-
-
 namespace demo
 {
-class World;
 
-
-// load demo::World
-class LoadWorkerWorld
+LoadWorld::LoadWorld(BATB* b)
 {
-public:
-    LoadWorkerWorld(BATB* b, World* w) : batb( b ), demo( w ) { }
-    void operator()(run::Work& );
-
-    BATB* batb;
-    World* demo = nullptr;
-};
+    batb = b;
+}
 
 
-// unload demo::World  
-class UnloadWorkerWorld
+
+void LoadWorld::load(const YAML::Node& yaml, World* demo)
 {
-public:
-    UnloadWorkerWorld(BATB* b, World* w) : batb( b ), demo( w ) { }
-    void operator()(run::Work& );
+    auto* forest = demo->forest.get();
 
-    BATB* batb;
-    World* demo = nullptr;
-};
+    // load subworld first
+    forest::LoadWorld( batb ).load( yaml[ "forest" ], forest );
+
+    // make sure stuff are connected
+
+    // connect WorldDrawer 
+    demo->forest_drawer.init( forest );
+    // connect MapDrawer
+    demo->map_drawer.init( demo );
+    // connect Course
+    demo->course.init( forest );
+
+}
 
 
-  
+void LoadWorld::unload(World& demo)
+{
+    batb->log << "FIXME: unload demo::World!" << std::endl;
+}
+
+
+
+
+
 } // namespace demo
 
 } // namespace batb
 
-#endif

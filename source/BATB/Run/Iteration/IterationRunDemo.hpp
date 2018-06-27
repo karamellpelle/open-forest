@@ -19,7 +19,6 @@
 #define BATB_RUN_ITERATION_ITERATIONRUNDEMO_HPP
 #include "BATB/Run/Iteration/IterationRun.hpp"
 #include "BATB/Demo/Iteration/IterationDemo.hpp"
-#include "BATB/Demo/workers.hpp"
 #include "BATB/Demo/World.hpp"
 
 

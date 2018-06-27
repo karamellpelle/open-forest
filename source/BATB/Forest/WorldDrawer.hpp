@@ -18,6 +18,9 @@
 #ifndef BATB_FOREST_WORLDDRAWER_HPP
 #define BATB_FOREST_WORLDDRAWER_HPP
 #include "BATB/Forest/AimControllable.hpp"
+#include "BATB/Forest/WorldDrawer/Camera.hpp"
+
+
 
 namespace Ogre
 {
@@ -42,10 +45,13 @@ class WorldDrawer : public AimControllable
 public:
     WorldDrawer();
 
+    // connect to world
     void init(World* );
 
     // draw to Ogre::RenderTarget
     void draw(Ogre::RenderTarget* );
+    // update state
+    void step(tick_t );
 
     // where to look from
     void camera(Ogre::SceneNode* , tick_t = 0.0);
@@ -53,12 +59,13 @@ public:
     void camera3thPerson(Ogre::SceneNode* , tick_t = 0.0);
 
     // AimControllable: let Keys control the view into World
-    void aiming(const Aim& ) override;
+    void aiming(const AimControllable::Aiming& ) override;
 
 private:
     World* forest_ = nullptr;
+    Camera camera_;    
+    tick_t tick_ = 0.0;
 
-    
     Ogre::Camera* ogre_camera_              = nullptr;
     Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
 
