@@ -22,6 +22,7 @@
 #include "BATB/Forest/WorldDrawer.hpp"
 #include "BATB/Forest/StepDT.hpp"
 #include "BATB/Forest/AimKeysController.hpp"
+#include "BATB/Forest/Sound.hpp"
 
 
 namespace batb
@@ -49,10 +50,13 @@ public:
 
     // drawing state: 3D world
     forest::WorldDrawer forest_drawer;
-    // drawing state: 2D map
-    demo::DemoMapDrawer map_drawer;
     // physics update state
     forest::StepDT step_dt;
+    // sound state
+    forest::Sound sound;
+    // drawing state: 2D map
+    demo::DemoMapDrawer map_drawer;
+
 
     // controllers
     forest::AimKeysController     aim_keyscontroller;

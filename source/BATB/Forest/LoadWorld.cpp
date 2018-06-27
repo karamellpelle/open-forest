@@ -66,17 +66,7 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
     // setup AL
 
     forest->alure_listener = batb->al->alure_context.getListener();
-    // TODO: create alure::Buffer's from defines in .yaml file.
     
-      #if 0
-        // also set listener to camera Aim
-        auto listener = forest.alure_listener;
-        auto pos = camera.move.aim[3];
-        auto at = camera.move.aim[2]; // FIXME: correct camera Aim matrix
-        auto up = camera.move.aim[1];
-        forest.alure_listener.setPosition( { pos.x, pos.y, pos.z } );
-        forest.alure_listener.setOrientation( {{at.x, at.y, at.z}, {up.x, up.y, up.z}} );
-#endif
 
 
     // TODO: delete old before loading

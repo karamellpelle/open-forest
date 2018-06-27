@@ -184,6 +184,12 @@ void WorldDrawer::aiming(const AimControllable::Aiming& aim)
     camera_.move.vel = x_speed * aim.aim[0] + z_speed * aim.aim[2];
 }
 
+Aim WorldDrawer::getAim() const
+{
+    return camera_.move;
+}
+
+
 } // namespace forest
 
 } // namespace batb

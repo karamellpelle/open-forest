@@ -15,18 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_WORLDDRAWER_HPP
-#define BATB_FOREST_WORLDDRAWER_HPP
-#include "BATB/Forest/AimControllable.hpp"
-#include "BATB/Forest/WorldDrawer/Camera.hpp"
+#ifndef BATB_FOREST_SOUND_HPP
+#define BATB_FOREST_SOUND_HPP
+#include "BATB/Forest.hpp"
 
 
-
-namespace Ogre
-{
-class RenderTarget;
-class SceneNode;
-}
 
 namespace batb
 {
@@ -40,38 +33,26 @@ class World;
 
 
 
-class WorldDrawer : public AimControllable
+class Sound 
 {
 public:
-    WorldDrawer();
+    Sound();
 
     // connect to world
     void init(World* );
 
-    // draw to Ogre::RenderTarget
-    void draw(Ogre::RenderTarget* );
-    // update state
+    void play3D(const Aim& );
+    void play2D();
+
     void step(tick_t );
 
-    // where to look from
-    void camera(Ogre::SceneNode* , tick_t = 0.0);
-    void cameraFree();
-    void camera3thPerson(Ogre::SceneNode* , tick_t = 0.0);
-
-    // AimControllable: let Keys control the view into World
-    void aiming(const AimControllable::Aiming& ) override;
-
-    // get current Aim in 3D world
-    Aim getAim() const;
+    // TODO: effects, etc.
 
 private:
     World* forest_ = nullptr;
-    Camera camera_;    
     tick_t tick_ = 0.0;
 
-    Ogre::Camera* ogre_camera_              = nullptr;
-    Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
-
+    Aim aim_;
 
 };
 

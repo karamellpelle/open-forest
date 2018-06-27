@@ -159,7 +159,9 @@ void IterationDemoForest::output(World& demo)
     demo.forest_drawer.draw( batb->ogre->ogre_renderwindow  );
     batb->ogre->sceneEnd();
 
-    // TODO: ALURE (3D listener, effects, etc)
+    // AL (3D listener, effects, etc)
+    auto aim = demo.forest_drawer.getAim();
+    demo.sound.play3D( aim );
 
 
     ////////////////////////////////////////////////////////////////
@@ -193,7 +195,10 @@ void IterationDemoForest::output(World& demo)
     
     batb->gl->nanovgEnd(); 
 
-    // TODO: ALURE: background sound (2D music)
+
+
+    // background/foreground sound (music, etc.)
+    demo.sound.play2D();
 
 
 }
@@ -296,6 +301,7 @@ IterationStack IterationDemoForest::step(World& demo)
     
     // step output state
     demo.forest_drawer.step( forest.tick );
+    demo.sound.step( forest.tick );
 
 
     // this iteratein runs forever 

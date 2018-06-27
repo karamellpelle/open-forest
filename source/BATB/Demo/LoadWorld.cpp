@@ -46,10 +46,12 @@ void LoadWorld::load(const YAML::Node& yaml, World* demo)
 
     // connect WorldDrawer 
     demo->forest_drawer.init( forest );
-    // connect MapDrawer
-    demo->map_drawer.init( demo );
     // connect Course
     demo->course.init( forest );
+    // connect Sound
+    demo->sound.init( forest );
+    // connect MapDrawer
+    demo->map_drawer.init( demo );
 
 }
 

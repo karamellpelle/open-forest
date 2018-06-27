@@ -2,7 +2,8 @@
 # TODO
 
 
-  
+* make smoother camera movement for forest::WorldDrawer! It has been worse, I think.
+  (it may instead be something wrong with AimKeysController or bad FPS).
 * let forest::World contain pointers to objects (Runners, Controls, etc.).
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
   something wrong happesn if 'setFixedYawAxis( true );' is not called
