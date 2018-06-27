@@ -23,6 +23,7 @@
 #include "BATB/Forest/Control.hpp"
 #include "BATB/Forest/Runner.hpp"
 #include "BATB/Forest/Weather.hpp"
+#include "BATB/Forest/SoundBuffers.hpp"
 #include "BATB/Event.hpp"
 #include "BATB.hpp"
 #include "AL/alure2.h"
@@ -119,15 +120,15 @@ public:
     uint frames = 0;
 
 
+    // Ogre world
     Ogre::SceneManager* ogre_scenemanager = nullptr;
 
+    // we need this in World in order to create buffers and sources
+    alure::Context  alure_context;
 
-    // sound
-    alure::Listener alure_listener;
+    // sounds
+    SoundBuffers    sounds;
 
-    // load a world
-    static void load(BATB* , const YAML::Node& , World& );
-    static void unload(BATB* , const YAML::Node& , World& );
 private:
     
     

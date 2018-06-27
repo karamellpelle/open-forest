@@ -20,6 +20,7 @@
 #include "BATB/Forest/events.hpp"
 #include "BATB/Forest/World.hpp"
 #include "BATB/Forest/Control.hpp"
+#include "BATB/AL.hpp"
 
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
@@ -62,7 +63,7 @@ void Control::reset(const ControlDefinition& def)
 
 
     ////////////////////////////////////////////////////////////////////////////////
-    // create output
+    // Ogre
     //
     std::ostringstream os( "Control_" );
     os << def.code << "(" << this << ")";
@@ -76,6 +77,28 @@ void Control::reset(const ControlDefinition& def)
     // shadows
     ogre_entity->setCastShadows( true );
 
+
+
+
+    ////////////////////////////////////////////////////////////////
+    // AL
+
+    // create an ALURE source aimed upwards 
+    alure_source       = forest.alure_context.createSource();
+    auto up     = aim.aim[1]; // y
+    auto lookat = aim.aim[2]; // z
+    auto pos    = aim.aim[3]; // p
+    alure_source.setPosition( { pos.x, pos.y, pos.z } );
+    alure_source.setOrientation( { { lookat.x, lookat.y, lookat.z } , { up.x, up.y, up.z } } );
+    alure_source.setDistanceRange( 1.0, 500.0 );
+    alure_source.setConeAngles( 100.0, 180.0 ) ;
+    alure_source.setRolloffFactors( 8.0 );
+    //src.setGain( 0.5 );
+
+    // set punch sound
+    if ( def.type == ControlDefinition::Type::Normal ) alure_buffer_punch = forest.sounds.control_punch_normal;
+    if ( def.type == ControlDefinition::Type::Finish ) alure_buffer_punch = forest.sounds.control_punch_finish;
+
     // set definition
     definition = def;
 }
@@ -86,7 +109,10 @@ void Control::punch(Runner* runner)
       
     ++stats_punches;
 
-    // add event
+    
+    // play sound
+    alure_source.play( alure_buffer_punch );
+
     forest.events.push( event::ControlPunch( forest.tick, runner, this ) );
 
     // tmp:

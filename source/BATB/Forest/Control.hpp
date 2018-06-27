@@ -18,6 +18,7 @@
 #ifndef BATB_FOREST_CONTROL_HPP
 #define BATB_FOREST_CONTROL_HPP
 #include "BATB/Forest/Aim.hpp"
+#include "BATB/AL.hpp"
 
 namespace Ogre
 {
@@ -99,7 +100,11 @@ public:
     // output
 
     Ogre::Entity* ogre_entity = nullptr;
-    //alure::Source alure_source;
+
+    // sound source
+    alure::Source alure_source;
+    // sound of this Control
+    alure::Buffer alure_buffer_punch;
 
     ////////////////////////////////////////////////////////////////////////////////
     // statistic

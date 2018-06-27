@@ -15,52 +15,27 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_SOUND_HPP
-#define BATB_FOREST_SOUND_HPP
-#include "BATB/Forest.hpp"
-
+#ifndef BATB_FOREST_SOUNDBUFFERS_HPP
+#define BATB_FOREST_SOUNDBUFFERS_HPP
+#include "BATB/AL.hpp"
 
 
 namespace batb
 {
-class BATB;
-
 namespace forest
 {
-class World;
 
 
-
-
-
-class Sound 
+// point in a soundbuffers
+class SoundBuffers
 {
 public:
-    Sound();
-
-    // connect to world
-    void init(World* );
-
-    void play3D(const Aim& );
-    void play2D();
-
-    void step(tick_t );
-
-    // TODO: effects, etc.
-
-
-    alure::Listener alure_listener;
-
-private:
-    World* forest_ = nullptr;
-    tick_t tick_ = 0.0;
-
-
-
-
-    Aim aim_;
+    alure::Buffer control_punch_normal;
+    alure::Buffer control_punch_finish;
 
 };
+
+
 
 
 } // namespace forest
@@ -68,5 +43,5 @@ private:
 } // namespace batb
 
 
-#endif
 
+#endif

@@ -65,8 +65,12 @@ void LoadWorld::load(const YAML::Node& yaml, World* forest)
     ////////////////////////////////////////////////////////////////////////////////
     // setup AL
 
-    forest->alure_listener = batb->al->alure_context.getListener();
-    
+    // context (we need this for sound creation)
+    forest->alure_context  = batb->al->alure_context;
+
+    // create ALURE buffers
+    forest->sounds.control_punch_normal = forest->alure_context.getBuffer(  file::static_data( "BATB/Forest/audio/si_punch.mp3" ).c_str() );
+    forest->sounds.control_punch_finish = forest->alure_context.getBuffer(  file::static_data( "BATB/Forest/audio/si_punch.mp3" ).c_str() ); // FIXME: dedicated sound
 
 
     ////////////////////////////////////////////////////////////////////////////////

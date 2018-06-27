@@ -49,9 +49,11 @@ void LoadWorld::load(const YAML::Node& yaml, World* demo)
     // connect Course
     demo->course.init( forest );
     // connect Sound
+    demo->sound.alure_listener = batb->al->alure_listener;
     demo->sound.init( forest );
     // connect MapDrawer
     demo->map_drawer.init( demo );
+
 
 }
 

@@ -97,7 +97,6 @@ void WorldDrawer::draw(Ogre::RenderTarget* ogre_rendertarget)
     }
     else
     {
-        std::cout << "adding viewport! \n";
         ogre_viewport = ogre_rendertarget->addViewport( ogre_camera_, camera_zorder );
         ogre_viewport->setClearEveryFrame( false, 0 ); 
     }

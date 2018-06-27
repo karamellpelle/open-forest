@@ -401,6 +401,7 @@ set(  BATB_INCLUDES
       "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/Terrain/TerrainPageProvider.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/Weather.hpp"
+      "${MAIN_SOURCE_DIR}/BATB/Forest/SoundBuffers.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/World.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/LoadWorld.hpp"
       "${MAIN_SOURCE_DIR}/BATB/Forest/events.hpp"

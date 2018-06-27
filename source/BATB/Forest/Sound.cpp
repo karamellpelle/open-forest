@@ -43,17 +43,18 @@ void Sound::init(World* forest)
     // always work on this World
     forest_ = forest;
 
+    
 }
 
 void Sound::play3D(const Aim& aim)
 {
     // also set listener to camera Aim
-    // FIXME: correct camera Aim matrix
+    // FIXME: correct camera Aim matrix (roll not used)
     auto pos = aim.aim[3];
     auto lookat = aim.aim[2];
     auto up = aim.aim[1];
-    forest_->alure_listener.setPosition( { pos.x, pos.y, pos.z } );
-    forest_->alure_listener.setOrientation( {{lookat.x, lookat.y, lookat.z}, {up.x, up.y, up.z}} );
+    alure_listener.setPosition( { pos.x, pos.y, pos.z } );
+    alure_listener.setOrientation( {{lookat.x, lookat.y, lookat.z}, {up.x, up.y, up.z}} );
 
 }
 

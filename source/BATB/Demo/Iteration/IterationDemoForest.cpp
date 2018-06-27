@@ -255,18 +255,6 @@ IterationStack IterationDemoForest::step(World& demo)
                 auto code = e->control->definition.code;
                 auto code1 = demo.course[ demo.course_i + 1 ]->definition.code;
 
-                // outpu sound
-                // TODO: use dedicated alure::Buffer loaded by forest::World
-                // create a source aimed upwards 
-                glm::mat4 source_aim;
-                source_aim[3] = e->control->aim.pos;
-                auto src = batb->al->source( file::static_data( "BATB/Forest/audio/si_punch.mp3" ), source_aim);
-
-                // does not work for me!!!
-                src.setDistanceRange( 1.0, 50.0 );
-                src.setConeAngles( 60.0, 300.0 ) ;
-                src.setRolloffFactors( 8.0 );
-                src.setGain( 0.5 );
 
 
                 // if correct control punched, set next
@@ -399,7 +387,7 @@ void IterationDemoForest::createRandomCourse(demo::World& demo)
 
     static std::default_random_engine rand( std::chrono::system_clock::now().time_since_epoch().count() );
 
-    constexpr uint max_controls = 16;
+    constexpr uint max_controls = 1;
     uint m = std::uniform_int_distribution<uint>( 1, max_controls )( rand );
 
     for (uint i = 0; i != m; ++i)
