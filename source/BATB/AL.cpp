@@ -180,26 +180,16 @@ void AL::frameEnd()
 }
 
 
-alure::Source AL::source(const std::string& path, const glm::mat4& mat)
+alure::Source AL::play2D(const std::string& path)
 {
     // "multiple calls with the same name will return the same buffer"
     //    - alure doc
     auto buf = alure_context.getBuffer( path );
-    if ( std::find( std::begin( buffers_ ), std::end( buffers_ ), buf ) == std::end( buffers_ ) )
-    {
-        buffers_.push_back( buf );
-    }
-   
     auto src = alure_context.createSource();
 
-    auto pos = mat[3];
-    src.setPosition( { pos.x, pos.y, pos.z } );
-    auto at = mat[2]; // z
-    auto up = mat[1]; // y
-    src.setOrientation( { { at.x, at.y, at.z } , { up.x, up.y, up.z } } );
+    // TODO: make sure src is 2D
 
-    // TODO: dont play.
-    // and play
+    // play
     src.play( buf );
 
     return src;

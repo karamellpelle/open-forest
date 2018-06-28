@@ -18,7 +18,7 @@
 #include "BATB/Run.hpp"
 #include "BATB/Run/Console.hpp"
 #include "BATB/Run/Console/parse.hpp"
-#include "BATB/Demo/libs/al.hpp"
+#include "BATB/AL.hpp"
 
 
 
@@ -58,7 +58,7 @@ bool cmd_easteregg(BATB* batb, const std::string& input)
     
     if ( left == right )
     {
-        demo::al::demo_play( batb, file::static_data( "easteregg.mp3" ) );
+        auto src = batb->al->play2D( file::static_data( "easteregg.mp3" ) );
 
         return true;
     }

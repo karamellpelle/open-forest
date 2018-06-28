@@ -90,9 +90,10 @@ void Control::reset(const ControlDefinition& def)
     auto pos    = aim.aim[3]; // p
     alure_source.setPosition( { pos.x, pos.y, pos.z } );
     alure_source.setOrientation( { { lookat.x, lookat.y, lookat.z } , { up.x, up.y, up.z } } );
-    alure_source.setDistanceRange( 1.0, 500.0 );
-    alure_source.setConeAngles( 100.0, 180.0 ) ;
-    alure_source.setRolloffFactors( 8.0 );
+    alure_source.setDistanceRange( 1.0, 200.0 );
+    alure_source.setConeAngles( 60.0, 100.0 ) ;
+    //alure_source.setRolloffFactors( 8.0 );
+    //alure_source.setPitch( 0.4 );
     //src.setGain( 0.5 );
 
     // set punch sound

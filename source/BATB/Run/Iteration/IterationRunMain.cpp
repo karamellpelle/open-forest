@@ -26,7 +26,6 @@
 #include "BATB/Demo.hpp"
 #include "BATB/Demo/LoadWorld.hpp"
 #include "BATB/Demo/libs/nanovg.hpp"
-#include "BATB/Demo/libs/al.hpp"
 #include "BATB/Demo/libs/gl.hpp"
 
 #include "BATB/OGRE.hpp"
@@ -101,9 +100,6 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
     demo::gl::tests_pause( false );
 #endif
 
-    // ALURE demo
-    demo::al::demo_begin( batb );
-
     // make GUI visible
     tb_main->SetVisibility( tb::WIDGET_VISIBILITY_VISIBLE ); 
 /*
@@ -155,7 +151,6 @@ debug::gl::DebugGroup _dbg(DEBUG_FUNCTION_NAME);
 #endif
 
     // step AL and nanovg demos
-    demo::al::demo_iterate( batb, run );
     demo::nanovg::demo_iterate( batb, false, false );
 
     // step widget

@@ -52,14 +52,9 @@ public:
     void frameBegin();
     void frameEnd();
 
-    // create and play a source. the Buffer is created automatically.
-    // the source must be removed with Source::destroy() when not needed anymore.
-    // its corresponing buffer will then be removed (by AL::frameEnd())
-    //
-    // TODO: this should be done better. don't play on creation. let objects take 
-    // care of the source including destroying it.
-    alure::Source source(const std::string& , const glm::mat4& );
-    //alure::Source& source(const std::string& ); // <- TODO: no matrix means background sound
+
+    // play in background (music for example)
+    alure::Source play2D(const std::string& );
 
 
     alure::DeviceManager alure_devmgr;
