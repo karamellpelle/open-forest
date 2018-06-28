@@ -8,7 +8,6 @@
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
   something wrong happesn if 'setFixedYawAxis( true );' is not called
   also fix controls and Z direction. An Ogre::Camera uses -Z for view direction.
-* remove RenderSystemGL and only use RenderSystemGL3Plus
 * no al in demo file.
   - find out what to do with the easter egg. can Alure delete buffer on finish?
 * setup GUI from .yaml
@@ -66,6 +65,7 @@
 ## Ogre3d
 * fix nanovg+ogre debug errors! (errors every frame when nanovg has been initialized with the `NVG_DEBUG` flag)
 * load/unload terrains etc, making possible to start over
+* use Ogre v2.x when macOS support becomes better/stable
 
 ## game
 * wrap Iteratations into some class with shared_ptr to easily work with Iteration's and have control over their lifetimes

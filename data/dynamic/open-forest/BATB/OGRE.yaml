@@ -10,7 +10,6 @@ plugins:
   - Codec_FreeImage
   - Codec_STBI
 
-#rendersystem: !<!> OpenGL Rendering Subsystem
 rendersystem: !<!> OpenGL 3+ Rendering Subsystem
 
 ################################################################################

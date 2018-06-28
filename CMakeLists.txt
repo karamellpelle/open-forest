@@ -200,7 +200,7 @@ set( OGRE_BUILD_PLUGIN_OCTREE         ON CACHE BOOL "" FORCE )
 set( OGRE_BUILD_PLUGIN_PCZ            ON CACHE BOOL "" FORCE )
 set( OGRE_BUILD_PLUGIN_PFX            ON CACHE BOOL "" FORCE )
 set( OGRE_BUILD_PLUGIN_STBI           ON CACHE BOOL "" FORCE )
-set( OGRE_BUILD_RENDERSYSTEM_GL       ON CACHE BOOL "" FORCE )
+set( OGRE_BUILD_RENDERSYSTEM_GL       OFF CACHE BOOL "" FORCE )
 set( OGRE_BUILD_RENDERSYSTEM_GL3PLU   ON CACHE BOOL "" FORCE )
 set( OGRE_BUILD_RENDERSYSTEM_GLES2    OFF CACHE BOOL "" FORCE )
 set( OGRE_BUILD_SAMPLES               OFF CACHE BOOL "" FORCE )
@@ -645,12 +645,9 @@ if ( BATB_BUILD )
     target_include_directories( open-forest PRIVATE "${LIBS_SOURCE_DIR}/ogre" )
     target_include_directories( open-forest PRIVATE "${CMAKE_BINARY_DIR}/include" ) # we need the build generated XXXX
     target_include_directories( open-forest PRIVATE "${LIBS_BINARY_DIR}/ogre/include" ) # we need the build generated YYYY
-    # "${LIBS_SOURCE_DIR}/ogre/RenderSystems/GL/include" <- must not be included, it overrides glew.h !!!
 
 
-    if ( OGRE_BUILD_RENDERSYSTEM_GL )
-        list( APPEND BATB_LIBRARIES RenderSystem_GL )
-    endif()
+    # only use GL3Plus rendersystem
     if ( OGRE_BUILD_RENDERSYSTEM_GL3Plus )
         list( APPEND BATB_LIBRARIES RenderSystem_GL3Plus )
     endif()
@@ -660,7 +657,7 @@ if ( BATB_BUILD )
     # link hazzle on macOS
     if ( APPLE )
         # fix a link error (add AGL)
-        set_target_properties( open-forest PROPERTIES LINK_FLAGS "-framework AGL")
+        set_target_properties( open-forest PROPERTIES LINK_FLAGS "-framework AGL -framework OpenGL")
         # set where to look after dynamic libraries (where rpath points to (may be more than one; see doc))
         set_target_properties( open-forest PROPERTIES INSTALL_RPATH "@executable_path/lib/" )
     endif()

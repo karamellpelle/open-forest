@@ -18,6 +18,7 @@
 #ifndef BATB_GL_HPP
 #define BATB_GL_HPP
 #include "BATB/ModuleBATB.hpp"
+#include "BATB/Screen.hpp"
 
 //#define NANOVG_GL2_IMPLEMENTATION
 #define NANOVG_GL3_IMPLEMENTATION
