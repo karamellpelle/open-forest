@@ -34,8 +34,8 @@ float_t proj3DNear               = 0.1;
 float_t proj3DFar                = 512.0;
 float_t proj3DFOVY               = 1.047;
 
-tick_t  dt                       = 0.02;
-tick_t  dt_max                   = 2.0;
+tick_t  dt                       = 0.01;
+tick_t  dt_max                   = 1.0;
 
 float_t runConsoleOpenTicks      = 0.3;
 float_t runConsoleOpacity        = 0.55;

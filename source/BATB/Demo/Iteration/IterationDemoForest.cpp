@@ -388,7 +388,7 @@ void IterationDemoForest::createRandomCourse(demo::World& demo)
 
     static std::default_random_engine rand( std::chrono::system_clock::now().time_since_epoch().count() );
 
-    constexpr uint max_controls = 1;
+    constexpr uint max_controls = 16;
     uint m = std::uniform_int_distribution<uint>( 1, max_controls )( rand );
 
     for (uint i = 0; i != m; ++i)
