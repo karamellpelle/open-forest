@@ -124,11 +124,11 @@ debug::gl::DebugGroup _dbg( DEBUG_FUNCTION_NAME );
 */
 
     // notification
-    std::ostringstream os; os << "use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n"
-                              << "use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
+    std::ostringstream os; os << "Use " << batb->run->keys->console->nameGUI() << " to toggle console." <<  "\n"
+                              << "Use " << batb->run->keys->fullscreen->nameGUI() << " to toggle fullscreen." <<  "\n";
                               //<< "fdjs lfej wijfls jasl fjeiw jfl jefaj fkl jlkajf iejlfjaghiu fghu48394 43q923 8923 98235749tujfrfsjkfle øjewf 489 u4rfdsjkl jasi 48tj gfdsER T $I$TCqTV 495 ug føre på3t4j hy";
 
-    batb->run->notify->message( os.str(), 4.0 );
+    batb->run->notify->message( os.str(), 3.0 );
 
 }
 

@@ -38,9 +38,14 @@ void KeySet::load(const YAML::Node& yaml)
 
     // TODO: release current pointers back to Keys
 
+    batb->log << "help";
+    help = create<KeyClicker>( createSafeKey( yaml > "help" ) );
+    batb->log->endl();
+
     batb->log << "map-view-full:  ";
     map_view_full = create<KeyClicker>( createSafeKey( yaml > "map-view-full" ) );
     batb->log->endl();
+
 
 }
 

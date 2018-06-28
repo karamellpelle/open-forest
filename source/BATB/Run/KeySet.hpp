@@ -53,7 +53,7 @@ public:
     keys::KeyClicker* console = nullptr;
     keys::KeyClicker* escape  = nullptr;
     keys::KeyClicker* fullscreen  = nullptr;
-    keys::KeyClicker* notify_ok  = nullptr;
+    keys::KeyClicker* notify_dismiss  = nullptr;
 
 };
 

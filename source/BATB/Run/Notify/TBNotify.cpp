@@ -99,7 +99,7 @@ TBNotify::TBNotify(BATB* b) : tb::TBLayout( tb::AXIS_Y ), batb( b ), notify_( b-
 
 void TBNotify::step(World& run)
 {
-    auto wth = run.scene.wth;
+auto wth = run.scene.wth;
     auto hth = run.scene.hth;
 
     // make sure TBNotify fills whole screen
@@ -109,13 +109,13 @@ void TBNotify::step(World& run)
     tick_t tick = batb->time->get();
    
     // remove (first removable) notification if user wants it
-    if ( batb->run->keys->notify_ok->click() )
+    if ( batb->run->keys->notify_dismiss->click() )
     {
         auto i = std::begin( tb_notify_messages_ );
         while ( i != std::end( tb_notify_messages_ ) )
         {
             auto* tbmsg = *i;
-            if ( tbmsg->notifymessage->isOKAllowed() )
+            if ( tbmsg->notifymessage->isDismissAllowed() )
             {
                 remove( *i ); 
 
@@ -133,8 +133,9 @@ void TBNotify::step(World& run)
     {
         TBNotifyMessage* tbmsg = *i;
 
-        // duration specifies minimum time
-        if ( tbmsg->tick + tbmsg->notifymessage->duration <= tick ) 
+
+        // duration specifies minimum time, unless duration is 0.0 (infinite)
+        if ( tbmsg->notifymessage->duration != 0.0 && tbmsg->tick + tbmsg->notifymessage->duration <= tick ) 
         {
             if ( tbmsg->isActive() )
             {

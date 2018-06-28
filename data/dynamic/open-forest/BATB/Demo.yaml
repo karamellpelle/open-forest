@@ -2,3 +2,5 @@
 KeySet:
     map-view-full:    
         KeyMouseButton: { code: RIGHT }
+    help:    
+        KeyKeyboardButton: { code: F1 }

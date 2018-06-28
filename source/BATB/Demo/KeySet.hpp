@@ -39,6 +39,7 @@ public:
     void reset();
 
     keys::KeyClicker* map_view_full = nullptr;
+    keys::KeyClicker* help = nullptr;
 
 
 };

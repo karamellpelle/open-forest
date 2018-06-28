@@ -57,9 +57,6 @@ void IterationRunDemo::iterate_begin(World& run)
     
     if ( !stack_.empty() )
     {
-        // notify message
-        std::ostringstream msg; msg << "use " << batb->run->keys->escape->nameGUI() << " to go back";
-        batb->run->notify->message( msg.str(), 4.0 );
 
         stack_.front()->iterate_begin( *demo_ );
     }

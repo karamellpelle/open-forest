@@ -18,6 +18,7 @@
 #include "BATB/Run/World.hpp"
 #include "BATB/Run.hpp"
 #include "BATB/Run/KeySet.hpp"
+#include "BATB/Run/Notify.hpp"
 #include "BATB/Demo.hpp"
 #include "BATB/Demo/World.hpp"
 #include "BATB/Demo/Iteration/IterationDemoForest.hpp"
@@ -67,6 +68,8 @@ void IterationDemoForest::iterate_begin(World& demo)
     auto& run = *demo.run;
     auto& forest = *demo.forest;
 
+    bool first_run = demo.runner == nullptr;
+
     // set ticks to current run-tick
     demo.tick = run.tick;
     forest.tick = demo.tick;
@@ -82,18 +85,20 @@ void IterationDemoForest::iterate_begin(World& demo)
     batb->gui->lockKeys( false );
 
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // add a runner, if first time
-
-    if ( !demo.runner )
+    if ( first_run )
     {
+        // add a runner
         demo.runner = forest.addRunner( run.player ); 
         demo.runner->reset( glm::vec2( 0, 0 ) );
-       //demo.runner->headlamp( true );
+        //demo.runner->headlamp( true );
 
-       // runner iff started before
-       demo.aim_keyscontroller.connect( &demo.forest_drawer );
-       demo.forest_drawer.cameraFree();
+
+        demo.aim_keyscontroller.connect( &demo.forest_drawer );
+        demo.forest_drawer.cameraFree();
+
+        std::ostringstream msg; msg << "For help, press " << batb->demo->keys->help->nameGUI(); 
+        batb->run->notify->message( msg.str(), 3.5 );
+
     }
 
     // if we have no Course, create one
@@ -135,6 +140,8 @@ IterationStack IterationDemoForest::iterate_demo(World& demo)
     ////////////////////////////////////////////////////////////////
     // output 
     output( demo );
+
+    if ( batb->demo->keys->help->click() ) notifyHelpMessage();
 
     ////////////////////////////////////////////////////////////////
     // step
@@ -214,8 +221,8 @@ IterationStack IterationDemoForest::step(World& demo)
     // "AI" for demo
     modifyRunnerDemo( demo );
 
-    // use Keys to control aiming in forest::World, typically camera
-    demo.aim_keyscontroller.step( batb );
+    // key controllers
+    stepKeysControllers( demo, batb );
 
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
@@ -296,6 +303,28 @@ IterationStack IterationDemoForest::step(World& demo)
     // this iteratein runs forever 
     return { this };
     
+}
+
+
+// 
+void IterationDemoForest::stepKeysControllers(demo::World& demo, BATB* batb)
+{
+    // use Keys to control aiming in forest::World, typically camera
+    demo.aim_keyscontroller.step( batb );
+
+}
+
+void IterationDemoForest::notifyHelpMessage()
+{
+
+    std::ostringstream msg; 
+    msg << "Go back:    " << batb->run->keys->escape->nameGUI() << "\n"
+        << "Help:       " << batb->demo->keys->help->nameGUI() << "\n"
+        << "\n\n\n"
+        << "Press " << batb->run->keys->notify_dismiss->nameGUI() << " to dismiss this message.";
+
+    // show forever until dismissed
+    batb->run->notify->message( msg.str(), 0.0 );
 }
 
 // "AI" in our demo

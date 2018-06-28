@@ -46,9 +46,9 @@ public:
     NotifyMessage(const std::string& s) : str( s ) { }
     NotifyMessage(const std::string& s, tick_t d) : str( s ), duration( d ) { }
 
-    bool isOKAllowed()
+    bool isDismissAllowed()
     {
-        return ok_allowed || duration == 0.0;
+        return dismiss_allowed || duration == 0.0;
     }
 
     // signalize OK
@@ -61,7 +61,7 @@ public:
 
     tick_t duration = 0.0;
     Type type = Type::Normal;
-    bool ok_allowed = true;
+    bool dismiss_allowed = false;
 
     // TODO: callbacks, etc.
     
