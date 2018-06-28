@@ -234,6 +234,13 @@ add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/libs/ogre" )
 ################################################################################
 # alure
 
+# we only need WAVE and MPG123
+set( ALURE_ENABLE_VORBIS  OFF CACHE BOOL "" FORCE )
+set( ALURE_ENABLE_FLAC    OFF CACHE BOOL "" FORCE )
+set( ALURE_ENABLE_OPUS    OFF CACHE BOOL "" FORCE )
+set( ALURE_ENABLE_SNDFILE OFF CACHE BOOL "" FORCE )
+set( ALURE_ENABLE_WAVE    ON CACHE BOOL "" FORCE )
+set( ALURE_ENABLE_MPG123  ON CACHE BOOL "" FORCE )
 add_subdirectory( ${LIBS_SOURCE_DIR}/alure )
 
 #list( APPEND ALURE_LIBRARIES alure2 ${OPENAL_LIBRARY} )

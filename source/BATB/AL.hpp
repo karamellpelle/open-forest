@@ -54,6 +54,9 @@ public:
 
 
     // play in background (music for example)
+    // NOTE: a source with 2 channels will never be played in 3D according to 
+    //       reference (5.3.4.Specifying Buffer Content). hence playing
+    //       a 2 channel sound will always be 2D.
     alure::Source play2D(const std::string& );
 
 
@@ -66,8 +69,6 @@ public:
 private:
     bool enabled_ = false;
    
-    // for playing sources
-    std::list<alure::Buffer> buffers_;
 };
 
 

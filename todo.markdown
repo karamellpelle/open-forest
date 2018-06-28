@@ -20,21 +20,14 @@
 * clipboard support TB (tb_system.h)
 * clean up events during shutdown
 * let cmd's use boost program_options
-* Notify and message Key
-  - remove Key from NotifyMessage and put into TBNotify. this key should call message->finish() on
-    first NotifyMessage. 
-  - implement TBNotifyStep and message lifetimes
-* move event (BeginEvents class) from Demo to demo::World. also Forest
 * rewrite Event. use C++14. handle memory better.
-* find better, consequent names. for example the name 'begin' is used for setup a permanent object (ex: `BATB::begin( filepath )`) but also set up a frame (ex: `begin( run.scene )`
 * make demo::World a subworld of run::World. then remove 'IterationRunDemo::demoWorld()' from 
   IterationRunDemo because Iteration's are never bound to specific worlds; they work on every
   world. in our case we only have 1 run::World so it works, but in the wrong way.
 * Value reads values from Value.yaml file. 1 big file, or 1 per module?
 * TBTickerLine statusline in top of console :)
-* tb skin for Key::nameGUI()
+* tb skin images for non-keyboardbutton keys Key::nameGUI()
 * tutorial for controls in forest.
-* TBMain setup
 * mouse and map view
 * create global variable 'batb'? Answer: NO! BATB is the toolbox to work **on** World's, hence make it impossible to use it inside World's
 * `using float_t = double_t;` in include?
@@ -47,6 +40,7 @@
   open-forest too) needs stb_image.
 * define invariants (OpenGL, ...)
 * YAML configuration
+  - user configuration overrides values, because user configuration can have comments
   - static files vs. dynamic files: settings override. for example keyboard settings, how should this be done?
     can YAML::Node tree easily replace elements by providing new nodes to the tree?
   - saving configuration (dynamic files)
@@ -72,7 +66,6 @@
 ## Forest
 * `reset()` for objects in forest::World
 * use metric system for terrain and all models!!!
-* let AL sources for control punches play in 3D, not 2D as it seems to be now
 
 ### controls
 * add more settings in the "KeySet" YAML::Node than the ones used to create the Key's, for example camera movement speed and map scroll speed

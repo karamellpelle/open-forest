@@ -59,8 +59,13 @@ void AL::begin(const std::string& path)
             // there is only one listener
             alure_listener = alure_context.getListener();
 
-            //////////////////////////////////////////////////////////
-            //      OpenAL
+            // set distance model
+            // AL_INVERSE_DISTANCE_CLAMPED makes it possible to use the settings 
+            // AL_REFERENCE_DISTANCE, AL_MAX_DISTANCE and AL_ROLLOFF_FACTOR
+            //alure_context.setDistanceModel( alure::DistanceModel::InverseClamped ); // can't get this working well :(
+            //alure_context.setDistanceModel( alure::DistanceModel::LinearClamped );
+            alure_context.setDistanceModel( alure::DistanceModel::Exponent );
+
         }
         catch (std::exception& e)
         {
@@ -91,13 +96,6 @@ void AL::end()
     if ( init_nonempty() )
     {
         save();
-
-        // Buffer's must be destroyed according to doc
-        for ( auto buf : buffers_ )
-        {
-            alure_context.removeBuffer( buf );
-        }
-        batb->log << "buffers removed" << std::endl;
 
         alure::Context::MakeCurrent( nullptr );
         alure_context.destroy();
@@ -140,37 +138,6 @@ void AL::frameEnd()
     { 
         if ( enabled_ )
         {
-
-            // try to release buffers (if no source is using it)
-            auto i = std::begin( buffers_ );
-            while ( i != std::end( buffers_ ) )
-            {
-                alure::Buffer buf = *i;
-
-                // release sources that are not using this buffer anymore
-                auto srcs = buf.getSources();
-
-                if ( srcs.empty() )
-                {
-                    alure_context.removeBuffer( buf );
-                    i = buffers_.erase( i );
-                }
-                else
-                {
-                    // remove non-playing sources. this should not be done
-                    // since a source could be used multiple times
-                    //for ( auto src : srcs )
-                    //{
-                    //    if ( !src.isPlaying() )
-                    //    {
-                    //        src.destroy();
-                    //    }
-                    //}
-
-                    ++i;
-                }
-               
-            }
 
             // update ALURE/AL
             alure_context.update();
