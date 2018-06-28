@@ -23,7 +23,7 @@
 #include "BATB/OGRE/helpers.hpp"
 #include "BATB/Value/Forest.hpp"
 #include "BATB/glm.hpp"
-
+#include "BATB/Value/Run.hpp"
 #include "OgreEntity.h"
 #include "OgreTerrainGroup.h"
 #include "OgreSceneNode.h"
@@ -210,7 +210,9 @@ void Runner::update()
 }
 
 
-// z is forward
+// z is forward 
+// FIXME: looks like ogre meshes uses -z forward (but not all, like ninja.mesh).
+//        this should be defined and fixed, but stuff works now.
 // 'dir' gets normalized, so no need for unit vector
 void Runner::setDirection(const glm::vec2& dir)
 {
@@ -258,15 +260,16 @@ void RunnerAnimation::reset(const YAML::Node& yaml)
 
 void RunnerAnimation::step(tick_t tick_next)
 {
-    //TODO: prevent tick_next == tick
 
-    auto delta = tick_next - tick;
-    
-    auto add = delta * std::max( value::forestRunnerAnimSpeedMin, runner.move.speed * value::forestRunnerAnimSpeed );
-    ogre_animstate_base->addTime( add );
-    ogre_animstate_top->addTime( add );
+    if ( tick < tick_next ) // if FPS is very high
+    {
+        auto delta = tick_next - tick;
+        auto add = delta * std::max( value::forestRunnerAnimSpeedMin, runner.move.speed * value::forestRunnerAnimSpeed );
+        ogre_animstate_base->addTime( add );
+        ogre_animstate_top->addTime( add );
 
-    tick = tick_next;
+        tick = tick_next;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

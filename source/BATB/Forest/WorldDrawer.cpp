@@ -128,9 +128,9 @@ void WorldDrawer::draw(Ogre::RenderTarget* ogre_rendertarget)
 
 void WorldDrawer::step(tick_t tick)
 {
-    // make sure we can handle very fast framerate (tick == tick_)
-    while ( tick_ + value::dt <= tick )
+    if ( tick_ <= tick ) // handle very high FPS
     {
+        auto dt = tick - tick_;
 
         ////////////////////////////////////////////////////////////////////////////////
         // move camera
@@ -141,7 +141,7 @@ void WorldDrawer::step(tick_t tick)
         //camera_.move.vel += (float)( dt ) * move.acc;
         camera_.move.vel[3] = 1.0;
 
-        camera_.move.pos += (float)( value::dt ) * camera_.move.vel;
+        camera_.move.pos += (float)( dt ) * camera_.move.vel;
         camera_.move.pos[3] = 1.0;
 
         camera_.move.compute();
@@ -156,7 +156,7 @@ void WorldDrawer::step(tick_t tick)
 
 
 
-        tick_ += value::dt;
+        tick_ = tick;
     }
 }
 

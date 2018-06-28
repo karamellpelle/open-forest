@@ -113,28 +113,6 @@ void IterationDemoForest::iterate_begin(World& demo)
                       glm::vec2( control1->aim.pos.x, control1->aim.pos.z ) );
         curve_i = 0; 
    
-    using namespace Ogre;
-    auto scnMgr = demo.forest->ogre_scenemanager;
-#if 0
-    Entity* ninjaEntity = scnMgr->createEntity("ninja.mesh");
-    ninjaEntity->setCastShadows(true);
-    auto node_ninja =  scnMgr->getRootSceneNode()->createChildSceneNode();
-    node_ninja->attachObject(ninjaEntity);
-    node_ninja->scale( 10, 10, 10 );
-    node_ninja->setPosition( 0, 0, 300 );
-
-    auto head = scnMgr->createEntity( "ogrehead.mesh" );
-    auto node_head =  scnMgr->getRootSceneNode()->createChildSceneNode();
-    node_head->attachObject(ninjaEntity);
-    node_head->scale( 10, 10, 10 );
-    node_head->setPosition( 0, 0, 0 );
-    //ogre_entity = forest.ogre_scenemanager->createEntity( os.str(), "Sinbad.mesh" );
-    //ogre_entity->setCastShadows( true );
-    //
-    //ogre_scenenode = forest.ogre_scenemanager->getRootSceneNode()->createChildSceneNode();
-    //ogre_scenenode->scale( 3, 3, 3 ); // FIXME: use metric system all over (Terrain, Runners, Controls)
-    //ogre_scenenode->attachObject( ogre_entity );
-#endif
     }
 
 }
