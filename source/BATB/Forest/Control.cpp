@@ -92,7 +92,7 @@ void Control::reset(const ControlDefinition& def)
     alure_source.setOrientation( { { lookat.x, lookat.y, lookat.z } , { up.x, up.y, up.z } } );
     alure_source.setConeAngles( 360.0, 360.0 ) ;
     alure_source.setDistanceRange( 20, 500 );
-    alure_source.setRolloffFactors( 3.0 );
+    alure_source.setRolloffFactors( 2.0 );
 
     // set punch sound
     if ( def.type == ControlDefinition::Type::Normal ) alure_buffer_punch = forest.sounds.control_punch_normal;
