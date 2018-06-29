@@ -41,7 +41,10 @@ public:
     void connect(AimControllable* );
     
     // set back pointer
-    void recenter(BATB* );
+    void recenter();
+
+    // ignore movement?
+    void setRotationLock(bool );
 
     ////////////////////////////////////////////////////////////////////////////////
     //
@@ -57,6 +60,11 @@ private:
 
     tick_t tick_x_ = 0.0;
     tick_t tick_z_ = 0.0;
+
+    bool lockrotation_ = false;
+    bool lockrotation_next_ = false;
+    bool do_lockrotation_ = false;
+    bool do_recenter_ = false;
 };
 
 

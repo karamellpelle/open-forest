@@ -44,35 +44,63 @@ void AimKeysController::step(BATB* batb)
 {
     auto tick = batb->time->get();
 
-    ////////////////////////////////////////////////////////////////////////////////
-    // rotate
-
-    float_t x, y;
-    batb->forest->keys->aim->axis( x, y );
-
     auto to_a = [](float_t x) { return x * value::forestAimX; };
     auto to_b = [](float_t y) { return y * value::forestAimY; };
-    aim_a = to_a( x );
-    aim_b = to_b( y );
-
+    auto from_a = [](float_t a) { return a / value::forestAimX; };
     auto from_b = [](float_t b) { return b / value::forestAimY; };
 
-    // prevent overwrapping y axis
-    constexpr float_t max_b = (0.25 * twopi) - 0.4;
-    if ( aim_b <= -max_b )
+    // set lock?
+    if ( do_lockrotation_ )
     {
-        batb->forest->keys->aim->axis_y->set( from_b( -max_b ) );
+        // recenter when lock released
+        if ( !lockrotation_next_ && lockrotation_ )
+        {
+            do_recenter_ = true;
+        }
+
+        lockrotation_ = lockrotation_next_;
+        do_lockrotation_ = false;
     }
-    if ( max_b <= aim_b )
+    // recenter?
+    if ( do_recenter_ )
     {
-        batb->forest->keys->aim->axis_y->set( from_b( max_b ) );
+        batb->forest->keys->aim->axis_x->set( from_a( aim_a ) );
+        batb->forest->keys->aim->axis_y->set( from_b( aim_b ) );
+
+        do_recenter_ = false;
     }
 
 
-    auto rotation = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
-    aiming.aim[0] = rotation[0];
-    aiming.aim[1] = rotation[1];
-    aiming.aim[2] = rotation[2];
+    ////////////////////////////////////////////////////////////////////////////////
+    // rotate
+    //
+    if ( !lockrotation_ )
+    {
+        float_t x, y;
+        batb->forest->keys->aim->axis( x, y );
+
+        aim_a = to_a( x );
+        aim_b = to_b( y );
+
+
+        // prevent overwrapping y axis
+        constexpr float_t max_b = (0.25 * twopi) - 0.4;
+        if ( aim_b <= -max_b )
+        {
+            batb->forest->keys->aim->axis_y->set( from_b( -max_b ) );
+        }
+        if ( max_b <= aim_b )
+        {
+            batb->forest->keys->aim->axis_y->set( from_b( max_b ) );
+        }
+
+        auto rotation = glm::eulerAngleYXZ( aim_a, aim_b, aim_c );
+        aiming.aim[0] = rotation[0];
+        aiming.aim[1] = rotation[1];
+        aiming.aim[2] = rotation[2];
+
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     // move 
@@ -95,7 +123,7 @@ void AimKeysController::step(BATB* batb)
     aiming.ticks_x = aiming.move_x == 0.0 ? 0.0 : tick - tick_x_;
     aiming.ticks_z = aiming.move_z == 0.0 ? 0.0 : tick - tick_z_;
 
-    // we work controllable_
+    // we work on 'controllable_'
     if ( controllable_ )
     {
         controllable_->aiming( aiming );
@@ -103,16 +131,18 @@ void AimKeysController::step(BATB* batb)
 }
 
 
-void AimKeysController::recenter(BATB* batb)
+void AimKeysController::recenter()
 {
-    auto from_a = [](float_t a) { return a / value::forestAimX; };
-    auto from_b = [](float_t b) { return b / value::forestAimY; };
-    batb->forest->keys->aim->axis_x->set( from_a( aim_a ) );
-    batb->forest->keys->aim->axis_y->set( from_b( aim_b ) );
 
+    do_recenter_ = true;
     
 }
 
+void AimKeysController::setRotationLock(bool on)
+{
+    lockrotation_next_ = on;
+    do_lockrotation_ = true;
+}
 
 
 
