@@ -199,7 +199,7 @@ void Keys::getCursorPos(uint& x, uint& y)
 void Keys::getCursorPos(double& x, double& y)
 {
     int wth; int hth;
-    glfwGetFramebufferSize( glfw_window_, &wth, &hth ); // FIXME: use Window instead?
+    glfwGetWindowSize( glfw_window_, &wth, &hth ); // FIXME: use Window instead?
     float_t scale = 1.0 / (float_t)( std::max( wth, hth ) );
 
     double x_, y_;
@@ -235,7 +235,7 @@ void Keys::getCursorPos_(double& x, double& y)
     }
 
     int wth; int hth;
-    glfwGetFramebufferSize( glfw_window_, &wth, &hth ); // TODO: use Window instead?
+    glfwGetWindowSize( glfw_window_, &wth, &hth ); // TODO: use Window instead?
     double scale = 1.0 / (double)( std::max( wth, hth ) );
     x *=  scale;
     y *=  scale;
