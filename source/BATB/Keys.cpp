@@ -72,7 +72,7 @@ void Keys::begin(const std::string& path)
         // retrieve GLFW window (needed for input)
         glfw_window_ = batb->screen->glfw_window;
 
-        // cursor input mode is _NORMAL!
+        // cursor input mode is _NORMAL as default
         glfwSetInputMode( glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL ); 
         cursor_free_ = false;
 
@@ -187,29 +187,45 @@ code::ButtonState Keys::getMouseButton_(code::MouseButton k)
 ////////////////////////////////////////////////////////////////////////////////
 
 // get cursor pos, in pixels
-void Keys::getCursorPos(uint& x, uint& y)
+void Keys::getCursorPos(int& x, int& y)
 {
     double x_, y_;
     glfwGetCursorPos( glfw_window_, &x_, &y_ );
-    x = (uint)( x_ );
-    y = (uint)( y_ );
+    x = (int)( std::floor( x_ ) );
+    y = (int)( std::floor( y_ ) );
+}
+
+void Keys::setCursorPos(int x, int y)
+{
+    glfwSetCursorPos( glfw_window_, (double)( x ), (double)( y ) );
 }
 
 // get cursor pos, relative to screen shape 
 void Keys::getCursorPos(double& x, double& y)
 {
     int wth; int hth;
-    glfwGetWindowSize( glfw_window_, &wth, &hth ); // FIXME: use Window instead?
-    float_t scale = 1.0 / (float_t)( std::max( wth, hth ) );
+    glfwGetWindowSize( glfw_window_, &wth, &hth );
 
     double x_, y_;
     glfwGetCursorPos( glfw_window_, &x_, &y_ );
-    x = (float_t)( x_ ) * scale;
-    y = (float_t)( y_ ) * scale;
+
+    double scale = 1.0 / (double)( std::max( wth, hth ) );
+    x = (double)( x_ ) * scale;
+    y = (double)( y_ ) * scale;
+}
+
+// set cursor pos, relative to screen shape 
+void Keys::setCursorPos(double x, double y)
+{
+    int wth; int hth;
+    glfwGetWindowSize( glfw_window_, &wth, &hth );
+    double unit = (double)( std::max( wth, hth ) );
+   
+    glfwSetCursorPos( glfw_window_, x * unit, y * unit );
 }
 
 
-void Keys::getCursorPos_(uint& x, uint& y)
+void Keys::getCursorPos_(int& x, int& y)
 {
     if ( key_enable_ )
     {
@@ -217,8 +233,16 @@ void Keys::getCursorPos_(uint& x, uint& y)
     }
     else
     {
-        x = (uint)( cursor_enable_x0_ );
-        y = (uint)( cursor_enable_y0_ );
+        x = (int)( std::floor( cursor_enable_x0_ ) );
+        y = (int)( std::floor( cursor_enable_y0_ ) );
+    }
+}
+
+void Keys::setCursorPos_(int x, int y)
+{
+    if ( key_enable_ )
+    {
+        setCursorPos( x, y );
     }
 }
 
@@ -235,12 +259,19 @@ void Keys::getCursorPos_(double& x, double& y)
     }
 
     int wth; int hth;
-    glfwGetWindowSize( glfw_window_, &wth, &hth ); // TODO: use Window instead?
+    glfwGetWindowSize( glfw_window_, &wth, &hth ); 
     double scale = 1.0 / (double)( std::max( wth, hth ) );
     x *=  scale;
     y *=  scale;
 }
 
+void Keys::setCursorPos_(double x, double y)
+{
+    if ( key_enable_ )
+    {
+        setCursorPos( x, y );
+    }
+}
 
 void Keys::setCursorFree(bool free)
 {

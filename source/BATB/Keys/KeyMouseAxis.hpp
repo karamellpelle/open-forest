@@ -35,6 +35,7 @@ public:
     void reset() override                   { }
     void step(tick_t ) override             { }
     float_t alpha() override;
+    void set(float_t ) override;
 
     virtual std::string name()     const override; // unique identifier
     virtual std::string nameEasy() const override; // human readable

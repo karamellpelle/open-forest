@@ -30,10 +30,10 @@ namespace keys
 KeyPointer::KeyPointer(BATB* b, Key* x, Key* y, Key* l, Key* r) : Key( b )
 {
     // create default if not provided
-    axis_x_        = x ? x : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::X ) );
-    axis_y_        = y ? y : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::Y ) );
-    clicker_left_  = batb->keys->create<KeyClicker>( l ? l : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
-    clicker_right_ = batb->keys->create<KeyClicker>( r ? r : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
+    axis_x        = x ? x : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::X ) );
+    axis_y        = y ? y : (Key*)( batb->keys->create<KeyMouseAxis>( code::MouseAxis::Y ) );
+    left  = batb->keys->create<KeyClicker>( l ? l : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
+    right = batb->keys->create<KeyClicker>( r ? r : (Key*)( batb->keys->create<KeyMouseButton>( GLFW_MOUSE_BUTTON_LEFT ) ) );
 
 }
 
@@ -47,13 +47,13 @@ void KeyPointer::step(tick_t t)
     // dont do this; all Key's are stepped by the Keys object:
     //axis_x_->step( t );
     //axis_y_->step( t );
-    //clicker_left_->step( t );
-    //clicker_right_->step( t );
+    //left->step( t );
+    //right->step( t );
 
-    if ( clicker_left_->pressed() )
+    if ( left->pressed() )
     {
-        x0_ = axis_x_->alpha();
-        y0_ = axis_y_->alpha();
+        x0_ = axis_x->alpha();
+        y0_ = axis_y->alpha();
     }
 
 
@@ -68,32 +68,32 @@ float_t KeyPointer::alpha()
 
 void KeyPointer::reset()
 {
-    axis_x_->reset();
-    axis_y_->reset();
-    clicker_left_->reset();
-    clicker_right_->reset();
+    axis_x->reset();
+    axis_y->reset();
+    left->reset();
+    right->reset();
 }
 
 void KeyPointer::canDisable(bool b) 
 {
     // all called; is this correct behaviour?
-    axis_x_->canDisable( b );
-    axis_y_->canDisable( b );
-    clicker_left_->canDisable( b );
-    clicker_right_->canDisable( b );
+    axis_x->canDisable( b );
+    axis_y->canDisable( b );
+    left->canDisable( b );
+    right->canDisable( b );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
 
 bool KeyPointer::drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
 {
-    if ( clicker_left_->press( ticks ) )
+    if ( left->press( ticks ) )
     {
         x0 = (1.0 - x0_) * x_a + x0_ * x_b;
         y0 = (1.0 - y0_) * y_a + y0_ * y_b;
 
-        float_t x1_ = axis_x_->alpha();
-        float_t y1_ = axis_y_->alpha();
+        float_t x1_ = axis_x->alpha();
+        float_t y1_ = axis_y->alpha();
         x1 = (1.1 - x1_) * x_a + x1_ * x_b;
         y1 = (1.1 - y1_) * y_a + y1_ * y_b;
          
@@ -105,13 +105,13 @@ bool KeyPointer::drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_
 
 bool KeyPointer::drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b,  float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
 {
-    if ( clicker_left_->released( ticks ) )
+    if ( left->released( ticks ) )
     {
         x0 = (1.0 - x0_) * x_a + x0_ * x_b;
         y0 = (1.0 - y0_) * y_a + y0_ * y_b;
 
-        float_t x1_ = axis_x_->alpha();
-        float_t y1_ = axis_y_->alpha();
+        float_t x1_ = axis_x->alpha();
+        float_t y1_ = axis_y->alpha();
         x1 = (1.1 - x1_) * x_a + x1_ * x_b;
         y1 = (1.1 - y1_) * y_a + y1_ * y_b;
          

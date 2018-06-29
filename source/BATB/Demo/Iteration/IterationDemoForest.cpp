@@ -78,9 +78,12 @@ void IterationDemoForest::iterate_begin(World& demo)
     batb->demo->keys->reset();
     batb->forest->keys->reset();
 
-    // no cursor
+    // no visible cursor (free movement)
     batb->keys->setCursorFree( true );
-
+    // reset aim controller
+    demo.aim_keyscontroller.recenter( batb );
+    
+    
     // ensure we can use Key's
     batb->gui->lockKeys( false );
 

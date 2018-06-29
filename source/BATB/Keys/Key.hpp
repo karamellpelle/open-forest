@@ -53,6 +53,7 @@ public:
     virtual void reset()            { }
     virtual void step(tick_t )      { }
     virtual float_t alpha()         { return 0.0; }
+    virtual void set(float_t)       { } // try to set the alpha value
 
     
     ////////////////////////////////////////////////////////////////

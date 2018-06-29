@@ -45,7 +45,7 @@ float_t runConsoleOpacity        = 0.55;
 //  forest.hpp
 //
 
-float_t forestAimX               = 4.0;
+float_t forestAimX               = -4.0;
 float_t forestAimY               = 4.0;
 float_t forestMoveX              = 4000.0;
 float_t forestMoveZ              = 4000.0;

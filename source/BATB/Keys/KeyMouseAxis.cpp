@@ -36,6 +36,25 @@ float_t KeyMouseAxis::alpha()
     return 0.0;
 }
 
+void KeyMouseAxis::set(float_t alpha) 
+{
+    double x, y;
+    if ( can_disable )
+    {
+        batb->keys->getCursorPos_( x, y );
+        if ( code_ == code::MouseAxis::X ) batb->keys->setCursorPos_( alpha, y ); 
+        if ( code_ == code::MouseAxis::Y ) batb->keys->setCursorPos_( x, alpha ); 
+    }
+    else
+    {
+        batb->keys->getCursorPos( x, y ); 
+        if ( code_ == code::MouseAxis::X ) batb->keys->setCursorPos( alpha, y ); 
+        if ( code_ == code::MouseAxis::Y ) batb->keys->setCursorPos( x, alpha ); 
+    }
+
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // names. default.
 

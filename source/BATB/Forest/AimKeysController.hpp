@@ -39,6 +39,9 @@ public:
 
     // what to control 
     void connect(AimControllable* );
+    
+    // set back pointer
+    void recenter(BATB* );
 
     ////////////////////////////////////////////////////////////////////////////////
     //

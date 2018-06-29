@@ -68,15 +68,22 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // working with keys
-
+    
     // WTF does this? i dont remember. enable/disable cursor? 
     void keyEnable(bool b);
+
     // get cursor pos, in pixels
-    void getCursorPos(uint& x, uint& y);
+    void getCursorPos(int& x, int& y);
     // get cursor pos, relative to screen shape 
     void getCursorPos(double& x, double& y);
-    // can cursor move outside of window? default false
+    // set cursor pos, in pixels
+    void setCursorPos(int x, int y);
+    // set cursor pos, relative to screen shape
+    void setCursorPos(double x, double y);
+    // can cursor (in window/pixel coordinates) move outside of window, that is,
+    // infinite movement but no pointer is shown? default: false
     void setCursorFree(bool ); 
+
     // get keyboard button state
     code::ButtonState getKey(code::KeyboardButton );
     // get mouse button state
@@ -122,8 +129,10 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////////
     // these are to be used by Key's (checks if Key's disabled or not)
-    void getCursorPos_(uint& x, uint& y);
+    void getCursorPos_(int& x, int& y);
     void getCursorPos_(double& x, double& y);
+    void setCursorPos_(int x, int y);
+    void setCursorPos_(double x, double y);
     code::ButtonState getKey_(code::KeyboardButton );    
     code::ButtonState getMouseButton_(code::MouseButton );
 

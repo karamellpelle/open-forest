@@ -33,8 +33,8 @@ class KeyPointer : public Key
 {
 
 public:
-    KeyPointer(BATB* keys, Key* x, Key* y, Key* l, Key* r);
-    KeyPointer(BATB* keys);
+    KeyPointer(BATB* batb, Key* x, Key* y, Key* l, Key* r);
+    KeyPointer(BATB* batb);
 
     void reset() override;
     void step(tick_t ) override;
@@ -51,46 +51,23 @@ public:
     ////////////////////////////////////////////////////////////////
     void axis(float_t& x, float_t& y)
     {
-        x = axis_x_->alpha();
-        y = axis_y_->alpha();
+        x = axis_x->alpha();
+        y = axis_y->alpha();
     }
     void axis(float_t wth, float_t hth, float_t& x, float_t& y)
     {
-        x = axis_x_->alpha(0, wth);
-        y = axis_y_->alpha(0, hth);
+        x = axis_x->alpha(0, wth);
+        y = axis_y->alpha(0, hth);
     }
     void axis_center(float_t wth, float_t hth, float_t& x, float_t& y)
     {
-        x = axis_x_->alpha( -0.5 * wth, 0.5 * wth );
-        y = axis_y_->alpha( -0.5 * hth, 0.5 * hth );
+        x = axis_x->alpha( -0.5 * wth, 0.5 * wth );
+        y = axis_y->alpha( -0.5 * hth, 0.5 * hth );
     }
 
-
-    bool drag(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drag( 1.0, 1.0, x0, y0, x1, y1, ticks );
-    }
-    bool drag(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drag( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
-    }
-    bool drag_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drag( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
-    }
-    bool drop(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drop( 1.0, 1.0, x0, y0, x1, y1, ticks );
-    }
-    bool drop(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drop( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
-    }
-    bool drop_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
-    {
-        return drop( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
-    }
-    
+    ////////////////////////////////////////////////////////////////////////////////
+    // 
+    //
     bool left_pressed(float_t& x, float_t& y)
     {
         return left_pressed( 0.0, 1.0, 0.0, 1.0, x, y );
@@ -139,57 +116,85 @@ public:
     {
         return right_released( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x, y );
     }
-  
-    KeyClicker* left()      { return clicker_left_; }
-    KeyClicker* right()     { return clicker_right_; }
 
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // drag/drop: left_xxx with ticks
+    //
+    bool drag(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( 1.0, 1.0, x0, y0, x1, y1, ticks );
+    }
+    bool drag(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
+    }
+    bool drag_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drag( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
+    }
+    bool drop(float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( 1.0, 1.0, x0, y0, x1, y1, ticks );
+    }
+    bool drop(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( 0.0, wth, 0.0, hth, x0, y0, x1, y1, ticks );
+    }
+    bool drop_center(float_t wth, float_t hth, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks)
+    {
+        return drop( -0.5 * wth, 0.5 * wth, -0.5 * hth, 0.5 * hth, x0, y0, x1, y1, ticks );
+    }
+  
+    ////////////////////////////////////////////////////////////////////////////////
+    // 
+
+    Key* axis_x = nullptr;
+    Key* axis_y = nullptr;
+    KeyClicker* left = nullptr;
+    KeyClicker* right = nullptr;
 private:
     bool drag(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool drop(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x0, float_t& y0, float_t& x1, float_t& y1, tick_t& ticks);
     bool left_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
     {
-        if ( left()->pressed() )
+        if ( left->pressed() )
         {
-            x = axis_x_->alpha(x_a, x_b);
-            y = axis_y_->alpha(y_a, y_b);
+            x = axis_x->alpha(x_a, x_b);
+            y = axis_y->alpha(y_a, y_b);
         }
-        return left()->pressed();
+        return left->pressed();
     }
     bool left_released(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
     {
-        if ( left()->released() )
+        if ( left->released() )
         {
-            x = axis_x_->alpha(x_a, x_b);
-            y = axis_y_->alpha(y_a, y_b);
+            x = axis_x->alpha(x_a, x_b);
+            y = axis_y->alpha(y_a, y_b);
         }
-        return left()->released();
+        return left->released();
 
     }
     bool right_pressed(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
     {
-        if ( right()->pressed() )
+        if ( right->pressed() )
         {
-            x = axis_x_->alpha(x_a, x_b);
-            y = axis_y_->alpha(y_a, y_b);
+            x = axis_x->alpha(x_a, x_b);
+            y = axis_y->alpha(y_a, y_b);
         }
-        return right()->pressed();
+        return right->pressed();
     }
     bool right_released(float_t x_a, float_t x_b, float_t y_a, float_t y_b, float_t& x, float_t& y)
     {
-        if ( right()->released() )
+        if ( right->released() )
         {
-            x = axis_x_->alpha(x_a, x_b);
-            y = axis_y_->alpha(y_a, y_b);
+            x = axis_x->alpha(x_a, x_b);
+            y = axis_y->alpha(y_a, y_b);
         }
-        return right()->released();
+        return right->released();
 
     }
 
-    // TODO: public
-    Key* axis_x_;
-    Key* axis_y_;
-    KeyClicker* clicker_left_;
-    KeyClicker* clicker_right_;
 
     float_t x0_;
     float_t y0_;
