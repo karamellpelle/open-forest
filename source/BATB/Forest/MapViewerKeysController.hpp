@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,43 +15,50 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_DEMO_DEMOMAPDRAWER_HPP
-#define BATB_DEMO_DEMOMAPDRAWER_HPP
-#include "include.hpp"
-#include "BATB/Forest/MapDrawer2D.hpp"
+#ifndef BATB_FOREST_MAPVIEWERKEYSCONTROLLER_HPP
+#define BATB_FOREST_MAPVIEWERKEYSCONTROLLER_HPP
+#include "BATB/Forest.hpp"
+
 
 
 namespace batb
 {
-namespace demo
+class BATB;
+
+namespace forest
 {
 class World;
+class MapViewer2D;
 
 
-// draw a Map to a 2D NanovgContext
-class DemoMapDrawer : public forest::MapDrawer2D
+
+
+
+class MapViewerKeysController 
 {
 public:
-    DemoMapDrawer();
-    
+    MapViewerKeysController();
+
+    // connect to world
     void init(World* );
 
-protected:
-    World* demo_ = nullptr;
+    void step(BATB* );
 
-    void beginMapDraw(NVGcontext* , const forest::Map::Draw2D&) override;
-    void endMapDraw(NVGcontext* , const forest::Map::Draw2D& ) override;
+    bool isDragging();
+
+private:
+    World* forest_ = nullptr;
+
+    tick_t tick_ = 0.0;
 
 
 };
 
 
-
-
-} // namespace demo
+} // namespace forest
 
 } // namespace batb
 
 
-
 #endif
+

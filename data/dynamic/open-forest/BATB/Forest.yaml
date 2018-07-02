@@ -17,3 +17,11 @@ KeySet:
             KeyMouseButton: { code: Y }
           right:
             KeyMouseButton: { code: T }
+    mapview:
+        KeyKeyboardButton: { code: L }
+    mapview-plus:
+        KeyKeyboardButton: { code: K }
+    mapview-shift:
+        KeyKeyboardButton: { code: SHIFT }
+    mapview-rotate:
+        KeyMouseScroll: { axis: Y, sensitivity: 2.5 }

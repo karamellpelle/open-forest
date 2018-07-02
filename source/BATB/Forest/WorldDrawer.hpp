@@ -49,7 +49,7 @@ public:
     void init(World* );
 
     // draw to Ogre::RenderTarget
-    void draw(Ogre::RenderTarget* );
+    void draw3D(Ogre::RenderTarget* );
     // update state
     void step(tick_t );
 

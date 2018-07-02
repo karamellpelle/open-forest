@@ -1,4 +1,3 @@
-//    open-forest: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,7 +14,6 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Demo/DemoMapDrawer.hpp"
 #include "BATB/Demo/World.hpp"
 #include "BATB/CourseDrawer.hpp"
 
@@ -27,18 +25,18 @@ namespace demo
 {
 
 
-DemoMapDrawer::DemoMapDrawer()
+DemoMapViewer::DemoMapViewer()
 {
 
 }
 
-void DemoMapDrawer::init(World* d)
+void DemoMapViewer::init(World* d)
 {
     demo_ = d;
 }
 
 
-void DemoMapDrawer::beginMapDraw(NVGcontext* nvg, const forest::Map::Draw2D& region)
+void DemoMapViewer::beginDraw2D(NVGcontext* nvg, const Draw2D& region)
 {
   
 }
@@ -46,8 +44,9 @@ void DemoMapDrawer::beginMapDraw(NVGcontext* nvg, const forest::Map::Draw2D& reg
 // draw region defines part of world to be drawn.
 // draw region of world is in world coordinates.
 // target NanoVG coordinates is pixels
-void DemoMapDrawer::endMapDraw(NVGcontext* nvg, const forest::Map::Draw2D& draw)
+void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
 {
+
     using namespace forest;
     
     auto from_m = [&](float_t m) { return (float_t)( draw.from_m * m ); };

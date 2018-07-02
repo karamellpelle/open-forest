@@ -2,6 +2,7 @@
 # TODO
 
 
+* KeyOr/KeyAnd/KeyNot: 
 * find suitable values for Control alure::Source
 * let forest::World contain pointers to objects (Runners, Controls, etc.).
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
@@ -12,7 +13,7 @@
 * review the GL::xxxBegin()/End() functions in GL.cpp. remove as much as possible.
 * OGRE/AL enabled() necessary ??
 * fix OGRE data: static vs dynamic. 
-* custom TB-widgets have empty constructors since all TB-widgets should be possible.
+* custom TB-widgets have empty constructors since all TB-widgets should be possible to 
   to read from .tb.txt file's (TBWidgetFactory).
   - TBMain
   - TBConsole?
@@ -34,7 +35,6 @@
 * remove _emptylist_ - the bugfix for a compiler I had to use in a build.
 * better memory handling! use `shared_ptr`'s more.
 
-* OpenGL 3+, premultiplied colors by default
 * stb_image as individual CMake library (we are currently using the one from nanovg..) but Turbobadger (and maybe
   open-forest too) needs stb_image.
 * define invariants (OpenGL, ...)

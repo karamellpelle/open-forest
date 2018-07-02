@@ -77,7 +77,7 @@ void WorldDrawer::init(World* forest)
 
 }
 
-void WorldDrawer::draw(Ogre::RenderTarget* ogre_rendertarget)
+void WorldDrawer::draw3D(Ogre::RenderTarget* ogre_rendertarget)
 {
     if ( ogre_rendertarget == nullptr )
     {

@@ -15,10 +15,11 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
+#include "BATB/Forest/MapViewer.hpp"
 #include "BATB/Forest.hpp"
-#include "BATB/Forest/MapDrawer2D.hpp"
 #include "BATB/Forest/World.hpp"
 #include "BATB/Forest/Terrain.hpp"
+#include "BATB/Scene.hpp"
 
 
 namespace batb
@@ -27,74 +28,101 @@ namespace batb
 namespace forest
 {
 
-
-MapDrawer2D::MapDrawer2D() 
+MapViewer::MapViewer() 
 {
 
 }
 
-void MapDrawer2D::mapscale(uint one, uint many)
+void MapViewer::mapscale(uint one, uint many)
 {
     scale_  = (double)( one ) / (double)( many );
     scale_inv_ = (double)( many ) / (double)( one );
 }
 
-void MapDrawer2D::setPosition(double x, double y)
+void MapViewer::setPosition(double x, double z, tick_t ticks)
 {
     p0_ = x;
-    p1_ = y;
+    p1_ = z;
 }
 
-void MapDrawer2D::setDirection(double x, double y)
+void MapViewer::setDirection(double x, double z, tick_t ticks)
 {
-    auto mm = x * x + y * y;
+    auto mm = x * x + z * z;
     auto ku = mm == 0 ? 1.0 : 1.0 / sqrt( mm );
     u0_ = ku * x;
-    u1_ = ku * y;
+    u1_ = ku * z;
     v0_ = -u1_;
     v1_ = u0_;
 }
 
-void MapDrawer2D::lookAt(double x, double y)
+void MapViewer::lookAt(double x, double z, tick_t ticks)
 {
 
-    setDirection( x - p0_ , y - p1_ );
+    setDirection( x - p0_ , z - p1_ );
 
 }
 
 
-void MapDrawer2D::setRotation(double rad)
+void MapViewer::setRotation(double rad, tick_t ticks)
 {
     double ux, uy;
     cossin( rad, ux, uy );
     setDirection( ux, uy );
 }
 
-void MapDrawer2D::setZoom(double z)
+void MapViewer::setZoom(double a, tick_t ticks)
 {
-    zoom_ = z;
-    zoom_inv_ = (1.0) / z;
+    zoom_ = a;
+    zoom_inv_ = (1.0) / a;
 }
 
-void MapDrawer2D::useMap(Map* m)
-{
-    map = m; 
-}
+//void MapViewer::useMap(Map* m)
+//{
+//    map = m; 
+//}
+// we want to work on the FBO target with meter coordinates to make the 
+// map as real as possible.
+//
 
-void MapDrawer2D::draw(NVGcontext* nvg, const Draw& draw)
+//void MapViewer::init(World* forest)
+//{
+//    // since we work directly with references to World, we can't initialize again.
+//    if ( forest_ ) throw std::runtime_error( "init() non-empty MapViewer" );
+//
+//
+//    // always work on this World
+//    forest_ = forest;
+//
+//    
+//}
+
+void MapViewer::draw2D(BATB* batb, const Scene& scene)
 {
+    ////////////////////////////////////////////////////////////////
+    // this draws in 2D
+
+    auto nvg = batb->gl->nanovgBegin( scene );
+    nvgSave( nvg );
+
+    // define size of NanoVG context, in pixels and meters
+    // we need to work with pixel since NanoVG has problem with 
+    // non-pixel coordinates, especially fonts
+
+    // set origo in the middle 
+    nvgTranslate( nvg, 0.5 * scene.wth_px, 0.5 * scene.hth_px );
+
     // meter context -> pixel of context
-    double from_m = draw.wth / draw.wth_m;
+    double from_m = scene.wth_px / scene.wth_m;
 
-    Map::Draw2D draw2d;
+    Draw2D draw2d;
     draw2d.from_m = from_m * zoom_;
     draw2d.to_m = scale_;
     draw2d.to_pixel = draw2d.from_m * draw2d.to_m;
 
     // the context defines a world region of this size
     // also make sure we take care of zooming
-    double world_wth = draw.wth_m * scale_inv_ * zoom_inv_;
-    double world_hth = draw.hth_m * scale_inv_ * zoom_inv_;
+    double world_wth = scene.wth_m * scale_inv_ * zoom_inv_;
+    double world_hth = scene.hth_m * scale_inv_ * zoom_inv_;
 
     // find bounding box (world coordinates)
     // FIXME: verify correctness
@@ -134,18 +162,40 @@ void MapDrawer2D::draw(NVGcontext* nvg, const Draw& draw)
     nvgLineTo( nvg,  0.0 ,  100 ); 
     nvgStroke( nvg );
 #endif
+
+    ////////////////////////////////////////////////////////////////
+    //
    
+    // begin 2D drawing
     nvgSave( nvg );
-    beginMapDraw( nvg, draw2d );
+    beginDraw2D( nvg, draw2d );
     nvgRestore( nvg );
 
+    // do 2D drawing
+    //nvgSave( nvg );
+    //if ( map ) map->draw2D( nvg, draw2d );
+    //nvgRestore( nvg );
+
+    // end 2D drawing
     nvgSave( nvg );
-    if ( map ) map->draw2D( nvg, draw2d );
+    endDraw2D( nvg, draw2d );
     nvgRestore( nvg );
 
-    nvgSave( nvg );
-    endMapDraw( nvg, draw2d );
+
+
     nvgRestore( nvg );
+    batb->gl->nanovgEnd(); 
+}
+
+
+void MapViewer::step(tick_t tick)
+{
+    // make sure we can handle very fast framerate (tick == tick_)
+    if ( tick_ < tick )
+    {
+
+        tick_ = tick;
+    }
 }
 
 

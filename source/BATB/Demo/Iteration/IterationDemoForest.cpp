@@ -167,7 +167,7 @@ void IterationDemoForest::output(World& demo)
 
     // draw forest::World 
     batb->ogre->sceneBegin( scene );
-    demo.forest_drawer.draw( batb->ogre->ogre_renderwindow  );
+    demo.forest_drawer.draw3D( batb->ogre->ogre_renderwindow  );
     batb->ogre->sceneEnd();
 
     // AL (3D listener, effects, etc)
@@ -179,33 +179,15 @@ void IterationDemoForest::output(World& demo)
     // 2D
 
     // draw map as overlay on Scene 
-    //
+
     // we want to work on the FBO target with meter coordinates to make the 
     // map as real as possible.
     //
-    auto nvg = batb->gl->nanovgBegin( scene );
 
-    nvgSave( nvg );
+    demo.map_viewer.mapscale( 1, 10000 );
+    //demo.map_drawer.useMap( nullptr ); 
 
-    // define size of NanoVG context, in pixels and meters
-    DemoMapDrawer::Draw draw;
-    draw.wth   = scene.wth_px;
-    draw.hth   = scene.hth_px;
-    draw.wth_m = scene.wth_m;
-    draw.hth_m = scene.hth_m;
-    
-    // set origo in the middle 
-    nvgTranslate( nvg, 0.5 * scene.wth_px, 0.5 * scene.hth_px );
-
-    //demo.map_drawer.setZoom(2.5);
-    demo.map_drawer.mapscale( 1, 10000 );
-    demo.map_drawer.useMap( nullptr ); 
-    demo.map_drawer.draw( nvg, draw );
-
-    nvgRestore( nvg );
-    
-    batb->gl->nanovgEnd(); 
-
+    demo.map_viewer.draw2D( batb, scene );
 
 
     // background/foreground sound (music, etc.)
@@ -312,6 +294,12 @@ IterationStack IterationDemoForest::step(World& demo)
 // 
 void IterationDemoForest::stepKeysControllers(demo::World& demo, BATB* batb)
 {
+    // handle map movement
+    demo.mapviewer_keyscontroller.step( batb );
+
+    // make sure we don't aim below if we drag the map
+    demo.aim_keyscontroller.setRotationLock( demo.mapviewer_keyscontroller.isDragging() );
+
     // use Keys to control aiming in forest::World, typically camera
     demo.aim_keyscontroller.step( batb );
 

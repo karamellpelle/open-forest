@@ -15,87 +15,109 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#ifndef BATB_FOREST_MAPDRAWER2D_HPP
-#define BATB_FOREST_MAPDRAWER2D_HPP
+#ifndef BATB_FOREST_MAPVIEWER_HPP
+#define BATB_FOREST_MAPVIEWER_HPP
+#include "BATB/Forest.hpp"
 #include "BATB/GL.hpp"
-#include "BATB/Forest/Map.hpp"
+
 
 
 namespace batb
 {
+class BATB;
+class Scene;
+
 namespace forest
 {
-
 class World;
-class Map;
+class MapDrawer2D;
 
 
-// draw a Map to a 2D NanoVG context
-// Map is in world coordinates, NanoVG context in pixel coordinates
-class MapDrawer2D
+
+
+
+class MapViewer 
 {
 public:
-    MapDrawer2D();
-   
-    // use this map
-    void useMap(Map* );
+    MapViewer();
+
+    // connect to world
+    //void init(World* );
+
+    void step(tick_t );
+    void draw2D(BATB* , const Scene& );
+
+    ////////////////////////////////////////////////////////////////
+    //
+    //// use this map
+    //void useMap(Map* );
     // mapscale alá orienteering map
     void mapscale(uint one, uint many); // map_drawer.mapscale( 1, 15000 );
 
-   
     ////////////////////////////////////////////////////////////////
     // view map based by World coordinates. 
     // world coordinates makes it easy to switch Map's on the fly
     // TODO: use decltype of world coordinates
-
     // view draw map from this point
-    void setPosition(double x, double z);
+    void setPosition(double x, double z, tick_t = 0.0);
     // look direction, i.e. upwards
-    void setDirection(double u0, double u1);
-    void lookAt(double x, double y);
-    void setRotation(double ); 
+    void setDirection(double u0, double u1, tick_t = 0.0);
+    void lookAt(double x, double y, tick_t = 0.0);
+    void setRotation(double , tick_t = 0.0); 
 
     // working on context
-    void setZoom(double ); // 1.0 is mapscale
+    void setZoom(double , tick_t = 0.0); // 1.0 is mapscale
 
+    // view draw map from this point
+
+
+    ////////////////////////////////////////////////////////////////
     // we need to work with pixel since NanoVG has problem with 
     // non-pixel coordinates, especially fonts
-    class Draw
+    class Draw2D
     {
     public:
-        double wth   = 0.0; // width of nanovg target, in pixels
-        double hth   = 0.0; // height of nanovg target, in pixels
-        double wth_m = 0.0; // width of nanovg target, in meters
-        double hth_m = 0.0; // height of nanovg target, in meters
+        // scaling: world -> context
+        //double scale = 1.0;
+        //double scale_inv = 1.0;
 
+        // bounding box, world coordinates
+        double x = 0.0;
+        double z = 0.0;
+        double w = 1.0;
+        double h = 1.0;
+    
+        // world coordinates scaled down (i.e. mapscale)
+        double to_m = 1.0;
+        // mapscale to NanoVG coordinates
+        double from_m = 1.0;
+        // world coordinates to NanoVG coordinates (NanoVG fonts needs pixels)
+        double to_pixel = from_m * to_m;
     };
 
-    // draw to given nanovg context. 
-    void draw(NVGcontext* nvg, const Draw& );
-
 protected:
+    virtual void beginDraw2D(NVGcontext* , const Draw2D& ) {}
+    virtual void endDraw2D(NVGcontext* , const Draw2D& )   {}
+
+
+private:
     double p0_ = 0.0;
     double p1_ = 0.0;
     double u0_ = 1.0;
     double u1_ = 0.0;
     double v0_ = 0.0;
     double v1_ = 1.0;
-   
 
-    virtual void beginMapDraw(NVGcontext* , const Map::Draw2D& ) {}
-    virtual void endMapDraw(NVGcontext* , const Map::Draw2D& )   {}
+    tick_t tick_ = 0.0;
 
     double scale_     = 1.0;
     double scale_inv_ = 1.0;
 
-
-    Map* map         = nullptr;
     double zoom_     = 1.0;
     double zoom_inv_ = 1.0;
 
+
 };
-
-
 
 
 } // namespace forest
@@ -103,5 +125,5 @@ protected:
 } // namespace batb
 
 
-
 #endif
+

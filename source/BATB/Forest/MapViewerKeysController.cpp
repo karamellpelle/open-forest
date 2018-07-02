@@ -1,4 +1,4 @@
-//    open-demo: an orientering game.
+//    open-forest: an orientering game.
 //    Copyright (C) 2018  karamellpelle@hotmail.com
 //
 //    This program is free software; you can redistribute it and/or modify
@@ -15,59 +15,54 @@
 //    with this program; if not, write to the Free Software Foundation, Inc.,
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-#include "BATB/Demo/World.hpp"
-#include "BATB/Demo/LoadWorld.hpp"
+#include "BATB/Forest/MapViewerKeysController.hpp"
 #include "BATB/Forest/World.hpp"
-#include "BATB/Forest/LoadWorld.hpp"
-#include "BATB/Run/World.hpp"
-
+#include "BATB/Time.hpp"
 
 
 namespace batb
 {
-namespace demo
+
+namespace forest
 {
 
-LoadWorld::LoadWorld(BATB* b)
+MapViewerKeysController::MapViewerKeysController() 
 {
-    batb = b;
-}
-
-
-
-void LoadWorld::load(const YAML::Node& yaml, World* demo)
-{
-    auto* forest = demo->forest.get();
-
-    // load subworld first
-    forest::LoadWorld( batb ).load( yaml[ "forest" ], forest );
-
-    // make sure stuff are connected
-
-    // connect WorldDrawer 
-    demo->forest_drawer.init( forest );
-    // connect Course
-    demo->course.init( forest );
-    // connect Sound
-    demo->sound.alure_listener = batb->al->alure_listener;
-    demo->sound.init( forest );
-    // connect MapDrawer
-    demo->map_viewer.init( demo );
-
 
 }
 
-
-void LoadWorld::unload(World& demo)
+void MapViewerKeysController::init(World* forest)
 {
-    batb->log << "FIXME: unload demo::World!" << std::endl;
+    // since we work directly with references to World, we can't initialize again.
+    if ( forest_ ) throw std::runtime_error( "init() non-empty MapViewerKeysController" );
+
+
+    // always work on this World
+    forest_ = forest;
+
+    
+}
+
+void MapViewerKeysController::step(BATB* batb)
+{
+    // make sure we can handle very fast framerate (tick == tick_)
+    auto tick = batb->time->get();
+    while ( tick_ < tick )
+    {
+
+        tick_ = tick;
+    }
+}
+
+bool MapViewerKeysController::isDragging()
+{
+
 }
 
 
-
-
-
-} // namespace demo
+} // namespace forest
 
 } // namespace batb
+
+
 

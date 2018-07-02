@@ -18,10 +18,11 @@
 #ifndef BATB_DEMO_WORLD_HPP
 #define BATB_DEMO_WORLD_HPP
 #include "BATB/Demo/Course.hpp"
-#include "BATB/Demo/DemoMapDrawer.hpp"
+#include "BATB/Demo/DemoMapViewer.hpp"
 #include "BATB/Forest/WorldDrawer.hpp"
 #include "BATB/Forest/StepDT.hpp"
 #include "BATB/Forest/AimKeysController.hpp"
+#include "BATB/Forest/MapViewerKeysController.hpp"
 #include "BATB/Forest/Sound.hpp"
 
 
@@ -55,12 +56,12 @@ public:
     // sound state
     forest::Sound sound;
     // drawing state: 2D map
-    demo::DemoMapDrawer map_drawer;
+    demo::DemoMapViewer map_viewer;
 
 
     // controllers
     forest::AimKeysController     aim_keyscontroller;
-    //forest::MapViewKeysController map_keyscontroller;
+    forest::MapViewerKeysController mapviewer_keyscontroller;
 
     // working with Runner
     forest::Runner* runner = nullptr;

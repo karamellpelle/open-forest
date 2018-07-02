@@ -21,7 +21,7 @@
 #include "BATB/Value/Forest.hpp"
 #include "BATB/Run/World.hpp"
 
-#define KEEP_CAMERA_ABOVE_GROUND
+
 
 namespace batb
 {

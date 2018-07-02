@@ -38,14 +38,19 @@ public:
 
     void reset();
 
-    keys::KeyClicker* forward  = nullptr;
-    keys::KeyClicker* backward = nullptr;
-    keys::KeyClicker* left     = nullptr;
-    keys::KeyClicker* right    = nullptr;
-    keys::KeyPointer* aim      = nullptr;
+    keys::KeyClicker* forward       = nullptr;
+    keys::KeyClicker* backward      = nullptr;
+    keys::KeyClicker* left          = nullptr;
+    keys::KeyClicker* right         = nullptr;
+    keys::KeyPointer* aim           = nullptr;
 
-    keys::KeyClicker* tmp0     = nullptr;
-    keys::KeyClicker* tmp1     = nullptr;
+    keys::KeyClicker* mapview       = nullptr;
+    keys::KeyClicker* mapview_plus  = nullptr;
+    keys::KeyClicker* mapview_shift = nullptr;
+    keys::Key* mapview_rotate       = nullptr;
+
+    keys::KeyClicker* tmp0          = nullptr;
+    keys::KeyClicker* tmp1          = nullptr;
 };
 
 } // namespace forest
