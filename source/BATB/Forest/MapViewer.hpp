@@ -59,10 +59,10 @@ public:
     // world coordinates makes it easy to switch Map's on the fly
     // TODO: use decltype of world coordinates
     // view draw map from this point
-    void setPosition(double x, double z, tick_t = 0.0);
+    void setPosition(const glm::vec3& , tick_t = 0.0);
     // look direction, i.e. upwards
-    void setDirection(double u0, double u1, tick_t = 0.0);
-    void lookAt(double x, double y, tick_t = 0.0);
+    void setDirection(const glm::vec3& , tick_t = 0.0);
+    void lookAt(const glm::vec3& , tick_t = 0.0);
     void setRotation(double , tick_t = 0.0); 
 
     // working on context
@@ -101,12 +101,9 @@ protected:
 
 
 private:
-    double p0_ = 0.0;
-    double p1_ = 0.0;
-    double u0_ = 1.0;
-    double u1_ = 0.0;
-    double v0_ = 0.0;
-    double v1_ = 1.0;
+    glm::vec3 p0_;
+    glm::vec3 u0_;
+    glm::vec3 v0_;
 
     tick_t tick_ = 0.0;
 

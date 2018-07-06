@@ -47,6 +47,7 @@ public:
     keys::KeyClicker* mapview       = nullptr;
     keys::KeyClicker* mapview_plus  = nullptr;
     keys::KeyClicker* mapview_shift = nullptr;
+    keys::KeyClicker* mapview_ctrl  = nullptr;
     keys::Key* mapview_rotate       = nullptr;
 
     keys::KeyClicker* tmp0          = nullptr;

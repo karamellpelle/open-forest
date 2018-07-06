@@ -45,18 +45,34 @@ void MapViewerKeysController::init(World* forest)
 
 void MapViewerKeysController::step(BATB* batb)
 {
+#if 0
     // make sure we can handle very fast framerate (tick == tick_)
+    auto* keys = batb->forest->keys;
+    bool pressed = keys->mapview->pressed()         ||
+                   keys->mapview_plus->pressed()    ||
+                   keys->mapview_rotate->pressed()  ||
+                   keys->mapview_ctrl->pressed();
+    // if there is a change of Key press, restart with current values
+    if ( pressed )
+    {
+        // save current Keys state
+        world_rot0_ = 
+
+    }
+
+    // physics step dt
     auto tick = batb->time->get();
-    while ( tick_ < tick )
+    if ( tick_ < tick )
     {
 
         tick_ = tick;
     }
+#endif
 }
 
 bool MapViewerKeysController::isDragging()
 {
-
+    return false;
 }
 
 

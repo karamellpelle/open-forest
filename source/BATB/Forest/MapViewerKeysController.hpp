@@ -51,6 +51,13 @@ private:
 
     tick_t tick_ = 0.0;
 
+    float_t pointer_x0_ = 0.0;
+    float_t pointer_y0_ = 0.0;
+
+    glm::vec3 world_p0_;
+    float_t world_rot0_ = 0.0;
+
+    float_t transparency0_ = 1.0;
 
 };
 
