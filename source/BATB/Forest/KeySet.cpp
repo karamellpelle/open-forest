@@ -64,6 +64,13 @@ void KeySet::load(const YAML::Node& yaml)
                             );
     batb->log->endl();
 
+    mapview       = create<KeyClicker>( createSafeKey( yaml > "mapview" ) ); 
+    mapview_plus  = create<KeyClicker>( createSafeKey( yaml > "mapview-plus" ) );  
+    mapview_shift = create<KeyClicker>( createSafeKey( yaml > "mapview-shift" ) );  
+    mapview_ctrl  = create<KeyClicker>( createSafeKey( yaml > "mapview-ctrl" ) );  
+
+    ///mapview_rotate       = nullptr; // FIXME
+
     ////////////////////////////////////////////////////////////////
 
     tmp0 = create<KeyClicker>( create<KeyKeyboardButton>( GLFW_KEY_V ) );

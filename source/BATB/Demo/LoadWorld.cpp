@@ -53,6 +53,7 @@ void LoadWorld::load(const YAML::Node& yaml, World* demo)
     demo->sound.init( forest );
     // connect MapDrawer
     demo->map_viewer.init( demo );
+    demo->map_viewer_keyscontroller.connect( &demo->map_viewer );
 
 
 }

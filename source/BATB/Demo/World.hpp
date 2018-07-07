@@ -61,7 +61,7 @@ public:
 
     // controllers
     forest::AimKeysController     aim_keyscontroller;
-    forest::MapViewerKeysController mapviewer_keyscontroller;
+    forest::MapViewerKeysController map_viewer_keyscontroller;
 
     // working with Runner
     forest::Runner* runner = nullptr;

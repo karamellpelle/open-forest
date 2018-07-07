@@ -53,7 +53,7 @@ private:
     void output(World& );
     IterationStack step(World& );
 
-    void stepKeysControllers(demo::World& , BATB* );
+    void stepControllers(demo::World& , BATB* );
     void createRandomCourse(demo::World& );
     void modifyRunnerDemo(demo::World& );
 

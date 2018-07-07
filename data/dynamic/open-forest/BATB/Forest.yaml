@@ -23,5 +23,7 @@ KeySet:
         KeyKeyboardButton: { code: K }
     mapview-shift:
         KeyKeyboardButton: { code: SHIFT }
+    mapview-ctrl:
+        KeyKeyboardButton: { code: CTRL }
     mapview-rotate:
         KeyMouseScroll: { axis: Y, sensitivity: 2.5 }

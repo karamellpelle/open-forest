@@ -28,7 +28,7 @@ class BATB;
 namespace forest
 {
 class World;
-class MapViewer2D;
+class MapViewer;
 
 
 
@@ -40,22 +40,25 @@ public:
     MapViewerKeysController();
 
     // connect to world
-    void init(World* );
+    void connect(MapViewer* );
 
     void step(BATB* );
 
-    bool isDragging();
+    bool isActive() const;
+    bool isDragging() const;
 
 private:
-    World* forest_ = nullptr;
+    MapViewer* mapviewer_ = nullptr;
 
     tick_t tick_ = 0.0;
 
     float_t pointer_x0_ = 0.0;
     float_t pointer_y0_ = 0.0;
+    bool active_ = false;
+    bool dragging_ = false;
 
-    glm::vec3 world_p0_;
-    float_t world_rot0_ = 0.0;
+    glm::vec3 p0_;
+    float_t rotate0_ = 0.0;
 
     float_t transparency0_ = 1.0;
 

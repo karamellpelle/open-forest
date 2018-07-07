@@ -65,8 +65,13 @@ public:
     void lookAt(const glm::vec3& , tick_t = 0.0);
     void setRotation(double , tick_t = 0.0); 
 
+    glm::vec3 getPosition() const;
+    glm::vec3 getDirection() const;
+    double getRotation() const; 
+
     // working on context
     void setZoom(double , tick_t = 0.0); // 1.0 is mapscale
+    double getZoom() const; // 1.0 is mapscale
 
     // view draw map from this point
 
@@ -104,6 +109,7 @@ private:
     glm::vec3 p0_;
     glm::vec3 u0_;
     glm::vec3 v0_;
+    double rotate0_ = 0.0;
 
     tick_t tick_ = 0.0;
 

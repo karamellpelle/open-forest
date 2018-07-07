@@ -82,6 +82,21 @@ void MapViewer::setZoom(double a, tick_t ticks)
     zoom_inv_ = (1.0) / a;
 }
 
+
+glm::vec3 MapViewer::getPosition() const
+{
+    return p0_;
+}
+
+glm::vec3 MapViewer::getDirection() const
+{
+    return u0_;
+}
+double MapViewer::getRotation() const
+{
+    return rotate0_;
+}
+
 //void MapViewer::useMap(Map* m)
 //{
 //    map = m; 

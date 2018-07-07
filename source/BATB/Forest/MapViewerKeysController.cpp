@@ -16,6 +16,7 @@
 //    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 #include "BATB/Forest/MapViewerKeysController.hpp"
+#include "BATB/Forest/MapViewer.hpp"
 #include "BATB/Forest/World.hpp"
 #include "BATB/Time.hpp"
 
@@ -31,34 +32,55 @@ MapViewerKeysController::MapViewerKeysController()
 
 }
 
-void MapViewerKeysController::init(World* forest)
+void MapViewerKeysController::connect(MapViewer* mv)
 {
-    // since we work directly with references to World, we can't initialize again.
-    if ( forest_ ) throw std::runtime_error( "init() non-empty MapViewerKeysController" );
-
-
     // always work on this World
-    forest_ = forest;
+    mapviewer_ = mv;
 
     
 }
 
 void MapViewerKeysController::step(BATB* batb)
 {
-#if 0
     // make sure we can handle very fast framerate (tick == tick_)
-    auto* keys = batb->forest->keys;
+    auto& keys = batb->forest->keys;
     bool pressed = keys->mapview->pressed()         ||
                    keys->mapview_plus->pressed()    ||
-                   keys->mapview_rotate->pressed()  ||
+                   keys->mapview_shift->pressed()  ||
                    keys->mapview_ctrl->pressed();
     // if there is a change of Key press, restart with current values
     if ( pressed )
     {
         // save current Keys state
-        world_rot0_ = 
+        p0_ = mapviewer_->getPosition();
+        rotate0_ = mapviewer_->getRotation();
 
+        keys->aim->axis( pointer_x0_, pointer_y0_ );
     }
+
+    if ( keys->mapview->press() )
+    {
+        // retrieve current ponter position
+        float_t pointer_x1, pointer_y1;
+        keys->aim->axis( pointer_x1, pointer_y1 );
+
+        if ( keys->mapview_plus->press() )
+        {
+            float_t delta_x = -10000.0 * (pointer_x1 - pointer_x0_);
+            float_t delta_z = -10000.0 * (pointer_y1 - pointer_y0_);
+
+            glm::vec3 position = p0_ + glm::vec3( delta_x, 0.0, delta_z );
+            mapviewer_->setPosition( position );
+        }
+
+        active_ = true;
+    }
+    else
+    {
+        active_ = false;
+    }
+
+    dragging_ = keys->mapview->press() && keys->mapview_plus->press();
 
     // physics step dt
     auto tick = batb->time->get();
@@ -67,12 +89,16 @@ void MapViewerKeysController::step(BATB* batb)
 
         tick_ = tick;
     }
-#endif
 }
 
-bool MapViewerKeysController::isDragging()
+bool MapViewerKeysController::isDragging() const
 {
-    return false;
+    return dragging_;
+}
+
+bool MapViewerKeysController::isActive() const
+{
+    return active_;
 }
 
 

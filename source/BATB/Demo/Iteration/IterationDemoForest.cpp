@@ -200,14 +200,12 @@ IterationStack IterationDemoForest::step(World& demo)
 {
     auto& forest = *demo.forest;
     auto tick = demo.tick;
+
     ////////////////////////////////////////////////////////////////////////////////
     // control objects
 
-    // "AI" for demo
-    modifyRunnerDemo( demo );
-
     // key controllers
-    stepKeysControllers( demo, batb );
+    stepControllers( demo, batb );
 
     ////////////////////////////////////////////////////////////////////////////////
     // step physics (adds events)
@@ -292,13 +290,16 @@ IterationStack IterationDemoForest::step(World& demo)
 
 
 // 
-void IterationDemoForest::stepKeysControllers(demo::World& demo, BATB* batb)
+void IterationDemoForest::stepControllers(demo::World& demo, BATB* batb)
 {
+    // "AI" for demo
+    modifyRunnerDemo( demo );
+
     // handle map movement
-    demo.mapviewer_keyscontroller.step( batb );
+    demo.map_viewer_keyscontroller.step( batb );
 
     // make sure we don't aim below if we drag the map
-    demo.aim_keyscontroller.setRotationLock( demo.mapviewer_keyscontroller.isDragging() );
+    demo.aim_keyscontroller.setRotationLock( demo.map_viewer_keyscontroller.isDragging() );
 
     // use Keys to control aiming in forest::World, typically camera
     demo.aim_keyscontroller.step( batb );
