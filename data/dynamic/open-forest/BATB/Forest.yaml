@@ -18,12 +18,12 @@ KeySet:
           right:
             KeyMouseButton: { code: T }
     mapview:
-        KeyKeyboardButton: { code: L }
+        KeyMouseButton: { code: RIGHT }
     mapview-plus:
-        KeyKeyboardButton: { code: K }
+        KeyMouseButton: { code: LEFT }
     mapview-shift:
-        KeyKeyboardButton: { code: SHIFT }
+        KeyKeyboardButton: { code: LEFT_SHIFT }
     mapview-ctrl:
-        KeyKeyboardButton: { code: CTRL }
+        KeyKeyboardButton: { code: LEFT_CONTROL }
     mapview-rotate:
         KeyMouseScroll: { axis: Y, sensitivity: 2.5 }

@@ -59,8 +59,8 @@ private:
 
     glm::vec3 p0_;
     float_t rotate0_ = 0.0;
-
-    float_t transparency0_ = 1.0;
+    float_t zoom0_ = 1.0;
+    float_t opacity0_ = 1.0;
 
 };
 

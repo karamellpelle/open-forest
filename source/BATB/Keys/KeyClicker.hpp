@@ -79,6 +79,7 @@ public:
         }
         return press();
     }
+    bool changed() { return pressed_ || released_; }
 
 
 private:

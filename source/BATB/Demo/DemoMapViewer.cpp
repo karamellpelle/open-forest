@@ -93,7 +93,8 @@ void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
 
     nvgStrokeWidth( nvg, from_mm15000( 0.5 ) );
     nvgLineCap(nvg, NVG_ROUND );
-    nvgStrokeColor(nvg, nvgRGBA(0,192,255,128));
+    nvgStrokeColor(nvg, nvgRGBA(0,192,255, draw.opacity * 255.0));
+
 
     const auto& points = trace.points;
     if ( !points.empty() )
@@ -117,8 +118,8 @@ void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
     }
 
     // draw current position
-    nvgStrokeColor(nvg, nvgRGBA(255,0,0,255));
-    nvgFillColor(nvg, nvgRGBA(255,0,0,255));
+    nvgStrokeColor(nvg, nvgRGBA(255,0,0,draw.opacity*255));
+    nvgFillColor(nvg, nvgRGBA(255,0,0,draw.opacity*255));
     nvgBeginPath( nvg );
     nvgArc( nvg, to_pixel( pos.x ), to_pixel( pos.z ), from_mm15000( 0.5 ), 0, twopi, NVG_CCW );
     nvgFill( nvg );
@@ -127,6 +128,11 @@ void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
     // draw course
 #endif
 #if 1
+float_t coursedrawerColorR       = 0.51;
+float_t coursedrawerColorG       = 0.04;
+float_t coursedrawerColorB       = 0.35;
+float_t coursedrawerColorA       = 0.6;
+
     if ( 2 <= course.size() )
     {
         CourseDrawer drawer;

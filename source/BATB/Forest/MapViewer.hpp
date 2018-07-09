@@ -60,6 +60,7 @@ public:
     // TODO: use decltype of world coordinates
     // view draw map from this point
     void setPosition(const glm::vec3& , tick_t = 0.0);
+    void setPositionScaleInv(const glm::vec3& , tick_t = 0.0);
     // look direction, i.e. upwards
     void setDirection(const glm::vec3& , tick_t = 0.0);
     void lookAt(const glm::vec3& , tick_t = 0.0);
@@ -73,8 +74,8 @@ public:
     void setZoom(double , tick_t = 0.0); // 1.0 is mapscale
     double getZoom() const; // 1.0 is mapscale
 
-    // view draw map from this point
-
+    void setOpacity(double );
+    double getOpacity() const;
 
     ////////////////////////////////////////////////////////////////
     // we need to work with pixel since NanoVG has problem with 
@@ -98,6 +99,8 @@ public:
         double from_m = 1.0;
         // world coordinates to NanoVG coordinates (NanoVG fonts needs pixels)
         double to_pixel = from_m * to_m;
+
+        double opacity = 1.0;
     };
 
 protected:
@@ -110,6 +113,7 @@ private:
     glm::vec3 u0_;
     glm::vec3 v0_;
     double rotate0_ = 0.0;
+    double opacity0_ = 1.0;
 
     tick_t tick_ = 0.0;
 

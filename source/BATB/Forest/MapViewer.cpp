@@ -58,6 +58,8 @@ void MapViewer::setDirection(const glm::vec3& d, tick_t ticks)
     u0_.z = ku * d.z;
     v0_.x = -u0_.z;
     v0_.z = u0_.x;
+
+    //rotate0_ = std::atan2( u0_.x, -u0_.y );
 }
 
 void MapViewer::lookAt(const glm::vec3& p, tick_t ticks)
@@ -71,6 +73,8 @@ void MapViewer::lookAt(const glm::vec3& p, tick_t ticks)
 
 void MapViewer::setRotation(double rad, tick_t ticks)
 {
+    rad = std::fmod( rad, twopi );
+
     double ux, uz;
     cossin( rad, ux, uz );
     setDirection( glm::vec3( ux, 0.0, uz ) );
@@ -80,6 +84,16 @@ void MapViewer::setZoom(double a, tick_t ticks)
 {
     zoom_ = a;
     zoom_inv_ = (1.0) / a;
+}
+
+void MapViewer::setOpacity(double a)
+{
+    opacity0_ = clamp( a, 0.0, 1.0 );
+}
+
+double MapViewer::getZoom() const
+{
+    return zoom_;
 }
 
 
@@ -95,6 +109,10 @@ glm::vec3 MapViewer::getDirection() const
 double MapViewer::getRotation() const
 {
     return rotate0_;
+}
+double MapViewer::getOpacity() const
+{
+    return opacity0_;
 }
 
 //void MapViewer::useMap(Map* m)
@@ -139,6 +157,7 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     draw2d.from_m = from_m * zoom_;
     draw2d.to_m = scale_;
     draw2d.to_pixel = draw2d.from_m * draw2d.to_m;
+    draw2d.opacity = opacity0_;
 
     // the context defines a world region of this size
     // also make sure we take care of zooming
@@ -147,14 +166,6 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
 
     // find bounding box (world coordinates)
     // FIXME: verify correctness
-    //double a0 = world_hth * u0_;
-    //double a1 = world_hth * u1_;
-    //double b0 = world_wth * v0_;
-    //double b1 = world_wth * v1_;
-    //double min_x = std::min( a0 , b0 );
-    //double max_x = std::max( a0 , b0 );
-    //double min_z = std::min( a1 , b1 );
-    //double max_z = std::max( a1 , b1 );
     double a0 = world_hth * u0_.x;
     double a1 = world_hth * u0_.z;
     double b0 = world_wth * v0_.x;
@@ -173,7 +184,8 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     // translate and rotate (world is scaled down to pixel level)
     auto p0 = draw2d.to_pixel * p0_.x;
     auto p1 = draw2d.to_pixel * p0_.z;
-    nvgTransform( nvg, v0_.x, -u0_.x, v0_.z, -u0_.z, -p0, -p1 );
+    nvgTransform( nvg, u0_.x, u0_.z, v0_.x, v0_.z, 0.0, 0.0 );
+    nvgTranslate( nvg, -p0, -p1 );
 
 // debug: draw axis
 #if 0

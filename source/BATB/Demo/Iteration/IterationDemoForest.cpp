@@ -184,10 +184,13 @@ void IterationDemoForest::output(World& demo)
     // map as real as possible.
     //
 
-    demo.map_viewer.mapscale( 1, 10000 );
-    //demo.map_drawer.useMap( nullptr ); 
+    if ( demo.map_viewer_keyscontroller.isActive() )
+    {
+        demo.map_viewer.mapscale( 1, 10000 );
+        //demo.map_drawer.useMap( nullptr ); 
 
-    demo.map_viewer.draw2D( batb, scene );
+        demo.map_viewer.draw2D( batb, scene );
+    }
 
 
     // background/foreground sound (music, etc.)
