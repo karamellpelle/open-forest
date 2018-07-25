@@ -46,7 +46,7 @@ void DemoMapViewer::beginDraw2D(NVGcontext* nvg, const Draw2D& region)
 // target NanoVG coordinates is pixels
 void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
 {
-return;
+
     using namespace forest;
     
     auto from_m = [&](float_t m) { return (float_t)( draw.from_m * m ); };
@@ -163,25 +163,6 @@ float_t coursedrawerColorA       = 0.6;
         }
         drawer.end();
     }
-#endif
-#if 0
-        CourseDrawer drawer;
-        drawer.numbers( true );
-        // unit size in drawing (defined by radius of a Normal control), in world coordinates
-        drawer.size( 15 ); // FIXME: more customizable settings
-
-            
-            drawer.begin( nvg );
-            drawer.start( glm::vec2( 0.0, 0.0 ));
-            drawer.normal( glm::vec2( 75, 0.0 ));
-            drawer.start( glm::vec2( 150, 0.0 ));
-            drawer.end();
-
-            drawer.begin( nvg );
-            drawer.finish( glm::vec2( 0.0, 0.0 ));
-            drawer.normal( glm::vec2( 0.0, 75 ));
-            drawer.finish( glm::vec2( 0.0, 150 ));
-            drawer.end();
 #endif
 }
 

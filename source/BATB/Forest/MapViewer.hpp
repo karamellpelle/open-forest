@@ -55,7 +55,7 @@ public:
     // mapscale alá orienteering map
     void mapscale(uint one, uint many); // map_drawer.mapscale( 1, 15000 );
 
-    // position, in MapViewer coordinates 
+    // position, in MapViewer 2D coordinates
     // (which happes to be, at least for now, Shape coordinates)
     void setPosition(double x, double y, tick_t = 0.0);
     void getPosition(double& , double& ) const;
@@ -123,9 +123,9 @@ private:
 
 
     double p0x_ = 0.0;
-    double p0z_ = 0.0;
+    double p0y_ = 0.0;
     double p1x_ = 0.0;
-    double p1z_ = 0.0;
+    double p1y_ = 0.0;
     tick_t p_tick_ = 0.0;
 
     double rotate0_ = 0.0;

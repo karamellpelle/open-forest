@@ -114,8 +114,8 @@ void MapViewerKeysController::step(BATB* batb)
             //float_t delta_z = -20000.0 * pointer_y;
             //
             //glm::vec3 position = p0_ + glm::vec3( delta_x, 0.0, delta_z );
-            double x = p0x_ + (3.0) * pointer_x;
-            double z = p0z_ + (3.0) * pointer_y;
+            double x = p0x_ + (1.0) * pointer_x;
+            double z = p0z_ + (1.0) * pointer_y;
             mapviewer_->setPosition( x, z );
 
             goto mapview_finished;

@@ -42,7 +42,7 @@ void MapViewer::mapscale(uint one, uint many)
 void MapViewer::setPosition(double x, double y, tick_t ticks)
 {
     p0x_ = x;
-    p0z_ = y;
+    p0y_ = y;
 }
 
 
@@ -61,7 +61,7 @@ void MapViewer::setDirection(double x, double y, tick_t ticks)
 void MapViewer::lookAt(double x, double y, tick_t ticks)
 {
 
-    setDirection( x - p0x_, y - p0z_, ticks);
+    setDirection( x - p0x_, y - p0y_, ticks);
 
 }
 
@@ -86,7 +86,7 @@ void MapViewer::getZoom(double& z) const
 void MapViewer::getPosition(double& x, double& y) const
 {
     x = p0x_;
-    y = p0z_;
+    y = p0y_;
 }
 
 void MapViewer::getRotation(double& r) const
@@ -111,7 +111,7 @@ void MapViewer::setPositionWorld(const glm::vec3& p, tick_t ticks)
 void MapViewer::lookAtWorld(const glm::vec3& p, tick_t ticks)
 {
     
-    setDirection( p.x - p0x_, p.z - p0z_ );
+    setDirection( p.x - p0x_, p.z - p0y_ );
 
 }
 
@@ -154,7 +154,8 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     nvgArc( nvg, x_, y_, 20.0, 0, twopi, NVG_CCW );
     nvgFill( nvg );
 #endif
-#if 1
+#if 0
+    {
     float_t x,y;
     batb->forest->keys->aim->axis( x, y );
     auto to_pixel = [&](float_t m) { return m * std::max( scene.wth_px, scene.hth_px ); };
@@ -162,8 +163,10 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     nvgStrokeColor(nvg, nvgRGBA(0,255,255, 255));
     nvgFillColor(nvg, nvgRGBA(0,255,128,255));
     nvgBeginPath( nvg );
-    nvgArc( nvg, to_pixel( x ) + 40, to_pixel( y ), 15.0, 0, twopi, NVG_CCW );
+    //nvgArc( nvg, to_pixel( x ) + 40, to_pixel( y ), 15.0, 0, twopi, NVG_CCW );
+    nvgArc( nvg, to_pixel( p0x_ ) + 40, to_pixel( p0y_ ), 15.0, 0, twopi, NVG_CCW );
     nvgFill( nvg );
+    }
 #endif
 
     // meter context -> pixel of context
@@ -214,33 +217,28 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     //auto p1 = draw2d.to_pixel * p0_.z;
     //nvgTransform( nvg, u0_.x, u0_.z, v0_.x, v0_.z, 0.0, 0.0 );
     //nvgTranslate( nvg, -p0, -p1 );
+
+    auto px_x = (px ) * (double)( std::max( scene.wth_px, scene.hth_px ) );
+    auto px_z = (pz ) * (double)( std::max( scene.wth_px, scene.hth_px ) );
+    nvgTranslate( nvg, px_x, px_z );
+
     nvgRotate( nvg, rotate );
    
-    // MapViewer position is in Shape coordinates, hence convert
-    // to pixels
-    auto px_x = px * std::max( scene.wth_px, scene.hth_px );
-    auto px_z = pz * std::max( scene.wth_px, scene.hth_px );
+    //auto px_x = (px * (trans.a + trans.c)) * (double)( std::max( scene.wth_px, scene.hth_px ) );
+    //auto px_z = (pz * (trans.c + trans.d)) * (double)( std::max( scene.wth_px, scene.hth_px ) );
     nvgTranslate( nvg, -px_x, -px_z );
 
-    {
-        CourseDrawer drawer;
-        drawer.numbers( true );
-        // unit size in drawing (defined by radius of a Normal control), in world coordinates
-        drawer.size( 16 ); // FIXME: more customizable settings
+    float trans[6];
+    nvgCurrentTransform( nvg, trans );
 
-        drawer.begin( nvg );
-        drawer.start( glm::vec2( 0.0, 0.0 ) );
-        drawer.normal( glm::vec2( 100.0, 0.0 ) );
-        drawer.normal( glm::vec2( 250.0, 100.0 ) );
-        drawer.end();
+    auto a = trans[0];
+    auto b = trans[1];
+    auto c = trans[2];
+    auto d = trans[3];
+    auto e = trans[4];
+    auto f = trans[5];
+  
 
-        drawer.begin( nvg );
-        drawer.finish( glm::vec2( 0.0, 0.0 ) );
-        drawer.normal( glm::vec2( 0.0, 80.0 ) );
-        drawer.normal( glm::vec2( 0.0, 160.0 ) );
-        drawer.normal( glm::vec2( 0.0, 290.0 ) );
-        drawer.end();
-    }
 // debug: draw axis
 #if 0
     nvgStrokeWidth( nvg, 4.0 ); 
@@ -260,7 +258,7 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
 
     ////////////////////////////////////////////////////////////////
     //
-   
+#if 1   
     // begin 2D drawing
     nvgSave( nvg );
     beginDraw2D( nvg, draw2d );
@@ -275,8 +273,49 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     nvgSave( nvg );
     endDraw2D( nvg, draw2d );
     nvgRestore( nvg );
+#endif
 
     nvgRestore( nvg );
+
+#if 1
+    // MapViewer position is in Shape coordinates, hence convert
+    // to pixels
+   { 
+    auto ux = a / ( a*a + b*b == 0 ? 1.0 : std::sqrt( a*a + b*b ) );
+    auto uy = b / ( a*a + b*b == 0 ? 1.0 : std::sqrt( a*a + b*b ) );
+    auto vx = c / ( c*c + d*d == 0 ? 1.0 : std::sqrt( c*c + d*d ) );
+    auto vy = d / ( c*c + d*d == 0 ? 1.0 : std::sqrt( c*c + d*d ) );
+
+    auto px_x = (px ) * (double)( std::max( scene.wth_px, scene.hth_px ) );
+    auto px_z = (pz ) * (double)( std::max( scene.wth_px, scene.hth_px ) );
+    auto e = px_x;
+    auto f = px_z;
+
+    //double x,y;
+    //cossin( rotate, x, y );
+    //auto a = x;
+    //auto b = y;
+    //auto c = -y;
+    //auto d = x;
+
+
+    // set origo in the middle 
+    nvgTranslate( nvg, 0.5 * scene.wth_px, 0.5 * scene.hth_px );
+
+    nvgStrokeColor(nvg, nvgRGBA(255,0,0,255));
+    nvgBeginPath( nvg );
+    nvgMoveTo( nvg,  e + 0.0 ,  f + 0.0  );
+    nvgLineTo( nvg,  e + 50.0 * ux,  f + 50.0 * uy ); 
+    nvgStroke( nvg );
+
+    nvgStrokeColor(nvg, nvgRGBA(0.0,255,0,255));
+    nvgBeginPath( nvg );
+    nvgMoveTo( nvg,  e + 0.0 ,  f + 0.0  );
+    nvgLineTo( nvg,  e + 50.0 * vx,  f + 50.0 * vy ); 
+    nvgStroke( nvg );
+}
+#endif
+
     batb->gl->nanovgEnd(); 
 }
 
