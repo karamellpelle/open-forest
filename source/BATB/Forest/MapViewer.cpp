@@ -21,6 +21,7 @@
 #include "BATB/Forest/Terrain.hpp"
 #include "BATB/Scene.hpp"
 
+#include "BATB/CourseDrawer.hpp"
 
 namespace batb
 {
@@ -30,10 +31,6 @@ namespace forest
 
 MapViewer::MapViewer() 
 {
-    u0_.x = 1.0;
-    u0_.z = 0.0;
-    v0_.x = 0.0;
-    v0_.z = 1.0;
 }
 
 void MapViewer::mapscale(uint one, uint many)
@@ -42,48 +39,37 @@ void MapViewer::mapscale(uint one, uint many)
     scale_inv_ = (double)( many ) / (double)( one );
 }
 
-void MapViewer::setPosition(const glm::vec3& p, tick_t ticks)
+void MapViewer::setPosition(double x, double y, tick_t ticks)
 {
-    //p0_ = x;
-    //p1_ = z;
-
-    p0_ = p;
-}
-
-void MapViewer::setDirection(const glm::vec3& d, tick_t ticks)
-{
-    auto mm = d.x * d.x + d.z * d.z;
-    auto ku = mm == 0 ? 1.0 : 1.0 / sqrt( mm );
-    u0_.x = ku * d.x;
-    u0_.z = ku * d.z;
-    v0_.x = -u0_.z;
-    v0_.z = u0_.x;
-
-    //rotate0_ = std::atan2( u0_.x, -u0_.y );
-}
-
-void MapViewer::lookAt(const glm::vec3& p, tick_t ticks)
-{
-
-    //setDirection( x - p0_ , z - p1_ );
-    setDirection( p - p0_ );
-
+    p0x_ = x;
+    p0z_ = y;
 }
 
 
 void MapViewer::setRotation(double rad, tick_t ticks)
 {
-    rad = std::fmod( rad, twopi );
-
-    double ux, uz;
-    cossin( rad, ux, uz );
-    setDirection( glm::vec3( ux, 0.0, uz ) );
+    //rad = std::fmod( rad, twopi );
+    rotate0_ = rad;
 }
+
+void MapViewer::setDirection(double x, double y, tick_t ticks)
+{
+    auto rotate = std::atan2( x, y );
+    setRotation( rotate, ticks);
+}
+
+void MapViewer::lookAt(double x, double y, tick_t ticks)
+{
+
+    setDirection( x - p0x_, y - p0z_, ticks);
+
+}
+
+
 
 void MapViewer::setZoom(double a, tick_t ticks)
 {
-    zoom_ = a;
-    zoom_inv_ = (1.0) / a;
+    zoom0_ = a;
 }
 
 void MapViewer::setOpacity(double a)
@@ -91,52 +77,59 @@ void MapViewer::setOpacity(double a)
     opacity0_ = clamp( a, 0.0, 1.0 );
 }
 
-double MapViewer::getZoom() const
+void MapViewer::getZoom(double& z) const
 {
-    return zoom_;
+    z = zoom0_;
 }
 
 
-glm::vec3 MapViewer::getPosition() const
+void MapViewer::getPosition(double& x, double& y) const
 {
-    return p0_;
+    x = p0x_;
+    y = p0z_;
 }
 
-glm::vec3 MapViewer::getDirection() const
+void MapViewer::getRotation(double& r) const
 {
-    return u0_;
-}
-double MapViewer::getRotation() const
-{
-    return rotate0_;
-}
-double MapViewer::getOpacity() const
-{
-    return opacity0_;
+    r = rotate0_;
 }
 
-//void MapViewer::useMap(Map* m)
-//{
-//    map = m; 
-//}
-// we want to work on the FBO target with meter coordinates to make the 
-// map as real as possible.
-//
 
-//void MapViewer::init(World* forest)
-//{
-//    // since we work directly with references to World, we can't initialize again.
-//    if ( forest_ ) throw std::runtime_error( "init() non-empty MapViewer" );
-//
-//
-//    // always work on this World
-//    forest_ = forest;
-//
-//    
-//}
+void MapViewer::getOpacity(double& o) const
+{
+    o = opacity0_;
+}
+
+void MapViewer::setPositionWorld(const glm::vec3& p, tick_t ticks)
+{
+    auto px = p.x;
+    auto py = p.z;
+    // TODO: convert!
+    //setPosition( px, py, ticks );
+}
+
+void MapViewer::lookAtWorld(const glm::vec3& p, tick_t ticks)
+{
+    
+    setDirection( p.x - p0x_, p.z - p0z_ );
+
+}
+
+
+
 
 void MapViewer::draw2D(BATB* batb, const Scene& scene)
 {
+    double px, pz;
+    getPosition( px, pz );
+    double rotate;
+    getRotation( rotate );
+    double zoom;
+    getZoom( zoom );
+    double opacity;
+    getOpacity( opacity );
+
+
     ////////////////////////////////////////////////////////////////
     // this draws in 2D
 
@@ -149,44 +142,105 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
 
     // set origo in the middle 
     nvgTranslate( nvg, 0.5 * scene.wth_px, 0.5 * scene.hth_px );
+#if 0
+    auto glfw_window_ = batb->screen->glfw_window;
+    int wth; int hth;
+    glfwGetWindowSize( glfw_window_, &wth, &hth );
+    double x_, y_;
+    glfwGetCursorPos( glfw_window_, &x_, &y_ );
+    nvgStrokeColor(nvg, nvgRGBA(255,255,0, 255));
+    nvgFillColor(nvg, nvgRGBA(255,255,0,255));
+    nvgBeginPath( nvg );
+    nvgArc( nvg, x_, y_, 20.0, 0, twopi, NVG_CCW );
+    nvgFill( nvg );
+#endif
+#if 1
+    float_t x,y;
+    batb->forest->keys->aim->axis( x, y );
+    auto to_pixel = [&](float_t m) { return m * std::max( scene.wth_px, scene.hth_px ); };
+
+    nvgStrokeColor(nvg, nvgRGBA(0,255,255, 255));
+    nvgFillColor(nvg, nvgRGBA(0,255,128,255));
+    nvgBeginPath( nvg );
+    nvgArc( nvg, to_pixel( x ) + 40, to_pixel( y ), 15.0, 0, twopi, NVG_CCW );
+    nvgFill( nvg );
+#endif
 
     // meter context -> pixel of context
     double from_m = scene.wth_px / scene.wth_m;
 
     Draw2D draw2d;
-    draw2d.from_m = from_m * zoom_;
-    draw2d.to_m = scale_;
-    draw2d.to_pixel = draw2d.from_m * draw2d.to_m;
-    draw2d.opacity = opacity0_;
+    draw2d.from_m = from_m * zoom; // meter on map to pixels
+    draw2d.to_m = scale_;           // meter in Terrain to meter on map
+    draw2d.to_pixel = draw2d.from_m * draw2d.to_m; // meter in Terrain to pixels
+    draw2d.opacity = opacity;
 
-    // the context defines a world region of this size
-    // also make sure we take care of zooming
-    double world_wth = scene.wth_m * scale_inv_ * zoom_inv_;
-    double world_hth = scene.hth_m * scale_inv_ * zoom_inv_;
+    ////////////////////////////////////////////////////////////////
+    // define World region to draw 
+    // FIXME: don't know if this is correct
 
-    // find bounding box (world coordinates)
-    // FIXME: verify correctness
-    double a0 = world_hth * u0_.x;
-    double a1 = world_hth * u0_.z;
-    double b0 = world_wth * v0_.x;
-    double b1 = world_wth * v0_.z;
+    // MapViewer 
+    // the Scene context defines a world region of this size
+    //double world_wth = scene.wth_m * scale_inv_ * zoom_inv_;
+    //double world_hth = scene.hth_m * scale_inv_ * zoom_inv_;
+    double world_wth = scene.wth_m / (scale_ * zoom);
+    double world_hth = scene.hth_m / (scale_ * zoom);
+
+    // find bounding box in World 
+    double ux, uz;
+    cossin( rotate, ux, uz );
+    double vx = uz;
+    double vz = -ux;
+    double a0 = world_hth * ux;
+    double a1 = world_hth * uz;
+    double b0 = world_wth * vx;
+    double b1 = world_wth * vz;
     double min_x = std::min( a0 , b0 );
     double max_x = std::max( a0 , b0 );
     double min_z = std::min( a1 , b1 );
     double max_z = std::max( a1 , b1 );
 
-    draw2d.x = (p0_.x + min_x) - 0.5 * world_hth; // from center to corner
-    draw2d.z = (p0_.z + min_z) - 0.5 * world_wth; // from center to corner
+    // MapViewer position to World position
+    double world_x = (px * std::max( scene.wth_m, scene.hth_m ) ) / (scale_ * zoom);
+    double world_z = (pz * std::max( scene.wth_m, scene.hth_m ) ) / (scale_ * zoom);
+    draw2d.x = (world_x + min_x) - 0.5 * world_hth; // from center to corner
+    draw2d.z = (world_z + min_z) - 0.5 * world_wth; // from center to corner
     draw2d.w = draw2d.x + max_x;
     draw2d.h = draw2d.z + max_z;
 
 
     // translate and rotate (world is scaled down to pixel level)
-    auto p0 = draw2d.to_pixel * p0_.x;
-    auto p1 = draw2d.to_pixel * p0_.z;
-    nvgTransform( nvg, u0_.x, u0_.z, v0_.x, v0_.z, 0.0, 0.0 );
-    nvgTranslate( nvg, -p0, -p1 );
+    //auto p0 = draw2d.to_pixel * p0_.x;
+    //auto p1 = draw2d.to_pixel * p0_.z;
+    //nvgTransform( nvg, u0_.x, u0_.z, v0_.x, v0_.z, 0.0, 0.0 );
+    //nvgTranslate( nvg, -p0, -p1 );
+    nvgRotate( nvg, rotate );
+   
+    // MapViewer position is in Shape coordinates, hence convert
+    // to pixels
+    auto px_x = px * std::max( scene.wth_px, scene.hth_px );
+    auto px_z = pz * std::max( scene.wth_px, scene.hth_px );
+    nvgTranslate( nvg, -px_x, -px_z );
 
+    {
+        CourseDrawer drawer;
+        drawer.numbers( true );
+        // unit size in drawing (defined by radius of a Normal control), in world coordinates
+        drawer.size( 16 ); // FIXME: more customizable settings
+
+        drawer.begin( nvg );
+        drawer.start( glm::vec2( 0.0, 0.0 ) );
+        drawer.normal( glm::vec2( 100.0, 0.0 ) );
+        drawer.normal( glm::vec2( 250.0, 100.0 ) );
+        drawer.end();
+
+        drawer.begin( nvg );
+        drawer.finish( glm::vec2( 0.0, 0.0 ) );
+        drawer.normal( glm::vec2( 0.0, 80.0 ) );
+        drawer.normal( glm::vec2( 0.0, 160.0 ) );
+        drawer.normal( glm::vec2( 0.0, 290.0 ) );
+        drawer.end();
+    }
 // debug: draw axis
 #if 0
     nvgStrokeWidth( nvg, 4.0 ); 
@@ -221,8 +275,6 @@ void MapViewer::draw2D(BATB* batb, const Scene& scene)
     nvgSave( nvg );
     endDraw2D( nvg, draw2d );
     nvgRestore( nvg );
-
-
 
     nvgRestore( nvg );
     batb->gl->nanovgEnd(); 

@@ -57,10 +57,11 @@ private:
     bool active_ = false;
     bool dragging_ = false;
 
-    glm::vec3 p0_;
-    float_t rotate0_ = 0.0;
-    float_t zoom0_ = 1.0;
-    float_t opacity0_ = 1.0;
+    double p0x_ = 0.0;
+    double p0z_ = 0.0;
+    double rotate0_ = 0.0;
+    double zoom0_ = 1.0;
+    double opacity0_ = 1.0;
 
 };
 

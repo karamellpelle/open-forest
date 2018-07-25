@@ -53,12 +53,13 @@ void MapViewerKeysController::step(BATB* batb)
     // if there is a change of Key press, restart with current values
     if ( mapview->changed() || mapview_plus->changed() || mapview_shift->changed() || mapview_ctrl->changed() )
     {
-        // save current Keys state
-        p0_ = mapviewer_->getPosition();
-        rotate0_ = mapviewer_->getRotation();
-        zoom0_ = mapviewer_->getZoom();
-        opacity0_ = mapviewer_->getOpacity();
+        // save current MapViewer view state
+        mapviewer_->getPosition( p0x_, p0z_ );
+        mapviewer_->getRotation( rotate0_ );
+        mapviewer_->getZoom( zoom0_ );
+        mapviewer_->getOpacity( opacity0_ );
 
+        // save current pointer
         keys->aim->axis( pointer_x0_, pointer_y0_ );
     }
 
@@ -109,11 +110,13 @@ void MapViewerKeysController::step(BATB* batb)
 
 
             // move
-            float_t delta_x = -20000.0 * pointer_x;
-            float_t delta_z = -20000.0 * pointer_y;
-
-            glm::vec3 position = p0_ + glm::vec3( delta_x, 0.0, delta_z );
-            mapviewer_->setPosition( position );
+            //float_t delta_x = -20000.0 * pointer_x;
+            //float_t delta_z = -20000.0 * pointer_y;
+            //
+            //glm::vec3 position = p0_ + glm::vec3( delta_x, 0.0, delta_z );
+            double x = p0x_ + (3.0) * pointer_x;
+            double z = p0z_ + (3.0) * pointer_y;
+            mapviewer_->setPosition( x, z );
 
             goto mapview_finished;
         }

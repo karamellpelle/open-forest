@@ -36,6 +36,7 @@ class MapDrawer2D;
 
 
 
+// TODO: work on dedicated FBO/texture and blit to Scene
 class MapViewer 
 {
 public:
@@ -54,28 +55,34 @@ public:
     // mapscale alá orienteering map
     void mapscale(uint one, uint many); // map_drawer.mapscale( 1, 15000 );
 
+    // position, in MapViewer coordinates 
+    // (which happes to be, at least for now, Shape coordinates)
+    void setPosition(double x, double y, tick_t = 0.0);
+    void getPosition(double& , double& ) const;
+
+    // rotation
+    void setRotation(double , tick_t = 0.0); 
+    void getRotation(double& ) const; 
+    void setDirection(double x, double y, tick_t = 0.0); // upward direction
+    void lookAt(double x, double y, tick_t = 0.0);
+
+    // zoom
+    void setZoom(double , tick_t = 0.0); // 1.0 is mapscale
+    void getZoom(double& ) const; 
+
+    // opacity
+    void setOpacity(double );
+    void getOpacity(double& ) const;
+
+
+
     ////////////////////////////////////////////////////////////////
     // view map based by World coordinates. 
-    // world coordinates makes it easy to switch Map's on the fly
     // TODO: use decltype of world coordinates
-    // view draw map from this point
-    void setPosition(const glm::vec3& , tick_t = 0.0);
-    void setPositionScaleInv(const glm::vec3& , tick_t = 0.0);
+    void setPositionWorld(const glm::vec3& , tick_t = 0.0);
+    void getPositionWorld(glm::vec3& ) const;
     // look direction, i.e. upwards
-    void setDirection(const glm::vec3& , tick_t = 0.0);
-    void lookAt(const glm::vec3& , tick_t = 0.0);
-    void setRotation(double , tick_t = 0.0); 
-
-    glm::vec3 getPosition() const;
-    glm::vec3 getDirection() const;
-    double getRotation() const; 
-
-    // working on context
-    void setZoom(double , tick_t = 0.0); // 1.0 is mapscale
-    double getZoom() const; // 1.0 is mapscale
-
-    void setOpacity(double );
-    double getOpacity() const;
+    void lookAtWorld(const glm::vec3& , tick_t = 0.0);
 
     ////////////////////////////////////////////////////////////////
     // we need to work with pixel since NanoVG has problem with 
@@ -109,19 +116,29 @@ protected:
 
 
 private:
-    glm::vec3 p0_;
-    glm::vec3 u0_;
-    glm::vec3 v0_;
-    double rotate0_ = 0.0;
-    double opacity0_ = 1.0;
-
     tick_t tick_ = 0.0;
 
     double scale_     = 1.0;
     double scale_inv_ = 1.0;
 
-    double zoom_     = 1.0;
-    double zoom_inv_ = 1.0;
+
+    double p0x_ = 0.0;
+    double p0z_ = 0.0;
+    double p1x_ = 0.0;
+    double p1z_ = 0.0;
+    tick_t p_tick_ = 0.0;
+
+    double rotate0_ = 0.0;
+    double rotate1_ = 0.0;
+    tick_t rotate_tick_ = 0.0;
+
+    double opacity0_ = 1.0;
+    double opacity1_ = 1.0;
+    tick_t opacity_tick_ = 0.0;
+
+    double zoom0_     = 1.0;
+    double zoom1_     = 1.0;
+    tick_t zoom_tick_ = 0.0;
 
 
 };

@@ -46,7 +46,7 @@ void DemoMapViewer::beginDraw2D(NVGcontext* nvg, const Draw2D& region)
 // target NanoVG coordinates is pixels
 void DemoMapViewer::endDraw2D(NVGcontext* nvg, const Draw2D& draw)
 {
-
+return;
     using namespace forest;
     
     auto from_m = [&](float_t m) { return (float_t)( draw.from_m * m ); };

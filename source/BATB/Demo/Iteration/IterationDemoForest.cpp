@@ -184,7 +184,7 @@ void IterationDemoForest::output(World& demo)
     // map as real as possible.
     //
 
-    if ( demo.map_viewer_keyscontroller.isActive() )
+    //if ( demo.map_viewer_keyscontroller.isActive() )
     {
         demo.map_viewer.mapscale( 1, 10000 );
         //demo.map_drawer.useMap( nullptr ); 

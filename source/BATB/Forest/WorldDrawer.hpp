@@ -72,6 +72,26 @@ private:
     Ogre::Camera* ogre_camera_              = nullptr;
     Ogre::SceneNode* ogre_camera_scenenode_ = nullptr;
 
+/*
+    Camera camera_
+    {
+        OgreSceneNode* ogre_scene_node;
+        DTMovable move;
+        // ^ updating 'move' sets ogre_scene_node too
+    }
+
+    OgreSceneNode* ogre_scene_node0_;
+    OgreSceneNode* ogre_scene_node1_;
+    tick_t tick_;
+    tick_t ticks_; 
+    // void update()
+    //   auto alpha = ticks_ == 0.0 ? 1.0 : std::max( 1.0, (tick - tick_)/ ticks_ );
+    //   if ( alpha_ == 1.0 )
+    //      ogre_camera->node = ogre_scene_node1_;
+    //   else
+    //      ogre_camera->node->pos = smooth( ogre_scene_node0_, ogre_scene_node1_, alpha );
+    //      ogre_camera->node->aim = smooth( ogre_scene_node0_, ogre_scene_node1_, alpha );
+*/
 
 };
 

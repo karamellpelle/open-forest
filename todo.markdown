@@ -1,8 +1,9 @@
 
 # TODO
 
-
-* KeyOr/KeyAnd/KeyNot: 
+* define North in World/Terrain as -Z axis!
+* let Key::alpha have type double, not float_t. also rename alpha() to value()
+* KeyOr/KeyAnd/KeyNot
 * find suitable values for Control alure::Source
 * let forest::World contain pointers to objects (Runners, Controls, etc.).
 * fix Camera: set Ogre::Camera's SceneNode from BATB::Forest::Camera's Aim matrix.
